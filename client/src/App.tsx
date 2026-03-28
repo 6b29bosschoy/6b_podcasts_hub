@@ -18,11 +18,13 @@ import BlogPost from "./pages/BlogPost";
 import BlogSubmit from "./pages/BlogSubmit";
 import Booking from "./pages/Booking";
 import Contact from "./pages/Contact";
-import Admin from "./pages/Admin";
+import Admin from "@/pages/Admin";
+import Welcome from "@/pages/Welcome";
 
 function Router() {
   return (
     <Switch>
+      <Route path="/welcome" component={Welcome} />
       <Route path="/" component={Home} />
       <Route path="/about" component={About} />
       <Route path="/services" component={Services} />
@@ -43,17 +45,20 @@ function Router() {
 }
 
 function App() {
+  const [location] = useLocation();
+  const isWelcome = location === "/welcome" || location.startsWith("/welcome?");
+
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster />
-          <Navbar />
+          {!isWelcome && <Navbar />}
           <Router />
-          <Footer />
-          <ChatBot />
-          <PushBellButton />
-          <PushPromptBanner />
+          {!isWelcome && <Footer />}
+          {!isWelcome && <ChatBot />}
+          {!isWelcome && <PushBellButton />}
+          {!isWelcome && <PushPromptBanner />}
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

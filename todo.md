@@ -102,3 +102,18 @@
 - [x] 收聽 Podcasts：PodcastSeries + BreadcrumbList Schema
 - [x] 合作洽談：ContactPage + BreadcrumbList Schema
 - [x] 聯絡我們：ContactPage + LocalBusiness Schema
+
+## FB/IG Landing Page (/welcome)
+
+- [x] 後端：復用現有 youtube.getVideos + youtube.getChannels 程序
+- [x] 前端：Hero 區塊（品牌標語 + 主要 CTA）
+- [x] 前端：最新影片展示區（YouTube 縮圖列表 + 外連）
+- [x] 前端：玄學服務快速預約 CTA 區塊
+- [x] 前端：社群數據展示（訂閱數、集數、年數）
+- [x] 前端：社群追蹤按鈕（YouTube / FB / IG / Podcast）
+- [x] 前端：嘉賓金句輪播區塊
+- [x] Open Graph 標籤（針對 FB/IG 分享優化）
+- [x] JSON-LD Schema（WebPage + Organization + BreadcrumbList）
+- [x] UTM 參數追蹤支援（utm_source=facebook/instagram）
+- [x] 加入 App.tsx 路由 /welcome（隐藏 Navbar/Footer/ChatBot）
+- [x] Vitest 測試覆蓋（40 個測試全部通過）
