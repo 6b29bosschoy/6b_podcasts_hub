@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "wouter";
 import SubscribeBox from "@/components/SubscribeBox";
+import ReaderSubmissions from "@/components/ReaderSubmissions";
 import { trpc } from "@/lib/trpc";
 import { Loader2, Play, Eye, Clock } from "lucide-react";
 import { JsonLd, buildOrganizationSchema, buildWebSiteSchema, SITE_URL } from "@/components/JsonLd";
@@ -444,6 +445,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Reader Submissions */}
+      <ReaderSubmissions />
 
       {/* Subscribe */}
       <SubscribeBox />

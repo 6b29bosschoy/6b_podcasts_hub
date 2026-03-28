@@ -1,4 +1,4 @@
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   BlogPost,
@@ -7,13 +7,16 @@ import {
   InsertBlogPost,
   InsertBooking,
   InsertContact,
+  InsertReaderSubmission,
   InsertSubscription,
   InsertUser,
+  ReaderSubmission,
   Subscription,
   YoutubeCache,
   blogPosts,
   bookings,
   contacts,
+  readerSubmissions,
   subscriptions,
   users,
   youtubeCache,
@@ -158,6 +161,45 @@ export async function getAllContacts(): Promise<Contact[]> {
   const db = await getDb();
   if (!db) return [];
   return db.select().from(contacts).orderBy(desc(contacts.createdAt));
+}
+
+// ─── Reader Submissions ───────────────────────────────────────────────────────
+
+export async function createReaderSubmission(data: InsertReaderSubmission): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(readerSubmissions).values(data);
+}
+
+export async function getApprovedSubmissions(limit = 12, offset = 0): Promise<ReaderSubmission[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(readerSubmissions)
+    .where(eq(readerSubmissions.status, "approved"))
+    .orderBy(desc(readerSubmissions.createdAt))
+    .limit(limit).offset(offset);
+}
+
+export async function getAllSubmissions(limit = 50, offset = 0): Promise<ReaderSubmission[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(readerSubmissions)
+    .orderBy(desc(readerSubmissions.createdAt))
+    .limit(limit).offset(offset);
+}
+
+export async function updateSubmissionStatus(id: number, status: "approved" | "rejected"): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(readerSubmissions).set({ status }).where(eq(readerSubmissions.id, id));
+}
+
+export async function likeSubmission(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(readerSubmissions)
+    .set({ likes: sql`${readerSubmissions.likes} + 1` })
+    .where(and(eq(readerSubmissions.id, id), eq(readerSubmissions.status, "approved")));
 }
 
 // ─── YouTube Cache ──────────────────────────────────────────────────────────────────────────────

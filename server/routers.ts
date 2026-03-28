@@ -24,14 +24,19 @@ import {
   createBlogPost,
   createBooking,
   createContact,
+  createReaderSubmission,
   createSubscription,
   getAllBlogPosts,
   getAllBookings,
   getAllContacts,
+  getAllSubmissions,
   getApprovedBlogPosts,
+  getApprovedSubmissions,
   getBlogPostBySlug,
+  likeSubmission,
   updateBlogPostStatus,
   updateBookingStatus,
+  updateSubmissionStatus,
   getYoutubeCache,
   setYoutubeCache,
 } from "./db";
@@ -360,7 +365,70 @@ export const appRouter = router({
     }),
   }),
 
-  // ─── AI Chatbot ───────────────────────────────────────────────────────────
+  // ─── Reader Submissions ────────────────────────────────────────────────────────────────────────
+  submission: router({
+    /** Submit a reader story / question (public) */
+    submit: publicProcedure
+      .input(z.object({
+        nickname: z.string().min(1).max(50),
+        category: z.enum(["relationship", "fengshui", "confession", "question", "other"]),
+        content: z.string().min(10).max(1000),
+        isAnonymous: z.boolean().default(false),
+      }))
+      .mutation(async ({ input }) => {
+        await createReaderSubmission({
+          nickname: input.isAnonymous ? "匿名" : input.nickname,
+          category: input.category,
+          content: input.content,
+          isAnonymous: input.isAnonymous,
+        });
+        await notifyOwner({
+          title: "📨 新讀者投稿",
+          content: `「${input.isAnonymous ? "匿名" : input.nickname}」提交了一則「${input.category}」類別的投稿，請到後台審核。`,
+        });
+        return { success: true };
+      }),
+
+    /** List approved submissions (public) */
+    listApproved: publicProcedure
+      .input(z.object({
+        limit: z.number().int().min(1).max(20).default(9),
+        offset: z.number().int().min(0).default(0),
+      }))
+      .query(async ({ input }) => {
+        const items = await getApprovedSubmissions(input.limit, input.offset);
+        return { items };
+      }),
+
+    /** Like a submission (public, optimistic) */
+    like: publicProcedure
+      .input(z.object({ id: z.number().int().positive() }))
+      .mutation(async ({ input }) => {
+        await likeSubmission(input.id);
+        return { success: true };
+      }),
+
+    /** Admin: list all submissions */
+    adminList: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== "admin") throw new Error("Admin only");
+      const items = await getAllSubmissions(100);
+      return { items };
+    }),
+
+    /** Admin: approve or reject a submission */
+    updateStatus: protectedProcedure
+      .input(z.object({
+        id: z.number().int().positive(),
+        status: z.enum(["approved", "rejected"]),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== "admin") throw new Error("Admin only");
+        await updateSubmissionStatus(input.id, input.status);
+        return { success: true };
+      }),
+  }),
+
+  // ─── AI Chatbot ────────────────────────────────────────────────────────────────────────
   chatbot: router({
     chat: publicProcedure
       .input(z.object({

@@ -29,6 +29,13 @@
       "when": 1774677341233,
       "tag": "0003_abnormal_vanisher",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1774718797939,
+      "tag": "0004_glossy_stick",
+      "breakpoints": true
     }
   ]
 }

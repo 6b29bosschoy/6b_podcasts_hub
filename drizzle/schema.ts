@@ -105,6 +105,22 @@ export const youtubeCache = mysqlTable("youtube_cache", {
 export type YoutubeCache = typeof youtubeCache.$inferSelect;
 export type InsertYoutubeCache = typeof youtubeCache.$inferInsert;
 
+// Reader submissions – audience stories, questions, confessions
+export const readerSubmissions = mysqlTable("reader_submissions", {
+  id: int("id").autoincrement().primaryKey(),
+  nickname: varchar("nickname", { length: 50 }).notNull(),
+  category: mysqlEnum("category", ["relationship", "fengshui", "confession", "question", "other"]).default("other").notNull(),
+  content: text("content").notNull(),
+  isAnonymous: boolean("isAnonymous").default(false).notNull(),
+  status: mysqlEnum("status", ["pending", "approved", "rejected"]).default("pending").notNull(),
+  likes: int("likes").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ReaderSubmission = typeof readerSubmissions.$inferSelect;
+export type InsertReaderSubmission = typeof readerSubmissions.$inferInsert;
+
 // Web Push Notification subscriptions
 export const pushSubscriptions = mysqlTable("push_subscriptions", {
   id: int("id").autoincrement().primaryKey(),

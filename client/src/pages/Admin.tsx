@@ -4,7 +4,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { toast } from "sonner";
 import { Link } from "wouter";
 
-type Tab = "blogs" | "bookings" | "contacts" | "subscriptions" | "push";
+type Tab = "blogs" | "bookings" | "contacts" | "subscriptions" | "push" | "submissions";
 
 const SERVICE_LABELS: Record<string, string> = {
   fengshui: "風水諮詢", bazi: "八字命理", tarot: "塔羅占卜", spiritual: "身心靈療癒", course: "課程報名",
@@ -30,6 +30,9 @@ export default function Admin() {
 
   const approveBlog = trpc.blog.updateStatus.useMutation({ onSuccess: () => { toast.success("已更新文章狀態"); refetchBlogs(); } });
   const updateBooking = trpc.booking.updateStatus.useMutation({ onSuccess: () => { toast.success("已更新預約狀態"); refetchBookings(); } });
+
+  const { data: submissions, refetch: refetchSubmissions } = trpc.submission.adminList.useQuery(undefined, { enabled: isAuthenticated && user?.role === "admin" });
+  const updateSubmission = trpc.submission.updateStatus.useMutation({ onSuccess: () => { toast.success("已更新投稿狀態"); refetchSubmissions(); } });
 
   const { data: pushSubCount } = trpc.push.subscriberCount.useQuery(undefined, { enabled: isAuthenticated && user?.role === "admin" });
   const { data: pushHistory, refetch: refetchPushHistory } = trpc.push.history.useQuery(undefined, { enabled: isAuthenticated && user?.role === "admin" && tab === "push" });
@@ -60,6 +63,7 @@ export default function Admin() {
     { id: "contacts", label: "聯絡查詢", count: contacts?.length },
     { id: "subscriptions", label: "訂閱者", count: subscriptions?.length },
     { id: "push", label: "🔔 推送通知", count: pushSubCount?.count },
+    { id: "submissions", label: "📨 讀者投稿", count: submissions?.items?.filter(s => s.status === "pending").length },
   ];
 
   return (
@@ -291,6 +295,54 @@ export default function Admin() {
                 </div>
               </div>
             )}
+          </div>
+        )}
+      {/* Reader Submissions */}
+        {tab === "submissions" && (
+          <div className="flex flex-col gap-4">
+            {!submissions?.items?.length ? (
+              <p style={{ color: "oklch(0.55 0.02 60)" }}>暫時沒有投稿</p>
+            ) : submissions.items.map((s) => (
+              <div key={s.id} className="glass-card rounded-xl p-5">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2 flex-wrap">
+                      <span className="text-xs px-2 py-0.5 rounded font-bold" style={{
+                        background: s.status === "pending" ? "oklch(0.78 0.16 75 / 0.2)" : s.status === "approved" ? "oklch(0.65 0.20 145 / 0.2)" : "oklch(0.55 0.22 25 / 0.2)",
+                        color: s.status === "pending" ? "oklch(0.78 0.16 75)" : s.status === "approved" ? "oklch(0.65 0.20 145)" : "oklch(0.55 0.22 25)"
+                      }}>
+                        {s.status === "pending" ? "待審核" : s.status === "approved" ? "已發佈" : "已拒絕"}
+                      </span>
+                      <span className="text-xs px-2 py-0.5 rounded" style={{ background: "oklch(0.16 0.02 260)", color: "oklch(0.60 0.02 60)" }}>
+                        {s.category === "relationship" ? "💕 感情故事" : s.category === "fengshui" ? "🔮 玄學奇遇" : s.category === "confession" ? "💬 心底話" : s.category === "question" ? "🙋 問題想問" : "✨ 其他"}
+                      </span>
+                      <span className="text-xs" style={{ color: "oklch(0.45 0.02 60)" }}>
+                        {new Date(s.createdAt).toLocaleString("zh-HK")}
+                      </span>
+                      <span className="text-xs" style={{ color: "oklch(0.55 0.22 25)" }}>
+                        ♥ {s.likes}
+                      </span>
+                    </div>
+                    <p className="text-sm leading-relaxed mb-2" style={{ color: "oklch(0.82 0.01 60)" }}>{s.content}</p>
+                    <p className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>
+                      — {s.isAnonymous ? "匿名讀者" : s.nickname}
+                    </p>
+                  </div>
+                  {s.status === "pending" && (
+                    <div className="flex gap-2 flex-shrink-0">
+                      <button onClick={() => updateSubmission.mutate({ id: s.id, status: "approved" })}
+                        className="px-3 py-1.5 rounded text-xs font-bold" style={{ background: "oklch(0.65 0.20 145)", color: "white" }}>
+                        批准
+                      </button>
+                      <button onClick={() => updateSubmission.mutate({ id: s.id, status: "rejected" })}
+                        className="px-3 py-1.5 rounded text-xs font-bold" style={{ background: "oklch(0.55 0.22 25)", color: "white" }}>
+                        拒絕
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>

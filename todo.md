@@ -117,3 +117,15 @@
 - [x] UTM 參數追蹤支援（utm_source=facebook/instagram）
 - [x] 加入 App.tsx 路由 /welcome（隐藏 Navbar/Footer/ChatBot）
 - [x] Vitest 測試覆蓋（40 個測試全部通過）
+
+## 讀者投稿功能（首頁互動區塊）
+
+- [x] DB Schema：新增 reader_submissions 資料表（id, nickname, category, content, status, likes, createdAt）
+- [x] 後端：submission.submit 公開程序（提交投稿）
+- [x] 後端：submission.listApproved 公開程序（取得精選投稿列表）
+- [x] 後端：submission.adminList 管理員程序（全部投稿）
+- [x] 後端：submission.updateStatus 管理員程序（審核通過/拒絕）
+- [x] 首頁：ReaderSubmissions 區塊（卡片網格 + 讓好按鈕）
+- [x] 首頁：投稿表單 Dialog（類別、內容、匿名選項）
+- [x] 管理後台：Admin.tsx 加入 📨 讀者投稿審核 tab
+- [x] Vitest 測試覆蓋（57 個測試全部通過）
