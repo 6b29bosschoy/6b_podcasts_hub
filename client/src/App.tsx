@@ -8,6 +8,10 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ChatBot from "./components/ChatBot";
 import Home from "./pages/Home";
+import About from "./pages/About";
+import Services from "./pages/Services";
+import PodcastsPage from "./pages/PodcastsPage";
+import Partnership from "./pages/Partnership";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import BlogSubmit from "./pages/BlogSubmit";
@@ -19,6 +23,10 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/about" component={About} />
+      <Route path="/services" component={Services} />
+      <Route path="/podcasts" component={PodcastsPage} />
+      <Route path="/partnership" component={Partnership} />
       <Route path="/blog" component={Blog} />
       <Route path="/blog/submit" component={BlogSubmit} />
       <Route path="/blog/:slug">

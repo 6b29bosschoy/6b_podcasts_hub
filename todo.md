@@ -35,3 +35,13 @@
 - [x] 更新 Home.tsx：以真實 YouTube 數據替換靜態影片，加入頻道篩選 tabs、縮圖、觀看數、時間
 - [x] 首頁社交平台區顯示即時訂閱人數
 - [x] 撰寫 youtube.test.ts 並通過所有 23 個測試
+
+## 新增 Tab 頁面（參考舊版網站）
+- [x] 訪問舊版網站收集內容
+- [x] 建立「關於我們」頁面 /about
+- [x] 建立「服務項目」頁面 /services
+- [x] 建立「收聽聲音 PODCASTS」頁面 /podcasts
+- [x] 建立「合作洽談」頁面 /partnership
+- [x] 更新 Navbar 加入四個新 Tab
+- [x] 更新 App.tsx 路由
+- [x] 撰寫新頁面測試（29 個測試全部通過）

@@ -11,8 +11,12 @@ const SOCIAL_LINKS = [
 
 const NAV_ITEMS = [
   { label: "首頁", href: "/" },
+  { label: "關於我們", href: "/about" },
+  { label: "服務項目", href: "/services" },
   { label: "嘉賓專欄", href: "/blog" },
   { label: "玄學服務", href: "/booking" },
+  { label: "收聽聲音 PODCASTS", href: "/podcasts" },
+  { label: "合作洽談", href: "/partnership" },
   { label: "聯絡我們", href: "/contact" },
 ];
 
@@ -35,12 +39,12 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden md:flex items-center gap-4 flex-wrap">
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="text-sm font-medium transition-colors duration-200"
+              className="text-xs font-medium transition-colors duration-200 whitespace-nowrap"
               style={{ color: location === item.href ? "oklch(0.62 0.24 25)" : "oklch(0.70 0.01 60)" }}
             >
               {item.label}
