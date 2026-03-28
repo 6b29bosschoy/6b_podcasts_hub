@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link } from "wouter";
 import SubscribeBox from "@/components/SubscribeBox";
 import { trpc } from "@/lib/trpc";
@@ -63,6 +63,111 @@ const SERVICES = [
 ];
 
 type ChannelFilter = "all" | "podcasts" | "fengshui";
+
+// ── VideoCard: hover to play YouTube inline ──────────────────────────────────
+function VideoCard({
+  v,
+  isFengshui,
+}: {
+  v: { id: string; title: string; thumbnail: string | null; url: string; viewCount: string; publishedAt: string; duration: string | null; channelTitle?: string | null; channelId?: string | null };
+  isFengshui: boolean;
+}) {
+  const [hovered, setHovered] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleMouseEnter = () => {
+    // small delay so fast mouse-overs don't trigger
+    timerRef.current = setTimeout(() => setHovered(true), 350);
+  };
+  const handleMouseLeave = () => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    setHovered(false);
+  };
+
+  return (
+    <div
+      className="glass-card rounded-xl overflow-hidden group transition-all duration-200 hover:scale-[1.02] cursor-pointer"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onClick={() => window.open(v.url, "_blank", "noopener,noreferrer")}
+    >
+      {/* Thumbnail / Player area */}
+      <div className="aspect-video relative overflow-hidden" style={{ background: "oklch(0.15 0.015 260)" }}>
+        {/* YouTube iframe — shown only on hover */}
+        {hovered ? (
+          <iframe
+            src={`https://www.youtube.com/embed/${v.id}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&loop=0`}
+            title={v.title}
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+            className="absolute inset-0 w-full h-full"
+            style={{ border: "none" }}
+            onClick={(e) => e.stopPropagation()}
+          />
+        ) : (
+          <>
+            {/* Thumbnail */}
+            {v.thumbnail ? (
+              <img
+                src={v.thumbnail}
+                alt={v.title}
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                loading="lazy"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <Play className="w-10 h-10 opacity-30" style={{ color: "oklch(0.62 0.24 25)" }} />
+              </div>
+            )}
+            {/* Play overlay hint */}
+            <div
+              className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+              style={{ background: "oklch(0 0 0 / 0.45)" }}
+            >
+              <div className="w-14 h-14 rounded-full flex items-center justify-center mb-2" style={{ background: "oklch(0.62 0.24 25 / 0.92)", boxShadow: "0 0 20px oklch(0.62 0.24 25 / 0.5)" }}>
+                <Play className="w-6 h-6 text-white fill-white ml-0.5" />
+              </div>
+              <span className="text-xs font-bold text-white" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>預覽播放</span>
+            </div>
+          </>
+        )}
+        {/* Channel badge */}
+        <div
+          className="absolute top-2 left-2 px-2 py-0.5 rounded text-xs font-bold z-10"
+          style={{ background: isFengshui ? "oklch(0.55 0.20 250 / 0.9)" : "oklch(0.62 0.24 25 / 0.9)", color: "white" }}
+        >
+          {isFengshui ? "路邊玄學堂" : "路邊電台"}
+        </div>
+        {/* Duration badge — hide when playing */}
+        {!hovered && v.duration && (
+          <div
+            className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded text-xs font-mono font-bold z-10"
+            style={{ background: "oklch(0 0 0 / 0.8)", color: "white" }}
+          >
+            {v.duration}
+          </div>
+        )}
+      </div>
+      <div className="p-4">
+        <h3 className="text-sm font-bold leading-snug mb-2 line-clamp-2" style={{ color: "oklch(0.88 0.01 60)" }}>
+          {v.title}
+        </h3>
+        <div className="flex items-center gap-3 text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>
+          <span className="flex items-center gap-1">
+            <Eye className="w-3 h-3" />
+            {v.viewCount}
+          </span>
+          <span>·</span>
+          <span className="flex items-center gap-1">
+            <Clock className="w-3 h-3" />
+            {formatRelativeTime(v.publishedAt)}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+// ─────────────────────────────────────────────────────────────────────────────
 
 function formatRelativeTime(dateStr: string): string {
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -243,63 +348,7 @@ export default function Home() {
               {videos.map((v) => {
                 const isFengshui = v.channelTitle?.includes("玄學") || v.channelId === channelsData?.fengshui?.id;
                 return (
-                  <a
-                    key={v.id}
-                    href={v.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="glass-card rounded-xl overflow-hidden group transition-all duration-200 hover:scale-[1.02]"
-                  >
-                    {/* Thumbnail */}
-                    <div className="aspect-video relative overflow-hidden" style={{ background: "oklch(0.15 0.015 260)" }}>
-                      {v.thumbnail ? (
-                        <img
-                          src={v.thumbnail}
-                          alt={v.title}
-                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                          loading="lazy"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <Play className="w-10 h-10 opacity-30" style={{ color: "oklch(0.62 0.24 25)" }} />
-                        </div>
-                      )}
-                      {/* Play overlay */}
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200" style={{ background: "oklch(0 0 0 / 0.4)" }}>
-                        <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "oklch(0.62 0.24 25 / 0.9)" }}>
-                          <Play className="w-5 h-5 text-white fill-white ml-0.5" />
-                        </div>
-                      </div>
-                      {/* Channel badge */}
-                      <div className="absolute top-2 left-2 px-2 py-0.5 rounded text-xs font-bold"
-                        style={{ background: isFengshui ? "oklch(0.55 0.20 250 / 0.9)" : "oklch(0.62 0.24 25 / 0.9)", color: "white" }}>
-                        {isFengshui ? "路邊玄學堂" : "路邊電台"}
-                      </div>
-                      {/* Duration badge */}
-                      {v.duration && (
-                        <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded text-xs font-mono font-bold"
-                          style={{ background: "oklch(0 0 0 / 0.8)", color: "white" }}>
-                          {v.duration}
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-4">
-                      <h3 className="text-sm font-bold leading-snug mb-2 line-clamp-2" style={{ color: "oklch(0.88 0.01 60)" }}>
-                        {v.title}
-                      </h3>
-                      <div className="flex items-center gap-3 text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>
-                        <span className="flex items-center gap-1">
-                          <Eye className="w-3 h-3" />
-                          {v.viewCount}
-                        </span>
-                        <span>·</span>
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {formatRelativeTime(v.publishedAt)}
-                        </span>
-                      </div>
-                    </div>
-                  </a>
+                  <VideoCard key={v.id} v={v} isFengshui={isFengshui} />
                 );
               })}
             </div>
