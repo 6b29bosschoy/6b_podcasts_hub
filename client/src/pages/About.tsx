@@ -115,11 +115,21 @@ export default function About() {
           <div className="max-w-3xl mx-auto">
             <div className="glass-card rounded-2xl p-8 md:p-10" style={{ border: "1px solid oklch(0.78 0.16 75 / 0.2)" }}>
               <div className="flex flex-col md:flex-row gap-8 items-start">
-                {/* Avatar placeholder */}
+                {/* Founder Photo */}
                 <div className="flex-shrink-0 mx-auto md:mx-0">
-                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-black"
-                    style={{ background: "linear-gradient(135deg, oklch(0.60 0.22 25), oklch(0.75 0.15 75))", color: "white" }}>
-                    R
+                  <div className="relative">
+                    <img
+                      src="https://d2xsxph8kpxj0f.cloudfront.net/310519663073423209/XJagJnJEiagVDDmfVeExSL/ray-choy_49c64651.webp"
+                      alt="Ray Choy 蔡力泓"
+                      className="w-32 h-32 md:w-40 md:h-40 rounded-2xl object-cover object-top"
+                      style={{ border: "2px solid oklch(0.62 0.24 25 / 0.5)", boxShadow: "0 0 24px oklch(0.62 0.24 25 / 0.2)" }}
+                    />
+                    <div
+                      className="absolute -bottom-2 -right-2 w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black"
+                      style={{ background: "linear-gradient(135deg, oklch(0.60 0.22 25), oklch(0.75 0.15 75))", color: "white" }}
+                    >
+                      創
+                    </div>
                   </div>
                 </div>
                 <div className="flex-1">
