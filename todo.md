@@ -65,3 +65,13 @@
 - [x] PushNotificationManager.tsx：訂閱提示 Banner（8秒後出現）+ 浮動鈴鐵按鈕
 - [x] 管理員後台「🔔 推送通知」 Tab：訂閱者數量、撰寫發送、發送記錄
 - [x] 34 個測試全部通過
+
+## SEO 修復（首頁）
+- [x] 優化頁面標題至 30–60 字元（路邊電台 × 路邊玄學堂｜香港最真實人物訪談）
+- [x] 加入 Meta Description（50–160 字元）
+- [x] 加入關鍵字 Meta 標籤（12 個關鍵字）
+- [x] 加入 Open Graph 標籤（Facebook / WhatsApp 分享預覽）
+- [x] 加入 Twitter Card 標籤
+- [x] 設定 html lang="zh-Hant" 及 canonical URL
+- [x] 首頁 useEffect 動態設定 document.title 及 meta
+- [x] 34 個測試全部通過
