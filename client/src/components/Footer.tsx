@@ -7,8 +7,18 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand */}
           <div>
-            <div className="text-xl font-black mb-2 gradient-text">路邊電台</div>
-            <div className="text-sm mb-1" style={{ color: "oklch(0.55 0.02 60)" }}>香港最真實人物訪談</div>
+            <div className="flex items-center gap-3 mb-3">
+              <img
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663073423209/XJagJnJEiagVDDmfVeExSL/logo_393d1c47.png"
+                alt="路邊 PODCASTS"
+                className="h-14 w-14 rounded-xl object-cover"
+                style={{ filter: "drop-shadow(0 0 8px oklch(0.62 0.24 25 / 0.4))" }}
+              />
+              <div>
+                <div className="text-lg font-black gradient-text">路邊電台</div>
+                <div className="text-xs" style={{ color: "oklch(0.55 0.02 60)" }}>香港最真實人物訪談</div>
+              </div>
+            </div>
             <div className="text-xs mt-3 leading-relaxed" style={{ color: "oklch(0.45 0.02 60)" }}>
               探討兩性關係 × 都市感情 × 專家對談 × 玄學命理<br />
               每週三、日準時上架新節目

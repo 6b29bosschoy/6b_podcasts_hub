@@ -28,10 +28,13 @@ export default function Navbar() {
     <header className="fixed top-0 left-0 right-0 z-50" style={{ background: "oklch(0.08 0.01 260 / 0.92)", backdropFilter: "blur(16px)", borderBottom: "1px solid oklch(0.22 0.02 260)" }}>
       <div className="container flex items-center justify-between h-16">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-black" style={{ background: "linear-gradient(135deg, oklch(0.60 0.22 25), oklch(0.75 0.15 75))" }}>
-            路
-          </div>
+        <Link href="/" className="flex items-center gap-2 group">
+          <img
+            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663073423209/XJagJnJEiagVDDmfVeExSL/logo_393d1c47.png"
+            alt="路邊 PODCASTS"
+            className="h-10 w-10 rounded-lg object-cover transition-transform duration-200 group-hover:scale-105"
+            style={{ filter: "drop-shadow(0 0 6px oklch(0.62 0.24 25 / 0.5))" }}
+          />
           <div className="hidden sm:block">
             <div className="text-sm font-black leading-tight" style={{ color: "oklch(0.92 0.01 60)" }}>路邊電台</div>
             <div className="text-xs" style={{ color: "oklch(0.55 0.02 60)" }}>香港最真實人物訪談</div>
