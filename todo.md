@@ -81,3 +81,13 @@
 - [x] 建立靜態 robots.txt（允許所有爬蟲，封鎖 /admin 及 /api/）
 - [x] sitemap 指向 https://6bpodcasts.com，自動更新 lastmod 為當天日期
 - [x] 34 個測試全部通過
+
+## 各頁面獨立 SEO 優化
+- [x] About.tsx — 關於我們｜Ray Choy 路邊電台創辦人（標題 + Description + 關鍵字 + OG）
+- [x] Services.tsx — 服務項目｜YouTube訪談製作、宣傳推廣、場地租用（標題 + Description + 關鍵字 + OG）
+- [x] Booking.tsx — 玄學服務預約｜風水諮詢、八字命理、塔羅占卜（標題 + Description + 關鍵字 + OG）
+- [x] Blog.tsx — 嘉賓專欄｜路邊電台嘉賓心得與幕後故事（標題 + Description + 關鍵字 + OG）
+- [x] PodcastsPage.tsx — 收聽聲音 PODCASTS｜Apple Podcasts 及 Spotify 收聽（標題 + Description + 關鍵字 + OG）
+- [x] Partnership.tsx — 合作洽談｜品牌置入、內容共創、整合行销（標題 + Description + 關鍵字 + OG）
+- [x] Contact.tsx — 聯絡我們｜商業合作、嘉賓邀請、觀眾反饵（標題 + Description + 關鍵字 + OG）
+- [x] 34 個測試全部通過

@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 const PODCAST_PLATFORMS = [
   {
     name: "Apple Music / Apple Podcasts",
@@ -43,6 +45,20 @@ const FEATURES = [
 ];
 
 export default function PodcastsPage() {
+  useEffect(() => {
+    document.title = "收聽聲音 PODCASTS｜ Apple Podcasts 及 Spotify 收聽";
+    const setMeta = (name: string, content: string, prop = false) => {
+      const attr = prop ? "property" : "name";
+      let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
+      if (!el) { el = document.createElement("meta"); el.setAttribute(attr, name); document.head.appendChild(el); }
+      el.setAttribute("content", content);
+    };
+    setMeta("description", "在 Apple Podcasts、Spotify 收聽「路邊電台」香港最真實訪談 Podcast，隨時隨地收聽兩性關係、玄學命理、都市感情等精彩內容。");
+    setMeta("keywords", "Apple Podcasts,Spotify收聽,路邊電台Podcast,香港Podcast,兩性關係節目,玄學訪談,香港訪談節目");
+    setMeta("og:title", "收聽聲音 PODCASTS｜路邊電台 × 路邊玄學堂", true);
+    setMeta("og:description", "在 Apple Podcasts、Spotify 收聽香港最真實訪談 Podcast，隨時隨地收聽兩性關係、玄學命理等精彩內容。", true);
+    return () => { document.title = "路邊電台 × 路邊玄學堂｜香港最真實人物訪談"; };
+  }, []);
   return (
     <div className="min-h-screen pt-20">
       {/* Hero */}

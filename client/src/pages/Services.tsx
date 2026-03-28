@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link } from "wouter";
 
 const SERVICES = [
@@ -71,6 +72,20 @@ const STATS = [
 ];
 
 export default function Services() {
+  useEffect(() => {
+    document.title = "服務項目｜YouTube訪談製作、宣傳推廣、場地租用";
+    const setMeta = (name: string, content: string, prop = false) => {
+      const attr = prop ? "property" : "name";
+      let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
+      if (!el) { el = document.createElement("meta"); el.setAttribute(attr, name); document.head.appendChild(el); }
+      el.setAttribute("content", content);
+    };
+    setMeta("description", "路邊電台提供 YouTube 訪談製作、品牌宣傳推廣、場地租用及流量優化服務，為你的品牌建立最強大的內容行销策略。");
+    setMeta("keywords", "YouTube訪談製作,場地租用,品牌宣傳,內容行销,香港Podcast制作,流量優化,路邊電台服務");
+    setMeta("og:title", "服務項目｜路邊電台 × 路邊玄學堂", true);
+    setMeta("og:description", "YouTube 訪談製作、宣傳推廣、場地租用及流量優化服務一站式提供。", true);
+    return () => { document.title = "路邊電台 × 路邊玄學堂｜香港最真實人物訪談"; };
+  }, []);
   return (
     <div className="min-h-screen pt-20">
       {/* Hero */}

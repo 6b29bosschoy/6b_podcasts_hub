@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 
@@ -18,6 +19,20 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 export default function Blog() {
+  useEffect(() => {
+    document.title = "嘉賓專欄｜路邊電台嘉賓心得與幕後故事";
+    const setMeta = (name: string, content: string, prop = false) => {
+      const attr = prop ? "property" : "name";
+      let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
+      if (!el) { el = document.createElement("meta"); el.setAttribute(attr, name); document.head.appendChild(el); }
+      el.setAttribute("content", content);
+    };
+    setMeta("description", "路邊電台嘉賓專欄：嘉賓分享訪談後的心得、幕後故事與深度觀點，涉及兩性關係、玄學風水、生活態度等主題。");
+    setMeta("keywords", "嘉賓專欄,路邊電台專欄,心得分享,玄學博客,兩性關係,香港Podcast專欄,訪談幕後故事");
+    setMeta("og:title", "嘉賓專欄｜路邊電台 × 路邊玄學堂", true);
+    setMeta("og:description", "嘉賓分享訪談後的心得、幕後故事與深度觀點，涉及兩性關係、玄學風水、生活態度等主題。", true);
+    return () => { document.title = "路邊電台 × 路邊玄學堂｜香港最真實人物訪談"; };
+  }, []);
   const { data: posts, isLoading } = trpc.blog.list.useQuery({ limit: 20, offset: 0 });
 
   return (

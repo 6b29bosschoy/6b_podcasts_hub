@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { CheckCircle } from "lucide-react";
@@ -15,6 +15,20 @@ const SERVICES = [
 const TIME_SLOTS = ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00", "17:00", "19:00", "20:00"];
 
 export default function Booking() {
+  useEffect(() => {
+    document.title = "玄學服務預約｜風水諮詢、八字命理、塔羅占卜";
+    const setMeta = (name: string, content: string, prop = false) => {
+      const attr = prop ? "property" : "name";
+      let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
+      if (!el) { el = document.createElement("meta"); el.setAttribute(attr, name); document.head.appendChild(el); }
+      el.setAttribute("content", content);
+    };
+    setMeta("description", "線上預約路邊玄學堂玄學服務：風水諮詢、八字命理分析、塔羅占卜、身心靈課程，專業玄學師傅為你解決人生問題。");
+    setMeta("keywords", "風水諮詢,八字命理,塔羅占卜,身心靈課程,玄學服務,香港風水師,路邊玄學堂預約");
+    setMeta("og:title", "玄學服務預約｜路邊玄學堂", true);
+    setMeta("og:description", "線上預約風水諮詢、八字命理、塔羅占卜及身心靈課程，專業玄學師傅為你解決人生問題。", true);
+    return () => { document.title = "路邊電台 × 路邊玄學堂｜香港最真實人物訪談"; };
+  }, []);
   const [submitted, setSubmitted] = useState(false);
   const [selectedService, setSelectedService] = useState("");
   const [form, setForm] = useState({

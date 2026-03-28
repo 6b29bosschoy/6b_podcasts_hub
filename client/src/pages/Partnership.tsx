@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
@@ -31,6 +31,20 @@ const WHY_COLLAB = [
 ];
 
 export default function Partnership() {
+  useEffect(() => {
+    document.title = "合作洽談｜品牌置入、內容共創、整合行销";
+    const setMeta = (name: string, content: string, prop = false) => {
+      const attr = prop ? "property" : "name";
+      let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
+      if (!el) { el = document.createElement("meta"); el.setAttribute(attr, name); document.head.appendChild(el); }
+      el.setAttribute("content", content);
+    };
+    setMeta("description", "與路邊電台合作：品牌置入、內容共創、整合行销方案，觸達香港 16,000+ 粉絲，提升品牌曝光度與轉化率。");
+    setMeta("keywords", "品牌合作,內容共創,整合行销,YouTube廣告,香港Podcast合作,路邊電台合作,KOL合作");
+    setMeta("og:title", "合作洽談｜路邊電台 × 路邊玄學堂", true);
+    setMeta("og:description", "品牌置入、內容共創、整合行销方案，觸達香港 16,000+ 粉絲，提升品牌曝光度與轉化率。", true);
+    return () => { document.title = "路邊電台 × 路邊玄學堂｜香港最真實人物訪談"; };
+  }, []);
   const [form, setForm] = useState({
     name: "",
     company: "",
