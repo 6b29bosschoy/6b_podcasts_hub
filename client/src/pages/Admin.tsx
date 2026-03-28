@@ -4,7 +4,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { toast } from "sonner";
 import { Link } from "wouter";
 
-type Tab = "blogs" | "bookings" | "contacts" | "subscriptions";
+type Tab = "blogs" | "bookings" | "contacts" | "subscriptions" | "push";
 
 const SERVICE_LABELS: Record<string, string> = {
   fengshui: "風水諮詢", bazi: "八字命理", tarot: "塔羅占卜", spiritual: "身心靈療癒", course: "課程報名",
@@ -19,6 +19,9 @@ const CATEGORY_LABELS: Record<string, string> = {
 export default function Admin() {
   const { user, isAuthenticated } = useAuth();
   const [tab, setTab] = useState<Tab>("blogs");
+  const [pushTitle, setPushTitle] = useState("");
+  const [pushBody, setPushBody] = useState("");
+  const [pushUrl, setPushUrl] = useState("/");
 
   const { data: blogs, refetch: refetchBlogs } = trpc.blog.adminList.useQuery(undefined, { enabled: isAuthenticated && user?.role === "admin" });
   const { data: bookings, refetch: refetchBookings } = trpc.booking.adminList.useQuery(undefined, { enabled: isAuthenticated && user?.role === "admin" });
@@ -27,6 +30,17 @@ export default function Admin() {
 
   const approveBlog = trpc.blog.updateStatus.useMutation({ onSuccess: () => { toast.success("已更新文章狀態"); refetchBlogs(); } });
   const updateBooking = trpc.booking.updateStatus.useMutation({ onSuccess: () => { toast.success("已更新預約狀態"); refetchBookings(); } });
+
+  const { data: pushSubCount } = trpc.push.subscriberCount.useQuery(undefined, { enabled: isAuthenticated && user?.role === "admin" });
+  const { data: pushHistory, refetch: refetchPushHistory } = trpc.push.history.useQuery(undefined, { enabled: isAuthenticated && user?.role === "admin" && tab === "push" });
+  const sendPush = trpc.push.send.useMutation({
+    onSuccess: (data) => {
+      toast.success(`推送完成！成功 ${data.sent} 人，失敗 ${data.failed} 人`);
+      setPushTitle(""); setPushBody(""); setPushUrl("/");
+      refetchPushHistory();
+    },
+    onError: () => toast.error("發送失敗，請稍後再試"),
+  });
 
   if (!isAuthenticated || user?.role !== "admin") {
     return (
@@ -45,6 +59,7 @@ export default function Admin() {
     { id: "bookings", label: "預約管理", count: bookings?.filter(b => b.status === "pending").length },
     { id: "contacts", label: "聯絡查詢", count: contacts?.length },
     { id: "subscriptions", label: "訂閱者", count: subscriptions?.length },
+    { id: "push", label: "🔔 推送通知", count: pushSubCount?.count },
   ];
 
   return (
@@ -179,6 +194,103 @@ export default function Admin() {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Push Notifications */}
+        {tab === "push" && (
+          <div className="max-w-2xl">
+            {/* Stats */}
+            <div className="glass-card rounded-xl p-5 mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center text-lg" style={{ background: "oklch(0.62 0.24 25 / 0.15)", border: "1px solid oklch(0.62 0.24 25 / 0.3)" }}>🔔</div>
+                <div>
+                  <div className="text-2xl font-black" style={{ color: "oklch(0.62 0.24 25)" }}>{pushSubCount?.count ?? 0}</div>
+                  <div className="text-xs" style={{ color: "oklch(0.55 0.02 60)" }}>目前活躍訂閱者</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Compose */}
+            <div className="glass-card rounded-xl p-6 mb-6">
+              <h3 className="font-bold mb-4" style={{ color: "oklch(0.88 0.01 60)" }}>發送推送通知</h3>
+              <div className="flex flex-col gap-4">
+                <div>
+                  <label className="text-xs font-bold block mb-1.5" style={{ color: "oklch(0.65 0.02 60)" }}>標題 *</label>
+                  <input
+                    value={pushTitle}
+                    onChange={(e) => setPushTitle(e.target.value)}
+                    placeholder="例：🎙️ 新節目上線！「路邊電台」最新訪談"
+                    maxLength={100}
+                    className="w-full px-3 py-2.5 rounded-lg text-sm outline-none transition-all"
+                    style={{ background: "oklch(0.10 0.01 260)", border: "1px solid oklch(0.25 0.02 260)", color: "oklch(0.88 0.01 60)" }}
+                  />
+                  <div className="text-right text-xs mt-1" style={{ color: "oklch(0.45 0.02 60)" }}>{pushTitle.length}/100</div>
+                </div>
+                <div>
+                  <label className="text-xs font-bold block mb-1.5" style={{ color: "oklch(0.65 0.02 60)" }}>內容 *</label>
+                  <textarea
+                    value={pushBody}
+                    onChange={(e) => setPushBody(e.target.value)}
+                    placeholder="例：今日最新一集已上線，立即收聽！"
+                    maxLength={300}
+                    rows={3}
+                    className="w-full px-3 py-2.5 rounded-lg text-sm outline-none transition-all resize-none"
+                    style={{ background: "oklch(0.10 0.01 260)", border: "1px solid oklch(0.25 0.02 260)", color: "oklch(0.88 0.01 60)" }}
+                  />
+                  <div className="text-right text-xs mt-1" style={{ color: "oklch(0.45 0.02 60)" }}>{pushBody.length}/300</div>
+                </div>
+                <div>
+                  <label className="text-xs font-bold block mb-1.5" style={{ color: "oklch(0.65 0.02 60)" }}>連結 URL（點擊通知後跳轉）</label>
+                  <input
+                    value={pushUrl}
+                    onChange={(e) => setPushUrl(e.target.value)}
+                    placeholder="/"
+                    className="w-full px-3 py-2.5 rounded-lg text-sm outline-none transition-all"
+                    style={{ background: "oklch(0.10 0.01 260)", border: "1px solid oklch(0.25 0.02 260)", color: "oklch(0.88 0.01 60)" }}
+                  />
+                </div>
+                <button
+                  onClick={() => sendPush.mutate({ title: pushTitle, body: pushBody, url: pushUrl })}
+                  disabled={!pushTitle.trim() || !pushBody.trim() || sendPush.isPending || (pushSubCount?.count ?? 0) === 0}
+                  className="w-full py-3 rounded-lg font-bold text-sm transition-all duration-200 hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  style={{ background: "oklch(0.62 0.24 25)", color: "white" }}
+                >
+                  {sendPush.isPending ? (
+                    <>⏳ 發送中...</>
+                  ) : (
+                    <>🔔 發送給全部 {pushSubCount?.count ?? 0} 位訂閱者</>
+                  )}
+                </button>
+                {(pushSubCount?.count ?? 0) === 0 && (
+                  <p className="text-xs text-center" style={{ color: "oklch(0.50 0.02 60)" }}>目前沒有訂閱者，推廣網站後即可開始累積</p>
+                )}
+              </div>
+            </div>
+
+            {/* History */}
+            {pushHistory && pushHistory.length > 0 && (
+              <div>
+                <h3 className="font-bold mb-3" style={{ color: "oklch(0.88 0.01 60)" }}>發送記錄</h3>
+                <div className="flex flex-col gap-3">
+                  {pushHistory.map((h) => (
+                    <div key={h.id} className="glass-card rounded-lg p-4">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1">
+                          <div className="font-bold text-sm mb-1" style={{ color: "oklch(0.88 0.01 60)" }}>{h.title}</div>
+                          <div className="text-xs mb-2" style={{ color: "oklch(0.60 0.02 60)" }}>{h.body}</div>
+                          <div className="text-xs" style={{ color: "oklch(0.45 0.02 60)" }}>{new Date(h.sentAt).toLocaleString("zh-HK")}</div>
+                        </div>
+                        <div className="text-right flex-shrink-0">
+                          <div className="text-sm font-bold" style={{ color: "oklch(0.65 0.20 145)" }}>✓ {h.sentCount}</div>
+                          {h.failedCount > 0 && <div className="text-xs" style={{ color: "oklch(0.55 0.22 25)" }}>✗ {h.failedCount}</div>}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

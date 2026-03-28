@@ -55,3 +55,13 @@
 - [x] 配額超限時自動降級至 7 天 stale 快取，不拋出錯誤至前端
 - [x] 修復 Admin.tsx blog.approve 連結錯誤
 - [x] 修復 Home.tsx TypeScript 類型錯誤
+
+## Web Push Notification 系統
+- [x] 安裝 web-push 套件，生成 VAPID 金鑰
+- [x] 建立 push_subscriptions + push_notifications 資料表
+- [x] 後端 push.ts：subscribe / unsubscribe / sendPushToAll / getPushHistory / getPushSubscriberCount
+- [x] tRPC push router：subscribe, unsubscribe, subscriberCount, send, history procedures
+- [x] 前端 Service Worker sw.js：接收推送、點擊跳轉、震動回饋
+- [x] PushNotificationManager.tsx：訂閱提示 Banner（8秒後出現）+ 浮動鈴鐵按鈕
+- [x] 管理員後台「🔔 推送通知」 Tab：訂閱者數量、撰寫發送、發送記錄
+- [x] 34 個測試全部通過

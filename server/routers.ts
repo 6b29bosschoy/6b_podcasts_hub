@@ -14,6 +14,13 @@ import {
   formatViewCount,
 } from "./youtube";
 import {
+  savePushSubscription,
+  removePushSubscription,
+  sendPushToAll,
+  getPushHistory,
+  getPushSubscriberCount,
+} from "./push";
+import {
   createBlogPost,
   createBooking,
   createContact,
@@ -289,6 +296,67 @@ export const appRouter = router({
         console.warn("[YouTube] getChannels API error:", err);
         return { podcasts: null, fengshui: null };
       }
+    }),
+  }),
+
+  // ─── Web Push Notifications ─────────────────────────────────────────────
+  push: router({
+    /** Subscribe to push notifications */
+    subscribe: publicProcedure
+      .input(z.object({
+        endpoint: z.string().url(),
+        keys: z.object({
+          p256dh: z.string(),
+          auth: z.string(),
+        }),
+        userAgent: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        await savePushSubscription(
+          { endpoint: input.endpoint, keys: input.keys },
+          ctx.user?.id,
+          input.userAgent
+        );
+        return { success: true };
+      }),
+
+    /** Unsubscribe from push notifications */
+    unsubscribe: publicProcedure
+      .input(z.object({ endpoint: z.string() }))
+      .mutation(async ({ input }) => {
+        await removePushSubscription(input.endpoint);
+        return { success: true };
+      }),
+
+    /** Get subscriber count (public) */
+    subscriberCount: publicProcedure.query(async () => {
+      const count = await getPushSubscriberCount();
+      return { count };
+    }),
+
+    /** Send push notification to all subscribers (admin only) */
+    send: protectedProcedure
+      .input(z.object({
+        title: z.string().min(1).max(100),
+        body: z.string().min(1).max(300),
+        url: z.string().optional(),
+        icon: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new Error("Admin only");
+        }
+        const result = await sendPushToAll(
+          { title: input.title, body: input.body, url: input.url, icon: input.icon },
+          ctx.user.id
+        );
+        return result;
+      }),
+
+    /** Get push notification history (admin only) */
+    history: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== "admin") return [];
+      return getPushHistory(30);
     }),
   }),
 

@@ -7,6 +7,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ChatBot from "./components/ChatBot";
+import { PushBellButton, PushPromptBanner } from "./components/PushNotificationManager";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Services from "./pages/Services";
@@ -51,6 +52,8 @@ function App() {
           <Router />
           <Footer />
           <ChatBot />
+          <PushBellButton />
+          <PushPromptBanner />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

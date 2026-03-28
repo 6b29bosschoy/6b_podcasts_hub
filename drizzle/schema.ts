@@ -104,3 +104,35 @@ export const youtubeCache = mysqlTable("youtube_cache", {
 
 export type YoutubeCache = typeof youtubeCache.$inferSelect;
 export type InsertYoutubeCache = typeof youtubeCache.$inferInsert;
+
+// Web Push Notification subscriptions
+export const pushSubscriptions = mysqlTable("push_subscriptions", {
+  id: int("id").autoincrement().primaryKey(),
+  endpoint: text("endpoint").notNull(),
+  p256dh: text("p256dh").notNull(),
+  auth: text("auth").notNull(),
+  userId: int("userId"),
+  userAgent: text("userAgent"),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PushSubscription = typeof pushSubscriptions.$inferSelect;
+export type InsertPushSubscription = typeof pushSubscriptions.$inferInsert;
+
+// Push notification send history
+export const pushNotifications = mysqlTable("push_notifications", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  body: text("body").notNull(),
+  url: varchar("url", { length: 500 }),
+  icon: varchar("icon", { length: 500 }),
+  sentCount: int("sentCount").default(0).notNull(),
+  failedCount: int("failedCount").default(0).notNull(),
+  sentAt: timestamp("sentAt").defaultNow().notNull(),
+  createdBy: int("createdBy"),
+});
+
+export type PushNotification = typeof pushNotifications.$inferSelect;
+export type InsertPushNotification = typeof pushNotifications.$inferInsert;
