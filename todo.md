@@ -1,0 +1,29 @@
+# 6B Podcasts Hub - TODO
+
+## 資料庫 & 後端
+- [x] 設計 schema：blog_posts, subscriptions, bookings, contacts
+- [x] 建立 blog 相關 tRPC procedures
+- [x] 建立 subscription tRPC procedures
+- [x] 建立 booking tRPC procedures
+- [x] 建立 contact tRPC procedures
+- [x] 建立 AI chatbot tRPC procedure（LLM 整合）
+- [x] 新增/預約/聯絡時自動通知 owner
+
+## 前端頁面
+- [x] 全域 CSS 主題（深夜霓虹風格）
+- [x] 頂部導航欄（含社交媒體連結）
+- [x] 首頁（Hero + 最新影片展示 + 社交媒體引流）
+- [x] 部落格列表頁
+- [x] 部落格文章詳情頁
+- [x] 部落格投稿頁（嘉賓提交）
+- [x] 玄學服務預約頁
+- [x] 電郵訂閱組件
+- [x] 聯絡表單頁
+- [x] AI 聊天機器人浮動按鈕
+- [x] 頁腳（Footer）
+- [x] 管理員後台（審核部落格文章）
+- [x] 響應式設計適配
+
+## 測試
+- [x] 後端 procedures 單元測試
+- [x] 前端主要流程測試
