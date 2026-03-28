@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { CheckCircle, Mail, Phone, Youtube, Instagram, Facebook } from "lucide-react";
 import { Link } from "wouter";
+import { JsonLd, buildBreadcrumbSchema, SITE_URL } from "@/components/JsonLd";
 
 const INQUIRY_TYPES = [
   { value: "collaboration", label: "商業合作", desc: "廣告、品牌合作、贊助" },
@@ -78,8 +79,50 @@ export default function Contact() {
     outline: "none",
   };
 
+  const contactSchemas = [
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "@id": `${SITE_URL}/#local-business`,
+      name: "路邊電台 × 路邊玄學堂",
+      alternateName: "6B Podcasts",
+      description: "香港最真實訪談節目平台，提供玄學服務、訪談製作及品牌合作。",
+      url: SITE_URL,
+      email: "6bpodcasts@gmail.com",
+      areaServed: {
+        "@type": "Place",
+        name: "香港",
+      },
+      sameAs: [
+        "https://www.youtube.com/@6bpodcasts",
+        "https://www.facebook.com/6bpodcasts",
+        "https://www.instagram.com/6bpodcasts",
+      ],
+      openingHoursSpecification: [
+        {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          opens: "10:00",
+          closes: "18:00",
+        },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "ContactPage",
+      name: "聯絡我們｜路邊電台",
+      description: "聯絡路邊電台：商業合作洽談、嘉賓邀請申請、觀眾反饨意見，我們會在 48 小時內回覆。",
+      url: `${SITE_URL}/contact`,
+    },
+    buildBreadcrumbSchema([
+      { name: "首頁", url: SITE_URL },
+      { name: "聯絡我們", url: `${SITE_URL}/contact` },
+    ]),
+  ];
+
   return (
     <div className="min-h-screen pt-24 pb-16">
+      <JsonLd data={contactSchemas} id="contact" />
       {/* Header */}
       <div className="py-12 text-center" style={{ background: "oklch(0.10 0.01 260)", borderBottom: "1px solid oklch(0.18 0.02 260)" }}>
         <div className="text-xs font-bold tracking-widest mb-2" style={{ color: "oklch(0.62 0.24 25)" }}>CONTACT</div>

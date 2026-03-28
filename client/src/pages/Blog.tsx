@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
+import { JsonLd, buildBreadcrumbSchema, SITE_URL } from "@/components/JsonLd";
 
 const CATEGORY_LABELS: Record<string, string> = {
   relationship: "兩性關係",
@@ -35,8 +36,29 @@ export default function Blog() {
   }, []);
   const { data: posts, isLoading } = trpc.blog.list.useQuery({ limit: 20, offset: 0 });
 
+  const blogSchemas = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Blog",
+      name: "嘉賓專欄｜路邊電台",
+      description: "路邊電台嘉賓專欄：嘉賓分享訪談後的心得、幕後故事與深度觀點，淼蓋兩性關係、玄學風水、生活態度等主題。",
+      url: `${SITE_URL}/blog`,
+      publisher: {
+        "@type": "Organization",
+        name: "路邊電台 × 路邊玄學堂",
+        url: SITE_URL,
+      },
+      inLanguage: "zh-HK",
+    },
+    buildBreadcrumbSchema([
+      { name: "首頁", url: SITE_URL },
+      { name: "嘉賓專欄", url: `${SITE_URL}/blog` },
+    ]),
+  ];
+
   return (
     <div className="min-h-screen pt-24 pb-16">
+      <JsonLd data={blogSchemas} id="blog" />
       {/* Header */}
       <div className="py-12 text-center" style={{ background: "oklch(0.10 0.01 260)", borderBottom: "1px solid oklch(0.18 0.02 260)" }}>
         <div className="text-xs font-bold tracking-widest mb-2" style={{ color: "oklch(0.62 0.24 25)" }}>GUEST COLUMN</div>

@@ -91,3 +91,14 @@
 - [x] Partnership.tsx — 合作洽談｜品牌置入、內容共創、整合行销（標題 + Description + 關鍵字 + OG）
 - [x] Contact.tsx — 聯絡我們｜商業合作、嘉賓邀請、觀眾反饵（標題 + Description + 關鍵字 + OG）
 - [x] 34 個測試全部通過
+## 結構化資料 (Schema.org JSON-LD)
+
+- [x] 建立可重用 JsonLd 元件 (client/src/components/JsonLd.tsx)
+- [x] 首頁：Organization + WebSite + BreadcrumbList Schema
+- [x] 關於我們：Person (Ray Choy) + Organization Schema
+- [x] 服務項目：Service + ItemList Schema（含 FAQ）
+- [x] 玄學預約：Service + FAQPage Schema（含服務價格）
+- [x] 嘉賓專欄：Blog + BreadcrumbList Schema
+- [x] 收聽 Podcasts：PodcastSeries + BreadcrumbList Schema
+- [x] 合作洽談：ContactPage + BreadcrumbList Schema
+- [x] 聯絡我們：ContactPage + LocalBusiness Schema

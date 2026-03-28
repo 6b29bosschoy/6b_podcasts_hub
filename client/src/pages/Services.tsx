@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "wouter";
+import { JsonLd, buildBreadcrumbSchema, SITE_URL } from "@/components/JsonLd";
 
 const SERVICES = [
   {
@@ -86,8 +87,73 @@ export default function Services() {
     setMeta("og:description", "YouTube 訪談製作、宣傳推廣、場地租用及流量優化服務一站式提供。", true);
     return () => { document.title = "路邊電台 × 路邊玄學堂｜香港最真實人物訪談"; };
   }, []);
+  const servicesSchemas = [
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: "路邊電台服務項目",
+      description: "路邊電台提供 YouTube 訪談製作、宣傳推廣、場地租用及流量優化服務",
+      url: `${SITE_URL}/services`,
+      numberOfItems: SERVICES.length,
+      itemListElement: SERVICES.map((s, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        item: {
+          "@type": "Service",
+          name: s.title,
+          description: s.desc,
+          provider: {
+            "@type": "Organization",
+            name: "路邊電台 × 路邊玄學堂",
+            url: SITE_URL,
+          },
+          areaServed: {
+            "@type": "Place",
+            name: "香港",
+          },
+          serviceType: s.title,
+        },
+      })),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "路邊電台提供哪些服務？",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "路邊電台提供 YouTube 訪談製作、宣傳推廣、市場行銷、影片流量優化及場地租用五大服務，全面支援品牌內容行銷需求。",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "如何與路邊電台洽談合作？",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "可透過「合作洽談」頁面提交詢問表單，或直接 WhatsApp 聯絡 Ray Choy，我們會在 24 小時內回覆。",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "場地租用有哪些設備？",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "場地配備專業攝影棚、燈光設備、高速網路、音響設備及訪談區域，支持按小時、半天或全天彈性租用。",
+          },
+        },
+      ],
+    },
+    buildBreadcrumbSchema([
+      { name: "首頁", url: SITE_URL },
+      { name: "服務項目", url: `${SITE_URL}/services` },
+    ]),
+  ];
+
   return (
     <div className="min-h-screen pt-20">
+      <JsonLd data={servicesSchemas} id="services" />
       {/* Hero */}
       <section className="py-20 relative overflow-hidden" style={{ background: "linear-gradient(180deg, oklch(0.10 0.015 260) 0%, oklch(0.08 0.01 260) 100%)" }}>
         <div className="absolute inset-0 pointer-events-none overflow-hidden">

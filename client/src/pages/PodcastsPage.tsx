@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { JsonLd, buildBreadcrumbSchema, SITE_URL } from "@/components/JsonLd";
 
 const PODCAST_PLATFORMS = [
   {
@@ -59,8 +60,46 @@ export default function PodcastsPage() {
     setMeta("og:description", "在 Apple Podcasts、Spotify 收聽香港最真實訪談 Podcast，隨時隨地收聽兩性關係、玄學命理等精彩內容。", true);
     return () => { document.title = "路邊電台 × 路邊玄學堂｜香港最真實人物訪談"; };
   }, []);
+  const podcastSchemas = [
+    {
+      "@context": "https://schema.org",
+      "@type": "PodcastSeries",
+      name: "路邊電台 - 最真實香港 Podcast",
+      description: "香港最真實訪談 Podcast，探討兩性關係、都市感情、玄學命理，超過 486 集精彩內容完全免費收聴。",
+      url: `${SITE_URL}/podcasts`,
+      webFeed: [
+        {
+          "@type": "DataFeed",
+          name: "Apple Podcasts",
+          url: "https://apple.co/3nhSxy8",
+        },
+        {
+          "@type": "DataFeed",
+          name: "Spotify",
+          url: "https://spoti.fi/30EQPOT",
+        },
+      ],
+      author: {
+        "@type": "Person",
+        name: "Ray Choy",
+      },
+      publisher: {
+        "@type": "Organization",
+        name: "路邊電台 × 路邊玄學堂",
+        url: SITE_URL,
+      },
+      inLanguage: "zh-HK",
+      genre: ["訪談", "兩性關係", "玄學命理", "都市生活"],
+    },
+    buildBreadcrumbSchema([
+      { name: "首頁", url: SITE_URL },
+      { name: "收聽 Podcasts", url: `${SITE_URL}/podcasts` },
+    ]),
+  ];
+
   return (
     <div className="min-h-screen pt-20">
+      <JsonLd data={podcastSchemas} id="podcasts" />
       {/* Hero */}
       <section className="py-20 relative overflow-hidden" style={{ background: "linear-gradient(180deg, oklch(0.10 0.015 260) 0%, oklch(0.08 0.01 260) 100%)" }}>
         <div className="absolute inset-0 pointer-events-none overflow-hidden">

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "wouter";
+import { JsonLd, buildOrganizationSchema, buildBreadcrumbSchema, SITE_URL, LOGO_URL } from "@/components/JsonLd";
 
 const CORE_VALUES = [
   {
@@ -57,8 +58,37 @@ export default function About() {
     setMeta("og:description", "認識路邊電台創辦人 Ray Choy，了解品牌故事、核心價值與創作理念。", true);
     return () => { document.title = "路邊電台 × 路邊玄學堂｜香港最真實人物訪談"; };
   }, []);
+  const aboutSchemas = [
+    buildOrganizationSchema(),
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "@id": `${SITE_URL}/#ray-choy`,
+      name: "Ray Choy",
+      jobTitle: "創辦人 / 主持人",
+      description: "路邊電台創辦人 Ray Choy，香港訪談節目主持人，擅長兩性關係、都市感情與玄學命理訪談。",
+      image: LOGO_URL,
+      url: `${SITE_URL}/about`,
+      sameAs: [
+        "https://www.youtube.com/@6bpodcasts",
+        "https://www.facebook.com/6bpodcasts",
+        "https://www.instagram.com/6bpodcasts",
+      ],
+      worksFor: {
+        "@type": "Organization",
+        name: "KT Creative Firm Ltd",
+        alternateName: "路天邊制作有限公司",
+      },
+    },
+    buildBreadcrumbSchema([
+      { name: "首頁", url: SITE_URL },
+      { name: "關於我們", url: `${SITE_URL}/about` },
+    ]),
+  ];
+
   return (
     <div className="min-h-screen pt-20">
+      <JsonLd data={aboutSchemas} id="about" />
       {/* Hero */}
       <section className="py-20 relative overflow-hidden" style={{ background: "linear-gradient(180deg, oklch(0.10 0.015 260) 0%, oklch(0.08 0.01 260) 100%)" }}>
         <div className="absolute inset-0 pointer-events-none overflow-hidden">

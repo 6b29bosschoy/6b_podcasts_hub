@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { CheckCircle } from "lucide-react";
 import { Link } from "wouter";
+import { JsonLd, buildBreadcrumbSchema, SITE_URL } from "@/components/JsonLd";
 
 const SERVICES = [
   { value: "fengshui", label: "風水諮詢", icon: "🧭", desc: "家居、辦公室風水佈局分析，改善運勢與財運" },
@@ -92,8 +93,105 @@ export default function Booking() {
     outline: "none",
   };
 
+  const bookingSchemas = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      name: "路邊玄學堂玄學服務",
+      description: "香港專業玄學服務，提供風水診詢、八字命理、塔羅占卜及身心靈療癒課程",
+      url: `${SITE_URL}/booking`,
+      provider: {
+        "@type": "Organization",
+        name: "路邊玄學堂",
+        url: SITE_URL,
+      },
+      areaServed: { "@type": "Place", name: "香港" },
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "玄學服務專案",
+        itemListElement: [
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "風水診詢",
+              description: "家居、辦公室風水佈局分析，改善運勢與財運",
+            },
+            priceRange: "HK$500-HK$800",
+            priceCurrency: "HKD",
+          },
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "八字命理",
+              description: "根據生辰八字分析個人運程、事業、感情走向",
+            },
+            priceRange: "HK$1000-HK$1500",
+            priceCurrency: "HKD",
+          },
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "塔羅占卜",
+              description: "塔羅牌解讀，為你的人生問題提供指引",
+            },
+            priceRange: "HK$500-HK$800",
+            priceCurrency: "HKD",
+          },
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "玄學課程",
+              description: "風水、命理、塔羅相關課程報名",
+            },
+            priceRange: "HK$2000-HK$5000",
+            priceCurrency: "HKD",
+          },
+        ],
+      },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "玄學服務收費是多少？",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "風水診詢 HK$500-800，八字命理 HK$1,000-1,500，塔羅占卜 HK$500-800，玄學課程 HK$2,000-5,000。詳情請聯絡我們確認。",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "預約後多久會確認？",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "提交預約後，我們會在 24 小時內透過電郵或 WhatsApp 確認預約詳情及時間安排。",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "玄學診詢是面對面還是線上進行？",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "我們提供面對面及線上（Zoom/WhatsApp）兩種形式，方便香港及海外客戶。",
+          },
+        },
+      ],
+    },
+    buildBreadcrumbSchema([
+      { name: "首頁", url: SITE_URL },
+      { name: "玄學服務預約", url: `${SITE_URL}/booking` },
+    ]),
+  ];
+
   return (
     <div className="min-h-screen pt-24 pb-16">
+      <JsonLd data={bookingSchemas} id="booking" />
       {/* Header */}
       <div className="py-12 text-center" style={{ background: "oklch(0.10 0.01 260)", borderBottom: "1px solid oklch(0.18 0.02 260)" }}>
         <div className="text-xs font-bold tracking-widest mb-2" style={{ color: "oklch(0.78 0.16 75)" }}>BOOKING</div>

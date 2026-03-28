@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import SubscribeBox from "@/components/SubscribeBox";
 import { trpc } from "@/lib/trpc";
 import { Loader2, Play, Eye, Clock } from "lucide-react";
+import { JsonLd, buildOrganizationSchema, buildWebSiteSchema, SITE_URL } from "@/components/JsonLd";
 
 const SOCIAL_PLATFORMS = [
   {
@@ -216,8 +217,21 @@ export default function Home() {
   type VideoItem = { id: string; title: string; thumbnail: string | null; url: string; viewCount: string; publishedAt: string; duration: string | null; channelTitle?: string | null; channelId?: string | null };
   const videos = (videosData?.videos ?? []) as VideoItem[];
 
+  const homeSchemas = [
+    buildOrganizationSchema(),
+    buildWebSiteSchema(),
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "首頁", item: SITE_URL },
+      ],
+    },
+  ];
+
   return (
     <div className="min-h-screen">
+      <JsonLd data={homeSchemas} id="home" />
       {/* Hero Section */}
       <section className="hero-gradient pt-32 pb-20 relative overflow-hidden">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">

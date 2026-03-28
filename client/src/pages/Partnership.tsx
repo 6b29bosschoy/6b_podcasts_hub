@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { JsonLd, buildBreadcrumbSchema, SITE_URL } from "@/components/JsonLd";
 
 const COLLAB_TYPES = [
   {
@@ -81,8 +82,44 @@ export default function Partnership() {
     });
   };
 
+  const partnershipSchemas = [
+    {
+      "@context": "https://schema.org",
+      "@type": "ContactPage",
+      name: "合作洽談｜路邊電台",
+      description: "與路邊電台合作：品牌置入、內容共創、整合行銷方案，觸達香港 16,000+ 粉絲，提升品牌曝光度與轉化率。",
+      url: `${SITE_URL}/partnership`,
+      mainEntity: {
+        "@type": "Organization",
+        name: "路邊電台 × 路邊玄學堂",
+        url: SITE_URL,
+        contactPoint: {
+          "@type": "ContactPoint",
+          contactType: "sales",
+          availableLanguage: ["zh-HK"],
+        },
+      },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: "合作方式",
+      itemListElement: COLLAB_TYPES.map((c, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: c.title,
+        description: c.desc,
+      })),
+    },
+    buildBreadcrumbSchema([
+      { name: "首頁", url: SITE_URL },
+      { name: "合作洽談", url: `${SITE_URL}/partnership` },
+    ]),
+  ];
+
   return (
     <div className="min-h-screen pt-20">
+      <JsonLd data={partnershipSchemas} id="partnership" />
       {/* Hero */}
       <section className="py-20 relative overflow-hidden" style={{ background: "linear-gradient(180deg, oklch(0.10 0.015 260) 0%, oklch(0.08 0.01 260) 100%)" }}>
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
