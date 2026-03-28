@@ -75,3 +75,9 @@
 - [x] 設定 html lang="zh-Hant" 及 canonical URL
 - [x] 首頁 useEffect 動態設定 document.title 及 meta
 - [x] 34 個測試全部通過
+
+## SEO - Sitemap & robots.txt
+- [x] 建立動態 /sitemap.xml 端點（列出 8 個頁面，含 lastmod / changefreq / priority）
+- [x] 建立靜態 robots.txt（允許所有爬蟲，封鎖 /admin 及 /api/）
+- [x] sitemap 指向 https://6bpodcasts.com，自動更新 lastmod 為當天日期
+- [x] 34 個測試全部通過

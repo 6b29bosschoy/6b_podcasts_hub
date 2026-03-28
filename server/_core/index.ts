@@ -35,7 +35,34 @@ async function startServer() {
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
-  // tRPC API
+
+  // ── Sitemap ──────────────────────────────────────────────────────────────────
+  app.get("/sitemap.xml", (_req, res) => {
+    const baseUrl = "https://6bpodcasts.com";
+    const now = new Date().toISOString().split("T")[0];
+    const pages = [
+      { loc: "/",           changefreq: "daily",   priority: "1.0" },
+      { loc: "/about",      changefreq: "monthly",  priority: "0.8" },
+      { loc: "/services",   changefreq: "monthly",  priority: "0.8" },
+      { loc: "/booking",    changefreq: "weekly",   priority: "0.9" },
+      { loc: "/blog",       changefreq: "daily",   priority: "0.9" },
+      { loc: "/podcasts",   changefreq: "weekly",   priority: "0.8" },
+      { loc: "/partnership",changefreq: "monthly",  priority: "0.7" },
+      { loc: "/contact",    changefreq: "monthly",  priority: "0.6" },
+    ];
+    const urls = pages
+      .map(
+        (p) =>
+          `  <url>\n    <loc>${baseUrl}${p.loc}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>${p.changefreq}</changefreq>\n    <priority>${p.priority}</priority>\n  </url>`
+      )
+      .join("\n");
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>`;
+    res.setHeader("Content-Type", "application/xml; charset=utf-8");
+    res.setHeader("Cache-Control", "public, max-age=3600");
+    res.send(xml);
+  });
+
+  // ── tRPC API
   app.use(
     "/api/trpc",
     createExpressMiddleware({

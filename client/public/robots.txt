@@ -1,0 +1,14 @@
+# robots.txt for 6bpodcasts.com
+# 路邊電台 × 路邊玄學堂
+
+User-agent: *
+Allow: /
+
+# Block admin panel from search engines
+Disallow: /admin
+
+# Block API routes
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://6bpodcasts.com/sitemap.xml
