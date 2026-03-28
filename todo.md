@@ -27,3 +27,11 @@
 ## 測試
 - [x] 後端 procedures 單元測試
 - [x] 前端主要流程測試
+
+## YouTube API 整合
+- [x] 設定 YOUTUBE_API_KEY 環境變數
+- [x] 建立 server/youtube.ts（resolveChannelId, getChannelInfo, getLatestVideos, parseDuration, formatViewCount）
+- [x] 在 routers.ts 加入 youtube.getVideos 及 youtube.getChannels tRPC procedures
+- [x] 更新 Home.tsx：以真實 YouTube 數據替換靜態影片，加入頻道篩選 tabs、縮圖、觀看數、時間
+- [x] 首頁社交平台區顯示即時訂閱人數
+- [x] 撰寫 youtube.test.ts 並通過所有 23 個測試

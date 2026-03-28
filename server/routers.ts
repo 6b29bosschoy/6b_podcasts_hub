@@ -7,6 +7,13 @@ import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
 import { notifyOwner } from "./_core/notification";
 import {
+  getLatestVideos,
+  getChannelInfo,
+  resolveChannelId,
+  parseDuration,
+  formatViewCount,
+} from "./youtube";
+import {
   createBlogPost,
   createBooking,
   createContact,
@@ -193,6 +200,64 @@ export const appRouter = router({
         if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
         return getAllContacts();
       }),
+  }),
+
+  // ─── YouTube ──────────────────────────────────────────────────────────────
+  youtube: router({
+    /**
+     * Returns latest videos from both channels.
+     * Results are cached in-memory for 10 minutes to avoid burning API quota.
+     */
+    getVideos: publicProcedure
+      .input(
+        z.object({
+          channel: z.enum(["podcasts", "fengshui", "all"]).default("all"),
+          limit: z.number().min(1).max(12).default(6),
+        }).optional()
+      )
+      .query(async ({ input }) => {
+        const channel = input?.channel ?? "all";
+        const limit = input?.limit ?? 6;
+
+        // Resolve channel handles to IDs (cached per process)
+        const [podcastsId, fengshuiId] = await Promise.all([
+          resolveChannelId("6bpodcasts"),
+          resolveChannelId("6bfengshui"),
+        ]);
+
+        if (channel === "podcasts") {
+          const videos = await getLatestVideos(podcastsId, limit);
+          return { videos: videos.map((v) => ({ ...v, duration: parseDuration(v.duration), viewCount: formatViewCount(v.viewCount) })) };
+        }
+        if (channel === "fengshui") {
+          const videos = await getLatestVideos(fengshuiId, limit);
+          return { videos: videos.map((v) => ({ ...v, duration: parseDuration(v.duration), viewCount: formatViewCount(v.viewCount) })) };
+        }
+
+        // "all" — fetch both in parallel, interleave by date
+        const [pVideos, fVideos] = await Promise.all([
+          getLatestVideos(podcastsId, limit),
+          getLatestVideos(fengshuiId, limit),
+        ]);
+        const merged = [...pVideos, ...fVideos]
+          .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+          .slice(0, limit * 2);
+        return {
+          videos: merged.map((v) => ({ ...v, duration: parseDuration(v.duration), viewCount: formatViewCount(v.viewCount) })),
+        };
+      }),
+
+    getChannels: publicProcedure.query(async () => {
+      const [podcastsId, fengshuiId] = await Promise.all([
+        resolveChannelId("6bpodcasts"),
+        resolveChannelId("6bfengshui"),
+      ]);
+      const [podcasts, fengshui] = await Promise.all([
+        getChannelInfo(podcastsId),
+        getChannelInfo(fengshuiId),
+      ]);
+      return { podcasts, fengshui };
+    }),
   }),
 
   // ─── AI Chatbot ───────────────────────────────────────────────────────────
