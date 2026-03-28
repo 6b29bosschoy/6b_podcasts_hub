@@ -88,3 +88,19 @@ export const contacts = mysqlTable("contacts", {
 
 export type Contact = typeof contacts.$inferSelect;
 export type InsertContact = typeof contacts.$inferInsert;
+
+// YouTube API cache — reduces quota consumption
+// cacheKey: e.g. "channel:6bpodcasts", "videos:all:6"
+// data: JSON stringified payload
+// expiresAt: cache TTL (24h for channel IDs, 1h for video lists)
+export const youtubeCache = mysqlTable("youtube_cache", {
+  id: int("id").autoincrement().primaryKey(),
+  cacheKey: varchar("cacheKey", { length: 255 }).notNull().unique(),
+  data: text("data").notNull(),
+  expiresAt: timestamp("expiresAt").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type YoutubeCache = typeof youtubeCache.$inferSelect;
+export type InsertYoutubeCache = typeof youtubeCache.$inferInsert;

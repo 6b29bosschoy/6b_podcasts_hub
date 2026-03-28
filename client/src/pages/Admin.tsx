@@ -25,7 +25,7 @@ export default function Admin() {
   const { data: contacts } = trpc.contact.adminList.useQuery(undefined, { enabled: isAuthenticated && user?.role === "admin" });
   const { data: subscriptions } = trpc.subscription.adminList.useQuery(undefined, { enabled: isAuthenticated && user?.role === "admin" });
 
-  const approveBlog = trpc.blog.approve.useMutation({ onSuccess: () => { toast.success("已更新文章狀態"); refetchBlogs(); } });
+  const approveBlog = trpc.blog.updateStatus.useMutation({ onSuccess: () => { toast.success("已更新文章狀態"); refetchBlogs(); } });
   const updateBooking = trpc.booking.updateStatus.useMutation({ onSuccess: () => { toast.success("已更新預約狀態"); refetchBookings(); } });
 
   if (!isAuthenticated || user?.role !== "admin") {

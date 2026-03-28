@@ -48,3 +48,10 @@
 
 ## 影片卡片互動優化
 - [x] 首頁影片卡片：鼠標懸停時自動播放 YouTube 影片預覽
+
+## YouTube API 配額修復
+- [x] 建立 youtube_cache 資料表（頻道 ID + 影片列表，TTL 24h）
+- [x] 後端優先讀快取，失效才呼叫 YouTube API（頻道 ID 快取 24h，影片列表快取 1h）
+- [x] 配額超限時自動降級至 7 天 stale 快取，不拋出錯誤至前端
+- [x] 修復 Admin.tsx blog.approve 連結錯誤
+- [x] 修復 Home.tsx TypeScript 類型錯誤

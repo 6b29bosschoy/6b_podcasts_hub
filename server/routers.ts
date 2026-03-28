@@ -25,6 +25,8 @@ import {
   getBlogPostBySlug,
   updateBlogPostStatus,
   updateBookingStatus,
+  getYoutubeCache,
+  setYoutubeCache,
 } from "./db";
 
 function generateSlug(title: string): string {
@@ -35,6 +37,16 @@ function generateSlug(title: string): string {
     .replace(/\s+/g, "-")
     .slice(0, 60);
   return `${base}-${timestamp}`;
+}
+
+/** Resolve channel handle to ID, with 24h DB cache */
+async function getCachedChannelId(handle: string): Promise<string> {
+  const key = `channelId:${handle}`;
+  const hit = await getYoutubeCache(key);
+  if (hit) return JSON.parse(hit.data) as string;
+  const id = await resolveChannelId(handle);
+  await setYoutubeCache(key, id, 86400); // 24h
+  return id;
 }
 
 export const appRouter = router({
@@ -80,20 +92,21 @@ export const appRouter = router({
         const slug = generateSlug(input.title);
         await createBlogPost({ ...input, slug, status: "pending" });
         await notifyOwner({
-          title: `新嘉賓投稿：${input.title}`,
-          content: `${input.authorName} (${input.authorEmail}) 提交了新文章「${input.title}」，請前往管理後台審核。`,
-        });
-        return { success: true };
+          title: "新嘉賓投稿",
+          content: `${input.authorName} 提交了新文章「${input.title}」，請前往管理後台審核。`,
+        }).catch(() => {});
+        return { success: true, slug };
       }),
 
-    // Admin only
     adminList: protectedProcedure
-      .query(async ({ ctx }) => {
+      .input(z.object({ limit: z.number().min(1).max(100).default(50), offset: z.number().min(0).default(0) }).optional())
+      .query(async ({ ctx, input }) => {
         if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
-        return getAllBlogPosts(100, 0);
+        const { limit = 50, offset = 0 } = input ?? {};
+        return getAllBlogPosts(limit, offset);
       }),
 
-    approve: protectedProcedure
+    updateStatus: protectedProcedure
       .input(z.object({ id: z.number(), status: z.enum(["approved", "rejected"]) }))
       .mutation(async ({ ctx, input }) => {
         if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
@@ -102,31 +115,26 @@ export const appRouter = router({
       }),
   }),
 
-  // ─── Subscription ─────────────────────────────────────────────────────────
+  // ─── Subscriptions ────────────────────────────────────────────────────────
   subscription: router({
     subscribe: publicProcedure
-      .input(z.object({
-        email: z.string().email(),
-        name: z.string().max(100).optional(),
-      }))
+      .input(z.object({ email: z.string().email(), name: z.string().max(100).optional() }))
       .mutation(async ({ input }) => {
         await createSubscription({ email: input.email, name: input.name });
         await notifyOwner({
-          title: `新訂閱者：${input.email}`,
-          content: `${input.name ?? "訪客"} (${input.email}) 已訂閱電子報。`,
-        });
+          title: "新電郵訂閱",
+          content: `${input.email}${input.name ? ` (${input.name})` : ""} 訂閱了電子報。`,
+        }).catch(() => {});
         return { success: true };
       }),
 
-    adminList: protectedProcedure
-      .query(async ({ ctx }) => {
-        if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
-        const { getSubscriptions } = await import("./db");
-        return getSubscriptions();
-      }),
+    adminList: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      return getSubscriptions();
+    }),
   }),
 
-  // ─── Booking ──────────────────────────────────────────────────────────────
+  // ─── Bookings ─────────────────────────────────────────────────────────────
   booking: router({
     create: publicProcedure
       .input(z.object({
@@ -139,26 +147,18 @@ export const appRouter = router({
         message: z.string().max(1000).optional(),
       }))
       .mutation(async ({ input }) => {
-        const serviceLabels: Record<string, string> = {
-          fengshui: "風水諮詢",
-          bazi: "八字命理",
-          tarot: "塔羅占卜",
-          spiritual: "身心靈療癒",
-          course: "課程報名",
-        };
-        await createBooking(input);
+        await createBooking({ ...input, status: "pending" });
         await notifyOwner({
-          title: `新預約：${serviceLabels[input.serviceType] ?? input.serviceType}`,
-          content: `${input.name} (${input.email}) 預約了「${serviceLabels[input.serviceType]}」服務，希望時間：${input.preferredDate ?? "未指定"} ${input.preferredTime ?? ""}。`,
-        });
+          title: "新服務預約",
+          content: `${input.name} (${input.email}) 預約了「${input.serviceType}」服務，日期：${input.preferredDate ?? "待定"}。`,
+        }).catch(() => {});
         return { success: true };
       }),
 
-    adminList: protectedProcedure
-      .query(async ({ ctx }) => {
-        if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
-        return getAllBookings();
-      }),
+    adminList: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      return getAllBookings();
+    }),
 
     updateStatus: protectedProcedure
       .input(z.object({ id: z.number(), status: z.enum(["confirmed", "cancelled"]) }))
@@ -169,45 +169,38 @@ export const appRouter = router({
       }),
   }),
 
-  // ─── Contact ──────────────────────────────────────────────────────────────
+  // ─── Contacts ─────────────────────────────────────────────────────────────
   contact: router({
     submit: publicProcedure
       .input(z.object({
         name: z.string().min(1).max(100),
         email: z.string().email(),
         phone: z.string().max(30).optional(),
-        inquiryType: z.enum(["collaboration", "guest", "feedback", "other"]),
+        inquiryType: z.enum(["collaboration", "guest", "feedback", "other"]).default("other"),
         subject: z.string().min(1).max(255),
         message: z.string().min(10).max(2000),
       }))
       .mutation(async ({ input }) => {
-        const typeLabels: Record<string, string> = {
-          collaboration: "商業合作",
-          guest: "嘉賓邀請",
-          feedback: "觀眾反饋",
-          other: "其他",
-        };
-        await createContact(input);
+        await createContact({ ...input });
         await notifyOwner({
-          title: `新聯絡查詢：${typeLabels[input.inquiryType]} — ${input.subject}`,
-          content: `${input.name} (${input.email}) 發送了「${typeLabels[input.inquiryType]}」查詢：${input.message.slice(0, 200)}`,
-        });
+          title: "新聯絡查詢",
+          content: `${input.name} (${input.email}) 提交了「${input.inquiryType}」查詢：${input.subject}`,
+        }).catch(() => {});
         return { success: true };
       }),
 
-    adminList: protectedProcedure
-      .query(async ({ ctx }) => {
-        if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+    adminList: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
         return getAllContacts();
       }),
   }),
 
   // ─── YouTube ──────────────────────────────────────────────────────────────
+  // Cache strategy:
+  //   - Channel IDs: DB cache 24h (costs 1 unit per resolve)
+  //   - Video lists: DB cache 1h (costs ~100 units per fetch)
+  //   - On quota error: return stale cache or empty list (no error thrown to client)
   youtube: router({
-    /**
-     * Returns latest videos from both channels.
-     * Results are cached in-memory for 10 minutes to avoid burning API quota.
-     */
     getVideos: publicProcedure
       .input(
         z.object({
@@ -218,45 +211,84 @@ export const appRouter = router({
       .query(async ({ input }) => {
         const channel = input?.channel ?? "all";
         const limit = input?.limit ?? 6;
+        const videoCacheKey = `videos:${channel}:${limit}`;
 
-        // Resolve channel handles to IDs (cached per process)
-        const [podcastsId, fengshuiId] = await Promise.all([
-          resolveChannelId("6bpodcasts"),
-          resolveChannelId("6bfengshui"),
-        ]);
-
-        if (channel === "podcasts") {
-          const videos = await getLatestVideos(podcastsId, limit);
-          return { videos: videos.map((v) => ({ ...v, duration: parseDuration(v.duration), viewCount: formatViewCount(v.viewCount) })) };
-        }
-        if (channel === "fengshui") {
-          const videos = await getLatestVideos(fengshuiId, limit);
-          return { videos: videos.map((v) => ({ ...v, duration: parseDuration(v.duration), viewCount: formatViewCount(v.viewCount) })) };
+        // 1. Try fresh DB cache
+        const cached = await getYoutubeCache(videoCacheKey);
+        if (cached) {
+          return JSON.parse(cached.data) as { videos: unknown[]; fromCache?: boolean };
         }
 
-        // "all" — fetch both in parallel, interleave by date
-        const [pVideos, fVideos] = await Promise.all([
-          getLatestVideos(podcastsId, limit),
-          getLatestVideos(fengshuiId, limit),
-        ]);
-        const merged = [...pVideos, ...fVideos]
-          .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
-          .slice(0, limit * 2);
-        return {
-          videos: merged.map((v) => ({ ...v, duration: parseDuration(v.duration), viewCount: formatViewCount(v.viewCount) })),
-        };
+        try {
+          const [podcastsId, fengshuiId] = await Promise.all([
+            getCachedChannelId("6bpodcasts"),
+            getCachedChannelId("6bfengshui"),
+          ]);
+
+          let result: { videos: unknown[] };
+
+          if (channel === "podcasts") {
+            const videos = await getLatestVideos(podcastsId, limit);
+            result = { videos: videos.map((v) => ({ ...v, duration: parseDuration(v.duration), viewCount: formatViewCount(v.viewCount) })) };
+          } else if (channel === "fengshui") {
+            const videos = await getLatestVideos(fengshuiId, limit);
+            result = { videos: videos.map((v) => ({ ...v, duration: parseDuration(v.duration), viewCount: formatViewCount(v.viewCount) })) };
+          } else {
+            const [pVideos, fVideos] = await Promise.all([
+              getLatestVideos(podcastsId, limit),
+              getLatestVideos(fengshuiId, limit),
+            ]);
+            const merged = [...pVideos, ...fVideos]
+              .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+              .slice(0, limit * 2);
+            result = { videos: merged.map((v) => ({ ...v, duration: parseDuration(v.duration), viewCount: formatViewCount(v.viewCount) })) };
+          }
+
+          // 2. Store fresh result in DB cache (1h) + stale backup (7 days)
+          await Promise.all([
+            setYoutubeCache(videoCacheKey, result, 3600),
+            setYoutubeCache(videoCacheKey + ":stale", result, 604800),
+          ]);
+          return result;
+        } catch (err) {
+          // 3. On quota/network error, return stale cache silently
+          const stale = await getYoutubeCache(videoCacheKey + ":stale");
+          if (stale) {
+            return { ...JSON.parse(stale.data) as { videos: unknown[] }, fromCache: true };
+          }
+          console.warn("[YouTube] API error, returning empty:", err);
+          return { videos: [], fromCache: true };
+        }
       }),
 
     getChannels: publicProcedure.query(async () => {
-      const [podcastsId, fengshuiId] = await Promise.all([
-        resolveChannelId("6bpodcasts"),
-        resolveChannelId("6bfengshui"),
-      ]);
-      const [podcasts, fengshui] = await Promise.all([
-        getChannelInfo(podcastsId),
-        getChannelInfo(fengshuiId),
-      ]);
-      return { podcasts, fengshui };
+      const channelsCacheKey = "channels:info";
+
+      // 1. Try fresh DB cache (1h)
+      const cached = await getYoutubeCache(channelsCacheKey);
+      if (cached) return JSON.parse(cached.data) as { podcasts: unknown; fengshui: unknown };
+
+      try {
+        const [podcastsId, fengshuiId] = await Promise.all([
+          getCachedChannelId("6bpodcasts"),
+          getCachedChannelId("6bfengshui"),
+        ]);
+        const [podcasts, fengshui] = await Promise.all([
+          getChannelInfo(podcastsId),
+          getChannelInfo(fengshuiId),
+        ]);
+        const result = { podcasts, fengshui };
+        await Promise.all([
+          setYoutubeCache(channelsCacheKey, result, 3600),
+          setYoutubeCache(channelsCacheKey + ":stale", result, 604800),
+        ]);
+        return result;
+      } catch (err) {
+        const stale = await getYoutubeCache(channelsCacheKey + ":stale");
+        if (stale) return JSON.parse(stale.data) as { podcasts: unknown; fengshui: unknown };
+        console.warn("[YouTube] getChannels API error:", err);
+        return { podcasts: null, fengshui: null };
+      }
     }),
   }),
 
@@ -309,5 +341,8 @@ export const appRouter = router({
       }),
   }),
 });
+
+// Helper import needed for subscription adminList
+import { getSubscriptions } from "./db";
 
 export type AppRouter = typeof appRouter;

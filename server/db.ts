@@ -10,11 +10,13 @@ import {
   InsertSubscription,
   InsertUser,
   Subscription,
+  YoutubeCache,
   blogPosts,
   bookings,
   contacts,
   subscriptions,
   users,
+  youtubeCache,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
@@ -156,4 +158,39 @@ export async function getAllContacts(): Promise<Contact[]> {
   const db = await getDb();
   if (!db) return [];
   return db.select().from(contacts).orderBy(desc(contacts.createdAt));
+}
+
+// ─── YouTube Cache ──────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Read a cache entry. Returns null if not found or expired.
+ */
+export async function getYoutubeCache(cacheKey: string): Promise<YoutubeCache | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(youtubeCache)
+    .where(eq(youtubeCache.cacheKey, cacheKey))
+    .limit(1);
+  if (result.length === 0) return null;
+  const row = result[0];
+  // Check expiry
+  if (row.expiresAt < new Date()) {
+    // Expired — delete asynchronously, don’t block the caller
+    db.delete(youtubeCache).where(eq(youtubeCache.cacheKey, cacheKey)).catch(() => {});
+    return null;
+  }
+  return row;
+}
+
+/**
+ * Write (upsert) a cache entry with a given TTL in seconds.
+ */
+export async function setYoutubeCache(cacheKey: string, data: unknown, ttlSeconds: number): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  const expiresAt = new Date(Date.now() + ttlSeconds * 1000);
+  const serialized = JSON.stringify(data);
+  await db.insert(youtubeCache)
+    .values({ cacheKey, data: serialized, expiresAt })
+    .onDuplicateKeyUpdate({ set: { data: serialized, expiresAt, updatedAt: new Date() } });
 }

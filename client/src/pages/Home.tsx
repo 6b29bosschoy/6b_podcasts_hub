@@ -200,7 +200,8 @@ export default function Home() {
     staleTime: 30 * 60 * 1000, // cache 30 minutes
   });
 
-  const videos = videosData?.videos ?? [];
+  type VideoItem = { id: string; title: string; thumbnail: string | null; url: string; viewCount: string; publishedAt: string; duration: string | null; channelTitle?: string | null; channelId?: string | null };
+  const videos = (videosData?.videos ?? []) as VideoItem[];
 
   return (
     <div className="min-h-screen">
@@ -258,10 +259,11 @@ export default function Home() {
             {SOCIAL_PLATFORMS.map((p) => {
               // Inject live subscriber count for YouTube channels
               let desc = p.fallbackDesc;
+              type ChannelInfo = { subscriberCount: string; id: string };
               if (p.descKey === "podcasts" && channelsData?.podcasts) {
-                desc = formatSubscriberCount(channelsData.podcasts.subscriberCount);
+                desc = formatSubscriberCount((channelsData.podcasts as ChannelInfo).subscriberCount);
               } else if (p.descKey === "fengshui" && channelsData?.fengshui) {
-                desc = formatSubscriberCount(channelsData.fengshui.subscriberCount);
+                desc = formatSubscriberCount((channelsData.fengshui as ChannelInfo).subscriberCount);
               }
               return (
                 <a
@@ -346,7 +348,8 @@ export default function Home() {
           {!videosLoading && !videosError && videos.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {videos.map((v) => {
-                const isFengshui = v.channelTitle?.includes("玄學") || v.channelId === channelsData?.fengshui?.id;
+                type ChannelInfo2 = { id: string };
+                const isFengshui = v.channelTitle?.includes("玄學") || v.channelId === (channelsData?.fengshui as ChannelInfo2 | null | undefined)?.id;
                 return (
                   <VideoCard key={v.id} v={v} isFengshui={isFengshui} />
                 );
