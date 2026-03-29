@@ -129,3 +129,10 @@
 - [x] 首頁：投稿表單 Dialog（類別、內容、匿名選項）
 - [x] 管理後台：Admin.tsx 加入 📨 讀者投稿審核 tab
 - [x] Vitest 測試覆蓋（57 個測試全部通過）
+
+## Landing Page 投稿區塊 (/welcome)
+
+- [x] Welcome.tsx：加入「分享你的故事」內嵌投稿表單（類別、內容、暱稱、匿名）
+- [x] 複用 submission.submit tRPC 程序，提交後顯示成功提示
+- [x] 區塊設計配合 Landing Page 深色霧虹風格
+- [x] 更新 welcome.test.ts 測試覆蓋（64 個測試全部通過）

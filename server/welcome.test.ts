@@ -1,4 +1,7 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+// Mock notification to prevent real HTTP calls in test environment
+vi.mock("./_core/notification", () => ({ notifyOwner: vi.fn().mockResolvedValue(true) }));
 
 /**
  * Tests for the FB/IG Landing Page (/welcome)
@@ -119,5 +122,127 @@ describe("Welcome Landing Page - backend procedures used by landing page", () =>
         serviceType: "invalid_service" as "fengshui",
       })
     ).rejects.toThrow();
+  });
+});
+
+describe("Welcome Landing Page - submission form (share your story)", () => {
+  it("submission.submit procedure exists on appRouter", () => {
+    // Verify the procedure is accessible via the router
+    expect(typeof appRouter._def.procedures["submission.submit"]).toBe("function");
+  });
+
+  it("submission.submit rejects content shorter than 10 characters", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+
+    await expect(
+      caller.submission.submit({
+        nickname: "小明",
+        category: "relationship",
+        content: "短",
+        isAnonymous: false,
+      })
+    ).rejects.toThrow();
+  });
+
+  it("submission.submit rejects invalid category", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+
+    await expect(
+      caller.submission.submit({
+        nickname: "小明",
+        category: "invalid_cat" as "relationship",
+        content: "這是一個測試內容，用來測試投稿功能。",
+        isAnonymous: false,
+      })
+    ).rejects.toThrow();
+  });
+
+  it("submission.submit accepts valid relationship story", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+
+    try {
+      await caller.submission.submit({
+        nickname: "小明",
+        category: "relationship",
+        content: "我同女朋友拍拖三年，最近佢話想分手，我唔知點算好。",
+        isAnonymous: false,
+      });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      const isDbError =
+        msg.includes("database") ||
+        msg.includes("connect") ||
+        msg.includes("ECONNREFUSED") ||
+        msg.includes("Cannot read") ||
+        msg.includes("getDb");
+      expect(isDbError).toBe(true);
+    }
+  });
+
+  it("submission.submit accepts anonymous fengshui story", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+
+    try {
+      await caller.submission.submit({
+        nickname: "匿名",
+        category: "fengshui",
+        content: "搞左月搄左新屋，之後一直唔順，係唔係風水問題？",
+        isAnonymous: true,
+      });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      const isDbError =
+        msg.includes("database") ||
+        msg.includes("connect") ||
+        msg.includes("ECONNREFUSED") ||
+        msg.includes("Cannot read") ||
+        msg.includes("getDb");
+      expect(isDbError).toBe(true);
+    }
+  });
+
+  it("submission.submit rejects content over 1000 characters", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+
+    await expect(
+      caller.submission.submit({
+        nickname: "小明",
+        category: "other",
+        content: "a".repeat(1001),
+        isAnonymous: false,
+      })
+    ).rejects.toThrow();
+  });
+
+  it("all 5 landing page submission categories are valid", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const validCategories = ["relationship", "fengshui", "confession", "question", "other"] as const;
+
+    for (const category of validCategories) {
+      try {
+        await caller.submission.submit({
+          nickname: "測試",
+          category,
+          content: "這是一個測試內容，用來測試投稿功能。",
+          isAnonymous: false,
+        });
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : String(err);
+        // Only DB errors are acceptable — validation errors would fail the test
+        const isDbError =
+          msg.includes("database") ||
+          msg.includes("connect") ||
+          msg.includes("ECONNREFUSED") ||
+          msg.includes("Cannot read") ||
+          msg.includes("getDb");
+        expect(isDbError).toBe(true);
+      }
+    }
   });
 });

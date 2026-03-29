@@ -2,7 +2,8 @@ import { useEffect, useState, useRef } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { JsonLd, buildBreadcrumbSchema, buildOrganizationSchema, SITE_URL, LOGO_URL, BRAND_NAME } from "@/components/JsonLd";
-import { Play, ChevronRight, Star, Users, Youtube, Instagram, Facebook, Mic, Sparkles, ExternalLink, Volume2 } from "lucide-react";
+import { Play, ChevronRight, Star, Users, Youtube, Instagram, Facebook, Mic, Sparkles, ExternalLink, Volume2, PenLine, Send, CheckCircle2, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -147,12 +148,58 @@ function VideoCard({ video, featured = false }: { video: VideoItem; featured?: b
   );
 }
 
+// ─── Category config ─────────────────────────────────────────────────────────
+
+type SubmitCategory = "relationship" | "fengshui" | "confession" | "question" | "other";
+
+const SUBMIT_CATEGORIES: { value: SubmitCategory; label: string; emoji: string; color: string }[] = [
+  { value: "relationship", label: "感情故事", emoji: "💕", color: "oklch(0.62 0.24 25)" },
+  { value: "fengshui",     label: "玄學奇遇", emoji: "🔮", color: "oklch(0.65 0.20 290)" },
+  { value: "confession",   label: "心底話",   emoji: "💬", color: "oklch(0.60 0.18 200)" },
+  { value: "question",     label: "問題想問", emoji: "🙋", color: "oklch(0.65 0.20 145)" },
+  { value: "other",        label: "其他",     emoji: "✨", color: "oklch(0.78 0.16 75)" },
+];
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function Welcome() {
   // UTM source detection
   const [utmSource, setUtmSource] = useState<string | null>(null);
   const heroRef = useRef<HTMLDivElement>(null);
+
+  // ── Submission form state ────────────────────────────────────────────────
+  const [submitCategory, setSubmitCategory] = useState<SubmitCategory>("relationship");
+  const [submitContent, setSubmitContent] = useState("");
+  const [submitNickname, setSubmitNickname] = useState("");
+  const [submitAnonymous, setSubmitAnonymous] = useState(false);
+  const [submitDone, setSubmitDone] = useState(false);
+
+  const submitMutation = trpc.submission.submit.useMutation({
+    onSuccess: () => {
+      setSubmitDone(true);
+      setSubmitContent("");
+      setSubmitNickname("");
+      setSubmitAnonymous(false);
+      setSubmitCategory("relationship");
+    },
+    onError: (err) => {
+      toast.error("投稿失敗，請稍後再試", { description: err.message });
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (submitContent.trim().length < 10) {
+      toast.error("內容太短", { description: "請輸入至少 10 個字" });
+      return;
+    }
+    submitMutation.mutate({
+      nickname: submitAnonymous ? "匿名" : submitNickname.trim() || "讀者",
+      category: submitCategory,
+      content: submitContent.trim(),
+      isAnonymous: submitAnonymous,
+    });
+  };
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -504,6 +551,179 @@ export default function Welcome() {
                 <ChevronRight size={15} />
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Share Your Story ─────────────────────────────────────────────────── */}
+      <section
+        id="share"
+        className="py-14 px-4"
+        style={{
+          background: "linear-gradient(180deg, oklch(0.10 0.015 260) 0%, oklch(0.09 0.012 260) 100%)",
+          scrollMarginTop: "64px",
+        }}
+      >
+        <div className="max-w-2xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="text-xs font-bold tracking-widest mb-2" style={{ color: "oklch(0.62 0.24 25)" }}>SHARE YOUR STORY</div>
+            <h2 className="text-xl md:text-2xl font-black mb-2" style={{ color: "oklch(0.92 0.01 60)" }}>
+              分享你嘅故事
+            </h2>
+            <p className="text-sm" style={{ color: "oklch(0.55 0.02 60)" }}>
+              每一個故事都值得被聆聽，精選投稿將展示喺首頁，有機會喺節目中被討論
+            </p>
+          </div>
+
+          {/* Card */}
+          <div
+            className="rounded-2xl p-6 md:p-8 relative overflow-hidden"
+            style={{
+              background: "oklch(0.11 0.015 260)",
+              border: "1px solid oklch(0.20 0.025 260)",
+              boxShadow: "0 8px 40px oklch(0 0 0 / 0.3)",
+            }}
+          >
+            {/* Ambient glow */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{ background: "radial-gradient(ellipse at top left, oklch(0.62 0.24 25 / 0.06) 0%, transparent 60%)" }}
+            />
+
+            {submitDone ? (
+              /* ── Success state ── */
+              <div className="relative text-center py-6">
+                <CheckCircle2
+                  size={48}
+                  className="mx-auto mb-4"
+                  style={{ color: "oklch(0.65 0.20 145)" }}
+                />
+                <h3 className="text-lg font-black mb-2" style={{ color: "oklch(0.92 0.01 60)" }}>
+                  投稿成功！🎉
+                </h3>
+                <p className="text-sm mb-6" style={{ color: "oklch(0.55 0.02 60)" }}>
+                  感謝你嘅分享，我哋會盡快審核。<br />
+                  精選投稿將展示喺路邊電台首頁。
+                </p>
+                <button
+                  onClick={() => setSubmitDone(false)}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all hover:opacity-90"
+                  style={{
+                    background: "oklch(0.78 0.16 75 / 0.15)",
+                    border: "1px solid oklch(0.78 0.16 75 / 0.4)",
+                    color: "oklch(0.78 0.16 75)",
+                  }}
+                >
+                  <PenLine size={14} />
+                  再投一個故事
+                </button>
+              </div>
+            ) : (
+              /* ── Form ── */
+              <form onSubmit={handleSubmit} className="relative space-y-5">
+                {/* Category pills */}
+                <div>
+                  <div className="text-xs font-bold mb-2" style={{ color: "oklch(0.65 0.02 60)" }}>選擇類別</div>
+                  <div className="flex flex-wrap gap-2">
+                    {SUBMIT_CATEGORIES.map((cat) => (
+                      <button
+                        key={cat.value}
+                        type="button"
+                        onClick={() => setSubmitCategory(cat.value)}
+                        className="px-3 py-1.5 rounded-full text-xs font-bold transition-all"
+                        style={{
+                          background: submitCategory === cat.value ? `${cat.color}20` : "oklch(0.16 0.02 260)",
+                          border: `1px solid ${submitCategory === cat.value ? `${cat.color}60` : "oklch(0.24 0.025 260)"}`,
+                          color: submitCategory === cat.value ? cat.color : "oklch(0.55 0.02 60)",
+                          transform: submitCategory === cat.value ? "scale(1.05)" : "scale(1)",
+                        }}
+                      >
+                        {cat.emoji} {cat.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Content textarea */}
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className="text-xs font-bold" style={{ color: "oklch(0.65 0.02 60)" }}>你嘅故事 / 問題</div>
+                    <div className="text-xs" style={{ color: "oklch(0.40 0.02 60)" }}>{submitContent.length}/1000</div>
+                  </div>
+                  <textarea
+                    value={submitContent}
+                    onChange={(e) => setSubmitContent(e.target.value.slice(0, 1000))}
+                    placeholder="盡情分享你嘅感情故事、玄學奇遇、心底話，或者想問路邊電台嘅問題…（最少 10 字）"
+                    rows={4}
+                    className="w-full rounded-xl px-4 py-3 text-sm resize-none outline-none transition-all"
+                    style={{
+                      background: "oklch(0.14 0.018 260)",
+                      border: `1px solid ${submitContent.length > 0 ? "oklch(0.35 0.04 260)" : "oklch(0.22 0.025 260)"}`,
+                      color: "oklch(0.88 0.01 60)",
+                    }}
+                  />
+                </div>
+
+                {/* Nickname row */}
+                <div className="flex gap-2 items-center">
+                  <div className="flex-1">
+                    <div className="text-xs font-bold mb-1.5" style={{ color: "oklch(0.65 0.02 60)" }}>你嘅名字（花名都得）</div>
+                    <input
+                      type="text"
+                      value={submitNickname}
+                      onChange={(e) => setSubmitNickname(e.target.value.slice(0, 50))}
+                      placeholder={submitAnonymous ? "匿名投稿" : "例如：小明、Coco…"}
+                      disabled={submitAnonymous}
+                      className="w-full rounded-xl px-4 py-2.5 text-sm outline-none transition-all"
+                      style={{
+                        background: "oklch(0.14 0.018 260)",
+                        border: "1px solid oklch(0.22 0.025 260)",
+                        color: "oklch(0.88 0.01 60)",
+                        opacity: submitAnonymous ? 0.5 : 1,
+                      }}
+                    />
+                  </div>
+                  <div className="flex-shrink-0 pt-5">
+                    <button
+                      type="button"
+                      onClick={() => setSubmitAnonymous((v) => !v)}
+                      className="px-3 py-2.5 rounded-xl text-xs font-bold transition-all"
+                      style={{
+                        background: submitAnonymous ? "oklch(0.55 0.20 250 / 0.2)" : "oklch(0.16 0.02 260)",
+                        border: `1px solid ${submitAnonymous ? "oklch(0.55 0.20 250 / 0.5)" : "oklch(0.24 0.025 260)"}`,
+                        color: submitAnonymous ? "oklch(0.75 0.15 250)" : "oklch(0.55 0.02 60)",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {submitAnonymous ? "🙈 匿名中" : "匿名"}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Submit button */}
+                <button
+                  type="submit"
+                  disabled={submitMutation.isPending || submitContent.trim().length < 10}
+                  className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-sm transition-all hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{
+                    background: "linear-gradient(135deg, oklch(0.60 0.22 25), oklch(0.75 0.15 75))",
+                    color: "white",
+                    boxShadow: submitContent.trim().length >= 10 ? "0 4px 20px oklch(0.60 0.22 25 / 0.35)" : "none",
+                  }}
+                >
+                  {submitMutation.isPending ? (
+                    <><Loader2 size={15} className="animate-spin" /> 提交中…</>
+                  ) : (
+                    <><Send size={15} /> 立即投稿 ✉️</>
+                  )}
+                </button>
+
+                <p className="text-center text-xs" style={{ color: "oklch(0.38 0.02 60)" }}>
+                  投稿內容將由我哋團隊審核，通過後展示喺首頁
+                </p>
+              </form>
+            )}
           </div>
         </div>
       </section>
