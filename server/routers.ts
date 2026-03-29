@@ -101,15 +101,40 @@ export const appRouter = router({
         excerpt: z.string().max(500).optional(),
         content: z.string().min(50),
         category: z.enum(["relationship", "fengshui", "lifestyle", "interview", "other"]),
+        imageUrls: z.array(z.string().url()).max(5).optional(),
+        links: z.array(z.object({ title: z.string().max(100), url: z.string().url() })).max(3).optional(),
       }))
       .mutation(async ({ input }) => {
         const slug = generateSlug(input.title);
-        await createBlogPost({ ...input, slug, status: "pending" });
+        const { imageUrls, links, ...rest } = input;
+        await createBlogPost({
+          ...rest,
+          slug,
+          status: "pending",
+          images: JSON.stringify(imageUrls ?? []),
+          links: JSON.stringify(links ?? []),
+        });
         await notifyOwner({
           title: "新嘉賓投稿",
-          content: `${input.authorName} 提交了新文章「${input.title}」，請前往管理後台審核。`,
+          content: `${input.authorName} 提交了新文章「${input.title}」${imageUrls?.length ? `（含 ${imageUrls.length} 張圖片）` : ""}，請前往管理後台審核。`,
         }).catch(() => {});
         return { success: true, slug };
+      }),
+
+    uploadImage: publicProcedure
+      .input(z.object({
+        filename: z.string().max(255),
+        contentType: z.enum(["image/jpeg", "image/png", "image/webp", "image/gif"]),
+        base64: z.string().max(3_000_000), // ~2MB base64
+      }))
+      .mutation(async ({ input }) => {
+        const MAX_BYTES = 2 * 1024 * 1024;
+        const buf = Buffer.from(input.base64, "base64");
+        if (buf.byteLength > MAX_BYTES) throw new TRPCError({ code: "BAD_REQUEST", message: "圖片大小不得超過 2MB" });
+        const ext = input.contentType.split("/")[1];
+        const key = `blog-images/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+        const { url } = await storagePut(key, buf, input.contentType);
+        return { url };
       }),
 
     adminList: protectedProcedure

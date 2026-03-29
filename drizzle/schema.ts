@@ -36,6 +36,10 @@ export const blogPosts = mysqlTable("blog_posts", {
   content: text("content").notNull(),
   category: mysqlEnum("category", ["relationship", "fengshui", "lifestyle", "interview", "other"]).default("other").notNull(),
   status: mysqlEnum("status", ["pending", "approved", "rejected"]).default("pending").notNull(),
+  // JSON array of S3 image URLs (max 5), stored as varchar to support TiDB default value
+  images: varchar("images", { length: 5000 }).default("[]").notNull(),
+  // JSON array of { title, url } link objects (max 3)
+  links: varchar("links", { length: 2000 }).default("[]").notNull(),
   publishedAt: timestamp("publishedAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

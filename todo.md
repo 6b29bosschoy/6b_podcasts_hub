@@ -150,3 +150,15 @@
 - [x] 前端：首頁投稿展示卡片支援圖片輪播（有圖片時顯示）
 - [x] 前端：Landing Page 投稿表單同步升級支援圖片上傳
 - [x] Vitest 測試更新覆蓋新功能（64 個測試全部通過）
+
+## 嘉賓投稿升級（圖片上傳 + 連結 + 燈箱放大）
+
+- [x] DB Schema：blog_posts 加入 images (varchar 5000, JSON 陣列) 及 links (varchar 2000, JSON 陣列) 欄位
+- [x] 後端：blog.submit 更新支援 imageUrls 及 links 陣列參數
+- [x] 後端：blog.adminList 及 blog.getPost 回傳 images 及 links 欄位
+- [x] 前端：BlogSubmit.tsx 加入 ImageUploader 元件（最多5張、每張≤2MB）
+- [x] 前端：BlogSubmit.tsx 加入連結欄位（最多3條，含標題 + URL）
+- [x] 前端：建立可重用 Lightbox 元件（點擊圖片放大、鍵盤/點擊關閉、左右切換）
+- [x] 前端：Admin.tsx 嘉賓文章審核卡片加入圖片縮圖（點擊放大 Lightbox）及連結顯示
+- [x] 前端：Blog 文章詳情頁加入圖片輪播及連結展示區塊
+- [x] Vitest 64 個測試全部通過，零 TypeScript 錯誤

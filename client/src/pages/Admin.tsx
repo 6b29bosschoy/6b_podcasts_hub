@@ -3,6 +3,8 @@ import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { toast } from "sonner";
 import { Link } from "wouter";
+import { ExternalLink } from "lucide-react";
+import Lightbox from "@/components/Lightbox";
 
 type Tab = "blogs" | "bookings" | "contacts" | "subscriptions" | "push" | "submissions";
 
@@ -19,6 +21,11 @@ const CATEGORY_LABELS: Record<string, string> = {
 export default function Admin() {
   const { user, isAuthenticated } = useAuth();
   const [tab, setTab] = useState<Tab>("blogs");
+  // Lightbox state for blog post images
+  const [lightboxImages, setLightboxImages] = useState<string[]>([]);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const openLightbox = (images: string[], idx = 0) => { setLightboxImages(images); setLightboxIndex(idx); };
+  const closeLightbox = () => setLightboxImages([]);
   const [pushTitle, setPushTitle] = useState("");
   const [pushBody, setPushBody] = useState("");
   const [pushUrl, setPushUrl] = useState("/");
@@ -96,35 +103,89 @@ export default function Admin() {
         {/* Blog Posts */}
         {tab === "blogs" && (
           <div className="flex flex-col gap-4">
-            {!blogs?.length ? <p style={{ color: "oklch(0.55 0.02 60)" }}>暫時沒有投稿</p> : blogs.map((post) => (
-              <div key={post.id} className="glass-card rounded-xl p-5">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs px-2 py-0.5 rounded font-bold" style={{ background: post.status === "pending" ? "oklch(0.78 0.16 75 / 0.2)" : post.status === "approved" ? "oklch(0.65 0.20 145 / 0.2)" : "oklch(0.55 0.22 25 / 0.2)", color: post.status === "pending" ? "oklch(0.78 0.16 75)" : post.status === "approved" ? "oklch(0.65 0.20 145)" : "oklch(0.55 0.22 25)" }}>
-                        {post.status === "pending" ? "待審核" : post.status === "approved" ? "已發佈" : "已拒絕"}
-                      </span>
-                      <span className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>{CATEGORY_LABELS[post.category]}</span>
+            {!blogs?.length ? <p style={{ color: "oklch(0.55 0.02 60)" }}>暫時沒有投稿</p> : blogs.map((post) => {
+              const postImages: string[] = (() => { try { return JSON.parse(post.images || "[]"); } catch { return []; } })();
+              const postLinks: { title: string; url: string }[] = (() => { try { return JSON.parse(post.links || "[]"); } catch { return []; } })();
+              const statusBg = post.status === "pending" ? "oklch(0.78 0.16 75 / 0.2)" : post.status === "approved" ? "oklch(0.65 0.20 145 / 0.2)" : "oklch(0.55 0.22 25 / 0.2)";
+              const statusColor = post.status === "pending" ? "oklch(0.78 0.16 75)" : post.status === "approved" ? "oklch(0.65 0.20 145)" : "oklch(0.55 0.22 25)";
+              return (
+                <div key={post.id} className="glass-card rounded-xl p-5">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                        <span className="text-xs px-2 py-0.5 rounded font-bold" style={{ background: statusBg, color: statusColor }}>
+                          {post.status === "pending" ? "待審核" : post.status === "approved" ? "已發佈" : "已拒絕"}
+                        </span>
+                        <span className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>{CATEGORY_LABELS[post.category]}</span>
+                        {postImages.length > 0 && (
+                          <span className="text-xs px-2 py-0.5 rounded" style={{ background: "oklch(0.25 0.04 260)", color: "oklch(0.70 0.08 260)" }}>
+                            🖼 {postImages.length} 張圖片
+                          </span>
+                        )}
+                        {postLinks.length > 0 && (
+                          <span className="text-xs px-2 py-0.5 rounded" style={{ background: "oklch(0.22 0.04 200)", color: "oklch(0.65 0.12 200)" }}>
+                            🔗 {postLinks.length} 條連結
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="font-bold mb-1" style={{ color: "oklch(0.88 0.01 60)" }}>{post.title}</h3>
+                      <p className="text-xs" style={{ color: "oklch(0.55 0.02 60)" }}>{post.authorName} · {post.authorEmail}</p>
+                      {post.authorBio && <p className="text-xs mt-0.5 italic" style={{ color: "oklch(0.48 0.02 60)" }}>{post.authorBio}</p>}
+                      {post.excerpt && <p className="text-xs mt-2 line-clamp-2" style={{ color: "oklch(0.50 0.02 60)" }}>{post.excerpt}</p>}
+
+                      {/* Image thumbnails */}
+                      {postImages.length > 0 && (
+                        <div className="flex gap-2 mt-3 flex-wrap">
+                          {postImages.map((imgUrl, idx) => (
+                            <button
+                              key={idx}
+                              type="button"
+                              onClick={() => openLightbox(postImages, idx)}
+                              className="rounded-lg overflow-hidden transition-all hover:scale-105 hover:ring-2"
+                              style={{ width: 64, height: 64, flexShrink: 0 }}
+                              title="點擊放大"
+                            >
+                              <img src={imgUrl} alt={`圖片 ${idx + 1}`} className="w-full h-full object-cover" />
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Links */}
+                      {postLinks.length > 0 && (
+                        <div className="flex flex-col gap-1 mt-3">
+                          {postLinks.map((link, idx) => (
+                            <a
+                              key={idx}
+                              href={link.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 text-xs hover:opacity-80 transition-opacity"
+                              style={{ color: "oklch(0.62 0.18 200)" }}
+                            >
+                              <ExternalLink size={11} />
+                              {link.title || link.url}
+                            </a>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                    <h3 className="font-bold mb-1" style={{ color: "oklch(0.88 0.01 60)" }}>{post.title}</h3>
-                    <p className="text-xs" style={{ color: "oklch(0.55 0.02 60)" }}>{post.authorName} · {post.authorEmail}</p>
-                    {post.excerpt && <p className="text-xs mt-2 line-clamp-2" style={{ color: "oklch(0.50 0.02 60)" }}>{post.excerpt}</p>}
+                    {post.status === "pending" && (
+                      <div className="flex gap-2 flex-shrink-0">
+                        <button onClick={() => approveBlog.mutate({ id: post.id, status: "approved" })}
+                          className="px-3 py-1.5 rounded text-xs font-bold" style={{ background: "oklch(0.65 0.20 145)", color: "white" }}>
+                          批准
+                        </button>
+                        <button onClick={() => approveBlog.mutate({ id: post.id, status: "rejected" })}
+                          className="px-3 py-1.5 rounded text-xs font-bold" style={{ background: "oklch(0.55 0.22 25)", color: "white" }}>
+                          拒絕
+                        </button>
+                      </div>
+                    )}
                   </div>
-                  {post.status === "pending" && (
-                    <div className="flex gap-2 flex-shrink-0">
-                      <button onClick={() => approveBlog.mutate({ id: post.id, status: "approved" })}
-                        className="px-3 py-1.5 rounded text-xs font-bold" style={{ background: "oklch(0.65 0.20 145)", color: "white" }}>
-                        批准
-                      </button>
-                      <button onClick={() => approveBlog.mutate({ id: post.id, status: "rejected" })}
-                        className="px-3 py-1.5 rounded text-xs font-bold" style={{ background: "oklch(0.55 0.22 25)", color: "white" }}>
-                        拒絕
-                      </button>
-                    </div>
-                  )}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
@@ -344,13 +405,20 @@ export default function Admin() {
                     </div>
                   </div>
 
-                  {/* Image thumbnails */}
+                  {/* Image thumbnails — click to open Lightbox */}
                   {imgs.length > 0 && (
                     <div className="flex gap-2 flex-wrap">
                       {imgs.map((url, i) => (
-                        <a key={i} href={url} target="_blank" rel="noopener noreferrer">
-                          <img src={url} alt={`圖片${i+1}`} className="w-20 h-20 object-cover rounded-lg hover:opacity-80 transition-opacity" style={{ border: "1px solid oklch(0.22 0.025 260)" }} />
-                        </a>
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => openLightbox(imgs, i)}
+                          className="rounded-lg overflow-hidden transition-all hover:scale-105 hover:opacity-90"
+                          style={{ width: 80, height: 80, flexShrink: 0, border: "1px solid oklch(0.22 0.025 260)" }}
+                          title="點擊放大"
+                        >
+                          <img src={url} alt={`圖片${i+1}`} className="w-full h-full object-cover" />
+                        </button>
                       ))}
                     </div>
                   )}
@@ -406,6 +474,17 @@ export default function Admin() {
           </div>
         )}
       </div>
+
+      {/* Lightbox for image preview */}
+      {lightboxImages.length > 0 && (
+        <Lightbox
+          images={lightboxImages}
+          currentIndex={lightboxIndex}
+          onClose={closeLightbox}
+          onPrev={() => setLightboxIndex((i) => Math.max(0, i - 1))}
+          onNext={() => setLightboxIndex((i) => Math.min(lightboxImages.length - 1, i + 1))}
+        />
+      )}
     </div>
   );
 }
