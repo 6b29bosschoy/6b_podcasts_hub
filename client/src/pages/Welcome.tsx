@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { JsonLd, buildBreadcrumbSchema, buildOrganizationSchema, SITE_URL, LOGO_URL, BRAND_NAME } from "@/components/JsonLd";
 import { Play, ChevronRight, Star, Users, Youtube, Instagram, Facebook, Mic, Sparkles, ExternalLink, Volume2, PenLine, Send, CheckCircle2, Loader2 } from "lucide-react";
+import ImageUploader, { type UploadedImage } from "@/components/ImageUploader";
 import { toast } from "sonner";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -173,6 +174,7 @@ export default function Welcome() {
   const [submitNickname, setSubmitNickname] = useState("");
   const [submitAnonymous, setSubmitAnonymous] = useState(false);
   const [submitDone, setSubmitDone] = useState(false);
+  const [submitImages, setSubmitImages] = useState<UploadedImage[]>([]);
 
   const submitMutation = trpc.submission.submit.useMutation({
     onSuccess: () => {
@@ -181,6 +183,7 @@ export default function Welcome() {
       setSubmitNickname("");
       setSubmitAnonymous(false);
       setSubmitCategory("relationship");
+      setSubmitImages([]);
     },
     onError: (err) => {
       toast.error("投稿失敗，請稍後再試", { description: err.message });
@@ -198,6 +201,7 @@ export default function Welcome() {
       category: submitCategory,
       content: submitContent.trim(),
       isAnonymous: submitAnonymous,
+      imageUrls: submitImages.map((img) => img.url),
     });
   };
 
@@ -665,6 +669,19 @@ export default function Welcome() {
                   />
                 </div>
 
+                {/* Image upload */}
+                <div>
+                  <div className="text-xs font-bold mb-1.5" style={{ color: "oklch(0.65 0.02 60)" }}>
+                    附上圖片 <span style={{ color: "oklch(0.40 0.02 60)", fontWeight: 400 }}>（可選，最多 5 張，每張 ≤ 2MB）</span>
+                  </div>
+                  <ImageUploader
+                    images={submitImages}
+                    onImagesChange={setSubmitImages}
+                    disabled={submitMutation.isPending}
+                    dark={true}
+                  />
+                </div>
+
                 {/* Nickname row */}
                 <div className="flex gap-2 items-center">
                   <div className="flex-1">
@@ -715,7 +732,7 @@ export default function Welcome() {
                   {submitMutation.isPending ? (
                     <><Loader2 size={15} className="animate-spin" /> 提交中…</>
                   ) : (
-                    <><Send size={15} /> 立即投稿 ✉️</>
+                    <><Send size={15} /> 立即投稿 ✉️{submitImages.length > 0 && ` (+${submitImages.length}📷)`}</>
                   )}
                 </button>
 

@@ -19,7 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Heart, PenLine, MessageSquareHeart, ChevronRight, Loader2 } from "lucide-react";
+import { Heart, PenLine, MessageSquareHeart, ChevronRight, Loader2, ChevronLeft, Image as ImageIcon } from "lucide-react";
+import ImageUploader, { type UploadedImage } from "@/components/ImageUploader";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -32,6 +33,62 @@ const CATEGORY_LABELS: Record<Category, { label: string; emoji: string; color: s
   question:     { label: "問題想問", emoji: "🙋", color: "oklch(0.65 0.20 145)" },
   other:        { label: "其他",     emoji: "✨", color: "oklch(0.78 0.16 75)" },
 };
+
+// ─── Image Carousel ───────────────────────────────────────────────────────────
+
+function ImageCarousel({ urls }: { urls: string[] }) {
+  const [idx, setIdx] = useState(0);
+  if (urls.length === 0) return null;
+
+  const prev = () => setIdx((i) => (i - 1 + urls.length) % urls.length);
+  const next = () => setIdx((i) => (i + 1) % urls.length);
+
+  return (
+    <div className="relative rounded-xl overflow-hidden mb-3" style={{ aspectRatio: "16/9", background: "oklch(0.08 0.01 260)" }}>
+      <img
+        src={urls[idx]}
+        alt={`圖片 ${idx + 1}`}
+        className="w-full h-full object-cover"
+      />
+      {urls.length > 1 && (
+        <>
+          <button
+            onClick={prev}
+            className="absolute left-1.5 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center transition-opacity hover:opacity-100 opacity-70"
+            style={{ background: "oklch(0 0 0 / 0.6)" }}
+          >
+            <ChevronLeft size={14} color="white" />
+          </button>
+          <button
+            onClick={next}
+            className="absolute right-1.5 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center transition-opacity hover:opacity-100 opacity-70"
+            style={{ background: "oklch(0 0 0 / 0.6)" }}
+          >
+            <ChevronRight size={14} color="white" />
+          </button>
+          {/* Dots */}
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+            {urls.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setIdx(i)}
+                className="w-1.5 h-1.5 rounded-full transition-all"
+                style={{ background: i === idx ? "white" : "oklch(1 0 0 / 0.4)" }}
+              />
+            ))}
+          </div>
+          {/* Counter */}
+          <div
+            className="absolute top-2 right-2 text-xs px-1.5 py-0.5 rounded"
+            style={{ background: "oklch(0 0 0 / 0.55)", color: "white", fontSize: "10px" }}
+          >
+            {idx + 1}/{urls.length}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
 
 // ─── Submission Card ──────────────────────────────────────────────────────────
 
@@ -47,12 +104,24 @@ function SubmissionCard({
     likes: number;
     isAnonymous: boolean;
     createdAt: Date | string;
+    images?: string | null;
   };
   onLike: (id: number) => void;
 }) {
   const [liked, setLiked] = useState(false);
   const [localLikes, setLocalLikes] = useState(item.likes);
   const cat = CATEGORY_LABELS[item.category] ?? CATEGORY_LABELS.other;
+
+  // Parse images JSON
+  let imageUrls: string[] = [];
+  try {
+    if (item.images && item.images !== "[]") {
+      const parsed = JSON.parse(item.images);
+      if (Array.isArray(parsed)) imageUrls = parsed.filter((u): u is string => typeof u === "string");
+    }
+  } catch {
+    imageUrls = [];
+  }
 
   const handleLike = () => {
     if (liked) return;
@@ -70,56 +139,73 @@ function SubmissionCard({
 
   return (
     <div
-      className="flex flex-col rounded-2xl p-5 transition-all hover:translate-y-[-2px]"
+      className="flex flex-col rounded-2xl overflow-hidden transition-all hover:translate-y-[-2px]"
       style={{
         background: "oklch(0.11 0.015 260)",
         border: "1px solid oklch(0.20 0.02 260)",
         boxShadow: "0 2px 12px oklch(0 0 0 / 0.2)",
       }}
     >
-      {/* Category badge */}
-      <div className="flex items-center justify-between mb-3">
-        <span
-          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold"
-          style={{
-            background: `${cat.color}18`,
-            border: `1px solid ${cat.color}40`,
-            color: cat.color,
-          }}
-        >
-          {cat.emoji} {cat.label}
-        </span>
-        <span className="text-xs" style={{ color: "oklch(0.42 0.01 60)" }}>
-          {dateStr}
-        </span>
-      </div>
+      {/* Image carousel (if any) */}
+      {imageUrls.length > 0 && (
+        <div className="px-4 pt-4">
+          <ImageCarousel urls={imageUrls} />
+        </div>
+      )}
 
-      {/* Content */}
-      <p
-        className="flex-1 text-sm leading-relaxed line-clamp-5 mb-4"
-        style={{ color: "oklch(0.78 0.01 60)" }}
-      >
-        {item.content}
-      </p>
+      <div className="flex flex-col flex-1 p-5">
+        {/* Category badge */}
+        <div className="flex items-center justify-between mb-3">
+          <span
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold"
+            style={{
+              background: `${cat.color}18`,
+              border: `1px solid ${cat.color}40`,
+              color: cat.color,
+            }}
+          >
+            {cat.emoji} {cat.label}
+          </span>
+          <div className="flex items-center gap-1.5">
+            {imageUrls.length > 0 && (
+              <span className="flex items-center gap-0.5 text-xs" style={{ color: "oklch(0.42 0.01 60)" }}>
+                <ImageIcon size={10} />
+                {imageUrls.length}
+              </span>
+            )}
+            <span className="text-xs" style={{ color: "oklch(0.42 0.01 60)" }}>
+              {dateStr}
+            </span>
+          </div>
+        </div>
 
-      {/* Footer */}
-      <div className="flex items-center justify-between pt-3" style={{ borderTop: "1px solid oklch(0.18 0.02 260)" }}>
-        <span className="text-xs font-medium" style={{ color: "oklch(0.50 0.02 60)" }}>
-          — {displayName}
-        </span>
-        <button
-          onClick={handleLike}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold transition-all hover:scale-110"
-          style={{
-            background: liked ? "oklch(0.62 0.24 25 / 0.15)" : "oklch(0.16 0.02 260)",
-            border: `1px solid ${liked ? "oklch(0.62 0.24 25 / 0.5)" : "oklch(0.22 0.02 260)"}`,
-            color: liked ? "oklch(0.62 0.24 25)" : "oklch(0.50 0.02 60)",
-          }}
-          aria-label="讚好"
+        {/* Content */}
+        <p
+          className="flex-1 text-sm leading-relaxed line-clamp-5 mb-4"
+          style={{ color: "oklch(0.78 0.01 60)" }}
         >
-          <Heart size={12} fill={liked ? "currentColor" : "none"} />
-          {localLikes}
-        </button>
+          {item.content}
+        </p>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between pt-3" style={{ borderTop: "1px solid oklch(0.18 0.02 260)" }}>
+          <span className="text-xs font-medium" style={{ color: "oklch(0.50 0.02 60)" }}>
+            — {displayName}
+          </span>
+          <button
+            onClick={handleLike}
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold transition-all hover:scale-110"
+            style={{
+              background: liked ? "oklch(0.62 0.24 25 / 0.15)" : "oklch(0.16 0.02 260)",
+              border: `1px solid ${liked ? "oklch(0.62 0.24 25 / 0.5)" : "oklch(0.22 0.02 260)"}`,
+              color: liked ? "oklch(0.62 0.24 25)" : "oklch(0.50 0.02 60)",
+            }}
+            aria-label="讚好"
+          >
+            <Heart size={12} fill={liked ? "currentColor" : "none"} />
+            {localLikes}
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -140,16 +226,19 @@ function SubmitDialog({
   const [category, setCategory] = useState<Category>("relationship");
   const [content, setContent] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
+  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
 
   const submitMutation = trpc.submission.submit.useMutation({
     onSuccess: () => {
       toast.success("投稿成功！", {
         description: "感謝你嘅分享，我哋會盡快審核，精選投稿將會喺首頁展示 🎉",
       });
+      // Reset form
       setNickname("");
       setCategory("relationship");
       setContent("");
       setIsAnonymous(false);
+      setUploadedImages([]);
       onSuccess();
       onClose();
     },
@@ -169,13 +258,16 @@ function SubmitDialog({
       category,
       content: content.trim(),
       isAnonymous,
+      imageUrls: uploadedImages.map((img) => img.url),
     });
   };
+
+  const isSubmitting = submitMutation.isPending;
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent
-        className="max-w-lg"
+        className="max-w-lg max-h-[90vh] overflow-y-auto"
         style={{ background: "oklch(0.10 0.015 260)", border: "1px solid oklch(0.22 0.025 260)" }}
       >
         <DialogHeader>
@@ -228,6 +320,22 @@ function SubmitDialog({
             />
           </div>
 
+          {/* Image upload */}
+          <div className="space-y-1.5">
+            <Label style={{ color: "oklch(0.75 0.01 60)" }}>
+              附上圖片
+              <span className="ml-1 text-xs" style={{ color: "oklch(0.45 0.02 60)" }}>
+                （可選，最多 5 張，每張 ≤ 2MB）
+              </span>
+            </Label>
+            <ImageUploader
+              images={uploadedImages}
+              onImagesChange={setUploadedImages}
+              disabled={isSubmitting}
+              dark={true}
+            />
+          </div>
+
           {/* Nickname + Anonymous toggle */}
           <div className="space-y-1.5">
             <Label style={{ color: "oklch(0.75 0.01 60)" }}>你嘅名字（可用花名）</Label>
@@ -268,12 +376,13 @@ function SubmitDialog({
               onClick={onClose}
               className="flex-1"
               style={{ background: "transparent", border: "1px solid oklch(0.25 0.025 260)", color: "oklch(0.60 0.02 60)" }}
+              disabled={isSubmitting}
             >
               取消
             </Button>
             <Button
               type="submit"
-              disabled={submitMutation.isPending}
+              disabled={isSubmitting}
               className="flex-1 font-bold"
               style={{
                 background: "linear-gradient(135deg, oklch(0.60 0.22 25), oklch(0.75 0.15 75))",
@@ -281,10 +390,10 @@ function SubmitDialog({
                 border: "none",
               }}
             >
-              {submitMutation.isPending ? (
+              {isSubmitting ? (
                 <><Loader2 size={14} className="animate-spin mr-1" /> 提交中…</>
               ) : (
-                "立即投稿 ✉️"
+                <>立即投稿 ✉️{uploadedImages.length > 0 && ` (+${uploadedImages.length}📷)`}</>
               )}
             </Button>
           </div>
@@ -435,7 +544,7 @@ export default function ReaderSubmissions() {
                   你都有故事想分享？
                 </div>
                 <div className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>
-                  每週精選投稿，有機會喺節目中被討論
+                  每週精選投稿，有機會喺節目中被討論 · 支援上傳圖片 📷
                 </div>
               </div>
               <button

@@ -30,16 +30,18 @@ import {
   getAllBookings,
   getAllContacts,
   getAllSubmissions,
-  getApprovedBlogPosts,
   getApprovedSubmissions,
+  getApprovedBlogPosts,
   getBlogPostBySlug,
   likeSubmission,
   updateBlogPostStatus,
   updateBookingStatus,
   updateSubmissionStatus,
+  getPublishedSubmissions,
   getYoutubeCache,
   setYoutubeCache,
 } from "./db";
+import { storagePut } from "./storage";
 
 function generateSlug(title: string): string {
   const timestamp = Date.now();
@@ -374,6 +376,7 @@ export const appRouter = router({
         category: z.enum(["relationship", "fengshui", "confession", "question", "other"]),
         content: z.string().min(10).max(1000),
         isAnonymous: z.boolean().default(false),
+        imageUrls: z.array(z.string().url()).max(5).default([]),
       }))
       .mutation(async ({ input }) => {
         await createReaderSubmission({
@@ -381,12 +384,36 @@ export const appRouter = router({
           category: input.category,
           content: input.content,
           isAnonymous: input.isAnonymous,
+          images: JSON.stringify(input.imageUrls),
         });
+        const imgNote = input.imageUrls.length > 0 ? `（附帶 ${input.imageUrls.length} 張圖片）` : "";
         await notifyOwner({
           title: "📨 新讀者投稿",
-          content: `「${input.isAnonymous ? "匿名" : input.nickname}」提交了一則「${input.category}」類別的投稿，請到後台審核。`,
+          content: `「${input.isAnonymous ? "匿名" : input.nickname}」提交了一則「${input.category}」類別的投稿${imgNote}，請到後台審核。`,
         });
         return { success: true };
+      }),
+
+    /** Upload image to S3 (public, returns CDN URL) */
+    uploadImage: publicProcedure
+      .input(z.object({
+        fileName: z.string().min(1).max(255),
+        mimeType: z.enum(["image/jpeg", "image/png", "image/webp", "image/gif"]),
+        base64Data: z.string().min(1),
+        sizeBytes: z.number().int().positive().max(2 * 1024 * 1024), // 2MB limit
+      }))
+      .mutation(async ({ input }) => {
+        // Decode base64 to buffer
+        const buffer = Buffer.from(input.base64Data, "base64");
+        if (buffer.byteLength > 2 * 1024 * 1024) {
+          throw new Error("圖片大小不能超過 2MB");
+        }
+        const ext = input.mimeType.split("/")[1] ?? "jpg";
+        const randomSuffix = Math.random().toString(36).slice(2, 10);
+        const safeFileName = input.fileName.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 60);
+        const key = `submissions/${Date.now()}-${randomSuffix}-${safeFileName}.${ext}`;
+        const { url } = await storagePut(key, buffer, input.mimeType);
+        return { url, key };
       }),
 
     /** List approved submissions (public) */
@@ -397,6 +424,18 @@ export const appRouter = router({
       }))
       .query(async ({ input }) => {
         const items = await getApprovedSubmissions(input.limit, input.offset);
+        return { items };
+      }),
+
+    /** List published submissions (public, by target) */
+    listPublished: publicProcedure
+      .input(z.object({
+        target: z.enum(["home", "blog"]).default("home"),
+        limit: z.number().int().min(1).max(20).default(9),
+        offset: z.number().int().min(0).default(0),
+      }))
+      .query(async ({ input }) => {
+        const items = await getPublishedSubmissions(input.target, input.limit, input.offset);
         return { items };
       }),
 
@@ -415,15 +454,20 @@ export const appRouter = router({
       return { items };
     }),
 
-    /** Admin: approve or reject a submission */
+    /** Admin: approve, reject, or publish a submission */
     updateStatus: protectedProcedure
       .input(z.object({
         id: z.number().int().positive(),
-        status: z.enum(["approved", "rejected"]),
+        status: z.enum(["approved", "rejected", "published"]),
+        publishTarget: z.enum(["home", "blog"]).optional(),
+        adminNote: z.string().max(500).optional(),
       }))
       .mutation(async ({ input, ctx }) => {
         if (ctx.user.role !== "admin") throw new Error("Admin only");
-        await updateSubmissionStatus(input.id, input.status);
+        await updateSubmissionStatus(input.id, input.status, {
+          publishTarget: input.publishTarget,
+          adminNote: input.adminNote,
+        });
         return { success: true };
       }),
   }),

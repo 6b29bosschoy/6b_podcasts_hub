@@ -112,8 +112,14 @@ export const readerSubmissions = mysqlTable("reader_submissions", {
   category: mysqlEnum("category", ["relationship", "fengshui", "confession", "question", "other"]).default("other").notNull(),
   content: text("content").notNull(),
   isAnonymous: boolean("isAnonymous").default(false).notNull(),
-  status: mysqlEnum("status", ["pending", "approved", "rejected"]).default("pending").notNull(),
+  // JSON array of S3 image URLs (max 5), stored as varchar to support TiDB default value
+  images: varchar("images", { length: 5000 }).default("[]").notNull(),
+  status: mysqlEnum("status", ["pending", "approved", "rejected", "published"]).default("pending").notNull(),
+  // Where to publish: "home" = homepage featured, "blog" = guest column
+  publishTarget: mysqlEnum("publishTarget", ["home", "blog"]).default("home"),
+  adminNote: text("adminNote"),
   likes: int("likes").default(0).notNull(),
+  publishedAt: timestamp("publishedAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

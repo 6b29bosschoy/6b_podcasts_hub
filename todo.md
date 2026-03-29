@@ -136,3 +136,17 @@
 - [x] 複用 submission.submit tRPC 程序，提交後顯示成功提示
 - [x] 區塊設計配合 Landing Page 深色霧虹風格
 - [x] 更新 welcome.test.ts 測試覆蓋（64 個測試全部通過）
+
+## 投稿系統升級（圖片上傳 + 發放功能）
+
+- [x] DB Schema：reader_submissions 加入 images、publishTarget、adminNote、publishedAt 欄位
+- [x] 後端：S3 圖片上傳 API（最多5張、每張≤2MB、驗證 MIME 類型）
+- [x] 後端：submission.uploadImage tRPC 程序（S3 直接上傳）
+- [x] 後端：submission.submit 更新支援 imageUrls 陣列- [x] 後端：submission.updateStatus 加入「 published」狀態及發佈目標（首頁/嘉賓專欄）
+- [x] 前端：建立可重用 ImageUploader 元件（拖放 + 點擊選擇 + 縮圖預覽 + 删除）
+- [x] 前端：圖片驗證（≤5張、每張≤2MB、只接受 jpg/png/webp/gif）
+- [x] 前端：管理後台審核卡片加入圖片縮圖預覽
+- [x] 前端：管理後台加入「發放」按鈕（選擇發佈目標：首頁精選 / 嘉賓專欄）
+- [x] 前端：首頁投稿展示卡片支援圖片輪播（有圖片時顯示）
+- [x] 前端：Landing Page 投稿表單同步升級支援圖片上傳
+- [x] Vitest 測試更新覆蓋新功能（64 個測試全部通過）

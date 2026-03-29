@@ -188,10 +188,27 @@ export async function getAllSubmissions(limit = 50, offset = 0): Promise<ReaderS
     .limit(limit).offset(offset);
 }
 
-export async function updateSubmissionStatus(id: number, status: "approved" | "rejected"): Promise<void> {
+export async function updateSubmissionStatus(
+  id: number,
+  status: "approved" | "rejected" | "published",
+  extra?: { publishTarget?: "home" | "blog"; adminNote?: string }
+): Promise<void> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  await db.update(readerSubmissions).set({ status }).where(eq(readerSubmissions.id, id));
+  const updateData: Partial<InsertReaderSubmission> & { publishedAt?: Date | null } = { status };
+  if (extra?.publishTarget) updateData.publishTarget = extra.publishTarget;
+  if (extra?.adminNote !== undefined) updateData.adminNote = extra.adminNote;
+  if (status === "published") updateData.publishedAt = new Date();
+  await db.update(readerSubmissions).set(updateData).where(eq(readerSubmissions.id, id));
+}
+
+export async function getPublishedSubmissions(target: "home" | "blog" = "home", limit = 12, offset = 0): Promise<ReaderSubmission[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(readerSubmissions)
+    .where(and(eq(readerSubmissions.status, "published"), eq(readerSubmissions.publishTarget, target)))
+    .orderBy(desc(readerSubmissions.publishedAt))
+    .limit(limit).offset(offset);
 }
 
 export async function likeSubmission(id: number): Promise<void> {

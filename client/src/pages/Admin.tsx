@@ -300,49 +300,109 @@ export default function Admin() {
       {/* Reader Submissions */}
         {tab === "submissions" && (
           <div className="flex flex-col gap-4">
+            {/* Legend */}
+            <div className="flex gap-3 text-xs flex-wrap" style={{ color: "oklch(0.50 0.02 60)" }}>
+              <span>🟡 待審核</span><span>🟢 已批准（首頁/嘉賓欄）</span><span>🔵 已發放</span><span>🔴 已拒絕</span>
+            </div>
             {!submissions?.items?.length ? (
               <p style={{ color: "oklch(0.55 0.02 60)" }}>暫時沒有投稿</p>
-            ) : submissions.items.map((s) => (
+            ) : submissions.items.map((s) => {
+              // Parse images
+              let imgs: string[] = [];
+              try { if (s.images && s.images !== "[]") imgs = JSON.parse(s.images as string); } catch {}
+
+              const statusColor = s.status === "pending" ? "oklch(0.78 0.16 75)" : s.status === "approved" ? "oklch(0.65 0.20 145)" : s.status === "published" ? "oklch(0.60 0.20 250)" : "oklch(0.55 0.22 25)";
+              const statusBg = statusColor.replace(")", " / 0.15)");
+              const statusLabel = s.status === "pending" ? "🟡 待審核" : s.status === "approved" ? "🟢 已批准" : s.status === "published" ? "🔵 已發放" : "🔴 已拒絕";
+
+              return (
               <div key={s.id} className="glass-card rounded-xl p-5">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2 flex-wrap">
-                      <span className="text-xs px-2 py-0.5 rounded font-bold" style={{
-                        background: s.status === "pending" ? "oklch(0.78 0.16 75 / 0.2)" : s.status === "approved" ? "oklch(0.65 0.20 145 / 0.2)" : "oklch(0.55 0.22 25 / 0.2)",
-                        color: s.status === "pending" ? "oklch(0.78 0.16 75)" : s.status === "approved" ? "oklch(0.65 0.20 145)" : "oklch(0.55 0.22 25)"
-                      }}>
-                        {s.status === "pending" ? "待審核" : s.status === "approved" ? "已發佈" : "已拒絕"}
+                <div className="flex flex-col gap-3">
+                  {/* Header row */}
+                  <div className="flex items-start justify-between gap-4 flex-wrap">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-xs px-2 py-0.5 rounded font-bold" style={{ background: statusBg, color: statusColor }}>
+                        {statusLabel}
                       </span>
                       <span className="text-xs px-2 py-0.5 rounded" style={{ background: "oklch(0.16 0.02 260)", color: "oklch(0.60 0.02 60)" }}>
                         {s.category === "relationship" ? "💕 感情故事" : s.category === "fengshui" ? "🔮 玄學奇遇" : s.category === "confession" ? "💬 心底話" : s.category === "question" ? "🙋 問題想問" : "✨ 其他"}
                       </span>
+                      {imgs.length > 0 && (
+                        <span className="text-xs px-2 py-0.5 rounded" style={{ background: "oklch(0.16 0.02 260)", color: "oklch(0.65 0.20 250)" }}>
+                          📷 {imgs.length} 張圖片
+                        </span>
+                      )}
+                      {s.publishTarget && s.status !== "pending" && (
+                        <span className="text-xs px-2 py-0.5 rounded" style={{ background: "oklch(0.16 0.02 260)", color: "oklch(0.65 0.20 145)" }}>
+                          {s.publishTarget === "home" ? "🏠 首頁" : "📝 嘉賓專欄"}
+                        </span>
+                      )}
                       <span className="text-xs" style={{ color: "oklch(0.45 0.02 60)" }}>
                         {new Date(s.createdAt).toLocaleString("zh-HK")}
                       </span>
-                      <span className="text-xs" style={{ color: "oklch(0.55 0.22 25)" }}>
-                        ♥ {s.likes}
-                      </span>
+                      <span className="text-xs" style={{ color: "oklch(0.55 0.22 25)" }}>♥ {s.likes}</span>
                     </div>
-                    <p className="text-sm leading-relaxed mb-2" style={{ color: "oklch(0.82 0.01 60)" }}>{s.content}</p>
-                    <p className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>
-                      — {s.isAnonymous ? "匿名讀者" : s.nickname}
-                    </p>
                   </div>
-                  {s.status === "pending" && (
-                    <div className="flex gap-2 flex-shrink-0">
-                      <button onClick={() => updateSubmission.mutate({ id: s.id, status: "approved" })}
-                        className="px-3 py-1.5 rounded text-xs font-bold" style={{ background: "oklch(0.65 0.20 145)", color: "white" }}>
-                        批准
-                      </button>
-                      <button onClick={() => updateSubmission.mutate({ id: s.id, status: "rejected" })}
-                        className="px-3 py-1.5 rounded text-xs font-bold" style={{ background: "oklch(0.55 0.22 25)", color: "white" }}>
-                        拒絕
-                      </button>
+
+                  {/* Image thumbnails */}
+                  {imgs.length > 0 && (
+                    <div className="flex gap-2 flex-wrap">
+                      {imgs.map((url, i) => (
+                        <a key={i} href={url} target="_blank" rel="noopener noreferrer">
+                          <img src={url} alt={`圖片${i+1}`} className="w-20 h-20 object-cover rounded-lg hover:opacity-80 transition-opacity" style={{ border: "1px solid oklch(0.22 0.025 260)" }} />
+                        </a>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Content */}
+                  <p className="text-sm leading-relaxed" style={{ color: "oklch(0.82 0.01 60)" }}>{s.content}</p>
+                  <p className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>— {s.isAnonymous ? "匿名讀者" : s.nickname}</p>
+
+                  {/* Admin note */}
+                  {s.adminNote && (
+                    <p className="text-xs px-3 py-2 rounded-lg" style={{ background: "oklch(0.14 0.018 260)", color: "oklch(0.60 0.02 60)", borderLeft: "3px solid oklch(0.78 0.16 75)" }}>
+                      管理員備注：{s.adminNote}
+                    </p>
+                  )}
+
+                  {/* Action buttons */}
+                  {(s.status === "pending" || s.status === "approved") && (
+                    <div className="flex gap-2 flex-wrap pt-1" style={{ borderTop: "1px solid oklch(0.18 0.02 260)" }}>
+                      {s.status === "pending" && (
+                        <>
+                          <button onClick={() => updateSubmission.mutate({ id: s.id, status: "approved", publishTarget: "home" })}
+                            className="px-3 py-1.5 rounded text-xs font-bold transition-opacity hover:opacity-80" style={{ background: "oklch(0.65 0.20 145)", color: "white" }}>
+                            ✓ 批准（首頁）
+                          </button>
+                          <button onClick={() => updateSubmission.mutate({ id: s.id, status: "approved", publishTarget: "blog" })}
+                            className="px-3 py-1.5 rounded text-xs font-bold transition-opacity hover:opacity-80" style={{ background: "oklch(0.60 0.20 145)", color: "white" }}>
+                            ✓ 批准（嘉賓欄）
+                          </button>
+                          <button onClick={() => updateSubmission.mutate({ id: s.id, status: "rejected" })}
+                            className="px-3 py-1.5 rounded text-xs font-bold transition-opacity hover:opacity-80" style={{ background: "oklch(0.55 0.22 25)", color: "white" }}>
+                            ✗ 拒絕
+                          </button>
+                        </>
+                      )}
+                      {s.status === "approved" && (
+                        <>
+                          <button onClick={() => updateSubmission.mutate({ id: s.id, status: "published", publishTarget: (s.publishTarget as "home" | "blog") ?? "home" })}
+                            className="px-3 py-1.5 rounded text-xs font-bold transition-opacity hover:opacity-80" style={{ background: "oklch(0.60 0.20 250)", color: "white" }}>
+                            🚀 發放至{s.publishTarget === "blog" ? "嘉賓專欄" : "首頁"}
+                          </button>
+                          <button onClick={() => updateSubmission.mutate({ id: s.id, status: "rejected" })}
+                            className="px-3 py-1.5 rounded text-xs font-bold transition-opacity hover:opacity-80" style={{ background: "oklch(0.55 0.22 25)", color: "white" }}>
+                            ✗ 撤回
+                          </button>
+                        </>
+                      )}
                     </div>
                   )}
                 </div>
               </div>
-            ))}
+            );
+            })}
           </div>
         )}
       </div>
