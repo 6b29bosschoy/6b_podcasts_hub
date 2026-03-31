@@ -5,6 +5,7 @@ import ReaderSubmissions from "@/components/ReaderSubmissions";
 import { trpc } from "@/lib/trpc";
 import { Loader2, Play, Eye, Clock } from "lucide-react";
 import { JsonLd, buildOrganizationSchema, buildWebSiteSchema, SITE_URL } from "@/components/JsonLd";
+import IgFeedEmbed from "@/components/IgFeedEmbed";
 
 const SOCIAL_PLATFORMS = [
   {
@@ -450,6 +451,9 @@ export default function Home() {
       <div id="submissions">
         <ReaderSubmissions />
       </div>
+
+      {/* Instagram Feed */}
+      <IgFeedEmbed />
 
       {/* Subscribe */}
       <SubscribeBox />
