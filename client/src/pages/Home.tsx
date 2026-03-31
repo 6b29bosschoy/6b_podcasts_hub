@@ -447,7 +447,9 @@ export default function Home() {
       </section>
 
       {/* Reader Submissions */}
-      <ReaderSubmissions />
+      <div id="submissions">
+        <ReaderSubmissions />
+      </div>
 
       {/* Subscribe */}
       <SubscribeBox />
