@@ -452,9 +452,8 @@ export default function Home() {
         <ReaderSubmissions />
       </div>
 
-      {/* Instagram Feed */}
+      {/* IG Feed */}
       <IgFeedEmbed />
-
       {/* Subscribe */}
       <SubscribeBox />
     </div>

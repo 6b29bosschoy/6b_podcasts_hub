@@ -20,7 +20,6 @@ import Booking from "./pages/Booking";
 import Contact from "./pages/Contact";
 import Admin from "@/pages/Admin";
 import Welcome from "@/pages/Welcome";
-import FacebookPixel from "./components/FacebookPixel";
 
 function Router() {
   return (
@@ -60,7 +59,6 @@ function App() {
           {!isWelcome && <ChatBot />}
           {!isWelcome && <PushBellButton />}
           {!isWelcome && <PushPromptBanner />}
-          <FacebookPixel />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

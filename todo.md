@@ -184,15 +184,6 @@
 - [x] 修正 blog.submit 的 title 最小字元限制（從 5 降至 1）
 - [x] 加入清晰中文錯誤提示訊息（title / authorName / email / content 全部中文化）
 
-## SEO 加強 + FB/IG 社群整合
+## SnapWidget IG Feed 更新
 
-- [x] 建立 useSeoMeta hook：每頁獨立 title、description、OG tags、Twitter Card
-- [x] index.html 加入預設 OG/Twitter meta 標籤（fallback）
-- [x] 建立 /sitemap.xml 動態路由（Express 後端生成）
-- [x] 建立 /robots.txt 靜態檔案（允許爬蟲 + 指向 sitemap）
-- [x] 每頁加入 canonical URL link 標籤（由 useSeoMeta 統一管理）
-- [x] 整合 Facebook Pixel（pageview 追蹤 + ViewContent 自訂事件）
-- [x] 文章詳情頁加入 ShareButtons（FB / WhatsApp / 複製連結）
-- [x] 首頁加入 IgFeedEmbed 區塊（SnapWidget 嵌入 IG Feed）
-- [x] 首頁加入 FB Page Plugin 按讚區塊
-- [x] Vitest 64 個測試全部通過，零 TypeScript 錯誤
+- [x] IgFeedEmbed.tsx 更新使用真實 SnapWidget ID 1121118（響應式寬度）

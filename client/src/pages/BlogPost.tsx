@@ -1,11 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { ArrowLeft, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import Lightbox from "@/components/Lightbox";
-import ShareButtons from "@/components/ShareButtons";
-import { useSeoMeta, SITE_URL } from "@/hooks/useSeoMeta";
-import { trackFbEvent } from "@/components/FacebookPixel";
 
 const CATEGORY_LABELS: Record<string, string> = {
   relationship: "兩性關係",
@@ -20,25 +17,6 @@ export default function BlogPost({ slug }: { slug: string }) {
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
-
-  // SEO meta for this article – images parsed here for OG image
-  const seoImages: string[] = (() => { try { return JSON.parse(post?.images || "[]"); } catch { return []; } })();
-  useSeoMeta({
-    title: post?.title ?? "嘉賓專欄",
-    description: post?.excerpt ?? post?.content?.slice(0, 120) ?? "路邊電台嘉賓心得與幕後故事",
-    ogImage: seoImages[0] ?? undefined,
-    canonicalPath: `/blog/${slug}`,
-    ogType: "article",
-    publishedTime: post?.createdAt ? new Date(post.createdAt).toISOString() : undefined,
-    author: post?.authorName ?? undefined,
-  });
-
-  // Track article view in FB Pixel
-  useEffect(() => {
-    if (post) {
-      trackFbEvent("ViewContent", { content_name: post.title, content_category: post.category });
-    }
-  }, [post?.id]);
 
   if (isLoading) {
     return (
@@ -213,15 +191,6 @@ export default function BlogPost({ slug }: { slug: string }) {
         </article>
 
         <div className="mt-12 pt-8" style={{ borderTop: "1px solid oklch(0.20 0.02 260)" }}>
-          {/* Share buttons */}
-          <div className="glass-card rounded-xl p-6 mb-4">
-            <ShareButtons
-              url={`${SITE_URL}/blog/${slug}`}
-              title={post?.title}
-              description={post?.excerpt ?? post?.content?.slice(0, 80)}
-              label="分享這篇文章"
-            />
-          </div>
           <div className="glass-card rounded-xl p-6 text-center">
             <p className="text-sm mb-4" style={{ color: "oklch(0.55 0.02 60)" }}>喜歡這篇文章？追蹤路邊電台獲取更多內容！</p>
             <div className="flex flex-wrap gap-3 justify-center">
