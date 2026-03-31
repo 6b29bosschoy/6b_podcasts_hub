@@ -187,3 +187,7 @@
 ## SnapWidget IG Feed 更新
 
 - [x] IgFeedEmbed.tsx 更新使用真實 SnapWidget ID 1121118（響應式寬度）
+
+## Bug 修正：IgFeedEmbed allowTransparency prop
+
+- [x] IgFeedEmbed.tsx：移除 allowTransparency 屬性（React/TS 不支援），透明度由 SnapWidget 自行處理

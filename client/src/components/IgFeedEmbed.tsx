@@ -48,7 +48,6 @@ export default function IgFeedEmbed() {
           <iframe
             src="https://snapwidget.com/embed/1121118"
             className="snapwidget-widget"
-            allowTransparency={true}
             frameBorder={0}
             scrolling="no"
             title="Posts from Instagram @6bpodcasts"
