@@ -178,3 +178,8 @@
 - [x] Navbar.tsx 手機版：漢堡選單內加入投稿選項（兩個連結）
 - [x] 點擊選單項目後自動關閉選單（含點擊外部自動收起）
 - [x] Vitest 64 個測試全部通過，零 TypeScript 錯誤
+
+## Bug 修正：嘉賓投稿 title 驗證錯誤
+
+- [x] 修正 blog.submit 的 title 最小字元限制（從 5 降至 1）
+- [x] 加入清晰中文錯誤提示訊息（title / authorName / email / content 全部中文化）

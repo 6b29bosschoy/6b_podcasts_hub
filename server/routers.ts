@@ -94,12 +94,12 @@ export const appRouter = router({
 
     submit: publicProcedure
       .input(z.object({
-        title: z.string().min(5).max(255),
-        authorName: z.string().min(1).max(100),
-        authorEmail: z.string().email(),
+        title: z.string().min(1, "請輸入文章標題").max(255, "標題不得超過 255 個字元"),
+        authorName: z.string().min(1, "請輸入你的名字").max(100),
+        authorEmail: z.string().email("請輸入有效的電郵地址"),
         authorBio: z.string().max(500).optional(),
         excerpt: z.string().max(500).optional(),
-        content: z.string().min(50),
+        content: z.string().min(10, "文章內容最少需要 10 個字元"),
         category: z.enum(["relationship", "fengshui", "lifestyle", "interview", "other"]),
         imageUrls: z.array(z.string().url()).max(5).optional(),
         links: z.array(z.object({ title: z.string().max(100), url: z.string().url() })).max(3).optional(),
