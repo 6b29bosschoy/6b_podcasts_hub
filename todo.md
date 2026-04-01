@@ -191,3 +191,11 @@
 ## Bug 修正：IgFeedEmbed allowTransparency prop
 
 - [x] IgFeedEmbed.tsx：移除 allowTransparency 屬性（React/TS 不支援），透明度由 SnapWidget 自行處理
+
+## AI 搜尋引擎優化（AEO / GEO）
+
+- [x] 建立 /llms.txt 靜態檔案（符合 llmstxt.org 規範）
+- [x] 建立 /llms-full.txt 完整版（包含所有頁面 Markdown 內容）
+- [x] 在 server 加入 /llms.txt 及 /llms-full.txt 路由端點
+- [x] 更新 robots.txt 加入 llms.txt 位置提示
+- [x] 測試 llms.txt 端點正確回應

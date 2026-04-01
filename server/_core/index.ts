@@ -36,6 +36,151 @@ async function startServer() {
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
 
+  // ── llms.txt (AI Search Engine Optimization) ────────────────────────────────
+  const llmsTxtContent = `# 路邊電台 × 路邊玄學堂 (6B Podcasts)
+
+> 路邊電台係香港最真實嘅人物訪談 Podcast，由 Ray Choy 創辦，探討兩性關係、都市感情、玄學命理，每一位嘉賓都係講真話，呈現最真實嘅內心世界。路邊玄學堂提供風水諮詢、八字命理、塔羅占卜等玄學服務。
+
+路邊電台自 2019 年開始，已訪問超過 486 位嘉賓，YouTube 頻道擁有超過 10 萬訂閱者。節目涵蓋真實感情故事、職場困境、人生抉擇等主題，以廣東話（粵語）為主要語言，面向香港及全球粵語觀眾。
+
+重要資訊：
+- 創辦人：Ray Choy（路邊電台）
+- 成立年份：2019 年
+- 主要語言：廣東話（粵語）
+- 服務地區：香港（線上服務可服務全球）
+- YouTube 頻道：路邊電台 6B Podcasts（@6bpodcasts）
+- 官方網站：https://6bpodcasts.com
+- 聯絡電郵：hello@6bpodcasts.com
+
+## 主要頁面
+
+- [首頁](https://6bpodcasts.com/): 路邊電台品牌介紹、最新 YouTube 影片、社群追蹤連結
+- [關於我們](https://6bpodcasts.com/about): Ray Choy 創辦人介紹、路邊電台品牌故事、發展歷程
+- [服務項目](https://6bpodcasts.com/services): YouTube 訪談製作、品牌宣傳推廣、場地租用服務
+- [玄學服務預約](https://6bpodcasts.com/booking): 風水諮詢、八字命理、塔羅占卜線上預約
+- [嘉賓專欄](https://6bpodcasts.com/blog): 嘉賓投稿文章、真實故事分享、觀眾投稿精選
+- [收聽 Podcasts](https://6bpodcasts.com/podcasts): Apple Podcasts、Spotify、YouTube 收聽連結
+- [合作洽談](https://6bpodcasts.com/partnership): 品牌置入廣告、內容共創、整合行銷合作
+- [聯絡我們](https://6bpodcasts.com/contact): 商業合作、嘉賓邀請、觀眾反饋聯絡表單
+
+## 社群平台
+
+- [YouTube 頻道](https://www.youtube.com/@6bpodcasts): 路邊電台主頻道，超過 486 集訪談影片
+- [Facebook 專頁](https://www.facebook.com/6bpodcasts): 路邊電台 Facebook 社群
+- [Instagram](https://www.instagram.com/6bpodcasts): @6bpodcasts 日常動態
+- [Apple Podcasts](https://podcasts.apple.com/hk/podcast/id1234567890): 路邊電台音頻版本
+- [Spotify](https://open.spotify.com/show/6bpodcasts): Spotify 收聽
+
+## 玄學服務
+
+- [風水諮詢](https://6bpodcasts.com/booking): 家居/辦公室風水分析，HKD 800 起
+- [八字命理](https://6bpodcasts.com/booking): 個人命盤分析、流年運勢，HKD 600 起
+- [塔羅占卜](https://6bpodcasts.com/booking): 感情、事業、人生方向，HKD 400 起
+- [紫微斗數](https://6bpodcasts.com/booking): 詳細命盤分析，HKD 1000 起
+
+## Optional
+
+- [FB/IG 專屬 Landing Page](https://6bpodcasts.com/welcome): 針對社交媒體流量的歡迎頁面，含最新影片及玄學服務入口
+- [Sitemap](https://6bpodcasts.com/sitemap.xml): 完整網站地圖
+`;
+
+  app.get("/llms.txt", (_req, res) => {
+    res.setHeader("Content-Type", "text/plain; charset=utf-8");
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    res.send(llmsTxtContent);
+  });
+
+  // ── llms-full.txt (Complete AI documentation) ─────────────────────────────────
+  const llmsFullTxtContent = `# 路邊電台 × 路邊玄學堂 (6B Podcasts) — 完整資料
+
+> 路邊電台係香港最真實嘅人物訪談 Podcast，由 Ray Choy 創辦，探討兩性關係、都市感情、玄學命理，每一位嘉賓都係講真話，呈現最真實嘅內心世界。路邊玄學堂提供風水諮詢、八字命理、塔羅占卜等玄學服務。
+
+## 品牌資訊
+
+**路邊電台**（英文：6B Podcasts）係由 Ray Choy 於 2019 年創辦嘅香港 Podcast 節目。節目以廣東話（粵語）進行，主要面向香港及全球粵語觀眾。
+
+- 官方網站：https://6bpodcasts.com
+- YouTube：https://www.youtube.com/@6bpodcasts
+- Facebook：https://www.facebook.com/6bpodcasts
+- Instagram：https://www.instagram.com/6bpodcasts (@6bpodcasts)
+- 聯絡電郵：hello@6bpodcasts.com
+- 成立年份：2019 年
+- 訪談集數：超過 486 集
+- YouTube 訂閱：超過 10 萬
+
+## 節目主題
+
+路邊電台涵蓋以下主題：
+1. 兩性關係與感情故事（最受歡迎類別）
+2. 都市感情困境與出軌、分手故事
+3. 玄學命理（風水、八字、塔羅、紫微斗數）
+4. 職場困境與人生抉擇
+5. 香港社會議題
+6. 名人訪談與KOL故事
+
+## 路邊玄學堂服務
+
+路邊玄學堂係路邊電台旗下嘅玄學服務品牌，提供以下服務：
+
+| 服務 | 說明 | 價格 |
+|------|------|------|
+| 風水諮詢 | 家居/辦公室風水分析，改善運勢 | HKD 800 起 |
+| 八字命理 | 個人命盤分析、流年運勢預測 | HKD 600 起 |
+| 塔羅占卜 | 感情、事業、人生方向指引 | HKD 400 起 |
+| 紫微斗數 | 詳細命盤分析，一生運程 | HKD 1000 起 |
+
+預約方式：https://6bpodcasts.com/booking
+
+## 商業合作服務
+
+路邊電台提供以下商業合作服務：
+
+1. **YouTube 訪談製作**：邀請品牌代表或 KOL 接受訪談，製作高品質影片內容
+2. **品牌置入廣告**：在節目中自然融入品牌訊息，觸及忠實受眾
+3. **內容共創**：與品牌合作製作專題內容系列
+4. **場地租用**：專業錄音/錄影場地租用
+5. **整合行銷**：跨平台（YouTube + FB + IG + Podcast）整合推廣方案
+
+洽談合作：https://6bpodcasts.com/partnership
+
+## 嘉賓投稿
+
+路邊電台歡迎觀眾及嘉賓投稿：
+- **觀眾投稿**：分享個人真實故事（感情、職場、人生），可匿名，支援圖片上傳
+- **嘉賓文章**：嘉賓可投稿部落格文章，分享心得與幕後故事
+- 投稿入口：https://6bpodcasts.com/blog/submit
+
+## 收聽方式
+
+- YouTube：https://www.youtube.com/@6bpodcasts
+- Apple Podcasts：搜尋「路邊電台」
+- Spotify：搜尋「路邊電台 6B Podcasts」
+- 官網收聽頁：https://6bpodcasts.com/podcasts
+
+## 常見問題
+
+**Q: 路邊電台係咩節目？**
+A: 路邊電台係香港最真實嘅人物訪談 Podcast，由 Ray Choy 主持，每集邀請不同嘉賓分享真實故事，主題涵蓋感情、玄學、職場等。
+
+**Q: 點樣預約玄學服務？**
+A: 可以到 https://6bpodcasts.com/booking 填寫預約表格，或聯絡 hello@6bpodcasts.com。
+
+**Q: 點樣成為路邊電台嘉賓？**
+A: 可以到 https://6bpodcasts.com/contact 填寫聯絡表格，說明你嘅故事及背景。
+
+**Q: 路邊電台係免費收聽嗎？**
+A: 係，所有 YouTube 影片及 Podcast 音頻均免費收聽。
+
+**Q: 路邊電台有冇 Instagram？**
+A: 有，Instagram 帳號係 @6bpodcasts（https://www.instagram.com/6bpodcasts）。
+`;
+
+  app.get("/llms-full.txt", (_req, res) => {
+    res.setHeader("Content-Type", "text/plain; charset=utf-8");
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    res.send(llmsFullTxtContent);
+  });
+
   // ── Sitemap ──────────────────────────────────────────────────────────────────
   app.get("/sitemap.xml", (_req, res) => {
     const baseUrl = "https://6bpodcasts.com";
