@@ -199,3 +199,9 @@
 - [x] 在 server 加入 /llms.txt 及 /llms-full.txt 路由端點
 - [x] 更新 robots.txt 加入 llms.txt 位置提示
 - [x] 測試 llms.txt 端點正確回應
+
+## 首頁 Hero 背景圖片升級
+
+- [x] 上傳錄音室背景圖片至 CDN
+- [x] 更新首頁 Hero 區塊使用真實錄音室背景圖
+- [x] 確保文字在圖片上清晰可見（加入暗色遮罩）

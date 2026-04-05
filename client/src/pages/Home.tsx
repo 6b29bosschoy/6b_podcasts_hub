@@ -235,14 +235,32 @@ export default function Home() {
     <div className="min-h-screen">
       <JsonLd data={homeSchemas} id="home" />
       {/* Hero Section */}
-      <section className="hero-gradient pt-32 pb-20 relative overflow-hidden">
+      <section className="pt-32 pb-20 relative overflow-hidden" style={{ minHeight: "90vh", display: "flex", alignItems: "center" }}>
+        {/* Studio background image */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url('https://d2xsxph8kpxj0f.cloudfront.net/310519663073423209/XJagJnJEiagVDDmfVeExSL/hero-bg-studio_6c62da39.webp')`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        />
+        {/* Dark overlay for text readability */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: "linear-gradient(to bottom, oklch(0.05 0.01 260 / 0.75) 0%, oklch(0.05 0.01 260 / 0.55) 50%, oklch(0.05 0.01 260 / 0.85) 100%)",
+          }}
+        />
+        {/* Neon glow accents */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 left-1/4 w-64 h-64 rounded-full opacity-5" style={{ background: "oklch(0.62 0.24 25)", filter: "blur(60px)" }} />
-          <div className="absolute bottom-10 right-1/4 w-48 h-48 rounded-full opacity-5" style={{ background: "oklch(0.55 0.20 250)", filter: "blur(40px)" }} />
+          <div className="absolute top-20 left-1/4 w-64 h-64 rounded-full opacity-10" style={{ background: "oklch(0.62 0.24 25)", filter: "blur(80px)" }} />
+          <div className="absolute bottom-10 right-1/4 w-48 h-48 rounded-full opacity-10" style={{ background: "oklch(0.55 0.20 250)", filter: "blur(60px)" }} />
         </div>
-        <div className="container relative">
+        <div className="container relative z-10 w-full">
           <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold mb-6" style={{ background: "oklch(0.62 0.24 25 / 0.15)", border: "1px solid oklch(0.62 0.24 25 / 0.3)", color: "oklch(0.62 0.24 25)" }}>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold mb-6" style={{ background: "oklch(0.62 0.24 25 / 0.25)", border: "1px solid oklch(0.62 0.24 25 / 0.5)", color: "oklch(0.80 0.18 55)", backdropFilter: "blur(8px)" }}>
               🎙️ 香港最真實人物訪談
             </div>
             <h1 className="text-4xl md:text-6xl font-black mb-4 leading-tight neon-flicker">
@@ -251,7 +269,7 @@ export default function Home() {
             <p className="text-lg md:text-xl font-medium mb-3" style={{ color: "oklch(0.75 0.15 75)" }}>
               × 路邊玄學堂
             </p>
-            <p className="text-base md:text-lg mb-8 leading-relaxed" style={{ color: "oklch(0.60 0.02 60)" }}>
+            <p className="text-base md:text-lg mb-8 leading-relaxed" style={{ color: "oklch(0.88 0.02 60)", textShadow: "0 1px 8px oklch(0 0 0 / 0.8)" }}>
               探討兩性關係 × 都市感情 × 玄學命理<br />
               每一位嘉賓都係講真話，呈現最真實嘅內心世界
             </p>
