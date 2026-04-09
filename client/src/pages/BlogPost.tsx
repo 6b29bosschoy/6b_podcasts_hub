@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { ArrowLeft, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import Lightbox from "@/components/Lightbox";
+import ShareButtons from "@/components/ShareButtons";
 
 const CATEGORY_LABELS: Record<string, string> = {
   relationship: "兩性關係",
@@ -190,7 +191,14 @@ export default function BlogPost({ slug }: { slug: string }) {
           )}
         </article>
 
-        <div className="mt-12 pt-8" style={{ borderTop: "1px solid oklch(0.20 0.02 260)" }}>
+        {/* ── Share Buttons ─────────────────────────────────── */}
+        <ShareButtons
+          url={typeof window !== "undefined" ? window.location.href : `https://6bpodcasts.com/blog/${slug}`}
+          title={post.title}
+          excerpt={post.excerpt ?? undefined}
+        />
+
+        <div className="mt-8 pt-8" style={{ borderTop: "1px solid oklch(0.20 0.02 260)" }}>
           <div className="glass-card rounded-xl p-6 text-center">
             <p className="text-sm mb-4" style={{ color: "oklch(0.55 0.02 60)" }}>喜歡這篇文章？追蹤路邊電台獲取更多內容！</p>
             <div className="flex flex-wrap gap-3 justify-center">

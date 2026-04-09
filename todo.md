@@ -205,3 +205,8 @@
 - [x] 上傳錄音室背景圖片至 CDN
 - [x] 更新首頁 Hero 區塊使用真實錄音室背景圖
 - [x] 確保文字在圖片上清晰可見（加入暗色遮罩）
+
+## 嘉賓專欄社交分享功能
+
+- [x] 建立 ShareButtons 元件（Facebook、Threads、WhatsApp、X/Twitter、複製連結）
+- [x] 加入到文章詳情頁（BlogPost.tsx）
