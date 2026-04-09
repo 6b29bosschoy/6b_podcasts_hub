@@ -40,6 +40,8 @@ export const blogPosts = mysqlTable("blog_posts", {
   images: varchar("images", { length: 5000 }).default("[]").notNull(),
   // JSON array of { title, url } link objects (max 3)
   links: varchar("links", { length: 2000 }).default("[]").notNull(),
+  // Article view count for social proof
+  viewCount: int("viewCount").default(0).notNull(),
   publishedAt: timestamp("publishedAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

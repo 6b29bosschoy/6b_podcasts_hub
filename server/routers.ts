@@ -40,6 +40,7 @@ import {
   getPublishedSubmissions,
   getYoutubeCache,
   setYoutubeCache,
+  incrementBlogPostViewCount,
 } from "./db";
 import { storagePut } from "./storage";
 
@@ -90,6 +91,13 @@ export const appRouter = router({
         const post = await getBlogPostBySlug(input.slug);
         if (!post) throw new TRPCError({ code: "NOT_FOUND", message: "文章不存在" });
         return post;
+      }),
+
+    incrementViewCount: publicProcedure
+      .input(z.object({ slug: z.string() }))
+      .mutation(async ({ input }) => {
+        await incrementBlogPostViewCount(input.slug);
+        return { success: true };
       }),
 
     submit: publicProcedure

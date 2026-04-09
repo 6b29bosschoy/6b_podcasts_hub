@@ -114,6 +114,18 @@ export async function updateBlogPostStatus(id: number, status: "approved" | "rej
   await db.update(blogPosts).set(updateData).where(eq(blogPosts.id, id));
 }
 
+export async function incrementBlogPostViewCount(slug: string): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  try {
+    await db.update(blogPosts)
+      .set({ viewCount: sql`${blogPosts.viewCount} + 1` })
+      .where(eq(blogPosts.slug, slug));
+  } catch (error) {
+    console.warn("[Database] Failed to increment view count:", error);
+  }
+}
+
 // ─── Subscriptions ────────────────────────────────────────────────────────────
 
 export async function createSubscription(data: InsertSubscription): Promise<void> {

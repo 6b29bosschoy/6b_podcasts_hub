@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { ArrowLeft, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, ExternalLink, Eye } from "lucide-react";
 import Lightbox from "@/components/Lightbox";
 import ShareButtons from "@/components/ShareButtons";
 
@@ -18,6 +18,14 @@ export default function BlogPost({ slug }: { slug: string }) {
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const incrementViewMutation = trpc.blog.incrementViewCount.useMutation();
+
+  // Increment view count when article loads
+  useEffect(() => {
+    if (post?.slug && !incrementViewMutation.isPending) {
+      incrementViewMutation.mutate({ slug: post.slug });
+    }
+  }, [post?.slug]);
 
   if (isLoading) {
     return (
@@ -71,16 +79,22 @@ export default function BlogPost({ slug }: { slug: string }) {
             {post.title}
           </h1>
 
-          <div className="flex items-center gap-4 mb-8 pb-8" style={{ borderBottom: "1px solid oklch(0.20 0.02 260)" }}>
-            <div className="w-10 h-10 rounded-full flex items-center justify-center font-black text-sm" style={{ background: "linear-gradient(135deg, oklch(0.60 0.22 25), oklch(0.75 0.15 75))", color: "white" }}>
-              {post.authorName.charAt(0)}
+          <div className="flex items-center justify-between mb-8 pb-8" style={{ borderBottom: "1px solid oklch(0.20 0.02 260)" }}>
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center font-black text-sm" style={{ background: "linear-gradient(135deg, oklch(0.60 0.22 25), oklch(0.75 0.15 75))", color: "white" }}>
+                {post.authorName.charAt(0)}
+              </div>
+              <div>
+                <div className="text-sm font-bold" style={{ color: "oklch(0.85 0.01 60)" }}>{post.authorName}</div>
+                {post.authorBio && <div className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>{post.authorBio}</div>}
+              </div>
             </div>
-            <div>
-              <div className="text-sm font-bold" style={{ color: "oklch(0.85 0.01 60)" }}>{post.authorName}</div>
-              {post.authorBio && <div className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>{post.authorBio}</div>}
-            </div>
-            <div className="ml-auto text-xs" style={{ color: "oklch(0.45 0.02 60)" }}>
-              {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString("zh-HK") : ""}
+            <div className="flex items-center gap-6 text-xs" style={{ color: "oklch(0.55 0.02 60)" }}>
+              <div>{post.publishedAt ? new Date(post.publishedAt).toLocaleDateString("zh-HK") : ""}</div>
+              <div className="flex items-center gap-1.5">
+                <Eye size={14} />
+                <span>{post.viewCount ?? 0} 人閱讀</span>
+              </div>
             </div>
           </div>
 

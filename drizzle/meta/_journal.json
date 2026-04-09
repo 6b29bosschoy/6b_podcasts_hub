@@ -50,6 +50,13 @@
       "when": 1774777476778,
       "tag": "0006_gigantic_enchantress",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1775742081451,
+      "tag": "0007_glossy_lady_vermin",
+      "breakpoints": true
     }
   ]
 }

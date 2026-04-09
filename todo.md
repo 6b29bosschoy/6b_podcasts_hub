@@ -210,3 +210,10 @@
 
 - [x] 建立 ShareButtons 元件（Facebook、Threads、WhatsApp、X/Twitter、複製連結）
 - [x] 加入到文章詳情頁（BlogPost.tsx）
+
+## 文章瀏覽次數統## 文章欄位計數功能
+
+- [x] 在 blog_posts 表加入 viewCount 欄位
+- [x] 建立 blog.incrementViewCount tRPC procedure
+- [x] 在 BlogPost 頁面載入時呼叫 incrementViewCount
+- [x] 在文章詳情頁顯示「已有 XXX 人閱讀」
