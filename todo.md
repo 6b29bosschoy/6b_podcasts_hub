@@ -217,3 +217,7 @@
 - [x] 建立 blog.incrementViewCount tRPC procedure
 - [x] 在 BlogPost 頁面載入時呼叫 incrementViewCount
 - [x] 在文章詳情頁顯示「已有 XXX 人閱讀」
+## 自動化文章發布流程
+
+- [x] 建立 publish_article.mjs 統一發布腳本（AI 生成配圖 + 上傳 S3 + 插入資料庫一次完成）
+- [x] 更新 hk-daily-column 技能說明文件
