@@ -43,6 +43,8 @@ import {
   incrementBlogPostViewCount,
   getRelatedBlogPosts,
   countRelatedBlogPosts,
+  getBlogPostFaq,
+  updateBlogPostFaq,
 } from "./db";
 import { storagePut } from "./storage";
 
@@ -177,6 +179,87 @@ export const appRouter = router({
           countRelatedBlogPosts(input.category, input.excludeSlug),
         ]);
         return { posts, total };
+      }),
+
+    getFaq: publicProcedure
+      .input(z.object({ slug: z.string() }))
+      .query(async ({ input }) => {
+        return getBlogPostFaq(input.slug);
+      }),
+
+    generateFaq: protectedProcedure
+      .input(z.object({ slug: z.string() }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+        const post = await getBlogPostBySlug(input.slug);
+        if (!post) throw new TRPCError({ code: "NOT_FOUND", message: "文章不存在" });
+
+        const categoryLabel: Record<string, string> = {
+          relationship: "兩性關係",
+          fengshui: "玄學風水",
+          lifestyle: "生活態度",
+          interview: "嘉賓訪談",
+          other: "其他",
+        };
+
+        const response = await invokeLLM({
+          messages: [
+            {
+              role: "system",
+              content: `你係一個香港 SEO 專家，專門為文章生成 FAQ 結構化資料。
+請根據文章內容，生成 2-3 個最有可能被香港讀者搜尋的問題及答案。
+要求：
+1. 問題用繁體中文，語氣自然，貼近香港讀者的搜尋習慣
+2. 答案簡潔有力，50-120 字，直接回答問題
+3. 問題應涵蓋文章核心主題，有助於 Google AI Overview 及 Perplexity 引用
+4. 輸出 JSON 格式`,
+            },
+            {
+              role: "user",
+              content: `文章標題：${post.title}
+文章分類：${categoryLabel[post.category] || post.category}
+文章摘要：${post.excerpt || ""}
+文章內容：${post.content.slice(0, 1500)}
+
+請生成 FAQ JSON 陣列，格式如下：
+[{"question": "問題一？", "answer": "答案一"}, ...]`,
+            },
+          ],
+          response_format: {
+            type: "json_schema",
+            json_schema: {
+              name: "faq_list",
+              strict: true,
+              schema: {
+                type: "object",
+                properties: {
+                  faqs: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        question: { type: "string" },
+                        answer: { type: "string" },
+                      },
+                      required: ["question", "answer"],
+                      additionalProperties: false,
+                    },
+                  },
+                },
+                required: ["faqs"],
+                additionalProperties: false,
+              },
+            },
+          },
+        });
+
+        const content = response.choices?.[0]?.message?.content;
+        if (!content || typeof content !== "string") throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "AI 生成失敗" });
+
+        const parsed = JSON.parse(content) as { faqs: { question: string; answer: string }[] };
+        const faqs = parsed.faqs.slice(0, 3);
+        await updateBlogPostFaq(input.slug, faqs);
+        return { success: true, faqs };
       }),
   }),
 

@@ -291,3 +291,34 @@ export async function setYoutubeCache(cacheKey: string, data: unknown, ttlSecond
     .values({ cacheKey, data: serialized, expiresAt })
     .onDuplicateKeyUpdate({ set: { data: serialized, expiresAt, updatedAt: new Date() } });
 }
+
+// ─── Blog Post FAQ ────────────────────────────────────────────────────────────
+
+/**
+ * Get FAQ for a blog post by slug.
+ * Returns parsed array of { question, answer } objects.
+ */
+export async function getBlogPostFaq(slug: string): Promise<{ question: string; answer: string }[]> {
+  const db = await getDb();
+  if (!db) return [];
+  const result = await db.select({ faq: blogPosts.faq }).from(blogPosts)
+    .where(eq(blogPosts.slug, slug))
+    .limit(1);
+  if (result.length === 0) return [];
+  try {
+    return JSON.parse(result[0].faq || "[]");
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Update FAQ for a blog post by slug.
+ */
+export async function updateBlogPostFaq(slug: string, faq: { question: string; answer: string }[]): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(blogPosts)
+    .set({ faq: JSON.stringify(faq) })
+    .where(eq(blogPosts.slug, slug));
+}

@@ -99,6 +99,73 @@ export function buildWebSiteSchema() {
   };
 }
 
+/** Article schema for blog posts */
+export function buildArticleSchema(post: {
+  title: string;
+  excerpt?: string | null;
+  content: string;
+  authorName: string;
+  authorBio?: string | null;
+  publishedAt?: Date | null;
+  updatedAt?: Date;
+  slug: string;
+  coverImage?: string | null;
+  images?: string;
+}) {
+  const imageUrl = (() => {
+    try {
+      const imgs = JSON.parse(post.images || "[]");
+      return imgs[0] || post.coverImage || LOGO_URL;
+    } catch {
+      return post.coverImage || LOGO_URL;
+    }
+  })();
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": `${SITE_URL}/blog/${post.slug}#article`,
+    headline: post.title,
+    description: post.excerpt || post.content.slice(0, 160),
+    image: {
+      "@type": "ImageObject",
+      url: imageUrl,
+    },
+    author: {
+      "@type": "Person",
+      name: post.authorName,
+      description: post.authorBio || undefined,
+    },
+    publisher: {
+      "@id": `${SITE_URL}/#organization`,
+    },
+    datePublished: post.publishedAt?.toISOString() || new Date().toISOString(),
+    dateModified: post.updatedAt?.toISOString() || new Date().toISOString(),
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${SITE_URL}/blog/${post.slug}`,
+    },
+    inLanguage: "zh-HK",
+  };
+}
+
+/** FAQPage schema for blog post FAQ sections */
+export function buildFAQSchema(faqs: { question: string; answer: string }[]) {
+  if (!faqs || faqs.length === 0) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
+}
+
 /** BreadcrumbList schema helper */
 export function buildBreadcrumbSchema(
   items: { name: string; url: string }[]

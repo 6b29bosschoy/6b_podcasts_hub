@@ -1,0 +1,1 @@
+ALTER TABLE `blog_posts` ADD `faq` varchar(5000) DEFAULT '[]' NOT NULL;

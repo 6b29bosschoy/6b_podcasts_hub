@@ -42,6 +42,8 @@ export const blogPosts = mysqlTable("blog_posts", {
   links: varchar("links", { length: 2000 }).default("[]").notNull(),
   // Article view count for social proof
   viewCount: int("viewCount").default(0).notNull(),
+  // JSON array of { question, answer } FAQ objects for SEO/GEO structured data
+  faq: varchar("faq", { length: 5000 }).default("[]").notNull(),
   publishedAt: timestamp("publishedAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

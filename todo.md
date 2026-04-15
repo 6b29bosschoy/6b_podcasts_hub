@@ -236,3 +236,12 @@
 
 - [x] 後端：blog.getRelated 新增 offset 參數支援分頁輪換
 - [x] 前端：相關文章區塊加入「換一批」按鈕，點擊後顯示下一批推薦
+
+## SEO/GEO 四項改進
+
+- [x] index.html 加入 hreflang zh-HK / zh-Hant / x-default 標籤
+- [x] 文章詳情頁加入 Article JSON-LD Schema（含 author、datePublished、image、publisher）
+- [x] 資料庫新增 faq 欄位，後端新增 blog.getFaq / blog.generateFaq procedure（AI 自動生成）
+- [x] BlogPost.tsx 加入 FAQ 展開區塊及 FAQPage JSON-LD Schema
+- [x] 為現有 9 篇文章批量生成 FAQ
+- [x] Google Search Console 驗證及提交 Sitemap 指引

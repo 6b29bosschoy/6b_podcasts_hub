@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { ArrowLeft, ChevronLeft, ChevronRight, ExternalLink, Eye } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, ExternalLink, Eye, ChevronDown, ChevronUp } from "lucide-react";
 import Lightbox from "@/components/Lightbox";
 import ShareButtons from "@/components/ShareButtons";
+import { JsonLd, buildArticleSchema, buildFAQSchema } from "@/components/JsonLd";
 
 const CATEGORY_LABELS: Record<string, string> = {
   relationship: "兩性關係",
@@ -22,6 +23,13 @@ export default function BlogPost({ slug }: { slug: string }) {
 
   const [relatedOffset, setRelatedOffset] = useState(0);
   const RELATED_LIMIT = 3;
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+
+  const { data: faqData } = trpc.blog.getFaq.useQuery(
+    { slug },
+    { enabled: !!slug }
+  );
+  const faqs = faqData ?? [];
 
   const { data: relatedData } = trpc.blog.getRelated.useQuery(
     { category: post?.category ?? "other", excludeSlug: slug, limit: RELATED_LIMIT, offset: relatedOffset },
@@ -75,10 +83,29 @@ export default function BlogPost({ slug }: { slug: string }) {
     try { return JSON.parse(post.links || "[]"); } catch { return []; }
   })();
 
+  // Build structured data schemas
+  const articleSchema = buildArticleSchema({
+    title: post.title,
+    excerpt: post.excerpt,
+    content: post.content,
+    authorName: post.authorName,
+    authorBio: post.authorBio,
+    publishedAt: post.publishedAt ? new Date(post.publishedAt) : undefined,
+    updatedAt: post.updatedAt ? new Date(post.updatedAt) : undefined,
+    slug: post.slug,
+    coverImage: post.coverImage,
+    images: post.images,
+  });
+  const faqSchema = faqs.length > 0 ? buildFAQSchema(faqs) : null;
+
   const openLightbox = (idx: number) => { setLightboxIndex(idx); setLightboxOpen(true); };
 
   return (
     <div className="min-h-screen pt-24 pb-16">
+      {/* Structured Data JSON-LD */}
+      <JsonLd data={articleSchema} id={`article-${slug}`} />
+      {faqSchema && <JsonLd data={faqSchema} id={`faq-${slug}`} />}
+
       <div className="container max-w-3xl mx-auto py-10">
         <Link href="/blog" className="inline-flex items-center gap-2 text-sm mb-8 hover:opacity-80 transition-opacity" style={{ color: "oklch(0.62 0.24 25)" }}>
           <ArrowLeft size={16} />
@@ -221,6 +248,36 @@ export default function BlogPost({ slug }: { slug: string }) {
             </div>
           )}
         </article>
+
+        {/* ── FAQ Section ──────────────────────────────────── */}
+        {faqs.length > 0 && (
+          <div className="mt-10 rounded-xl overflow-hidden" style={{ border: "1px solid oklch(0.22 0.02 260)" }}>
+            <div className="px-5 py-4" style={{ background: "oklch(0.13 0.015 260)" }}>
+              <h2 className="text-sm font-black tracking-widest uppercase" style={{ color: "oklch(0.62 0.24 25)" }}>常見問題 FAQ</h2>
+            </div>
+            <div className="divide-y" style={{ borderColor: "oklch(0.20 0.02 260)" }}>
+              {faqs.map((faq, idx) => (
+                <div key={idx}>
+                  <button
+                    onClick={() => setOpenFaqIndex(openFaqIndex === idx ? null : idx)}
+                    className="w-full flex items-center justify-between gap-3 px-5 py-4 text-left hover:opacity-80 transition-opacity"
+                    style={{ background: "oklch(0.11 0.015 260)" }}
+                  >
+                    <span className="text-sm font-bold" style={{ color: "oklch(0.88 0.01 60)" }}>{faq.question}</span>
+                    {openFaqIndex === idx
+                      ? <ChevronUp size={16} style={{ color: "oklch(0.62 0.24 25)", flexShrink: 0 }} />
+                      : <ChevronDown size={16} style={{ color: "oklch(0.50 0.02 60)", flexShrink: 0 }} />}
+                  </button>
+                  {openFaqIndex === idx && (
+                    <div className="px-5 py-4" style={{ background: "oklch(0.10 0.012 260)", borderTop: "1px solid oklch(0.18 0.02 260)" }}>
+                      <p className="text-sm leading-relaxed" style={{ color: "oklch(0.70 0.01 60)" }}>{faq.answer}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* ── Share Buttons ─────────────────────────────────── */}
         <ShareButtons
