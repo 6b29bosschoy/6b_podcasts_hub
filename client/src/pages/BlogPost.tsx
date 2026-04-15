@@ -20,10 +20,22 @@ export default function BlogPost({ slug }: { slug: string }) {
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const incrementViewMutation = trpc.blog.incrementViewCount.useMutation();
 
-  const { data: relatedPosts } = trpc.blog.getRelated.useQuery(
-    { category: post?.category ?? "other", excludeSlug: slug, limit: 3 },
+  const [relatedOffset, setRelatedOffset] = useState(0);
+  const RELATED_LIMIT = 3;
+
+  const { data: relatedData } = trpc.blog.getRelated.useQuery(
+    { category: post?.category ?? "other", excludeSlug: slug, limit: RELATED_LIMIT, offset: relatedOffset },
     { enabled: !!post?.category }
   );
+
+  const relatedPosts = relatedData?.posts ?? [];
+  const relatedTotal = relatedData?.total ?? 0;
+  const hasMore = relatedTotal > RELATED_LIMIT;
+
+  const handleNextBatch = () => {
+    const nextOffset = relatedOffset + RELATED_LIMIT;
+    setRelatedOffset(nextOffset >= relatedTotal ? 0 : nextOffset);
+  };
 
   // Increment view count when article loads
   useEffect(() => {
@@ -218,7 +230,7 @@ export default function BlogPost({ slug }: { slug: string }) {
         />
 
         {/* ── Related Articles ──────────────────────────────── */}
-        {relatedPosts && relatedPosts.length > 0 && (
+        {relatedPosts.length > 0 && (
           <div className="mt-12 pt-10" style={{ borderTop: "1px solid oklch(0.20 0.02 260)" }}>
             <div className="flex items-center gap-3 mb-6">
               <div className="h-px flex-1" style={{ background: "oklch(0.22 0.02 260)" }} />
@@ -264,6 +276,20 @@ export default function BlogPost({ slug }: { slug: string }) {
                 );
               })}
             </div>
+            {/* 換一批按鈕 */}
+            {hasMore && (
+              <div className="flex justify-center mt-6">
+                <button
+                  onClick={handleNextBatch}
+                  className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold transition-all hover:opacity-80 active:scale-95"
+                  style={{ background: "oklch(0.18 0.02 260)", border: "1px solid oklch(0.30 0.03 260)", color: "oklch(0.70 0.01 60)" }}
+                >
+                  <span style={{ fontSize: "1rem" }}>🔄</span>
+                  換一批
+                  <span className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>({relatedTotal} 篇同類文章)</span>
+                </button>
+              </div>
+            )}
           </div>
         )}
 

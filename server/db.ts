@@ -114,7 +114,7 @@ export async function updateBlogPostStatus(id: number, status: "approved" | "rej
   await db.update(blogPosts).set(updateData).where(eq(blogPosts.id, id));
 }
 
-export async function getRelatedBlogPosts(category: string, excludeSlug: string, limit = 3): Promise<BlogPost[]> {
+export async function getRelatedBlogPosts(category: string, excludeSlug: string, limit = 3, offset = 0): Promise<BlogPost[]> {
   const db = await getDb();
   if (!db) return [];
   return db.select().from(blogPosts)
@@ -124,7 +124,20 @@ export async function getRelatedBlogPosts(category: string, excludeSlug: string,
       ne(blogPosts.slug, excludeSlug),
     ))
     .orderBy(desc(blogPosts.publishedAt))
-    .limit(limit);
+    .limit(limit)
+    .offset(offset);
+}
+
+export async function countRelatedBlogPosts(category: string, excludeSlug: string): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+  const result = await db.select({ count: sql<number>`count(*)` }).from(blogPosts)
+    .where(and(
+      eq(blogPosts.status, "approved"),
+      eq(blogPosts.category, category as BlogPost["category"]),
+      ne(blogPosts.slug, excludeSlug),
+    ));
+  return Number(result[0]?.count ?? 0);
 }
 
 export async function incrementBlogPostViewCount(slug: string): Promise<void> {

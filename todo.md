@@ -231,3 +231,8 @@
 
 - [x] 後端：新增 blog.getRelated procedure（依分類取 3 篇相關文章，排除當前文章）
 - [x] 前端：BlogPost.tsx 文章底部加入「相關文章」卡片區塊
+
+## 相關文章「換一批」功能
+
+- [x] 後端：blog.getRelated 新增 offset 參數支援分頁輪換
+- [x] 前端：相關文章區塊加入「換一批」按鈕，點擊後顯示下一批推薦

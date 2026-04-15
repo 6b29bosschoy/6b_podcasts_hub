@@ -42,6 +42,7 @@ import {
   setYoutubeCache,
   incrementBlogPostViewCount,
   getRelatedBlogPosts,
+  countRelatedBlogPosts,
 } from "./db";
 import { storagePut } from "./storage";
 
@@ -164,9 +165,18 @@ export const appRouter = router({
       }),
 
     getRelated: publicProcedure
-      .input(z.object({ category: z.string(), excludeSlug: z.string(), limit: z.number().min(1).max(6).default(3) }))
+      .input(z.object({
+        category: z.string(),
+        excludeSlug: z.string(),
+        limit: z.number().min(1).max(6).default(3),
+        offset: z.number().min(0).default(0),
+      }))
       .query(async ({ input }) => {
-        return getRelatedBlogPosts(input.category, input.excludeSlug, input.limit);
+        const [posts, total] = await Promise.all([
+          getRelatedBlogPosts(input.category, input.excludeSlug, input.limit, input.offset),
+          countRelatedBlogPosts(input.category, input.excludeSlug),
+        ]);
+        return { posts, total };
       }),
   }),
 
