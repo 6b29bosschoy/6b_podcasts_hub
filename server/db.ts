@@ -1,4 +1,4 @@
-import { and, desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, ne, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   BlogPost,
@@ -112,6 +112,19 @@ export async function updateBlogPostStatus(id: number, status: "approved" | "rej
   const updateData: Partial<InsertBlogPost> = { status };
   if (status === "approved") updateData.publishedAt = new Date();
   await db.update(blogPosts).set(updateData).where(eq(blogPosts.id, id));
+}
+
+export async function getRelatedBlogPosts(category: string, excludeSlug: string, limit = 3): Promise<BlogPost[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(blogPosts)
+    .where(and(
+      eq(blogPosts.status, "approved"),
+      eq(blogPosts.category, category as BlogPost["category"]),
+      ne(blogPosts.slug, excludeSlug),
+    ))
+    .orderBy(desc(blogPosts.publishedAt))
+    .limit(limit);
 }
 
 export async function incrementBlogPostViewCount(slug: string): Promise<void> {

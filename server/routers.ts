@@ -41,6 +41,7 @@ import {
   getYoutubeCache,
   setYoutubeCache,
   incrementBlogPostViewCount,
+  getRelatedBlogPosts,
 } from "./db";
 import { storagePut } from "./storage";
 
@@ -160,6 +161,12 @@ export const appRouter = router({
         if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
         await updateBlogPostStatus(input.id, input.status);
         return { success: true };
+      }),
+
+    getRelated: publicProcedure
+      .input(z.object({ category: z.string(), excludeSlug: z.string(), limit: z.number().min(1).max(6).default(3) }))
+      .query(async ({ input }) => {
+        return getRelatedBlogPosts(input.category, input.excludeSlug, input.limit);
       }),
   }),
 

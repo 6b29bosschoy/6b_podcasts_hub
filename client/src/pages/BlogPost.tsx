@@ -20,6 +20,11 @@ export default function BlogPost({ slug }: { slug: string }) {
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const incrementViewMutation = trpc.blog.incrementViewCount.useMutation();
 
+  const { data: relatedPosts } = trpc.blog.getRelated.useQuery(
+    { category: post?.category ?? "other", excludeSlug: slug, limit: 3 },
+    { enabled: !!post?.category }
+  );
+
   // Increment view count when article loads
   useEffect(() => {
     if (post?.slug && !incrementViewMutation.isPending) {
@@ -211,6 +216,56 @@ export default function BlogPost({ slug }: { slug: string }) {
           title={post.title}
           excerpt={post.excerpt ?? undefined}
         />
+
+        {/* ── Related Articles ──────────────────────────────── */}
+        {relatedPosts && relatedPosts.length > 0 && (
+          <div className="mt-12 pt-10" style={{ borderTop: "1px solid oklch(0.20 0.02 260)" }}>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="h-px flex-1" style={{ background: "oklch(0.22 0.02 260)" }} />
+              <h2 className="text-sm font-black tracking-widest uppercase" style={{ color: "oklch(0.62 0.24 25)" }}>相關文章</h2>
+              <div className="h-px flex-1" style={{ background: "oklch(0.22 0.02 260)" }} />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {relatedPosts.map((related) => {
+                const relatedImages: string[] = (() => { try { return JSON.parse(related.images || "[]"); } catch { return []; } })();
+                return (
+                  <Link key={related.slug} href={`/blog/${related.slug}`}
+                    className="group rounded-xl overflow-hidden flex flex-col hover:opacity-90 transition-opacity"
+                    style={{ background: "oklch(0.12 0.015 260)", border: "1px solid oklch(0.20 0.02 260)" }}
+                  >
+                    {/* Cover */}
+                    <div className="relative overflow-hidden" style={{ aspectRatio: "16/9" }}>
+                      {relatedImages.length > 0 ? (
+                        <img src={relatedImages[0]} alt={related.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                      ) : related.coverImage ? (
+                        <img src={related.coverImage} alt={related.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-2xl" style={{ background: "linear-gradient(135deg, oklch(0.18 0.03 260), oklch(0.22 0.05 300))" }}>
+                          {CATEGORY_LABELS[related.category] === "兩性關係" ? "💕" : CATEGORY_LABELS[related.category] === "玄學風水" ? "✨" : "📝"}
+                        </div>
+                      )}
+                      <div className="absolute top-2 left-2">
+                        <span className="text-xs font-bold px-2 py-0.5 rounded" style={{ background: "oklch(0.62 0.24 25 / 0.85)", color: "white" }}>
+                          {CATEGORY_LABELS[related.category] ?? related.category}
+                        </span>
+                      </div>
+                    </div>
+                    {/* Text */}
+                    <div className="p-3 flex flex-col gap-1.5 flex-1">
+                      <h3 className="text-sm font-bold leading-snug line-clamp-2" style={{ color: "oklch(0.88 0.01 60)" }}>{related.title}</h3>
+                      <div className="flex items-center justify-between mt-auto pt-1">
+                        <span className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>{related.authorName}</span>
+                        <span className="text-xs" style={{ color: "oklch(0.45 0.02 60)" }}>
+                          {related.publishedAt ? new Date(related.publishedAt).toLocaleDateString("zh-HK") : ""}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         <div className="mt-8 pt-8" style={{ borderTop: "1px solid oklch(0.20 0.02 260)" }}>
           <div className="glass-card rounded-xl p-6 text-center">

@@ -226,3 +226,8 @@
 
 - [x] 嘉賓投稿自動批准發布（status 直接設為 approved，publishedAt 自動填入）
 - [x] 嘉賓投稿表單移除 Email 必填欄位（改為完全隱藏）
+
+## 相關文章推薦區塊
+
+- [x] 後端：新增 blog.getRelated procedure（依分類取 3 篇相關文章，排除當前文章）
+- [x] 前端：BlogPost.tsx 文章底部加入「相關文章」卡片區塊
