@@ -29,7 +29,7 @@ export const blogPosts = mysqlTable("blog_posts", {
   title: varchar("title", { length: 255 }).notNull(),
   slug: varchar("slug", { length: 255 }).notNull().unique(),
   authorName: varchar("authorName", { length: 100 }).notNull(),
-  authorEmail: varchar("authorEmail", { length: 320 }).notNull(),
+  authorEmail: varchar("authorEmail", { length: 320 }),
   authorBio: text("authorBio"),
   coverImage: text("coverImage"),
   excerpt: text("excerpt"),

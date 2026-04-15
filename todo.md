@@ -221,3 +221,8 @@
 
 - [x] 建立 publish_article.mjs 統一發布腳本（AI 生成配圖 + 上傳 S3 + 插入資料庫一次完成）
 - [x] 更新 hk-daily-column 技能說明文件
+
+## 嘉賓投稿改進
+
+- [x] 嘉賓投稿自動批准發布（status 直接設為 approved，publishedAt 自動填入）
+- [x] 嘉賓投稿表單移除 Email 必填欄位（改為完全隱藏）

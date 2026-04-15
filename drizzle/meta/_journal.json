@@ -57,6 +57,13 @@
       "when": 1775742081451,
       "tag": "0007_glossy_lady_vermin",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1776265715324,
+      "tag": "0008_perfect_corsair",
+      "breakpoints": true
     }
   ]
 }

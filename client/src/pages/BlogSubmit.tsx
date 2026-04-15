@@ -35,7 +35,6 @@ export default function BlogSubmit() {
   const [form, setForm] = useState({
     title: "",
     authorName: "",
-    authorEmail: "",
     authorBio: "",
     excerpt: "",
     content: "",
@@ -158,7 +157,7 @@ export default function BlogSubmit() {
           <CheckCircle size={48} className="mx-auto mb-4" style={{ color: "oklch(0.65 0.20 145)" }} />
           <h2 className="text-2xl font-black mb-3" style={{ color: "oklch(0.92 0.01 60)" }}>投稿成功！</h2>
           <p className="text-sm mb-6" style={{ color: "oklch(0.55 0.02 60)" }}>
-            感謝你的分享！我們的團隊會在審核後盡快發佈你的文章。
+            感謝你的分享！你的文章已即時發佈至嘉賓專欄。
           </p>
           <div className="flex gap-3 justify-center">
             <Link href="/blog" className="px-5 py-2.5 rounded-lg text-sm font-bold" style={{ background: "oklch(0.60 0.22 25)", color: "white" }}>
@@ -204,15 +203,9 @@ export default function BlogSubmit() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           {/* Author info */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-bold mb-1.5" style={labelStyle}>你的名字 *</label>
-              <input name="authorName" value={form.authorName} onChange={handleChange} required placeholder="顯示名稱" style={inputStyle} />
-            </div>
-            <div>
-              <label className="block text-xs font-bold mb-1.5" style={labelStyle}>電郵地址 *</label>
-              <input name="authorEmail" type="email" value={form.authorEmail} onChange={handleChange} required placeholder="your@email.com" style={inputStyle} />
-            </div>
+          <div>
+            <label className="block text-xs font-bold mb-1.5" style={labelStyle}>你的名字 *</label>
+            <input name="authorName" value={form.authorName} onChange={handleChange} required placeholder="顯示名稱" style={inputStyle} />
           </div>
 
           <div>

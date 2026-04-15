@@ -104,7 +104,7 @@ export const appRouter = router({
       .input(z.object({
         title: z.string().min(1, "請輸入文章標題").max(255, "標題不得超過 255 個字元"),
         authorName: z.string().min(1, "請輸入你的名字").max(100),
-        authorEmail: z.string().email("請輸入有效的電郵地址"),
+        authorEmail: z.string().email("請輸入有效的電郵地址").optional().or(z.literal("")).transform(v => v || ""),
         authorBio: z.string().max(500).optional(),
         excerpt: z.string().max(500).optional(),
         content: z.string().min(10, "文章內容最少需要 10 個字元"),
@@ -118,13 +118,14 @@ export const appRouter = router({
         await createBlogPost({
           ...rest,
           slug,
-          status: "pending",
+          status: "approved",
+          publishedAt: new Date(),
           images: JSON.stringify(imageUrls ?? []),
           links: JSON.stringify(links ?? []),
         });
         await notifyOwner({
           title: "新嘉賓投稿",
-          content: `${input.authorName} 提交了新文章「${input.title}」${imageUrls?.length ? `（含 ${imageUrls.length} 張圖片）` : ""}，請前往管理後台審核。`,
+          content: `${input.authorName} 提交了新文章「${input.title}」${imageUrls?.length ? `（含 ${imageUrls.length} 張圖片）` : ""}，已自動發布至嘉賓專欄。`,
         }).catch(() => {});
         return { success: true, slug };
       }),
