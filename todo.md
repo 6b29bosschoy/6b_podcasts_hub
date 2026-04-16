@@ -245,3 +245,8 @@
 - [x] BlogPost.tsx 加入 FAQ 展開區塊及 FAQPage JSON-LD Schema
 - [x] 為現有 9 篇文章批量生成 FAQ
 - [x] Google Search Console 驗證及提交 Sitemap 指引
+
+## Google AdSense 整合
+
+- [x] index.html 加入 AdSense 腳本（pub-7035034067070430）及 Auto Ads
+- [x] 改用 Auto Ads ，移除手動廣告位（Google 自動分析最佳位置）
