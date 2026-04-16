@@ -194,7 +194,7 @@ function formatSubscriberCount(count: string): string {
 export default function Home() {
   // SEO: set document title and meta description dynamically
   useEffect(() => {
-    document.title = "路邊電台 × 路邊玄學堂｜香港最真實人物訪談";
+    document.title = "路邊電台 × 路邊玄學堂｜香港最真實人物訪談 Podcast";
     const desc = document.querySelector("meta[name='description']");
     if (desc) {
       desc.setAttribute("content", "路邊電台係香港最真實人物訪談節目，探討兩性關係、都市感情與玄學命理。每位嘉賓講真話，呈現最真實內心世界。立即收看 YouTube 影片，預約風水命理服務。");

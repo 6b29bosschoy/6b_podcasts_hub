@@ -250,3 +250,8 @@
 
 - [x] index.html 加入 AdSense 腳本（pub-7035034067070430）及 Auto Ads
 - [x] 改用 Auto Ads ，移除手動廣告位（Google 自動分析最佳位置）
+
+## 首頁 SEO 修復
+
+- [x] 關鍵字從 12 個精簡至 6 個核心關鍵字
+- [x] 標題從 22 字元延長至 30-60 字元，並用 document.title 動態設置
