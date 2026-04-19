@@ -282,3 +282,9 @@
 
 - [x] 修復 /.well-known/api-catalog 端點，確保回傳 application/linkset+json（非 HTML）
 - [x] 刪除 client/public/.well-known/ 靜態檔案，Express 路由完全接管所有 .well-known 端點
+
+## Markdown for Agents 改進
+
+- [x] 擴展 Express Markdown 協商中介層，支援 /、/blog 及 /blog/:slug 路徑
+- [x] 加入 x-markdown-tokens 標頭（估算 token 數量）
+- [x] 加入 Vary: Accept 標頭確保快取正確區分 HTML/Markdown 回應

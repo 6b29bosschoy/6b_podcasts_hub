@@ -7,6 +7,22 @@ import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
+import { getApprovedBlogPosts, getBlogPostBySlug } from "../db";
+
+// Estimate token count (rough approximation: 1 token ≈ 4 chars)
+function estimateTokens(text: string): number {
+  return Math.ceil(text.length / 4);
+}
+
+// Send markdown response with proper headers
+function sendMarkdown(res: express.Response, content: string): void {
+  const tokens = estimateTokens(content);
+  res.setHeader("Content-Type", "text/markdown; charset=utf-8");
+  res.setHeader("x-markdown-tokens", String(tokens));
+  res.setHeader("Vary", "Accept");
+  res.setHeader("Cache-Control", "public, max-age=3600");
+  res.send(content);
+}
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -51,14 +67,90 @@ async function startServer() {
   });
 
   // ── Markdown Negotiation (Accept: text/markdown) ─────────────────────────────
-  app.use((req, res, next) => {
+  // Handles all page paths: /, /blog, /blog/:slug
+  app.use(async (req, res, next) => {
     const accept = req.headers["accept"] || "";
-    if (accept.includes("text/markdown") && req.path === "/") {
-      res.setHeader("Content-Type", "text/markdown; charset=utf-8");
-      res.setHeader("Cache-Control", "public, max-age=3600");
-      res.send(`# 路邊電台 × 路邊玄學堂 (6B Podcasts)\n\n> 路邊電台係香港最真實嘅人物訪談 Podcast，由 Ray Choy 創辦，探討兩性關係、都市感情、玄學命理。\n\n- 官方網站: https://6bpodcasts.com\n- YouTube: https://www.youtube.com/@6bpodcasts\n- 嘉賓專欄: https://6bpodcasts.com/blog\n- 玄學服務預約: https://6bpodcasts.com/booking\n- AI 資訊: https://6bpodcasts.com/llms.txt\n`);
-      return;
+    if (!accept.includes("text/markdown")) return next();
+
+    const path = req.path;
+
+    // Home page
+    if (path === "/") {
+      const md = `# 路邊電台 × 路邊玄學堂 (6B Podcasts)
+
+> 路邊電台係香港最真實嘅人物訪談 Podcast，由 Ray Choy 創辦，探討兩性關係、都市感情、玄學命理，每一位嘉賓都係講真話，呈現最真實嘅內心世界。
+
+## 主要功能
+
+- 官方網站: https://6bpodcasts.com
+- YouTube: https://www.youtube.com/@6bpodcasts
+- 嘉賓專欄: https://6bpodcasts.com/blog
+- 玄學服務預約: https://6bpodcasts.com/booking
+- AI 資訊: https://6bpodcasts.com/llms.txt
+- 完整 AI 文件: https://6bpodcasts.com/llms-full.txt
+`;
+      return sendMarkdown(res, md);
     }
+
+    // Blog listing page
+    if (path === "/blog") {
+      try {
+        const posts = await getApprovedBlogPosts(20, 0);
+        const lines = [
+          "# 嘉賓專欄 — 路邊電台",
+          "",
+          "> 路邊電台嘉賓及觀眾投稿文章，分享真實故事與心得。",
+          "",
+          "## 最新文章",
+          "",
+        ];
+        for (const post of posts.slice(0, 20)) {
+          const date = post.publishedAt ? new Date(post.publishedAt).toISOString().split("T")[0] : "";
+          lines.push(`### [${post.title}](https://6bpodcasts.com/blog/${post.slug})`);
+          if (post.category) lines.push(`**分類**: ${post.category}`);
+          if (date) lines.push(`**發布日期**: ${date}`);
+          if (post.excerpt) lines.push(`\n${post.excerpt}`);
+          lines.push("");
+        }
+        return sendMarkdown(res, lines.join("\n"));
+      } catch {
+        return next();
+      }
+    }
+
+    // Individual blog post
+    const blogMatch = path.match(/^\/blog\/([^/]+)$/);
+    if (blogMatch) {
+      try {
+        const slug = blogMatch[1];
+        const post = await getBlogPostBySlug(slug);
+        if (!post) return next();
+        const date = post.publishedAt ? new Date(post.publishedAt).toISOString().split("T")[0] : "";
+        const faqItems: Array<{ q: string; a: string }> = post.faq
+          ? (typeof post.faq === "string" ? JSON.parse(post.faq) : post.faq)
+          : [];
+        const lines = [
+          `# ${post.title}`,
+          "",
+          `**作者**: ${post.authorName || "路邊電台"}`,
+          date ? `**發布日期**: ${date}` : "",
+          post.category ? `**分類**: ${post.category}` : "",
+          "",
+          post.excerpt ? `> ${post.excerpt}\n` : "",
+          post.content || "",
+        ];
+        if (faqItems.length > 0) {
+          lines.push("", "## 常見問題", "");
+          for (const item of faqItems) {
+            lines.push(`**Q: ${item.q}**`, "", `A: ${item.a}`, "");
+          }
+        }
+        return sendMarkdown(res, lines.filter(l => l !== undefined).join("\n"));
+      } catch {
+        return next();
+      }
+    }
+
     next();
   });
 
