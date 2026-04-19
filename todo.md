@@ -265,3 +265,15 @@
 - [x] 資料庫新增 comments 表（postSlug, authorName, content, createdAt, approved）
 - [x] 後端：新增 comment.list / comment.submit procedures
 - [x] 前端：建立 Comments.tsx 元件，整合至 BlogPost.tsx 文章底部
+
+## AI Agent 可發現性（Agent Readiness）
+
+- [x] robots.txt 加入 Content Signals（ai-train=no, search=yes, ai-input=no）
+- [x] 建立 /.well-known/api-catalog（application/linkset+json，RFC 9727）
+- [x] 建立 /.well-known/oauth-authorization-server（OAuth 2.0 元資料）
+- [x] 建立 /.well-known/oauth-protected-resource（受保護資源元資料）
+- [x] 建立 /.well-known/mcp/server-card.json（MCP Server Card）
+- [x] 建立 /.well-known/agent-skills/index.json（Agent Skills Discovery）
+- [x] Express 伺服器加入 RFC 8288 Link 回應標頭
+- [x] Express 伺服器加入 Markdown 協商中介層（Accept: text/markdown）
+- [x] 前端加入 WebMCP navigator.modelContext.provideContext() 工具定義

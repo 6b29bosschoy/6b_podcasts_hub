@@ -36,6 +36,137 @@ async function startServer() {
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
 
+  // ── RFC 8288 Link Headers (Agent Discovery) ──────────────────────────────────
+  app.use((_req, res, next) => {
+    res.setHeader(
+      "Link",
+      [
+        '</.well-known/api-catalog>; rel="api-catalog"',
+        '</.well-known/agent-skills/index.json>; rel="agent-skills"',
+        '</.well-known/mcp/server-card.json>; rel="mcp-server-card"',
+        '</llms.txt>; rel="describedby"; type="text/plain"',
+      ].join(", ")
+    );
+    next();
+  });
+
+  // ── Markdown Negotiation (Accept: text/markdown) ─────────────────────────────
+  app.use((req, res, next) => {
+    const accept = req.headers["accept"] || "";
+    if (accept.includes("text/markdown") && req.path === "/") {
+      res.setHeader("Content-Type", "text/markdown; charset=utf-8");
+      res.setHeader("Cache-Control", "public, max-age=3600");
+      res.send(`# 路邊電台 × 路邊玄學堂 (6B Podcasts)\n\n> 路邊電台係香港最真實嘅人物訪談 Podcast，由 Ray Choy 創辦，探討兩性關係、都市感情、玄學命理。\n\n- 官方網站: https://6bpodcasts.com\n- YouTube: https://www.youtube.com/@6bpodcasts\n- 嘉賓專欄: https://6bpodcasts.com/blog\n- 玄學服務預約: https://6bpodcasts.com/booking\n- AI 資訊: https://6bpodcasts.com/llms.txt\n`);
+      return;
+    }
+    next();
+  });
+
+  // ── /.well-known/ JSON Endpoints (Agent Readiness) ──────────────────────────
+  app.get("/.well-known/api-catalog", (_req, res) => {
+    res.setHeader("Content-Type", "application/linkset+json");
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    res.json({
+      linkset: [
+        {
+          anchor: "https://6bpodcasts.com/api/trpc",
+          "service-doc": [{ href: "https://6bpodcasts.com/llms.txt", type: "text/plain" }],
+          "service-desc": [{ href: "https://6bpodcasts.com/.well-known/api-catalog", type: "application/linkset+json" }],
+          status: [{ href: "https://6bpodcasts.com/api/health" }],
+        },
+      ],
+    });
+  });
+
+  app.get("/.well-known/oauth-authorization-server", (_req, res) => {
+    res.setHeader("Content-Type", "application/json");
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    res.json({
+      issuer: "https://6bpodcasts.com",
+      authorization_endpoint: "https://6bpodcasts.com/api/oauth/callback",
+      token_endpoint: "https://6bpodcasts.com/api/trpc/auth.me",
+      response_types_supported: ["code"],
+      grant_types_supported: ["authorization_code"],
+      subject_types_supported: ["public"],
+      scopes_supported: ["openid", "profile"],
+      service_documentation: "https://6bpodcasts.com/llms.txt",
+    });
+  });
+
+  app.get("/.well-known/oauth-protected-resource", (_req, res) => {
+    res.setHeader("Content-Type", "application/json");
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    res.json({
+      resource: "https://6bpodcasts.com",
+      authorization_servers: ["https://6bpodcasts.com"],
+      scopes_supported: ["openid", "profile"],
+      bearer_methods_supported: ["header", "cookie"],
+      resource_documentation: "https://6bpodcasts.com/llms.txt",
+    });
+  });
+
+  app.get("/.well-known/mcp/server-card.json", (_req, res) => {
+    res.setHeader("Content-Type", "application/json");
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    res.json({
+      schema_version: "1.0",
+      serverInfo: {
+        name: "6B Podcasts Hub",
+        version: "1.0.0",
+        description: "路邊電台 × 路邊玄學堂官方網站 API — 提供嘉賓專欄文章、玄學服務預約、Podcast 節目資訊及讀者互動功能。",
+        homepage: "https://6bpodcasts.com",
+        contact: "https://6bpodcasts.com/contact",
+      },
+      transport: { type: "http", endpoint: "https://6bpodcasts.com/api/trpc" },
+      capabilities: { tools: true, resources: true, prompts: false, sampling: false },
+      tools: [
+        { name: "list_articles", description: "列出嘉賓專欄文章，可按分類篩選" },
+        { name: "get_article", description: "取得指定文章的完整內容，包括 FAQ 問答" },
+        { name: "list_podcasts", description: "取得路邊電台最新 YouTube Podcast 節目列表" },
+      ],
+      legal: {
+        privacy_policy: "https://6bpodcasts.com/privacy",
+        terms_of_service: "https://6bpodcasts.com/terms",
+        content_signals: "ai-train=no, search=yes, ai-input=no",
+      },
+    });
+  });
+
+  app.get("/.well-known/agent-skills/index.json", (_req, res) => {
+    res.setHeader("Content-Type", "application/json");
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    res.json({
+      $schema: "https://agentskills.io/schema/v0.2.0/index.json",
+      skills: [
+        {
+          name: "mcp-server-card",
+          type: "mcp",
+          description: "MCP Server Card for 6B Podcasts Hub.",
+          url: "https://6bpodcasts.com/.well-known/mcp/server-card.json",
+          sha256: "c6ab10e323a5db52155e7c257c1fb37e5ed26c8fd848b19c6d632db4c863b7fa",
+        },
+        {
+          name: "api-catalog",
+          type: "api",
+          description: "API Catalog (RFC 9727) for 6B Podcasts Hub.",
+          url: "https://6bpodcasts.com/.well-known/api-catalog",
+          sha256: "7cf0233915dbd2a1ac3515f6bde371a88932d3a07541b166e2d649e831b1a69f",
+        },
+        {
+          name: "llms-txt",
+          type: "llms-txt",
+          description: "LLMs.txt — AI-readable summary of 6B Podcasts Hub.",
+          url: "https://6bpodcasts.com/llms.txt",
+          sha256: "8c468f3f24c89a6e40ee76705706b243fc70da39ddac42ae81ad1571e857edbd",
+        },
+      ],
+    });
+  });
+
+  app.get("/api/health", (_req, res) => {
+    res.json({ status: "ok", service: "6B Podcasts Hub", timestamp: new Date().toISOString() });
+  });
+
   // ── llms.txt (AI Search Engine Optimization) ────────────────────────────────
   const llmsTxtContent = `# 路邊電台 × 路邊玄學堂 (6B Podcasts)
 
