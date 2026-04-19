@@ -47,6 +47,7 @@ import {
   updateBlogPostFaq,
 } from "./db";
 import { storagePut } from "./storage";
+import { generateFaqForPost } from "./faqHelper";
 
 function generateSlug(title: string): string {
   const timestamp = Date.now();
@@ -131,6 +132,14 @@ export const appRouter = router({
           title: "新嘉賓投稿",
           content: `${input.authorName} 提交了新文章「${input.title}」${imageUrls?.length ? `（含 ${imageUrls.length} 張圖片）` : ""}，已自動發布至嘉賓專欄。`,
         }).catch(() => {});
+        // Auto-generate FAQ in background (non-blocking)
+        generateFaqForPost({
+          slug,
+          title: input.title,
+          category: input.category,
+          excerpt: input.excerpt,
+          content: input.content,
+        }).catch(() => {});
         return { success: true, slug };
       }),
 
@@ -163,6 +172,20 @@ export const appRouter = router({
       .mutation(async ({ ctx, input }) => {
         if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
         await updateBlogPostStatus(input.id, input.status);
+        // Auto-generate FAQ when admin approves a post
+        if (input.status === "approved") {
+          const allPosts = await getAllBlogPosts(200, 0);
+          const post = allPosts.find(p => p.id === input.id);
+          if (post && !post.faq) {
+            generateFaqForPost({
+              slug: post.slug,
+              title: post.title,
+              category: post.category,
+              excerpt: post.excerpt,
+              content: post.content,
+            }).catch(() => {});
+          }
+        }
         return { success: true };
       }),
 
