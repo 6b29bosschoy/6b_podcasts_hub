@@ -1,9 +1,0 @@
-{
-  "resource": "https://6bpodcasts.com",
-  "authorization_servers": [
-    "https://6bpodcasts.com"
-  ],
-  "scopes_supported": ["openid", "profile"],
-  "bearer_methods_supported": ["header", "cookie"],
-  "resource_documentation": "https://6bpodcasts.com/llms.txt"
-}

@@ -277,3 +277,8 @@
 - [x] Express 伺服器加入 RFC 8288 Link 回應標頭
 - [x] Express 伺服器加入 Markdown 協商中介層（Accept: text/markdown）
 - [x] 前端加入 WebMCP navigator.modelContext.provideContext() 工具定義
+
+## API Catalog 修復（RFC 9727）
+
+- [x] 修復 /.well-known/api-catalog 端點，確保回傳 application/linkset+json（非 HTML）
+- [x] 刪除 client/public/.well-known/ 靜態檔案，Express 路由完全接管所有 .well-known 端點
