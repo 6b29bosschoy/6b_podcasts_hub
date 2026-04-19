@@ -5,6 +5,7 @@ import { ArrowLeft, ChevronLeft, ChevronRight, ExternalLink, Eye, ChevronDown, C
 import Lightbox from "@/components/Lightbox";
 import ShareButtons from "@/components/ShareButtons";
 import { JsonLd, buildArticleSchema, buildFAQSchema } from "@/components/JsonLd";
+import Comments from "@/components/Comments";
 
 const CATEGORY_LABELS: Record<string, string> = {
   relationship: "兩性關係",
@@ -364,6 +365,11 @@ export default function BlogPost({ slug }: { slug: string }) {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Comments Section */}
+      <div className="max-w-3xl mx-auto px-4 pb-16">
+        <Comments postSlug={slug} />
       </div>
 
       {/* Lightbox */}

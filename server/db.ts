@@ -3,9 +3,11 @@ import { drizzle } from "drizzle-orm/mysql2";
 import {
   BlogPost,
   Booking,
+  Comment,
   Contact,
   InsertBlogPost,
   InsertBooking,
+  InsertComment,
   InsertContact,
   InsertReaderSubmission,
   InsertSubscription,
@@ -15,6 +17,7 @@ import {
   YoutubeCache,
   blogPosts,
   bookings,
+  comments,
   contacts,
   readerSubmissions,
   subscriptions,
@@ -321,4 +324,29 @@ export async function updateBlogPostFaq(slug: string, faq: { question: string; a
   await db.update(blogPosts)
     .set({ faq: JSON.stringify(faq) })
     .where(eq(blogPosts.slug, slug));
+}
+
+// ─── Comments ─────────────────────────────────────────────────────────────────
+
+export async function getCommentsBySlug(postSlug: string): Promise<Comment[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(comments)
+    .where(and(eq(comments.postSlug, postSlug), eq(comments.approved, true)))
+    .orderBy(desc(comments.createdAt));
+}
+
+export async function createComment(data: InsertComment): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(comments).values(data);
+}
+
+export async function countCommentsBySlug(postSlug: string): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+  const result = await db.select({ count: sql<number>`count(*)` })
+    .from(comments)
+    .where(and(eq(comments.postSlug, postSlug), eq(comments.approved, true)));
+  return result[0]?.count ?? 0;
 }

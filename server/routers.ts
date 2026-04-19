@@ -45,6 +45,9 @@ import {
   countRelatedBlogPosts,
   getBlogPostFaq,
   updateBlogPostFaq,
+  getCommentsBySlug,
+  createComment,
+  countCommentsBySlug,
 } from "./db";
 import { storagePut } from "./storage";
 import { generateFaqForPost } from "./faqHelper";
@@ -673,13 +676,42 @@ export const appRouter = router({
         ];
 
         const response = await invokeLLM({ messages });
-        const reply = response.choices?.[0]?.message?.content ?? "唔好意思，我而家唔係好明你嘅問題，可以再問清楚啲嗎？";
+        const reply = response.choices?.[0]?.message?.content ?? "唔好意思，我而家唔係好明你嘉問題，可以再問清楚啊？";
         return { reply };
+      }),
+  }),
+
+  // ─── Comments ───────────────────────────────────────────────────────────────────────────────────
+  comment: router({
+    list: publicProcedure
+      .input(z.object({ postSlug: z.string() }))
+      .query(async ({ input }) => {
+        const [items, total] = await Promise.all([
+          getCommentsBySlug(input.postSlug),
+          countCommentsBySlug(input.postSlug),
+        ]);
+        return { items, total };
+      }),
+
+    submit: publicProcedure
+      .input(z.object({
+        postSlug: z.string(),
+        authorName: z.string().min(1, "請輸入名字").max(100),
+        content: z.string().min(2, "留言內容太短").max(1000, "留言不得超過 1000 字"),
+      }))
+      .mutation(async ({ input }) => {
+        await createComment({
+          postSlug: input.postSlug,
+          authorName: input.authorName,
+          content: input.content,
+          approved: true,
+        });
+        return { success: true };
       }),
   }),
 });
 
-// Helper import needed for subscription adminList
+/// Helper import needed for subscription adminList
 import { getSubscriptions } from "./db";
-
 export type AppRouter = typeof appRouter;
+

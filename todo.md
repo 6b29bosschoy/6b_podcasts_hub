@@ -259,3 +259,9 @@
 ## 新文章自動生成 FAQ
 
 - [x] 在文章發布 procedure（管理員發布 + 嘉賓投稿）中加入自動 FAQ 生成邏輯
+
+## 文章留言區塊
+
+- [x] 資料庫新增 comments 表（postSlug, authorName, content, createdAt, approved）
+- [x] 後端：新增 comment.list / comment.submit procedures
+- [x] 前端：建立 Comments.tsx 元件，整合至 BlogPost.tsx 文章底部

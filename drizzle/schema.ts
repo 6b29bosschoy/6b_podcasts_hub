@@ -166,3 +166,16 @@ export const pushNotifications = mysqlTable("push_notifications", {
 
 export type PushNotification = typeof pushNotifications.$inferSelect;
 export type InsertPushNotification = typeof pushNotifications.$inferInsert;
+
+// Reader comments on blog posts
+export const comments = mysqlTable("comments", {
+  id: int("id").autoincrement().primaryKey(),
+  postSlug: varchar("postSlug", { length: 255 }).notNull(),
+  authorName: varchar("authorName", { length: 100 }).notNull(),
+  content: text("content").notNull(),
+  // approved = visible; pending = awaiting moderation (default: auto-approved)
+  approved: boolean("approved").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type Comment = typeof comments.$inferSelect;
+export type InsertComment = typeof comments.$inferInsert;
