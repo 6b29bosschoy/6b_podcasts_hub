@@ -5,8 +5,9 @@ import { toast } from "sonner";
 import { Link } from "wouter";
 import { ExternalLink } from "lucide-react";
 import Lightbox from "@/components/Lightbox";
+import HostApplicationsAdmin from "./admin/HostApplicationsAdmin";
 
-type Tab = "blogs" | "bookings" | "contacts" | "subscriptions" | "push" | "submissions";
+type Tab = "blogs" | "bookings" | "contacts" | "subscriptions" | "push" | "submissions" | "hosts";
 
 const SERVICE_LABELS: Record<string, string> = {
   fengshui: "風水諮詢", bazi: "八字命理", tarot: "塔羅占卜", spiritual: "身心靈療癒", course: "課程報名",
@@ -21,6 +22,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 export default function Admin() {
   const { user, isAuthenticated } = useAuth();
   const [tab, setTab] = useState<Tab>("blogs");
+  const { data: hostApps } = trpc.host.adminList.useQuery(undefined, { enabled: isAuthenticated && user?.role === "admin" });
   // Lightbox state for blog post images
   const [lightboxImages, setLightboxImages] = useState<string[]>([]);
   const [lightboxIndex, setLightboxIndex] = useState(0);
@@ -71,6 +73,7 @@ export default function Admin() {
     { id: "subscriptions", label: "訂閱者", count: subscriptions?.length },
     { id: "push", label: "🔔 推送通知", count: pushSubCount?.count },
     { id: "submissions", label: "📨 讀者投稿", count: submissions?.items?.filter(s => s.status === "pending").length },
+    { id: "hosts", label: "🎙️ 主持申請", count: hostApps?.items?.filter(h => h.status === "pending").length },
   ];
 
   return (
@@ -359,8 +362,12 @@ export default function Admin() {
           </div>
         )}
       {/* Reader Submissions */}
-        {tab === "submissions" && (
-          <div className="flex flex-col gap-4">
+        {tab === "hosts" && (
+        <HostApplicationsAdmin />
+      )}
+
+      {tab === "submissions" && (
+        <div className="flex flex-col gap-4">
             {/* Legend */}
             <div className="flex gap-3 text-xs flex-wrap" style={{ color: "oklch(0.50 0.02 60)" }}>
               <span>🟡 待審核</span><span>🟢 已批准（首頁/嘉賓欄）</span><span>🔵 已發放</span><span>🔴 已拒絕</span>
