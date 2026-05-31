@@ -288,3 +288,13 @@
 - [x] 擴展 Express Markdown 協商中介層，支援 /、/blog 及 /blog/:slug 路徑
 - [x] 加入 x-markdown-tokens 標頭（估算 token 數量）
 - [x] 加入 Vary: Accept 標頭確保快取正確區分 HTML/Markdown 回應
+
+## 主持招募 Landing Page
+
+- [x] 資料庫新增 host_applications 表（9 個欄位 + 隱私聲明）
+- [x] 後端新增 host.submit tRPC procedure（表單提交）
+- [x] 前端建立 HostRecruitment.tsx landing page（9 欄位表單 + 隱私聲明）
+- [x] 前端加入路由 /host-recruitment
+- [x] 導航列加入「主持招募」連結
+- [x] 測試表單提交流程（69 個測試全部通過）
+- [x] 儲存 checkpoint

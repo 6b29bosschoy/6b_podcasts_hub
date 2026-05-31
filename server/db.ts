@@ -5,10 +5,12 @@ import {
   Booking,
   Comment,
   Contact,
+  HostApplication,
   InsertBlogPost,
   InsertBooking,
   InsertComment,
   InsertContact,
+  InsertHostApplication,
   InsertReaderSubmission,
   InsertSubscription,
   InsertUser,
@@ -19,6 +21,7 @@ import {
   bookings,
   comments,
   contacts,
+  hostApplications,
   readerSubmissions,
   subscriptions,
   users,
@@ -349,4 +352,42 @@ export async function countCommentsBySlug(postSlug: string): Promise<number> {
     .from(comments)
     .where(and(eq(comments.postSlug, postSlug), eq(comments.approved, true)));
   return result[0]?.count ?? 0;
+}
+
+// ─── Host Applications ─────────────────────────────────────────────────────────
+
+export async function createHostApplication(data: InsertHostApplication): Promise<HostApplication> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(hostApplications).values(data);
+  // Retrieve the most recently inserted record
+  const inserted = await db.select().from(hostApplications)
+    .orderBy(desc(hostApplications.createdAt))
+    .limit(1);
+  if (!inserted[0]) throw new Error("Failed to retrieve inserted host application");
+  return inserted[0];
+}
+
+export async function getHostApplications(): Promise<HostApplication[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(hostApplications)
+    .orderBy(desc(hostApplications.createdAt));
+}
+
+export async function getHostApplicationById(id: number): Promise<HostApplication | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(hostApplications)
+    .where(eq(hostApplications.id, id))
+    .limit(1);
+  return result[0] ?? null;
+}
+
+export async function updateHostApplicationStatus(id: number, status: "pending" | "contacted" | "rejected" | "archived"): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(hostApplications)
+    .set({ status })
+    .where(eq(hostApplications.id, id));
 }

@@ -179,3 +179,35 @@ export const comments = mysqlTable("comments", {
 });
 export type Comment = typeof comments.$inferSelect;
 export type InsertComment = typeof comments.$inferInsert;
+
+// Host recruitment applications
+export const hostApplications = mysqlTable("host_applications", {
+  id: int("id").autoincrement().primaryKey(),
+  // 1. 點稱呼？
+  name: varchar("name", { length: 100 }).notNull(),
+  // 2. 對邊類玄學話題最有興趣？除玄學外，會唔會有其他話題有興趣
+  interests: text("interests").notNull(), // e.g., "風水, 命理, 兩性討論"
+  // 3. 有冇拍片、直播、主持、KOL 或出鏡經驗？如有可以 send link。
+  experience: text("experience"), // optional, can be empty or contain links
+  // 4. 你覺得自己適合做主持、嘉賓主持，定單集嘉賓？
+  hostType: mysqlEnum("hostType", ["host", "co-host", "guest"]).notNull(),
+  // 5. 可以簡單介紹下自己嗎？例如你係邊個、點解對玄學節目有興趣、最想問玄學家咩問題。
+  introduction: text("introduction").notNull(),
+  // 6. 如果之後合作感覺好，你會唔會有興趣長期參與？
+  longTermInterest: boolean("longTermInterest").default(false).notNull(),
+  // 7. 除咗玄學，我哋亦有兩性討論、運動健身、人物訪談等節目，你會唔會都有興趣？
+  otherShowsInterest: text("otherShowsInterest"), // optional, e.g., "兩性討論, 人物訪談"
+  // 8. 聯絡方法。ig account / whatsapp。
+  contactMethod: varchar("contactMethod", { length: 255 }).notNull(), // e.g., "@instagram_handle" or "WhatsApp: +852 1234 5678"
+  // 9. 能夠拍攝時間 星期1至日  14:00 到18:00 19:00到23:00
+  availableTime: text("availableTime").notNull(), // e.g., "星期一至五 14:00-18:00, 19:00-23:00"
+  // Privacy & consent
+  privacyConsent: boolean("privacyConsent").default(false).notNull(), // User agrees data is for internal use only
+  // Status
+  status: mysqlEnum("status", ["pending", "contacted", "rejected", "archived"]).default("pending").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type HostApplication = typeof hostApplications.$inferSelect;
+export type InsertHostApplication = typeof hostApplications.$inferInsert;

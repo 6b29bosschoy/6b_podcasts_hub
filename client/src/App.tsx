@@ -20,6 +20,7 @@ import Booking from "./pages/Booking";
 import Contact from "./pages/Contact";
 import Admin from "@/pages/Admin";
 import Welcome from "@/pages/Welcome";
+import HostRecruitment from "@/pages/HostRecruitment";
 
 function Router() {
   return (
@@ -37,6 +38,7 @@ function Router() {
       </Route>
       <Route path="/booking" component={Booking} />
       <Route path="/contact" component={Contact} />
+      <Route path="/host-recruitment" component={HostRecruitment} />
       <Route path="/admin" component={Admin} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />

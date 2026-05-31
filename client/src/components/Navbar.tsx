@@ -18,6 +18,7 @@ const NAV_ITEMS = [
   { label: "收聽聲音 PODCASTS", href: "/podcasts" },
   { label: "合作洽談", href: "/partnership" },
   { label: "聯絡我們", href: "/contact" },
+  { label: "🎙️ 主持招募", href: "/host-recruitment" },
 ];
 
 // Submission dropdown options
@@ -34,6 +35,13 @@ const SUBMIT_OPTIONS = [
     label: "嘉賓投稿",
     desc: "投稿嘉賓專欄文章",
     href: "/blog/submit",
+    isAnchor: false,
+  },
+  {
+    icon: "🎙️",
+    label: "主持招募",
+    desc: "加入我們的節目主持團隊",
+    href: "/host-recruitment",
     isAnchor: false,
   },
 ];

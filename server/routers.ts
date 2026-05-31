@@ -48,6 +48,10 @@ import {
   getCommentsBySlug,
   createComment,
   countCommentsBySlug,
+  createHostApplication,
+  getHostApplications,
+  getHostApplicationById,
+  updateHostApplicationStatus,
 } from "./db";
 import { storagePut } from "./storage";
 import { generateFaqForPost } from "./faqHelper";
@@ -680,6 +684,71 @@ export const appRouter = router({
         return { reply };
       }),
   }),
+
+  // ─── Host Recruitment ────────────────────────────────────────────────────────────────────────────────────
+  host: router({
+    submit: publicProcedure
+      .input(z.object({
+        name: z.string().min(1, "請輸入名字").max(100),
+        interests: z.string().min(1, "請輸入興趣話題").max(500),
+        experience: z.string().max(2000).optional(),
+        hostType: z.enum(["host", "co-host", "guest"]),
+        introduction: z.string().min(10, "介紹需至少 10 字").max(2000),
+        longTermInterest: z.boolean().default(false),
+        otherShowsInterest: z.string().max(500).optional(),
+        contactMethod: z.string().min(1, "請輸入聯絡方法").max(255),
+        availableTime: z.string().min(1, "請輸入可用時間").max(500),
+        privacyConsent: z.boolean().refine(v => v === true, "必須同意隱私聲明"),
+      }))
+      .mutation(async ({ input }) => {
+        const app = await createHostApplication({
+          name: input.name,
+          interests: input.interests,
+          experience: input.experience || null,
+          hostType: input.hostType,
+          introduction: input.introduction,
+          longTermInterest: input.longTermInterest,
+          otherShowsInterest: input.otherShowsInterest || null,
+          contactMethod: input.contactMethod,
+          availableTime: input.availableTime,
+          privacyConsent: input.privacyConsent,
+          status: "pending",
+        });
+        // Notify owner of new application
+        await notifyOwner({
+          title: "🎙️ 新主持招募申請",
+          content: `${input.name} 申請成為${input.hostType === "host" ? "主持" : input.hostType === "co-host" ? "共同主持" : "嘉賓"}\n聯絡方法：${input.contactMethod}`,
+        });
+        return { success: true, id: app.id };
+      }),
+
+    adminList: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== "admin") throw new Error("Admin only");
+      const items = await getHostApplications();
+      return { items };
+    }),
+
+    getById: protectedProcedure
+      .input(z.object({ id: z.number().int().positive() }))
+      .query(async ({ input, ctx }) => {
+        if (ctx.user.role !== "admin") throw new Error("Admin only");
+        const app = await getHostApplicationById(input.id);
+        if (!app) throw new Error("Application not found");
+        return app;
+      }),
+
+    updateStatus: protectedProcedure
+      .input(z.object({
+        id: z.number().int().positive(),
+        status: z.enum(["pending", "contacted", "rejected", "archived"]),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== "admin") throw new Error("Admin only");
+        await updateHostApplicationStatus(input.id, input.status);
+        return { success: true };
+      }),
+  }),
+
 
   // ─── Comments ───────────────────────────────────────────────────────────────────────────────────
   comment: router({
