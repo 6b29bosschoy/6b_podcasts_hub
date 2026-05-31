@@ -8,6 +8,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { trpc } from "@/lib/trpc";
+import { X } from "lucide-react";
+
+const DAYS = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"];
+const TIME_SLOTS = ["14:00-18:00", "19:00-23:00"];
 
 export function HostRecruitment() {
   const [, setLocation] = useLocation();
@@ -22,8 +26,13 @@ export function HostRecruitment() {
     otherShowsInterest: "",
     contactMethod: "",
     availableTime: "",
+    availableTimeSlots: [] as Array<{ day: string; timeSlot: string }>,
+    hostPhotos: [] as string[],
+    acceptCommercial: false,
     privacyConsent: false,
   });
+
+  const [photoUploadLoading, setPhotoUploadLoading] = useState(false);
 
   const submitMutation = trpc.host.submit.useMutation({
     onSuccess: () => {
@@ -31,11 +40,85 @@ export function HostRecruitment() {
     },
   });
 
+  const toggleTimeSlot = (day: string, timeSlot: string) => {
+    const key = `${day}-${timeSlot}`;
+    const exists = formData.availableTimeSlots.some(
+      (slot) => slot.day === day && slot.timeSlot === timeSlot
+    );
+
+    if (exists) {
+      setFormData({
+        ...formData,
+        availableTimeSlots: formData.availableTimeSlots.filter(
+          (slot) => !(slot.day === day && slot.timeSlot === timeSlot)
+        ),
+      });
+    } else {
+      setFormData({
+        ...formData,
+        availableTimeSlots: [
+          ...formData.availableTimeSlots,
+          { day, timeSlot },
+        ],
+      });
+    }
+  };
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || formData.hostPhotos.length >= 5) {
+      alert("最多只能上傳 5 張照片");
+      return;
+    }
+
+    setPhotoUploadLoading(true);
+    try {
+      for (let i = 0; i < Math.min(files.length, 5 - formData.hostPhotos.length); i++) {
+        const file = files[i];
+        const formDataObj = new FormData();
+        formDataObj.append("file", file);
+
+        // Upload to server endpoint (you'll need to create this)
+        const response = await fetch("/api/upload-photo", {
+          method: "POST",
+          body: formDataObj,
+        });
+
+        if (!response.ok) {
+          throw new Error("上傳失敗");
+        }
+
+        const { url } = await response.json();
+        setFormData((prev) => ({
+          ...prev,
+          hostPhotos: [...prev.hostPhotos, url],
+        }));
+      }
+    } catch (error) {
+      alert("照片上傳失敗，請重試");
+    } finally {
+      setPhotoUploadLoading(false);
+    }
+  };
+
+  const removePhoto = (index: number) => {
+    setFormData({
+      ...formData,
+      hostPhotos: formData.hostPhotos.filter((_, i) => i !== index),
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
+      if (formData.availableTimeSlots.length === 0) {
+        alert("請至少選擇一個可用時間段");
+        setIsSubmitting(false);
+        return;
+      }
+
       const result = await submitMutation.mutateAsync({
         name: formData.name,
         interests: formData.interests,
@@ -46,10 +129,12 @@ export function HostRecruitment() {
         otherShowsInterest: formData.otherShowsInterest || undefined,
         contactMethod: formData.contactMethod,
         availableTime: formData.availableTime,
+        availableTimeSlots: formData.availableTimeSlots,
+        hostPhotos: formData.hostPhotos,
+        acceptCommercial: formData.acceptCommercial,
         privacyConsent: formData.privacyConsent,
       });
 
-      // Show success message
       alert("申請已提交！感謝你的興趣，我們會盡快聯絡你。");
 
       // Reset form
@@ -63,6 +148,9 @@ export function HostRecruitment() {
         otherShowsInterest: "",
         contactMethod: "",
         availableTime: "",
+        availableTimeSlots: [],
+        hostPhotos: [],
+        acceptCommercial: false,
         privacyConsent: false,
       });
 
@@ -236,11 +324,10 @@ export function HostRecruitment() {
                 />
               </div>
 
-              {/* 9. Available Time */}
+              {/* 9. Available Time - Original Text Field */}
               <div className="space-y-2">
                 <Label htmlFor="availableTime" className="text-gray-200">
-                  9. 能夠拍攝時間 星期1至日 14:00 到18:00 19:00到23:00{" "}
-                  <span className="text-red-400">*</span>
+                  9. 能夠拍攝時間 <span className="text-red-400">*</span>
                 </Label>
                 <Textarea
                   id="availableTime"
@@ -250,6 +337,113 @@ export function HostRecruitment() {
                   className="bg-slate-700/50 border-purple-400/30 text-white placeholder:text-gray-500 min-h-16"
                   required
                 />
+              </div>
+
+              {/* 9b. Available Time Slots - Multi-select */}
+              <div className="space-y-3 p-4 bg-slate-700/30 rounded-lg border border-purple-400/20">
+                <Label className="text-gray-200 font-semibold">
+                  📅 選擇可用時間段（可多選）
+                </Label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  {DAYS.map((day) => (
+                    <div key={day} className="space-y-2">
+                      <div className="text-sm font-medium text-cyan-300">{day}</div>
+                      {TIME_SLOTS.map((timeSlot) => {
+                        const isSelected = formData.availableTimeSlots.some(
+                          (slot) => slot.day === day && slot.timeSlot === timeSlot
+                        );
+                        return (
+                          <button
+                            key={`${day}-${timeSlot}`}
+                            type="button"
+                            onClick={() => toggleTimeSlot(day, timeSlot)}
+                            className={`w-full px-2 py-1 rounded text-sm transition-all ${
+                              isSelected
+                                ? "bg-cyan-500 text-white"
+                                : "bg-slate-600 text-gray-300 hover:bg-slate-500"
+                            }`}
+                          >
+                            {timeSlot}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ))}
+                </div>
+                {formData.availableTimeSlots.length > 0 && (
+                  <div className="text-sm text-gray-300 mt-2">
+                    已選擇 {formData.availableTimeSlots.length} 個時間段
+                  </div>
+                )}
+              </div>
+
+              {/* 10. Host Photos */}
+              <div className="space-y-3">
+                <Label className="text-gray-200">
+                  📸 上傳近照（最多 5 張）
+                </Label>
+                <div className="border-2 border-dashed border-purple-400/30 rounded-lg p-6 text-center">
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handlePhotoUpload}
+                    disabled={photoUploadLoading || formData.hostPhotos.length >= 5}
+                    className="hidden"
+                    id="photo-upload"
+                  />
+                  <label
+                    htmlFor="photo-upload"
+                    className="cursor-pointer text-gray-300 hover:text-cyan-300 transition-colors"
+                  >
+                    <div className="text-sm">點擊上傳照片或拖放檔案</div>
+                    <div className="text-xs text-gray-400 mt-1">
+                      {formData.hostPhotos.length}/5 張已上傳
+                    </div>
+                  </label>
+                </div>
+
+                {/* Photo Preview */}
+                {formData.hostPhotos.length > 0 && (
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                    {formData.hostPhotos.map((photo, index) => (
+                      <div key={index} className="relative group">
+                        <img
+                          src={photo}
+                          alt={`Photo ${index + 1}`}
+                          className="w-full h-24 object-cover rounded-lg"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removePhoto(index)}
+                          className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X size={16} className="text-white" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* 11. Accept Commercial */}
+              <div className="space-y-2 p-4 bg-slate-700/30 rounded-lg border border-purple-400/20">
+                <Label className="text-gray-200 font-semibold">
+                  💼 商業合作
+                </Label>
+                <div className="flex items-start space-x-2">
+                  <Checkbox
+                    id="acceptCommercial"
+                    checked={formData.acceptCommercial}
+                    onCheckedChange={(checked) =>
+                      setFormData({ ...formData, acceptCommercial: checked as boolean })
+                    }
+                    className="border-purple-400/50 mt-1"
+                  />
+                  <Label htmlFor="acceptCommercial" className="text-gray-300 cursor-pointer">
+                    我願意接拍商業合作及廣告內容
+                  </Label>
+                </div>
               </div>
 
               {/* Privacy Disclaimer */}
@@ -276,7 +470,7 @@ export function HostRecruitment() {
               {/* Submit Button */}
               <Button
                 type="submit"
-                disabled={isSubmitting || !formData.privacyConsent}
+                disabled={isSubmitting || !formData.privacyConsent || formData.availableTimeSlots.length === 0}
                 className="w-full bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white font-semibold py-3 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? "提交中..." : "提交申請"}

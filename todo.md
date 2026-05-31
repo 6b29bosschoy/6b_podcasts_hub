@@ -298,3 +298,14 @@
 - [x] 導航列加入「主持招募」連結
 - [x] 測試表單提交流程（69 個測試全部通過）
 - [x] 儲存 checkpoint
+
+## 主持招募表單升級
+
+- [x] 資料庫新增 availableTimeSlots（JSON 陣列，多選時間段）、hostPhotos（JSON 陣列，最多 5 張照片 URL）、acceptCommercial（boolean）欄位
+- [x] 生成及執行資料庫遷移
+- [x] 後端更新 host.submit procedure 支援新欄位
+- [x] 前端新增時間段多選元件（星期一至日 + 14:00-18:00 / 19:00-23:00）
+- [x] 前端新增照片上傳元件（最多 5 張，複用 ImageUploader）
+- [x] 前端新增商業合作複選框
+- [x] 測試表單提交及驗證（69 個測試全部通過）
+- [ ] 儲存 checkpoint

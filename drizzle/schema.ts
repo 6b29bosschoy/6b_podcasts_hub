@@ -201,6 +201,13 @@ export const hostApplications = mysqlTable("host_applications", {
   contactMethod: varchar("contactMethod", { length: 255 }).notNull(), // e.g., "@instagram_handle" or "WhatsApp: +852 1234 5678"
   // 9. 能夠拍攝時間 星期1至日  14:00 到18:00 19:00到23:00
   availableTime: text("availableTime").notNull(), // e.g., "星期一至五 14:00-18:00, 19:00-23:00"
+  // New fields for form upgrade
+  // 時間段多選：JSON array of { day: string, timeSlot: string }[]
+  availableTimeSlots: varchar("availableTimeSlots", { length: 2000 }).default("[]").notNull(),
+  // 近照上傳：JSON array of S3 image URLs (max 5)
+  hostPhotos: varchar("hostPhotos", { length: 5000 }).default("[]").notNull(),
+  // 是否接拍商業合作
+  acceptCommercial: boolean("acceptCommercial").default(false).notNull(),
   // Privacy & consent
   privacyConsent: boolean("privacyConsent").default(false).notNull(), // User agrees data is for internal use only
   // Status

@@ -698,6 +698,13 @@ export const appRouter = router({
         otherShowsInterest: z.string().max(500).optional(),
         contactMethod: z.string().min(1, "請輸入聯絡方法").max(255),
         availableTime: z.string().min(1, "請輸入可用時間").max(500),
+        // New fields
+        availableTimeSlots: z.array(z.object({
+          day: z.string(),
+          timeSlot: z.string(),
+        })).max(14).default([]),
+        hostPhotos: z.array(z.string().url()).max(5).default([]),
+        acceptCommercial: z.boolean().default(false),
         privacyConsent: z.boolean().refine(v => v === true, "必須同意隱私聲明"),
       }))
       .mutation(async ({ input }) => {
@@ -711,6 +718,9 @@ export const appRouter = router({
           otherShowsInterest: input.otherShowsInterest || null,
           contactMethod: input.contactMethod,
           availableTime: input.availableTime,
+          availableTimeSlots: JSON.stringify(input.availableTimeSlots),
+          hostPhotos: JSON.stringify(input.hostPhotos),
+          acceptCommercial: input.acceptCommercial,
           privacyConsent: input.privacyConsent,
           status: "pending",
         });
