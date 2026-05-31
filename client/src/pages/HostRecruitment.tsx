@@ -25,7 +25,7 @@ export function HostRecruitment() {
     longTermInterest: false,
     otherShowsInterest: "",
     contactMethod: "",
-    availableTime: "",
+    availableTime: "", // Keep for backward compatibility but won't be required
     availableTimeSlots: [] as Array<{ day: string; timeSlot: string }>,
     hostPhotos: [] as string[],
     acceptCommercial: false,
@@ -41,7 +41,6 @@ export function HostRecruitment() {
   });
 
   const toggleTimeSlot = (day: string, timeSlot: string) => {
-    const key = `${day}-${timeSlot}`;
     const exists = formData.availableTimeSlots.some(
       (slot) => slot.day === day && slot.timeSlot === timeSlot
     );
@@ -119,6 +118,16 @@ export function HostRecruitment() {
         return;
       }
 
+      // Build availableTime string from selected slots for backward compatibility
+      const timeSlotsByDay = DAYS.map(day => {
+        const slots = formData.availableTimeSlots
+          .filter(slot => slot.day === day)
+          .map(slot => slot.timeSlot);
+        return slots.length > 0 ? `${day} ${slots.join(", ")}` : null;
+      }).filter(Boolean);
+
+      const availableTimeStr = timeSlotsByDay.join("; ");
+
       const result = await submitMutation.mutateAsync({
         name: formData.name,
         interests: formData.interests,
@@ -128,7 +137,7 @@ export function HostRecruitment() {
         longTermInterest: formData.longTermInterest,
         otherShowsInterest: formData.otherShowsInterest || undefined,
         contactMethod: formData.contactMethod,
-        availableTime: formData.availableTime,
+        availableTime: availableTimeStr,
         availableTimeSlots: formData.availableTimeSlots,
         hostPhotos: formData.hostPhotos,
         acceptCommercial: formData.acceptCommercial,
@@ -324,26 +333,12 @@ export function HostRecruitment() {
                 />
               </div>
 
-              {/* 9. Available Time - Original Text Field */}
-              <div className="space-y-2">
-                <Label htmlFor="availableTime" className="text-gray-200">
-                  9. 能夠拍攝時間 <span className="text-red-400">*</span>
-                </Label>
-                <Textarea
-                  id="availableTime"
-                  placeholder="例如：星期一至五 14:00-18:00, 19:00-23:00"
-                  value={formData.availableTime}
-                  onChange={(e) => setFormData({ ...formData, availableTime: e.target.value })}
-                  className="bg-slate-700/50 border-purple-400/30 text-white placeholder:text-gray-500 min-h-16"
-                  required
-                />
-              </div>
-
-              {/* 9b. Available Time Slots - Multi-select */}
+              {/* 9. Available Time Slots - Multi-select (ONLY) */}
               <div className="space-y-3 p-4 bg-slate-700/30 rounded-lg border border-purple-400/20">
                 <Label className="text-gray-200 font-semibold">
-                  📅 選擇可用時間段（可多選）
+                  9. 能夠拍攝時間 <span className="text-red-400">*</span>
                 </Label>
+                <p className="text-sm text-gray-400">星期 1 至日 14:00 到 18:00 / 19:00 到 23:00（可多選）</p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                   {DAYS.map((day) => (
                     <div key={day} className="space-y-2">

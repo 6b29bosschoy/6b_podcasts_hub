@@ -690,12 +690,12 @@ export const appRouter = router({
     submit: publicProcedure
       .input(z.object({
         name: z.string().min(1, "請輸入名字").max(100),
-        interests: z.string().min(1, "請輸入興趣話題").max(500),
-        experience: z.string().max(2000).optional(),
+        interests: z.string().min(1, "請輸入興趣話題"),
+        experience: z.string().optional(),
         hostType: z.enum(["host", "co-host", "guest"]),
-        introduction: z.string().min(10, "介紹需至少 10 字").max(2000),
+        introduction: z.string().min(1, "請輸入介紹"),
         longTermInterest: z.boolean().default(false),
-        otherShowsInterest: z.string().max(500).optional(),
+        otherShowsInterest: z.string().optional(),
         contactMethod: z.string().min(1, "請輸入聯絡方法").max(255),
         availableTime: z.string().min(1, "請輸入可用時間").max(500),
         // New fields
