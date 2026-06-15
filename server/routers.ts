@@ -13,6 +13,7 @@ import {
   parseDuration,
   formatViewCount,
 } from "./youtube";
+import { calculateBazi, type BaziInput } from "./bazi";
 import {
   savePushSubscription,
   removePushSubscription,
@@ -762,6 +763,58 @@ export const appRouter = router({
 
   // ─── Mystic ─────────────────────────────────────────────────────────────────────────────────────
   mystic: router({
+    // 八字命盤推算（免費）
+    calculateBazi: publicProcedure
+      .input(z.object({
+        name: z.string(),
+        gender: z.enum(["male", "female"]),
+        year: z.number().int().min(1900).max(2100),
+        month: z.number().int().min(1).max(12),
+        day: z.number().int().min(1).max(31),
+        hour: z.number().int().min(0).max(23),
+        minute: z.number().int().min(0).max(59).optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const result = calculateBazi(input as BaziInput);
+        return result;
+      }),
+
+    // 八字 AI 深度分析（付費解鎖）
+    analyzeBazi: publicProcedure
+      .input(z.object({
+        baziSummary: z.string(), // 命盤摘要
+        topic: z.enum(["overall", "career", "wealth", "love", "health"]),
+      }))
+      .mutation(async ({ input }) => {
+        const topicMap: Record<string, string> = {
+          overall: "整體命格及流年運勢",
+          career: "事業運及工作發展",
+          wealth: "財運及投資時機",
+          love: "感情運及桃花運",
+          health: "健康運及注意事項",
+        };
+        const topicName = topicMap[input.topic];
+        const prompt = `你係一位精通八字命理嘅玄學師傅，請根據以下八字命盤資料，用廣東話提供詳細嘅${topicName}分析：
+
+${input.baziSummary}
+
+請提供約500字嘅深度分析，包括：
+1. 命格特點
+2. ${topicName}詳細解讀
+3. 今年（2026年）運勢重點
+4. 實用建議及開運方法
+
+語氣要正面積極，提供具體實用嘅建議。最後加入免責聲明。`;
+        const response = await invokeLLM({
+          messages: [
+            { role: "system", content: "你係一位精通八字命理嘅玄學師傅，擅長以淺白廣東話解釋八字命理，提供正面積極嘅人生指引。" },
+            { role: "user", content: prompt },
+          ],
+        });
+        const analysis = response.choices?.[0]?.message?.content || "分析生成失敗，請稍後再試。";
+        return { analysis };
+      }),
+
     generateReport: publicProcedure
       .input(z.object({
         name: z.string().optional(),

@@ -333,4 +333,13 @@
 - [x] 修改 App.tsx：將 / 路由指向新 Portal，原 Home 移至 /home
 - [x] 更新 MysticNavbar 及 Navbar 的 Logo 連結（回到 /）
 - [x] 69 個測試全部通過
-- [ ] 儲存 checkpoint
+- [x] 儲存 checkpoint（版本 92d7427c）
+
+## 八字命盤分析工具
+
+- [ ] 建立 server/bazi.ts 八字推算核心（天干地支、四柱、藏干、十神、大運、流年）
+- [ ] 建立後端 tRPC mystic.calculateBazi procedure
+- [ ] 建立後端 tRPC mystic.analyzeBazi AI 分析 procedure（付費解鎖）
+- [ ] 建立前端 /mystic/bazi 頁面（輸入表單 + 彩色四柱命盤 + 基本資料 + 免費總結 + 付費解鎖 AI 分析）
+- [ ] 整合至 MysticHome 及 MysticNavbar 導航
+- [ ] 測試及儲存 checkpoint

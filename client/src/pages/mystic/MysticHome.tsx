@@ -34,8 +34,8 @@ export default function MysticHome() {
           <p className="text-lg mb-10 max-w-2xl mx-auto" style={{ color: "oklch(0.65 0.03 250)" }}>
             結合紫微斗數、奇門遁甲、星座占星、生命靈數等中西玄學派別，為你分析事業、財運、感情同人生方向。
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/mystic/analysis">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center flex-wrap">
+            <Link href="/mystic/bazi">
               <span
                 className="inline-block px-8 py-4 rounded-xl font-bold text-lg cursor-pointer transition-all hover:scale-105 hover:shadow-xl"
                 style={{
@@ -44,16 +44,28 @@ export default function MysticHome() {
                   boxShadow: "0 0 30px oklch(0.55 0.22 290 / 0.3)",
                 }}
               >
-                🔮 立即開始分析
+                🔮 免費八字命盤
               </span>
             </Link>
-            <Link href="/mystic/videos">
+            <Link href="/mystic/analysis">
               <span
                 className="inline-block px-8 py-4 rounded-xl font-bold text-lg cursor-pointer border transition-all hover:scale-105"
                 style={{
                   borderColor: "oklch(0.55 0.22 290 / 0.5)",
                   color: "oklch(0.75 0.20 290)",
                   background: "oklch(0.55 0.22 290 / 0.08)",
+                }}
+              >
+                ✨ 其他玄學分析
+              </span>
+            </Link>
+            <Link href="/mystic/videos">
+              <span
+                className="inline-block px-8 py-4 rounded-xl font-bold text-lg cursor-pointer border transition-all hover:scale-105"
+                style={{
+                  borderColor: "oklch(0.40 0.08 60 / 0.5)",
+                  color: "oklch(0.75 0.15 60)",
+                  background: "oklch(0.55 0.10 60 / 0.06)",
                 }}
               >
                 ▶ 睇玄學家影片

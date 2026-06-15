@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 
 const NAV_LINKS = [
   { href: "/mystic", label: "首頁" },
+  { href: "/mystic/bazi", label: "🔮 八字命盤" },
   { href: "/mystic/analysis", label: "玄學分析" },
   { href: "/mystic/masters", label: "玄學家" },
   { href: "/mystic/videos", label: "影片" },
