@@ -486,6 +486,18 @@ export default function MysticAnalysis() {
             <h2 className="text-lg font-bold mb-1" style={{ color: "oklch(0.88 0.03 80)" }}>📋 輸入出生資料</h2>
             <p className="text-xs mb-5" style={{ color: "oklch(0.55 0.03 250)" }}>只需輸入一次，之後可自由切換中西玄學派別</p>
             <div className="space-y-4">
+              {/* 姓名（可選填） */}
+              <div>
+                <label className="text-sm mb-1.5 block" style={{ color: "oklch(0.70 0.03 250)" }}>姓名 <span style={{ color: "oklch(0.50 0.03 250)" }}>(可不填)</span></label>
+                <input
+                  className="w-full px-4 py-2.5 rounded-lg text-sm border outline-none"
+                  style={{ background: "oklch(0.13 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.88 0.03 80)" }}
+                  placeholder="例：小明（不填則匹名「你」）"
+                  value={birth.name}
+                  onChange={(e) => setBirth({ ...birth, name: e.target.value })}
+                />
+              </div>
+
               {/* 陰曆/陽曆 toggle */}
               <div className="flex gap-2 p-1 rounded-xl" style={{ background: "oklch(0.13 0.03 270)" }}>
                 {(["solar", "lunar"] as const).map((mode) => (
