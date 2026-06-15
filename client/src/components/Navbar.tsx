@@ -1,6 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, Play, Sparkles, Handshake, Calendar } from "lucide-react";
+
+// Mobile bottom quick nav (4 items)
+const MOBILE_BOTTOM_NAV = [
+  { label: "最新影片", href: "/episodes", Icon: Play },
+  { label: "玄學堂", href: "/mystic", Icon: Sparkles },
+  { label: "預約服務", href: "/booking", Icon: Calendar },
+  { label: "合作查詢", href: "/partnership", Icon: Handshake },
+];
 
 const SOCIAL_LINKS = [
   { label: "YouTube 路邊電台", href: "https://www.youtube.com/@6bpodcasts", icon: "YT" },
@@ -11,14 +19,14 @@ const SOCIAL_LINKS = [
 
 const NAV_ITEMS = [
   { label: "首頁", href: "/home" },
-  { label: "關於我們", href: "/about" },
-  { label: "服務項目", href: "/services" },
+  { label: "最新節目", href: "/episodes" },
+  { label: "路邊電台", href: "/podcasts" },
+  { label: "路邊玄學堂", href: "/mystic" },
+  { label: "玄學服務", href: "/mystic/services" },
   { label: "嘉賓專欄", href: "/blog" },
-  { label: "玄學服務", href: "/booking" },
-  { label: "收聽聲音 PODCASTS", href: "/podcasts" },
-  { label: "合作洽談", href: "/partnership" },
+  { label: "商業合作", href: "/partnership" },
+  { label: "關於 6B", href: "/about" },
   { label: "聯絡我們", href: "/contact" },
-  { label: "🎙️ 主持招募", href: "/host-recruitment" },
 ];
 
 // Submission dropdown options
@@ -81,14 +89,15 @@ export default function Navbar() {
   }
 
   return (
-    <header
-      className="fixed top-0 left-0 right-0 z-50"
-      style={{
-        background: "oklch(0.08 0.01 260 / 0.92)",
-        backdropFilter: "blur(16px)",
-        borderBottom: "1px solid oklch(0.22 0.02 260)",
-      }}
-    >
+    <>
+      <header
+        className="fixed top-0 left-0 right-0 z-50"
+        style={{
+          background: "oklch(0.08 0.01 260 / 0.92)",
+          backdropFilter: "blur(16px)",
+          borderBottom: "1px solid oklch(0.22 0.02 260)",
+        }}
+      >
       <div className="container flex items-center justify-between h-16">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
@@ -104,14 +113,17 @@ export default function Navbar() {
           </div>
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-4 flex-wrap">
+        {/* Desktop Nav — 9 items */}
+        <nav className="hidden lg:flex items-center gap-2 flex-wrap">
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="text-xs font-medium transition-colors duration-200 whitespace-nowrap"
-              style={{ color: location === item.href ? "oklch(0.62 0.24 25)" : "oklch(0.70 0.01 60)" }}
+              className="text-xs font-medium transition-colors duration-200 whitespace-nowrap px-1 py-1"
+              style={{
+                color: location === item.href ? "oklch(0.75 0.20 25)" : "oklch(0.68 0.01 60)",
+                borderBottom: location === item.href ? "1px solid oklch(0.62 0.24 25)" : "1px solid transparent",
+              }}
             >
               {item.label}
             </Link>
@@ -228,7 +240,7 @@ export default function Navbar() {
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden p-2 rounded"
+            className="lg:hidden p-2 rounded"
             style={{ color: "oklch(0.70 0.01 60)" }}
             onClick={() => setOpen(!open)}
             aria-label={open ? "關閉選單" : "開啟選單"}
@@ -238,9 +250,9 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Dropdown Menu */}
       {open && (
-        <div className="md:hidden" style={{ background: "oklch(0.10 0.01 260)", borderTop: "1px solid oklch(0.22 0.02 260)" }}>
+        <div className="lg:hidden" style={{ background: "oklch(0.10 0.01 260)", borderTop: "1px solid oklch(0.22 0.02 260)" }}>
           <div className="container py-4 flex flex-col gap-3">
             {NAV_ITEMS.map((item) => (
               <Link
@@ -314,5 +326,36 @@ export default function Navbar() {
         </div>
       )}
     </header>
+      {/* ── Mobile Bottom Quick Nav ──────────────────────────────────────────── */}
+      <nav
+        className="fixed bottom-0 left-0 right-0 z-40 lg:hidden"
+        style={{
+          background: "oklch(0.09 0.01 260 / 0.96)",
+          backdropFilter: "blur(16px)",
+          borderTop: "1px solid oklch(0.20 0.02 260)",
+          paddingBottom: "env(safe-area-inset-bottom, 0px)",
+        }}
+      >
+        <div className="flex items-center justify-around h-14">
+          {MOBILE_BOTTOM_NAV.map(({ label, href, Icon }) => {
+            const isActive = location === href || (href !== "/home" && location.startsWith(href));
+            return (
+              <Link
+                key={href}
+                href={href}
+                className="flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all duration-200 min-w-0"
+                style={{ color: isActive ? "oklch(0.75 0.20 25)" : "oklch(0.55 0.02 260)" }}
+              >
+                <Icon
+                  className="w-5 h-5 transition-transform duration-200"
+                  style={{ transform: isActive ? "scale(1.15)" : "scale(1)" }}
+                />
+                <span className="text-[10px] font-medium">{label}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
+    </>
   );
 }

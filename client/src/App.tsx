@@ -31,6 +31,8 @@ import MysticVideos from "@/pages/mystic/MysticVideos";
 import MysticArticles from "@/pages/mystic/MysticArticles";
 import MysticPricing from "@/pages/mystic/MysticPricing";
 import MysticBazi from "@/pages/mystic/MysticBazi";
+import Episodes from "@/pages/Episodes";
+import MysticServices from "@/pages/mystic/MysticServices";
 
 function Router() {
   return (
@@ -61,6 +63,8 @@ function Router() {
       <Route path="/mystic/articles" component={MysticArticles} />
       <Route path="/mystic/pricing" component={MysticPricing} />
       <Route path="/mystic/bazi" component={MysticBazi} />
+      <Route path="/mystic/services" component={MysticServices} />
+      <Route path="/episodes" component={Episodes} />
       <Route path="/admin" component={Admin} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
