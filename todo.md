@@ -309,3 +309,20 @@
 - [x] 前端新增商業合作複選框
 - [x] 測試表單提交及驗證（69 個測試全部通過）
 - [x] 儲存 checkpoint（版本 d8f28d44）
+
+## 路邊玄學堂平台 MVP
+
+- [x] 品牌選擇入口 Portal（首頁選擇路邊Podcasts / 路邊玄學堂）
+- [x] 玄學堂首頁（Hero、分類入口、最新影片、最新文章、玄學家介紹、會員升級區）
+- [x] 玄學分析工具頁（5步驟表單：出生資料→分類→派別→主題→生成報告）
+- [x] 玄學家列表頁（/mystic/masters）
+- [x] 玄學家個人頁（/mystic/masters/[id]）
+- [x] 影片專區（/mystic/videos，分類篩選）
+- [x] 文章專區（/mystic/articles，分類篩選）
+- [x] 會員方案頁（/mystic/pricing，三個等級）
+- [x] 玄學堂導航列（含品牌切換）
+- [x] Mock data（4位玄學家、影片、文章）
+- [x] 整合路由（App.tsx）
+- [x] Admin.tsx JSX 錯誤修復
+- [x] 69 個測試全部通過
+- [ ] 儲存 checkpoint

@@ -370,7 +370,10 @@ export default function Admin() {
         <div className="flex flex-col gap-4">
             {/* Legend */}
             <div className="flex gap-3 text-xs flex-wrap" style={{ color: "oklch(0.50 0.02 60)" }}>
-              <span>🟡 待審核</span><span>🟢 已批准（首頁/嘉賓欄）</span><span>🔵 已發放</span><span>🔴 已拒絕</span>
+              <span>🟡 待審核</span>
+              <span>🟢 已批准（首頁/嘉賓欄）</span>
+              <span>🔵 已發放</span>
+              <span>🔴 已拒絕</span>
             </div>
             {!submissions?.items?.length ? (
               <p style={{ color: "oklch(0.55 0.02 60)" }}>暫時沒有投稿</p>

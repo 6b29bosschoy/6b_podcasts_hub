@@ -760,6 +760,50 @@ export const appRouter = router({
   }),
 
 
+  // ─── Mystic ─────────────────────────────────────────────────────────────────────────────────────
+  mystic: router({
+    generateReport: publicProcedure
+      .input(z.object({
+        name: z.string().optional(),
+        year: z.number().int(),
+        month: z.number().int(),
+        day: z.number().int(),
+        hour: z.string().optional(),
+        gender: z.enum(["male", "female"]),
+        method: z.string(),
+        topics: z.array(z.string()),
+      }))
+      .mutation(async ({ input }) => {
+        const methodNames: Record<string, string> = {
+          ziwei: "紫微斗數", qimen: "奇門遁甲", bazi: "八字命理", meihua: "梅花易數",
+          fengshui: "風水流年", naming: "姓名學", astrology: "星座占星",
+          numerology: "生命靈數", tarot: "塔羅牌", humandesign: "人類圖",
+          "western-annual": "西洋占星流年", moon: "月亮星座分析",
+        };
+        const topicNames: Record<string, string> = {
+          annual: "流年總運", career: "事業運", wealth: "財運", love: "感情運",
+          family: "家庭運", health: "健康運", lucky: "貴人運", tips: "開運建議",
+        };
+        const method = methodNames[input.method] || input.method;
+        const topics = input.topics.map((t) => topicNames[t] || t).join("、");
+        const genderStr = input.gender === "male" ? "男" : "女";
+        const prompt = `你係一位精通${method}嘅玄學師傅，請用廣東話為以下人士提供流年玄學分析：
+
+出生資料：${input.year}年${input.month}月${input.day}日，${genderStr}性${input.hour ? `，${input.hour}出生` : ""}
+分析範疇：${topics}
+
+請提供約300字嘅簡短分析，包括整體流年運勢、各範疇重點提示。語氣要正面積極，提供實用建議。最後加入免責聲明：本分析只供娛樂參考，並不構成任何重大決策建議。`;
+        const response = await invokeLLM({
+          messages: [
+            { role: "system", content: "你係一位精通中西玄學嘅師傅，擅長以淺白廣東話解釋玄學概念，提供正面積極嘅人生指引。" },
+            { role: "user", content: prompt },
+          ],
+        });
+        const report = response.choices?.[0]?.message?.content || "分析生成失敗，請稍後再試。";
+        return { report };
+      }),
+  }),
+
   // ─── Comments ───────────────────────────────────────────────────────────────────────────────────
   comment: router({
     list: publicProcedure

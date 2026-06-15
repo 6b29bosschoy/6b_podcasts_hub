@@ -290,6 +290,13 @@ export default function Home() {
               >
                 預約玄學服務
               </Link>
+              <Link
+                href="/mystic"
+                className="px-6 py-3 rounded-lg font-bold text-sm transition-all duration-200 hover:opacity-90 hover:scale-105"
+                style={{ background: "linear-gradient(135deg, oklch(0.18 0.06 290), oklch(0.25 0.10 290))", border: "1px solid oklch(0.55 0.22 290 / 0.6)", color: "oklch(0.80 0.18 290)" }}
+              >
+                🔮 路邊玄學堂
+              </Link>
             </div>
           </div>
         </div>
