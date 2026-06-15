@@ -10,7 +10,7 @@ const SOCIAL_LINKS = [
 ];
 
 const NAV_ITEMS = [
-  { label: "首頁", href: "/" },
+  { label: "首頁", href: "/home" },
   { label: "關於我們", href: "/about" },
   { label: "服務項目", href: "/services" },
   { label: "嘉賓專欄", href: "/blog" },

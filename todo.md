@@ -325,4 +325,12 @@
 - [x] 整合路由（App.tsx）
 - [x] Admin.tsx JSX 錯誤修復
 - [x] 69 個測試全部通過
+- [x] 儲存 checkpoint（版本 e9d9e981）
+
+## 開門轉場品牌選擇首頁
+
+- [x] 重新設計 Portal.tsx：分割畫面（左邊路邊Podcasts / 右邊路邊玄學堂），hover 時該側展開，點擊後「開門」動畫轉場
+- [x] 修改 App.tsx：將 / 路由指向新 Portal，原 Home 移至 /home
+- [x] 更新 MysticNavbar 及 Navbar 的 Logo 連結（回到 /）
+- [x] 69 個測試全部通過
 - [ ] 儲存 checkpoint

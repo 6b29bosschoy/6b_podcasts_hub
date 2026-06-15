@@ -35,8 +35,8 @@ function Router() {
   return (
     <Switch>
       <Route path="/welcome" component={Welcome} />
-      <Route path="/portal" component={Portal} />
-      <Route path="/" component={Home} />
+      <Route path="/" component={Portal} />
+      <Route path="/home" component={Home} />
       <Route path="/about" component={About} />
       <Route path="/services" component={Services} />
       <Route path="/podcasts" component={PodcastsPage} />
@@ -70,7 +70,7 @@ function App() {
   const [location] = useLocation();
   const isWelcome = location === "/welcome" || location.startsWith("/welcome?");
   const isMystic = location.startsWith("/mystic");
-  const isPortal = location === "/portal";
+  const isPortal = location === "/" || location === "/portal";
   const showMainNav = !isWelcome && !isPortal && !isMystic;
 
   return (

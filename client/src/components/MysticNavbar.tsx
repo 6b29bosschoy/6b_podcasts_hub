@@ -61,6 +61,15 @@ export default function MysticNavbar() {
 
         {/* Right Actions */}
         <div className="flex items-center gap-3">
+          {/* Back to portal */}
+          <Link href="/">
+            <span
+              className="hidden md:flex items-center gap-1 text-xs px-2 py-1.5 rounded-full cursor-pointer transition-all hover:scale-105"
+              style={{ color: "oklch(0.45 0.03 260)", background: "oklch(0.15 0.02 260)" }}
+            >
+              ⬅ 返回選台
+            </span>
+          </Link>
           {/* Switch to Podcasts */}
           <Link href="/home">
             <span
