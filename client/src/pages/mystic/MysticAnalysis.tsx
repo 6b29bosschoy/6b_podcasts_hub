@@ -300,7 +300,7 @@ export default function MysticAnalysis() {
     return (
       <div className="mb-4 px-4 py-2 rounded-xl flex items-center gap-2 justify-between" style={{ background: "oklch(0.13 0.03 270)", border: "1px solid oklch(0.55 0.22 290 / 0.2)" }}>
         <span className="text-xs" style={{ color: "oklch(0.65 0.03 250)" }}>
-          👤 {birth.name || "匿名"} · {dateStr} · {birth.gender === "male" ? "男" : "女"}
+          👤 {dateStr} · {birth.gender === "male" ? "男" : "女"}
         </span>
         <button className="text-xs underline" style={{ color: "oklch(0.65 0.20 290)" }} onClick={() => setStep("birth")}>
           修改
