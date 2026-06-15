@@ -385,7 +385,7 @@ export const appRouter = router({
       .input(
         z.object({
           channel: z.enum(["podcasts", "fengshui", "all"]).default("all"),
-          limit: z.number().min(1).max(12).default(6),
+          limit: z.number().min(1).max(50).default(6),
         }).optional()
       )
       .query(async ({ input }) => {
