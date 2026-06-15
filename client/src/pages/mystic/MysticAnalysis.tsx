@@ -3,8 +3,10 @@ import { Link } from "wouter";
 import { CHINESE_METHODS, WESTERN_METHODS, ANALYSIS_TOPICS } from "@/data/mysticData";
 import { trpc } from "@/lib/trpc";
 
+// Steps: birth → tradition → method → topics → result
+// After result, user can go back to "tradition" step without re-entering birth data
 type Step = "birth" | "tradition" | "method" | "topics" | "result";
-type AkashicStep = "personA" | "personB" | "readingType" | "result";
+type AkashicStep = "readingType" | "personB" | "result";
 
 interface BirthData {
   name: string;
@@ -25,7 +27,7 @@ interface PersonData {
 const AKASHIC_READING_TYPES = [
   { id: "pastLife", icon: "🌀", title: "前世今生解讀", desc: "探索前世身份、未完成課題，了解今生性格來源" },
   { id: "soulAge", icon: "✨", title: "靈魂年齡分析", desc: "老靈魂還是年輕靈魂？靈魂類型與今生使命" },
-  { id: "soulMate", icon: "💞", title: "靈魂伴侶配對", desc: "兩人前世緣份、業力課題與今生吸引力來源（需輸入兩人資料）" },
+  { id: "soulMate", icon: "💞", title: "靈魂伴侶配對", desc: "兩人前世緣份、業力課題與今生吸引力來源（需輸入對方資料）" },
   { id: "energyField", icon: "🔮", title: "能量磁場補充", desc: "分析當前能量狀態，提供水晶、冥想、儀式等補充建議" },
   { id: "yearEnergy", icon: "🗓️", title: "2026下半年能量流年", desc: "按月份分析靈性能量走向，事業財運感情健康" },
 ];
@@ -97,6 +99,7 @@ function PersonForm({ data, onChange, title }: { data: PersonData; onChange: (d:
 }
 
 export default function MysticAnalysis() {
+  // Core flow state
   const [step, setStep] = useState<Step>("birth");
   const [birth, setBirth] = useState<BirthData>({ name: "", year: "", month: "", day: "", hour: "", gender: "" });
   const [tradition, setTradition] = useState<"chinese" | "western" | "">("");
@@ -107,11 +110,11 @@ export default function MysticAnalysis() {
 
   // Akashic Records state
   const [isAkashic, setIsAkashic] = useState(false);
-  const [akashicStep, setAkashicStep] = useState<AkashicStep>("personA");
-  const [personA, setPersonA] = useState<PersonData>({ name: "", year: "", month: "", day: "" });
+  const [akashicStep, setAkashicStep] = useState<AkashicStep>("readingType");
   const [personB, setPersonB] = useState<PersonData>({ name: "", year: "", month: "", day: "" });
   const [akashicReadingType, setAkashicReadingType] = useState("");
   const [akashicResult, setAkashicResult] = useState("");
+  const [akashicError, setAkashicError] = useState("");
 
   const generateMutation = trpc.mystic.generateReport.useMutation({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -121,7 +124,6 @@ export default function MysticAnalysis() {
     },
   });
 
-  const [akashicError, setAkashicError] = useState("");
   const akashicMutation = trpc.mystic.akashicReading.useMutation({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onSuccess: (data: any) => {
@@ -141,11 +143,6 @@ export default function MysticAnalysis() {
   const methods = tradition === "chinese" ? CHINESE_METHODS : tradition === "western" ? WESTERN_METHODS : [];
 
   const handleGenerate = () => {
-    if (selectedMethod === "akashic") {
-      setIsAkashic(true);
-      setAkashicStep("personA");
-      return;
-    }
     generateMutation.mutate({
       name: birth.name,
       year: parseInt(birth.year),
@@ -162,10 +159,10 @@ export default function MysticAnalysis() {
     const needsPersonB = akashicReadingType === "soulMate";
     akashicMutation.mutate({
       personA: {
-        name: personA.name,
-        year: parseInt(personA.year),
-        month: parseInt(personA.month),
-        day: parseInt(personA.day),
+        name: birth.name || "你",
+        year: parseInt(birth.year),
+        month: parseInt(birth.month),
+        day: parseInt(birth.day),
       },
       ...(needsPersonB && personB.name && personB.year ? {
         personB: {
@@ -179,21 +176,48 @@ export default function MysticAnalysis() {
     });
   };
 
-  const resetAll = () => {
-    setStep("birth");
-    setReport("");
-    setSelectedTopics([]);
-    setSelectedMethod("");
-    setTradition("");
+  // Go back to tradition selection, keeping birth data intact
+  const goBackToTradition = () => {
     setIsAkashic(false);
-    setAkashicStep("personA");
-    setPersonA({ name: "", year: "", month: "", day: "" });
+    setAkashicStep("readingType");
+    setAkashicReadingType("");
+    setAkashicResult("");
+    setAkashicError("");
+    setSelectedMethod("");
+    setSelectedTopics([]);
+    setReport("");
+    setStep("tradition");
+  };
+
+  // Full reset
+  const resetAll = () => {
+    setBirth({ name: "", year: "", month: "", day: "", hour: "", gender: "" });
+    setTradition("");
+    setSelectedMethod("");
+    setSelectedTopics([]);
+    setReport("");
+    setIsAkashic(false);
+    setAkashicStep("readingType");
     setPersonB({ name: "", year: "", month: "", day: "" });
     setAkashicReadingType("");
     setAkashicResult("");
+    setAkashicError("");
+    setStep("birth");
   };
 
   const stepNum = { birth: 1, tradition: 2, method: 3, topics: 4, result: 5 }[step];
+
+  // Birth info summary chip shown after step 1
+  const BirthSummary = () => birth.year ? (
+    <div className="mb-4 px-4 py-2 rounded-xl flex items-center gap-2 justify-between" style={{ background: "oklch(0.13 0.03 270)", border: "1px solid oklch(0.55 0.22 290 / 0.2)" }}>
+      <span className="text-xs" style={{ color: "oklch(0.65 0.03 250)" }}>
+        👤 {birth.name || "匿名"} · {birth.year}/{birth.month}/{birth.day} · {birth.gender === "male" ? "男" : "女"}
+      </span>
+      <button className="text-xs underline" style={{ color: "oklch(0.65 0.20 290)" }} onClick={() => setStep("birth")}>
+        修改
+      </button>
+    </div>
+  ) : null;
 
   // ─── Akashic Records Flow ─────────────────────────────────────────────────
   if (isAkashic) {
@@ -206,23 +230,7 @@ export default function MysticAnalysis() {
             <p className="text-sm mt-2" style={{ color: "oklch(0.60 0.03 250)" }}>前世今生 · 靈魂伴侶 · 靈魂年齡 · 能量磁場</p>
           </div>
 
-          {/* Step: Person A */}
-          {akashicStep === "personA" && (
-            <div className="rounded-2xl p-6 border" style={{ background: "oklch(0.11 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.2)" }}>
-              <PersonForm data={personA} onChange={setPersonA} title="📋 你的資料" />
-              <div className="flex gap-3 mt-6">
-                <button className="flex-1 py-3 rounded-xl border font-semibold" style={{ borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.70 0.03 250)" }} onClick={() => { setIsAkashic(false); setStep("method"); }}>← 返回</button>
-                <button
-                  className="flex-1 py-3 rounded-xl font-bold disabled:opacity-50"
-                  style={{ background: "linear-gradient(135deg, oklch(0.45 0.22 290), oklch(0.55 0.22 310))", color: "oklch(0.95 0.02 80)" }}
-                  disabled={!personA.name || !personA.year || !personA.month || !personA.day}
-                  onClick={() => setAkashicStep("readingType")}
-                >
-                  下一步 →
-                </button>
-              </div>
-            </div>
-          )}
+          <BirthSummary />
 
           {/* Step: Reading Type */}
           {akashicStep === "readingType" && (
@@ -249,15 +257,24 @@ export default function MysticAnalysis() {
                   </button>
                 ))}
               </div>
+              {akashicError && (
+                <div className="mt-3 p-3 rounded-xl text-sm text-center" style={{ background: "oklch(0.15 0.05 25)", color: "oklch(0.75 0.20 25)" }}>
+                  {akashicError}
+                </div>
+              )}
               <div className="flex gap-3 mt-6">
-                <button className="flex-1 py-3 rounded-xl border font-semibold" style={{ borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.70 0.03 250)" }} onClick={() => setAkashicStep("personA")}>← 返回</button>
+                <button className="flex-1 py-3 rounded-xl border font-semibold" style={{ borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.70 0.03 250)" }} onClick={goBackToTradition}>
+                  ← 換其他派別
+                </button>
                 <button
                   className="flex-1 py-3 rounded-xl font-bold disabled:opacity-50 flex items-center justify-center gap-2"
                   style={{ background: "linear-gradient(135deg, oklch(0.45 0.22 290), oklch(0.55 0.22 310))", color: "oklch(0.95 0.02 80)" }}
                   disabled={!akashicReadingType || akashicMutation.isPending}
                   onClick={() => akashicReadingType === "soulMate" ? setAkashicStep("personB") : handleAkashicGenerate()}
                 >
-                  {akashicMutation.isPending ? <><span className="animate-spin">⟳</span> 解讀中...</> : akashicReadingType === "soulMate" ? "下一步 →" : "🔮 開始解讀"}
+                  {akashicMutation.isPending
+                    ? <><span className="animate-spin">⟳</span> 解讀中...</>
+                    : akashicReadingType === "soulMate" ? "下一步 →" : "🔮 開始解讀"}
                 </button>
               </div>
             </div>
@@ -268,7 +285,9 @@ export default function MysticAnalysis() {
             <div className="rounded-2xl p-6 border" style={{ background: "oklch(0.11 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.2)" }}>
               <PersonForm data={personB} onChange={setPersonB} title="💞 對方的資料" />
               <div className="flex gap-3 mt-6">
-                <button className="flex-1 py-3 rounded-xl border font-semibold" style={{ borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.70 0.03 250)" }} onClick={() => setAkashicStep("readingType")}>← 返回</button>
+                <button className="flex-1 py-3 rounded-xl border font-semibold" style={{ borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.70 0.03 250)" }} onClick={() => setAkashicStep("readingType")}>
+                  ← 返回
+                </button>
                 <button
                   className="flex-1 py-3 rounded-xl font-bold disabled:opacity-50 flex items-center justify-center gap-2"
                   style={{ background: "linear-gradient(135deg, oklch(0.45 0.22 290), oklch(0.55 0.22 310))", color: "oklch(0.95 0.02 80)" }}
@@ -281,20 +300,12 @@ export default function MysticAnalysis() {
             </div>
           )}
 
-          {/* Error state */}
-          {akashicError && (
-            <div className="mt-4 p-4 rounded-xl text-sm text-center" style={{ background: "oklch(0.15 0.05 25)", color: "oklch(0.75 0.20 25)" }}>
-              {akashicError}
-              <button className="ml-3 underline" onClick={() => setAkashicError("")}>X</button>
-            </div>
-          )}
-
           {/* Result */}
           {akashicStep === "result" && (
             <div className="space-y-4">
               <div className="rounded-2xl p-6 border" style={{ background: "oklch(0.11 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.2)" }}>
                 <h2 className="text-lg font-bold mb-2" style={{ color: "oklch(0.88 0.03 80)" }}>
-                  💫 {personA.name} 的阿卡西紀錄解讀
+                  💫 {birth.name || "你"} 的阿卡西紀錄解讀
                 </h2>
                 <p className="text-xs mb-4" style={{ color: "oklch(0.55 0.22 290)" }}>
                   {AKASHIC_READING_TYPES.find(t => t.id === akashicReadingType)?.title}
@@ -310,13 +321,22 @@ export default function MysticAnalysis() {
                 </p>
               </div>
 
-              <button
-                className="w-full py-3 rounded-xl border font-semibold"
-                style={{ borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.70 0.03 250)" }}
-                onClick={resetAll}
-              >
-                重新解讀
-              </button>
+              <div className="flex gap-3">
+                <button
+                  className="flex-1 py-3 rounded-xl border font-semibold"
+                  style={{ borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.70 0.03 250)" }}
+                  onClick={goBackToTradition}
+                >
+                  換其他派別解讀
+                </button>
+                <button
+                  className="flex-1 py-3 rounded-xl border font-semibold"
+                  style={{ borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.70 0.03 250)" }}
+                  onClick={() => { setAkashicStep("readingType"); setAkashicReadingType(""); setAkashicResult(""); }}
+                >
+                  換解讀類型
+                </button>
+              </div>
             </div>
           )}
 
@@ -336,37 +356,50 @@ export default function MysticAnalysis() {
         <div className="text-center mb-8">
           <p className="text-xs font-bold tracking-widest mb-2" style={{ color: "oklch(0.75 0.20 290)" }}>MYSTIC ANALYSIS</p>
           <h1 className="text-2xl md:text-3xl font-black" style={{ color: "oklch(0.92 0.05 80)" }}>玄學分析工具</h1>
+          <p className="text-sm mt-2" style={{ color: "oklch(0.60 0.03 250)" }}>輸入一次出生資料，即可解鎖中西玄學全部派別</p>
         </div>
 
         {/* Progress Bar */}
         {step !== "result" && (
-          <div className="flex items-center gap-2 mb-8">
-            {[1, 2, 3, 4].map((n) => (
-              <div key={n} className="flex items-center gap-2 flex-1">
-                <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
-                  style={{
-                    background: n <= stepNum ? "oklch(0.55 0.22 290)" : "oklch(0.15 0.03 270)",
-                    color: n <= stepNum ? "oklch(0.95 0.02 80)" : "oklch(0.45 0.03 250)",
-                  }}
-                >
-                  {n}
+          <div className="flex items-center gap-2 mb-6">
+            {[
+              { n: 1, label: "出生資料" },
+              { n: 2, label: "中/西式" },
+              { n: 3, label: "選派別" },
+              { n: 4, label: "選主題" },
+            ].map(({ n, label }) => (
+              <div key={n} className="flex items-center gap-1 flex-1">
+                <div className="flex flex-col items-center gap-1">
+                  <div
+                    className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
+                    style={{
+                      background: n <= stepNum ? "oklch(0.55 0.22 290)" : "oklch(0.15 0.03 270)",
+                      color: n <= stepNum ? "oklch(0.95 0.02 80)" : "oklch(0.45 0.03 250)",
+                    }}
+                  >
+                    {n}
+                  </div>
+                  <span className="text-xs hidden sm:block" style={{ color: n <= stepNum ? "oklch(0.75 0.20 290)" : "oklch(0.40 0.02 250)" }}>{label}</span>
                 </div>
-                {n < 4 && <div className="h-0.5 flex-1" style={{ background: n < stepNum ? "oklch(0.55 0.22 290)" : "oklch(0.20 0.03 270)" }} />}
+                {n < 4 && <div className="h-0.5 flex-1 mb-4" style={{ background: n < stepNum ? "oklch(0.55 0.22 290)" : "oklch(0.20 0.03 270)" }} />}
               </div>
             ))}
           </div>
         )}
 
+        {/* Birth summary chip (shown after step 1) */}
+        {step !== "birth" && <BirthSummary />}
+
         {/* Step 1: Birth Data */}
         {step === "birth" && (
           <div className="rounded-2xl p-6 border" style={{ background: "oklch(0.11 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.2)" }}>
-            <h2 className="text-lg font-bold mb-6" style={{ color: "oklch(0.88 0.03 80)" }}>📋 輸入出生資料</h2>
+            <h2 className="text-lg font-bold mb-1" style={{ color: "oklch(0.88 0.03 80)" }}>📋 輸入出生資料</h2>
+            <p className="text-xs mb-5" style={{ color: "oklch(0.55 0.03 250)" }}>只需輸入一次，之後可自由切換中西玄學派別</p>
             <div className="space-y-4">
               <div>
                 <label className="text-sm mb-1.5 block" style={{ color: "oklch(0.70 0.03 250)" }}>稱呼（可匿名）</label>
                 <input
-                  className="w-full px-4 py-2.5 rounded-lg text-sm border outline-none focus:ring-2"
+                  className="w-full px-4 py-2.5 rounded-lg text-sm border outline-none"
                   style={{ background: "oklch(0.13 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.88 0.03 80)" }}
                   placeholder="例：小明 / 匿名"
                   value={birth.name}
@@ -414,7 +447,7 @@ export default function MysticAnalysis() {
                 </div>
               </div>
               <div>
-                <label className="text-sm mb-1.5 block" style={{ color: "oklch(0.70 0.03 250)" }}>出生時辰（可選）</label>
+                <label className="text-sm mb-1.5 block" style={{ color: "oklch(0.70 0.03 250)" }}>出生時辰（可選，中式玄學更準確）</label>
                 <select
                   className="w-full px-3 py-2.5 rounded-lg text-sm border outline-none"
                   style={{ background: "oklch(0.13 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.88 0.03 80)" }}
@@ -451,7 +484,7 @@ export default function MysticAnalysis() {
               disabled={!birth.year || !birth.month || !birth.day || !birth.gender}
               onClick={() => setStep("tradition")}
             >
-              下一步 →
+              下一步：選擇玄學系統 →
             </button>
           </div>
         )}
@@ -459,15 +492,16 @@ export default function MysticAnalysis() {
         {/* Step 2: Tradition */}
         {step === "tradition" && (
           <div className="rounded-2xl p-6 border" style={{ background: "oklch(0.11 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.2)" }}>
-            <h2 className="text-lg font-bold mb-6" style={{ color: "oklch(0.88 0.03 80)" }}>🌏 選擇玄學系統</h2>
+            <h2 className="text-lg font-bold mb-2" style={{ color: "oklch(0.88 0.03 80)" }}>🌏 選擇玄學系統</h2>
+            <p className="text-xs mb-5" style={{ color: "oklch(0.55 0.03 250)" }}>完成後可隨時返回換另一個系統，毋需重新輸入資料</p>
             <div className="grid grid-cols-1 gap-4">
               {[
-                { val: "chinese", icon: "🐉", title: "中國玄學", desc: "紫微斗數、奇門遁甲、八字命理、風水流年" },
-                { val: "western", icon: "⭐", title: "西方玄學", desc: "星座占星、生命靈數、塔羅牌、人類圖、阿卡西紀錄" },
+                { val: "chinese", icon: "🐉", title: "中國玄學", desc: "紫微斗數、奇門遁甲、八字命理、風水流年、姓名學", color: "oklch(0.65 0.20 60)" },
+                { val: "western", icon: "⭐", title: "西方玄學", desc: "星座占星、生命靈數、塔羅牌、人類圖、阿卡西紀錄", color: "oklch(0.65 0.20 290)" },
               ].map((t) => (
                 <button
                   key={t.val}
-                  className="p-5 rounded-xl border text-left transition-all hover:scale-[1.02]"
+                  className="p-5 rounded-xl border text-left transition-all hover:scale-[1.01]"
                   style={{
                     background: tradition === t.val ? "oklch(0.55 0.22 290 / 0.15)" : "oklch(0.13 0.03 270)",
                     borderColor: tradition === t.val ? "oklch(0.55 0.22 290)" : "oklch(0.55 0.22 290 / 0.2)",
@@ -481,12 +515,14 @@ export default function MysticAnalysis() {
               ))}
             </div>
             <div className="flex gap-3 mt-6">
-              <button className="flex-1 py-3 rounded-xl border font-semibold" style={{ borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.70 0.03 250)" }} onClick={() => setStep("birth")}>← 返回</button>
+              <button className="flex-1 py-3 rounded-xl border font-semibold" style={{ borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.70 0.03 250)" }} onClick={() => setStep("birth")}>
+                ← 修改資料
+              </button>
               <button
                 className="flex-1 py-3 rounded-xl font-bold disabled:opacity-50"
                 style={{ background: "linear-gradient(135deg, oklch(0.45 0.22 290), oklch(0.55 0.22 310))", color: "oklch(0.95 0.02 80)" }}
                 disabled={!tradition}
-                onClick={() => setStep("method")}
+                onClick={() => { setSelectedMethod(""); setStep("method"); }}
               >
                 下一步 →
               </button>
@@ -497,7 +533,9 @@ export default function MysticAnalysis() {
         {/* Step 3: Method */}
         {step === "method" && (
           <div className="rounded-2xl p-6 border" style={{ background: "oklch(0.11 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.2)" }}>
-            <h2 className="text-lg font-bold mb-6" style={{ color: "oklch(0.88 0.03 80)" }}>🔮 選擇分析派別</h2>
+            <h2 className="text-lg font-bold mb-6" style={{ color: "oklch(0.88 0.03 80)" }}>
+              {tradition === "chinese" ? "🐉 選擇中國玄學派別" : "⭐ 選擇西方玄學派別"}
+            </h2>
             <div className="grid grid-cols-2 gap-3">
               {methods.map((m) => (
                 <button
@@ -519,12 +557,22 @@ export default function MysticAnalysis() {
               ))}
             </div>
             <div className="flex gap-3 mt-6">
-              <button className="flex-1 py-3 rounded-xl border font-semibold" style={{ borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.70 0.03 250)" }} onClick={() => setStep("tradition")}>← 返回</button>
+              <button className="flex-1 py-3 rounded-xl border font-semibold" style={{ borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.70 0.03 250)" }} onClick={() => setStep("tradition")}>
+                ← 換系統
+              </button>
               <button
                 className="flex-1 py-3 rounded-xl font-bold disabled:opacity-50"
                 style={{ background: "linear-gradient(135deg, oklch(0.45 0.22 290), oklch(0.55 0.22 310))", color: "oklch(0.95 0.02 80)" }}
                 disabled={!selectedMethod}
-                onClick={() => selectedMethod === "akashic" ? (setIsAkashic(true), setAkashicStep("personA")) : setStep("topics")}
+                onClick={() => {
+                  if (selectedMethod === "akashic") {
+                    setIsAkashic(true);
+                    setAkashicStep("readingType");
+                  } else {
+                    setSelectedTopics([]);
+                    setStep("topics");
+                  }
+                }}
               >
                 {selectedMethod === "akashic" ? "💫 進入阿卡西解讀" : "下一步 →"}
               </button>
@@ -563,7 +611,9 @@ export default function MysticAnalysis() {
               })}
             </div>
             <div className="flex gap-3 mt-6">
-              <button className="flex-1 py-3 rounded-xl border font-semibold" style={{ borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.70 0.03 250)" }} onClick={() => setStep("method")}>← 返回</button>
+              <button className="flex-1 py-3 rounded-xl border font-semibold" style={{ borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.70 0.03 250)" }} onClick={() => setStep("method")}>
+                ← 換派別
+              </button>
               <button
                 className="flex-1 py-3 rounded-xl font-bold disabled:opacity-50 flex items-center justify-center gap-2"
                 style={{ background: "linear-gradient(135deg, oklch(0.45 0.22 290), oklch(0.55 0.22 310))", color: "oklch(0.95 0.02 80)" }}
@@ -571,9 +621,7 @@ export default function MysticAnalysis() {
                 onClick={handleGenerate}
               >
                 {generateMutation.isPending ? (
-                  <>
-                    <span className="animate-spin">⟳</span> 生成中...
-                  </>
+                  <><span className="animate-spin">⟳</span> 生成中...</>
                 ) : "🔮 生成分析報告"}
               </button>
             </div>
@@ -588,7 +636,6 @@ export default function MysticAnalysis() {
         {/* Step 5: Result */}
         {step === "result" && (
           <div className="space-y-4">
-            {/* Score Cards */}
             <div className="rounded-2xl p-6 border" style={{ background: "oklch(0.11 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.2)" }}>
               <h2 className="text-lg font-bold mb-4" style={{ color: "oklch(0.88 0.03 80)" }}>
                 🌟 {birth.name || "你"}的流年玄學分析
@@ -608,12 +655,8 @@ export default function MysticAnalysis() {
                   );
                 })}
               </div>
-
-              {/* Free Preview */}
-              <div className="prose prose-invert max-w-none">
-                <div className="text-sm leading-relaxed whitespace-pre-wrap" style={{ color: "oklch(0.75 0.03 250)" }}>
-                  {report.slice(0, 400)}...
-                </div>
+              <div className="text-sm leading-relaxed whitespace-pre-wrap" style={{ color: "oklch(0.75 0.03 250)" }}>
+                {report.slice(0, 400)}...
               </div>
             </div>
 
@@ -623,17 +666,10 @@ export default function MysticAnalysis() {
                 <div className="absolute inset-0 backdrop-blur-sm" style={{ background: "oklch(0.10 0.04 290 / 0.7)" }} />
                 <div className="relative z-10 text-center">
                   <div className="text-4xl mb-3">🔒</div>
-                  <h3 className="text-lg font-black mb-2" style={{ color: "oklch(0.92 0.05 80)" }}>
-                    完整報告已準備好
-                  </h3>
-                  <p className="text-sm mb-4" style={{ color: "oklch(0.65 0.03 250)" }}>
-                    你嘅完整 12 個月流年分析已準備好，升級 Premium 即可解鎖完整報告。
-                  </p>
+                  <h3 className="text-lg font-black mb-2" style={{ color: "oklch(0.92 0.05 80)" }}>完整報告已準備好</h3>
+                  <p className="text-sm mb-4" style={{ color: "oklch(0.65 0.03 250)" }}>升級 Premium 即可解鎖完整 12 個月流年分析。</p>
                   <Link href="/mystic/pricing">
-                    <span
-                      className="inline-block px-6 py-2.5 rounded-xl font-bold cursor-pointer transition-all hover:scale-105"
-                      style={{ background: "linear-gradient(135deg, oklch(0.65 0.20 60), oklch(0.70 0.18 50))", color: "oklch(0.10 0.02 60)" }}
-                    >
+                    <span className="inline-block px-6 py-2.5 rounded-xl font-bold cursor-pointer transition-all hover:scale-105" style={{ background: "linear-gradient(135deg, oklch(0.65 0.20 60), oklch(0.70 0.18 50))", color: "oklch(0.10 0.02 60)" }}>
                       👑 升級 Premium 解鎖
                     </span>
                   </Link>
@@ -641,30 +677,29 @@ export default function MysticAnalysis() {
               </div>
             )}
 
-            {/* Recommended Videos */}
-            <div className="rounded-2xl p-6 border" style={{ background: "oklch(0.11 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.2)" }}>
-              <h3 className="font-bold mb-4" style={{ color: "oklch(0.88 0.03 80)" }}>🎬 相關玄學家影片</h3>
-              <div className="space-y-3">
-                {[
-                  "2026 十二星座流年大解析｜事業財運感情全面睇",
-                  "紫微斗數睇事業轉機｜2026年邊幾個月最有利？",
-                ].map((title) => (
-                  <Link key={title} href="/mystic/videos">
-                    <div className="flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all hover:scale-[1.01]" style={{ background: "oklch(0.13 0.03 270)" }}>
-                      <div className="w-16 h-10 rounded flex items-center justify-center flex-shrink-0 text-xl" style={{ background: "oklch(0.15 0.04 290)" }}>▶</div>
-                      <span className="text-sm" style={{ color: "oklch(0.75 0.03 250)" }}>{title}</span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
+            {/* Action buttons */}
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                className="py-3 rounded-xl border font-semibold text-sm"
+                style={{ borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.75 0.20 290)" }}
+                onClick={goBackToTradition}
+              >
+                🔄 換其他派別解讀
+              </button>
+              <button
+                className="py-3 rounded-xl border font-semibold text-sm"
+                style={{ borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.70 0.03 250)" }}
+                onClick={() => { setSelectedTopics([]); setStep("topics"); }}
+              >
+                📊 換分析範疇
+              </button>
             </div>
-
             <button
-              className="w-full py-3 rounded-xl border font-semibold"
-              style={{ borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.70 0.03 250)" }}
+              className="w-full py-2.5 rounded-xl text-sm"
+              style={{ color: "oklch(0.45 0.02 250)" }}
               onClick={resetAll}
             >
-              重新分析
+              重新輸入出生資料
             </button>
           </div>
         )}
