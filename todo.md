@@ -400,3 +400,10 @@
 - [x] 加入社交平台追蹤區塊（訂閱數）
 - [x] 加入嘉賓專欄 CTA
 - [x] 確保 mobile-first，所有點擊區域 ≥ 44px
+
+## 現代化 SaaS 登錄頁設計（taste-skill）
+
+- [x] 重新設計 Portal.tsx：全螢幕分割門戶頁，加入 SaaS 登入 CTA、品牌故事、即時訂閱數
+- [x] 加入 framer-motion 入場動畫（stagger reveal）
+- [x] 加入 Phosphor Icons 替換 emoji
+- [x] 預飛檢查：零 em-dash、dark mode、mobile collapse、prefers-reduced-motion
