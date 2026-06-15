@@ -502,16 +502,7 @@ export default function MysticAnalysis() {
                   </button>
                 ))}
               </div>
-              <div>
-                <label className="text-sm mb-1.5 block" style={{ color: "oklch(0.70 0.03 250)" }}>稱呼（可匿名）</label>
-                <input
-                  className="w-full px-4 py-2.5 rounded-lg text-sm border outline-none"
-                  style={{ background: "oklch(0.13 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.88 0.03 80)" }}
-                  placeholder="例：小明 / 匿名"
-                  value={birth.name}
-                  onChange={(e) => setBirth({ ...birth, name: e.target.value })}
-                />
-              </div>
+
               {/* 公曆輸入 */}
               {birth.inputMode === "solar" && (
                 <div className="grid grid-cols-3 gap-3">
