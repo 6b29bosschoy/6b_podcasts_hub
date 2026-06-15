@@ -177,14 +177,18 @@ function getDayGanZhi(year: number, month: number, day: number): { tg: Tiangan; 
 // 時柱：以時辰計算
 const HOUR_DZ: Dizhi[] = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
 
-function getHourDizhi(hour: number): Dizhi {
+function getHourDizhi(hour: number, minute = 0): Dizhi {
   // 子時 23-1, 丑時 1-3, ...
-  const idx = Math.floor(((hour + 1) % 24) / 2);
+  // 精確計算：將時分轉換為分鐘數後判斷時辰
+  const totalMinutes = hour * 60 + minute;
+  // 子時從 23:00 開始，即 1380 分鐘
+  const adjustedMinutes = (totalMinutes + 60) % 1440; // 加60分鐘讓子時從0開始
+  const idx = Math.floor(adjustedMinutes / 120);
   return HOUR_DZ[idx];
 }
 
-function getHourGanZhi(dayTg: Tiangan, hour: number): { tg: Tiangan; dz: Dizhi } {
-  const dz = getHourDizhi(hour);
+function getHourGanZhi(dayTg: Tiangan, hour: number, minute = 0): { tg: Tiangan; dz: Dizhi } {
+  const dz = getHourDizhi(hour, minute);
   const dzIdx = DIZHI.indexOf(dz);
   // 五鼠遁日起時法
   const dayTgIdx = TIANGAN.indexOf(dayTg);
@@ -404,12 +408,12 @@ function getGeju(riGan: Tiangan, pillars: { tg: Tiangan; dz: Dizhi }[]): string 
 }
 
 export function calculateBazi(input: BaziInput): BaziResult {
-  const { name, gender, year, month, day, hour } = input;
+  const { name, gender, year, month, day, hour, minute = 0 } = input;
 
   const yearGZ = getYearGanZhi(year);
   const monthGZ = getMonthGanZhi(year, month, day);
   const dayGZ = getDayGanZhi(year, month, day);
-  const hourGZ = getHourGanZhi(dayGZ.tg, hour);
+  const hourGZ = getHourGanZhi(dayGZ.tg, hour, minute);
 
   const riGan = dayGZ.tg;
 
@@ -434,7 +438,7 @@ export function calculateBazi(input: BaziInput): BaziResult {
   return {
     name,
     gender: gender === "male" ? "男" : "女",
-    solarDate: `${year}年${month}月${day}日 ${hour}時`,
+    solarDate: `${year}年${month}月${day}日 ${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')}`,
     lunarDate: getLunarDateApprox(year, month, day),
     shengxiao: getShengxiao(year),
     zodiac: getZodiac(month, day),

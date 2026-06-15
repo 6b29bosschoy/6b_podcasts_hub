@@ -5,6 +5,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
+import { ENV } from "./_core/env";
 import { notifyOwner } from "./_core/notification";
 import {
   getLatestVideos,
@@ -779,10 +780,10 @@ export const appRouter = router({
         return result;
       }),
 
-    // 八字 AI 深度分析（付費解鎖）
+    // 八字 AI 深度分析（使用 DeepSeek API）
     analyzeBazi: publicProcedure
       .input(z.object({
-        baziSummary: z.string(), // 命盤摘要
+        baziSummary: z.string(),
         topic: z.enum(["overall", "career", "wealth", "love", "health"]),
       }))
       .mutation(async ({ input }) => {
@@ -794,20 +795,63 @@ export const appRouter = router({
           health: "健康運及注意事項",
         };
         const topicName = topicMap[input.topic];
-        const prompt = `你係一位精通八字命理嘅玄學師傅，請根據以下八字命盤資料，用廣東話提供詳細嘅${topicName}分析：
+        const prompt = `你係一位精通八字命理嘅資深玄學師傅，請根據以下八字命盤資料，用廣東話提供詳細嘅${topicName}深度分析：
 
 ${input.baziSummary}
 
-請提供約500字嘅深度分析，包括：
-1. 命格特點
-2. ${topicName}詳細解讀
-3. 今年（2026年）運勢重點
-4. 實用建議及開運方法
+請提供約800字嘅深度分析，結構如下：
 
-語氣要正面積極，提供具體實用嘅建議。最後加入免責聲明。`;
+## 命格總覽
+分析日主五行強弱、命格類型（身強/身弱）、格局特點
+
+## ${topicName}詳細解讀
+根據四柱天干地支、十神關係、藏干互動，深入分析${topicName}嘅具體表現
+
+## 大運流年影響
+分析目前大運對${topicName}嘅影響，以及2026年丙午年嘅具體運勢
+
+## 開運建議
+提供3-5個具體實用嘅開運方法，包括：有利顏色、方位、行業、注意事項
+
+## 重點提示
+列出3個今年最需要注意嘅事項
+
+語氣要正面積極，用詞淺白易明，提供具體實用嘅建議。最後加入一句簡短免責聲明。`;
+
+        // 優先使用 DeepSeek API
+        const deepseekKey = ENV.deepseekApiKey;
+        if (deepseekKey) {
+          try {
+            const dsResponse = await fetch("https://api.deepseek.com/chat/completions", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${deepseekKey}`,
+              },
+              body: JSON.stringify({
+                model: "deepseek-chat",
+                messages: [
+                  { role: "system", content: "你係一位精通八字命理、紫微斗數、奇門遁甲嘅資深玄學師傅，擅長以淺白廣東話解釋命理，提供正面積極嘅人生指引。你嘅分析詳盡、準確、有條理。" },
+                  { role: "user", content: prompt },
+                ],
+                temperature: 0.7,
+                max_tokens: 1500,
+              }),
+            });
+            if (dsResponse.ok) {
+              const dsData = await dsResponse.json() as { choices?: Array<{ message?: { content?: string } }> };
+              const analysis = dsData.choices?.[0]?.message?.content || "分析生成失敗，請稍後再試。";
+              return { analysis };
+            }
+          } catch {
+            // Fallback to built-in LLM
+          }
+        }
+
+        // Fallback: 使用內建 LLM
         const response = await invokeLLM({
           messages: [
-            { role: "system", content: "你係一位精通八字命理嘅玄學師傅，擅長以淺白廣東話解釋八字命理，提供正面積極嘅人生指引。" },
+            { role: "system", content: "你係一位精通八字命理嘅資深玄學師傅，擅長以淺白廣東話解釋八字命理，提供正面積極嘅人生指引。" },
             { role: "user", content: prompt },
           ],
         });
