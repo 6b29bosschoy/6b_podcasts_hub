@@ -582,12 +582,12 @@ export default function MysticBazi() {
             <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid oklch(0.55 0.22 290 / 0.4)" }}>
               <div className="p-5" style={{ background: "linear-gradient(135deg, oklch(0.12 0.06 290), oklch(0.10 0.04 290))" }}>
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-lg">🤖</span>
-                  <div className="text-sm font-black" style={{ color: "oklch(0.92 0.05 80)" }}>DeepSeek AI 深度命盤分析</div>
+                  <span className="text-lg">🔮</span>
+                  <div className="text-sm font-black" style={{ color: "oklch(0.92 0.05 80)" }}>深度命盤分析</div>
                   <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{ background: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.75 0.20 290)" }}>免費體驗</span>
                 </div>
                 <p className="text-xs mb-4" style={{ color: "oklch(0.55 0.03 260)" }}>
-                  由 DeepSeek AI 根據你嘅八字命盤，提供詳細嘅事業、財運、感情、健康深度分析，約800字專屬解讀。
+                  根據你嘅八字命盤，提供詳細嘅事業、財運、感情、健康深度分析，約800字專屬解讀。
                 </p>
                 <div className="flex gap-2 flex-wrap mb-4">
                   {topics.map(t => (
@@ -617,7 +617,7 @@ export default function MysticBazi() {
                       boxShadow: aiLoading ? "none" : "0 4px 20px oklch(0.55 0.22 290 / 0.4)",
                     }}
                   >
-                    {aiLoading ? "🤖 AI 分析中（約15-30秒）..." : `✨ 生成 ${topics.find(t => t.key === selectedTopic)?.label}深度分析`}
+                    {aiLoading ? "🔮 分析中（約15-30秒）..." : `✨ 生成 ${topics.find(t => t.key === selectedTopic)?.label}深度分析`}
                   </button>
                 )}
                 {aiAnalysis && (
