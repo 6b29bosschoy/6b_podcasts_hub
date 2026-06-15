@@ -340,6 +340,7 @@ export const WESTERN_METHODS = [
   { id: "humandesign", name: "人類圖", icon: "💫", desc: "了解自身能量類型" },
   { id: "western-annual", name: "西洋占星流年", icon: "🪐", desc: "流年星象分析" },
   { id: "moon", name: "月亮星座分析", icon: "🌙", desc: "月亮星座情感分析" },
+  { id: "akashic", name: "阿卡西紀錄", icon: "💫✨", desc: "前世今生、靈魂伴侶解讀", isNew: true },
 ];
 
 export const ANALYSIS_TOPICS = [

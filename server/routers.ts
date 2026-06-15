@@ -884,20 +884,193 @@ ${input.baziSummary}
         const method = methodNames[input.method] || input.method;
         const topics = input.topics.map((t) => topicNames[t] || t).join("、");
         const genderStr = input.gender === "male" ? "男" : "女";
-        const prompt = `你係一位精通${method}嘅玄學師傅，請用廣東話為以下人士提供流年玄學分析：
+        const birthInfo = `${input.year}年${input.month}月${input.day}日，${genderStr}性${input.hour ? `，${input.hour}出生` : ""}`;
 
-出生資料：${input.year}年${input.month}月${input.day}日，${genderStr}性${input.hour ? `，${input.hour}出生` : ""}
+        // Method-specific system prompts for more authentic, less AI-like responses
+        const systemPrompts: Record<string, string> = {
+          tarot: "你係一位有二十年經驗嘅塔羅師傅，解牌風格細膩有畫面感，唔會用罐頭句子，每次解讀都係獨一無二嘅故事。你嘅語言係廣東話，直接、真實，有時會講到令人雞皮疙瘩嘅細節。如果有唔好嘅跡象，你會直接講，唔會淨係講好聽嘅說話。",
+          astrology: "你係一位擁有英國占星學院認證嘅占星師，精通本命盤、流年推運及人際合盤。你嘅解讀唔係泛泛而談，係按照真實星象位置分析，會指出具體月份嘅行星移動如何影響當事人。用廣東話解說，語氣專業但親切，唔會用過多術語。",
+          numerology: "你係一位深研生命靈數超過十五年嘅靈數導師，熟悉 Pythagorean 及 Chaldean 兩套系統。你嘅分析唔只係講靈數係幾號，而係深入探討業力課題、靈魂課題同今生使命。用廣東話，語氣溫柔但直接，唔會迴避困難嘅課題。",
+          humandesign: "你係一位人類圖分析師，熟悉九大能量中心、四種類型、六條爻線及十三個閘門。你嘅解讀會結合當事人嘅出生資料推算能量類型，指出策略同權威，幫助佢哋做出正確決定。用廣東話，語氣清晰，避免過多術語。",
+          "western-annual": "你係一位精通太陽回歸盤及行運占星嘅占星師，擅長按月份分析流年星象。你嘅解讀係按照真實行星移動，指出每個季度嘅機遇同挑戰，唔係籠統嘅吉凶預測。用廣東話，語氣直接，提供可執行嘅建議。",
+          moon: "你係一位月亮星座情感分析師，深諳月亮星座如何影響一個人嘅情感模式、安全感需求同親密關係。你嘅解讀會揭示當事人嘅情感底層邏輯，解釋點解佢哋會有某些感情模式。用廣東話，語氣溫柔細膩，有畫面感。",
+        };
+
+        const systemPrompt = systemPrompts[input.method] ||
+          "你係一位精通中西玄學嘅師傅，擅長以廣東話解釋玄學概念，提供真實、有深度嘅人生指引。唔好用罐頭句子，每個分析都要針對當事人嘅具體情況，如有唔好嘅方面也要直接指出。";
+
+        // Method-specific prompt templates
+        const methodPrompts: Record<string, string> = {
+          tarot: `請以塔羅師傅嘅角色，為以下人士進行流年塔羅解讀：
+
+出生資料：${birthInfo}
 分析範疇：${topics}
 
-請提供約300字嘅簡短分析，包括整體流年運勢、各範疇重點提示。語氣要正面積極，提供實用建議。最後加入免責聲明：本分析只供娛樂參考，並不構成任何重大決策建議。`;
+請用抽牌嘅形式解讀，為每個範疇各抽一張主牌，描述牌面畫面、象徵意義，再連結到當事人嘅現實情況。語言要有畫面感、情緒細膩，唔好用「此牌代表...」呢種罐頭句式。如有逆位牌或挑戰性牌面，直接說明需要注意嘅地方。約400字。最後加一句：本解讀只供靈性參考，重大決定請自行判斷。`,
+          astrology: `請以占星師嘅角色，為以下人士進行流年占星分析：
+
+出生資料：${birthInfo}
+分析範疇：${topics}
+
+請按照2026年主要行星移動（木星、土星、天王星）分析對當事人嘅影響，指出具體月份嘅機遇同挑戰。唔好只講「運勢不錯」，要說明係哪個行星進入哪個宮位帶來咩影響。約400字。最後加一句：本分析只供參考，未來由你自己創造。`,
+          numerology: `請以生命靈數導師嘅角色，為以下人士進行靈數分析：
+
+出生資料：${birthInfo}
+分析範疇：${topics}
+
+請計算生命靈數、個人年數及靈魂衝動數，分析今年嘅業力課題同靈魂課題。唔好只係講靈數係幾號，要深入探討今年嘅核心功課係乜，以及如何透過了解自己嘅靈數模式改善各範疇運勢。約400字。最後加一句：靈數係工具，唔係命運。`,
+        };
+
+        const userPrompt = methodPrompts[input.method] ||
+          `請以精通${method}嘅師傅角色，為以下人士提供深入分析：
+
+出生資料：${birthInfo}
+分析範疇：${topics}
+
+分析要求：
+1. 唔好用罐頭句子，每個分析都要針對當事人嘅具體情況
+2. 如有唔好嘅方面，直接指出，唔好淨係講好聽嘅說話
+3. 提供具體、可執行嘅建議，唔係泛泛而談
+4. 語氣真實自然，像一位有經驗嘅師傅在傾談
+5. 約400字
+
+最後加一句：本分析只供娛樂參考，並不構成任何重大決策建議。`;
+
         const response = await invokeLLM({
           messages: [
-            { role: "system", content: "你係一位精通中西玄學嘅師傅，擅長以淺白廣東話解釋玄學概念，提供正面積極嘅人生指引。" },
-            { role: "user", content: prompt },
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
           ],
         });
         const report = response.choices?.[0]?.message?.content || "分析生成失敗，請稍後再試。";
         return { report };
+      }),
+
+    // ─── Akashic Records ─────────────────────────────────────────────────────
+    akashicReading: publicProcedure
+      .input(z.object({
+        personA: z.object({
+          name: z.string().min(1, "請輸入姓名"),
+          year: z.number().int(),
+          month: z.number().int(),
+          day: z.number().int(),
+        }),
+        personB: z.object({
+          name: z.string().min(1, "請輸入姓名"),
+          year: z.number().int(),
+          month: z.number().int(),
+          day: z.number().int(),
+        }).optional(),
+        readingType: z.enum(["pastLife", "soulAge", "soulMate", "energyField", "yearEnergy"]),
+      }))
+      .mutation(async ({ input }) => {
+        const { personA, personB, readingType } = input;
+        const birthA = `${personA.year}年${personA.month}月${personA.day}日`;
+
+        const systemPrompt = `你係一位阿卡西紀錄解讀師兼靈魂契約分析師，有超過二十年嘅靈性解讀經驗。
+你嘅解讀風格：溫柔細膩、具有畫面感、情緒豐富，像小說一樣有場景描述。
+你唔會用「根據阿卡西紀錄顯示...」呢種罐頭句式，而係直接帶入場景，讓當事人感受到畫面。
+你嘅廣東話自然流暢，有時會用到一啲詩意嘅比喻。
+重要：唔好預設帳號主人就係被分析嘅對象，嚴格按照提供嘅資料分析。`;
+
+        let userPrompt = "";
+
+        if (readingType === "pastLife") {
+          userPrompt = `請為以下人士進行阿卡西紀錄前世今生解讀：
+
+姓名：${personA.name}
+出生日期：${birthA}
+
+請提供三段前世解讀，每段包括：
+1. 前世嘅地點、時代同身分（要具體，唔好太抽象）
+2. 當時嘅性格同重要關係
+3. 未完成嘅課題或遺憾
+
+最後連結到今生：呢三段前世如何塑造咗 ${personA.name} 今生嘅性格、天賦同業力課題。
+
+語言要有畫面感，像在描述一個故事，約500字。`;
+        } else if (readingType === "soulAge") {
+          userPrompt = `請為以下人士分析靈魂年齡同靈魂類型：
+
+姓名：${personA.name}
+出生日期：${birthA}
+
+請分析：
+1. 靈魂年齡：係老靈魂、中年靈魂定係年輕靈魂？有幾多個輪迴？
+2. 靈魂類型：療癒者、戰士、學者、創造者、服務者定係其他？
+3. 今生嘅核心靈魂課題係乜？
+4. ${personA.name} 容易吸引乜嘢類型嘅人事物？
+5. 靈魂嘅天賦同使命
+
+語言要有深度同畫面感，約400字。`;
+        } else if (readingType === "soulMate" && personB) {
+          const birthB = `${personB.year}年${personB.month}月${personB.day}日`;
+          userPrompt = `請勿帶入過往任何談論經驗，也不要預設帳號主人。
+
+請為以下兩人進行阿卡西紀錄靈魂伴侶解讀：
+
+人物 A：${personA.name}，出生日期：${birthA}
+人物 B：${personB.name}，出生日期：${birthB}
+
+請分析：
+1. 兩人嘅靈魂特質同能量
+2. 前世係咪有相遇過？係乜嘢關係？
+3. 前世留低咗乜嘢遺憾或約定？
+4. 今生再次相遇嘅原因
+5. 兩人之間嘅業力、課題同吸引力來源
+6. 係靈魂伴侶、雙生火焰定係短暫緣分？
+7. 兩人感情中嘅拉扯、思念同命定感來源
+8. 呢段關係最需要學會嘅事
+9. 最後給兩人嘅靈魂訊息
+
+請用像小說般、有畫面感、情緒細膩嘅方式呈現，約600字。`;
+        } else if (readingType === "energyField") {
+          userPrompt = `請為以下人士分析能量磁場同補充建議：
+
+姓名：${personA.name}
+出生日期：${birthA}
+
+請分析：
+1. 目前嘅能量狀態（係高頻定低頻？有冇能量阻塞？）
+2. 最需要補充嘅能量類型
+3. 具體嘅能量補充建議：
+   - 適合嘅水晶同使用方法
+   - 冥想或靜心練習
+   - 適合嘅顏色、香氛或音頻
+   - 需要避開嘅人事物
+   - 每日可以做嘅小儀式（要實際可執行）
+
+語言要溫柔療癒，有具體可操作嘅建議，約400字。`;
+        } else if (readingType === "yearEnergy") {
+          userPrompt = `請為以下人士分析2026年下半年嘅能量流年：
+
+姓名：${personA.name}
+出生日期：${birthA}
+
+請按月份或季度分析：
+1. 7-8月：能量主題同重點事件
+2. 9-10月：能量主題同重點事件
+3. 11-12月：能量主題同重點事件
+
+同時分析：
+- 事業同財運嘅高低點
+- 感情能量嘅走向
+- 健康能量需要注意嘅地方
+- 下半年最重要嘅靈魂功課
+
+語言要有畫面感，按月份清晰列出，約500字。`;
+        } else {
+          userPrompt = `請為 ${personA.name}（${birthA}）進行阿卡西紀錄解讀，提供前世今生、靈魂課題同能量建議，約400字。`;
+        }
+
+        const response = await invokeLLM({
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+        });
+        const reading = response.choices?.[0]?.message?.content || "解讀生成失敗，請稍後再試。";
+        return { reading };
       }),
   }),
 
