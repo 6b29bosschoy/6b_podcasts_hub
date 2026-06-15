@@ -79,6 +79,18 @@ export default function MysticPricing() {
   return (
     <div className="min-h-screen pt-24 pb-16 px-4" style={{ background: "oklch(0.08 0.02 270)" }}>
       <div className="max-w-5xl mx-auto">
+        {/* Limited Time Free Banner */}
+        <div className="mb-8 rounded-2xl p-4 border flex items-center gap-4" style={{ background: "oklch(0.12 0.06 60 / 0.3)", borderColor: "oklch(0.65 0.20 60 / 0.5)" }}>
+          <span className="text-2xl flex-shrink-0">🎉</span>
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-xs font-black px-2 py-0.5 rounded-full" style={{ background: "oklch(0.65 0.20 60)", color: "oklch(0.10 0.02 60)" }}>限時免費體驗中</span>
+              <span className="text-sm font-bold" style={{ color: "oklch(0.80 0.15 60)" }}>完整流年分析報告現已免費開放</span>
+            </div>
+            <p className="text-xs" style={{ color: "oklch(0.60 0.03 250)" }}>我們正式推出前，先讓大家免費體驗完整玄學分析功能。此功能稍後將成為 Premium 會員專屬，趨快用吧！</p>
+          </div>
+        </div>
+
         <div className="text-center mb-12">
           <p className="text-xs font-bold tracking-widest mb-2" style={{ color: "oklch(0.75 0.20 290)" }}>MEMBERSHIP</p>
           <h1 className="text-3xl md:text-4xl font-black mb-4" style={{ color: "oklch(0.92 0.05 80)" }}>選擇你的會員方案</h1>

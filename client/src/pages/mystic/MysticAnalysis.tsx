@@ -106,7 +106,7 @@ export default function MysticAnalysis() {
   const [selectedMethod, setSelectedMethod] = useState("");
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   const [report, setReport] = useState<string>("");
-  const [isPremiumLocked] = useState(true);
+  const [isPremiumLocked] = useState(false); // 限時免費體驗中，稍後將改為付費功能
 
   // Akashic Records state
   const [isAkashic, setIsAkashic] = useState(false);
@@ -660,22 +660,28 @@ export default function MysticAnalysis() {
               </div>
             </div>
 
-            {/* Premium Lock */}
-            {isPremiumLocked && (
-              <div className="rounded-2xl p-6 border relative overflow-hidden" style={{ background: "oklch(0.12 0.05 290)", borderColor: "oklch(0.55 0.22 290 / 0.3)" }}>
-                <div className="absolute inset-0 backdrop-blur-sm" style={{ background: "oklch(0.10 0.04 290 / 0.7)" }} />
-                <div className="relative z-10 text-center">
-                  <div className="text-4xl mb-3">🔒</div>
-                  <h3 className="text-lg font-black mb-2" style={{ color: "oklch(0.92 0.05 80)" }}>完整報告已準備好</h3>
-                  <p className="text-sm mb-4" style={{ color: "oklch(0.65 0.03 250)" }}>升級 Premium 即可解鎖完整 12 個月流年分析。</p>
-                  <Link href="/mystic/pricing">
-                    <span className="inline-block px-6 py-2.5 rounded-xl font-bold cursor-pointer transition-all hover:scale-105" style={{ background: "linear-gradient(135deg, oklch(0.65 0.20 60), oklch(0.70 0.18 50))", color: "oklch(0.10 0.02 60)" }}>
-                      👑 升級 Premium 解鎖
-                    </span>
-                  </Link>
+            {/* Free Trial Banner */}
+            <div className="rounded-2xl p-4 border flex items-start gap-3" style={{ background: "oklch(0.12 0.06 60 / 0.4)", borderColor: "oklch(0.65 0.20 60 / 0.5)" }}>
+              <span className="text-xl flex-shrink-0 mt-0.5">🎉</span>
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs font-black px-2 py-0.5 rounded-full" style={{ background: "oklch(0.65 0.20 60)", color: "oklch(0.10 0.02 60)" }}>限時免費</span>
+                  <span className="text-xs font-bold" style={{ color: "oklch(0.80 0.15 60)" }}>完整報告現已開放體驗</span>
                 </div>
+                <p className="text-xs" style={{ color: "oklch(0.65 0.03 250)" }}>完整流年分析現正免費開放，讓大家先體驗一下！此功能稍後將成為 Premium 付費功能，把握機會盡情使用。</p>
               </div>
-            )}
+            </div>
+
+            {/* Full Report */}
+            <div className="rounded-2xl p-6 border" style={{ background: "oklch(0.11 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.2)" }}>
+              <div className="flex items-center gap-2 mb-4">
+                <h3 className="font-bold" style={{ color: "oklch(0.88 0.03 80)" }}>完整流年分析報告</h3>
+                <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{ background: "oklch(0.65 0.20 60)", color: "oklch(0.10 0.02 60)" }}>限時免費</span>
+              </div>
+              <div className="text-sm leading-relaxed whitespace-pre-wrap" style={{ color: "oklch(0.78 0.03 250)" }}>
+                {report}
+              </div>
+            </div>
 
             {/* Action buttons */}
             <div className="grid grid-cols-2 gap-3">
