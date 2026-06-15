@@ -407,3 +407,21 @@
 - [x] 加入 framer-motion 入場動畫（stagger reveal）
 - [x] 加入 Phosphor Icons 替換 emoji
 - [x] 預飛檢查：零 em-dash、dark mode、mobile collapse、prefers-reduced-motion
+
+## 首頁第三階段重設計（資訊架構重建）
+
+- [x] Hero Section：主標題「6B Podcast｜香港真實人物、關係、玄學與生活文化內容平台」+ 副標題 + 三個 CTA + 即時訂閱數
+- [x] 三大入口卡：路邊電台 / 路邊玄學堂 / 商業合作
+- [x] 最新 YouTube 影片區塊（混合兩個頻道，含篩選 tabs）
+- [x] 熱門節目分類區塊（4 個分類卡）
+- [x] 路邊玄學堂精選內容區塊（10 種派別網格 + AI 分析 CTA）
+- [x] 玄學服務 / 會員訂閱入口區塊
+- [x] 嘉賓專欄 / 精選文章區塊（有文章時顯示）
+- [x] 商業合作區塊
+- [x] 社交媒體追蹤區（6 個平台）
+- [x] Footer 更新（含導航連結）
+- [x] TypeScript 零錯誤，112 個測試全部通過
+- [ ] 手機版底部固定快捷導航（待後續實作）
+- [ ] 更新 Navbar：桌面 9 項（首頁/最新節目/路邊電台/路邊玄學堂/玄學服務/嘉賓專欄/商業合作/關於6B/聯絡我們）
+- [ ] 手機版 Navbar 底部快捷導航（最新影片/玄學堂/預約服務/合作查詢）
+- [ ] 更新 App.tsx 路由（/episodes, /podcasts 等新路由）

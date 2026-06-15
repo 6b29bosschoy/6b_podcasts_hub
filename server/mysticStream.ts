@@ -210,7 +210,13 @@ function buildAkashicPrompts(body: {
 // ── Auth + Quota middleware helper ─────────────────────────────────────────────────────
 
 async function checkAuthAndQuota(req: Request, res: Response): Promise<{ userId: number } | null> {
-  const user = await sdk.authenticateRequest(req);
+  let user;
+  try {
+    user = await sdk.authenticateRequest(req);
+  } catch {
+    res.status(401).json({ error: "LOGIN_REQUIRED", message: "請先登入以使用玄學分析功能" });
+    return null;
+  }
   if (!user) {
     res.status(401).json({ error: "LOGIN_REQUIRED", message: "請先登入以使用玄學分析功能" });
     return null;
