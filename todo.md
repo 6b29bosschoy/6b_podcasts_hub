@@ -343,3 +343,14 @@
 - [x] 建立前端 /mystic/bazi 頁面（輸入表單 + 彩色四柱命盤 + 基本資料 + 免費總結 + 付費解鎖 AI 分析）
 - [x] 整合至 MysticHome 及 MysticNavbar 導航
 - [x] 69 個測試全部通過，儲存 checkpoint bd64b237
+
+## 玄學影片專區 YouTube 真實資料整合
+
+- [x] 重寫 MysticVideos.tsx 使用 trpc.youtube.getVideos({ channel: "fengshui", limit: 50 }) 真實資料
+- [x] 加入 VideoCard 元件（縮圖、播放覆蓋、時長標籤、觀看數、發布日期）
+- [x] 加入分類篩選（全部 / 風水命理 / 塔羅靈數 / Shorts）
+- [x] 加入 @6bfengshui 頻道資訊橫幅（頻道頭像、訂閱按鈕）
+- [x] 全部影片分拆為「最新影片」及「Shorts 速學玄學」兩個區塊
+- [x] 加入載入骨架屏、錯誤狀態、載入更多按鈕
+- [x] 112 個測試全部通過，零 TypeScript 錯誤
+- [x] 儲存 checkpoint
