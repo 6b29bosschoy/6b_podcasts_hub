@@ -381,3 +381,12 @@
 - [x] 前端 MysticAnalysis.tsx 改用串流接收，逐字顯示報告
 - [-] 前端 MysticBazi.tsx AI 分析改用串流顯示（待後續要求）
 - [x] 測試串流及農曆功能正常運作
+
+## 會員系統（每日額度控制）
+
+- [x] 資料庫新增 mystic_usage 表（userId, date, count）
+- [x] 後端新增 canUseMysticToday / incrementMysticUsage helpers 及 mystic.getUsage tRPC procedure
+- [x] 後端串流端點加入 auth + 額度驗證（401 未登入，429 額度用盡）
+- [x] 前端 MysticAnalysis：未登入顯示登入提示頁，登入後顯示今日剩餘次數 badge
+- [x] 前端每次生成後自動刷新剩餘次數
+- [x] 測試期間：每日 10 次免費，全功能開放

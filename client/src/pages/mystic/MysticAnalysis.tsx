@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { CHINESE_METHODS, WESTERN_METHODS, ANALYSIS_TOPICS } from "@/data/mysticData";
 import { trpc } from "@/lib/trpc";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { getLoginUrl } from "@/const";
 
 // Steps: birth → tradition → method → topics → result
 // After result, user can go back to "tradition" step without re-entering birth data
@@ -106,6 +108,15 @@ function PersonForm({ data, onChange, title }: { data: PersonData; onChange: (d:
 }
 
 export default function MysticAnalysis() {
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
+  const utils = trpc.useUtils();
+
+  // Quota query — only when logged in
+  const { data: usageData, refetch: refetchUsage } = trpc.mystic.getUsage.useQuery(
+    undefined,
+    { enabled: isAuthenticated, staleTime: 30_000 }
+  );
+
   // Core flow state
   const [step, setStep] = useState<Step>("birth");
   const [birth, setBirth] = useState<BirthData>({
@@ -136,7 +147,7 @@ export default function MysticAnalysis() {
   });
 
   // Streaming fetch helper
-  const streamReport = async (body: object, onToken: (t: string) => void, onDone: () => void, onError: () => void) => {
+  const streamReport = async (body: object, onToken: (t: string) => void, onDone: () => void, onError: (code?: string, msg?: string) => void) => {
     const endpoint = (body as { readingType?: string }).readingType !== undefined
       ? "/api/mystic/stream-akashic"
       : "/api/mystic/stream-report";
@@ -147,7 +158,13 @@ export default function MysticAnalysis() {
         credentials: "include",
         body: JSON.stringify(body),
       });
-      if (!res.ok || !res.body) { onError(); return; }
+      if (!res.ok || !res.body) {
+        try {
+          const errData = await res.json() as { error?: string; message?: string };
+          onError(errData.error, errData.message);
+        } catch { onError(); }
+        return;
+      }
       const reader = res.body.getReader();
       const dec = new TextDecoder();
       let buf = "";
@@ -206,6 +223,10 @@ export default function MysticAnalysis() {
   };
 
   const handleGenerate = () => {
+    if (!isAuthenticated) {
+      window.location.href = getLoginUrl();
+      return;
+    }
     const sd = getSolarDate();
     setReport("");
     setIsStreaming(true);
@@ -224,12 +245,27 @@ export default function MysticAnalysis() {
         ...(sd.isLunar ? { lunarYear: sd.year, lunarMonth: sd.month, lunarDay: sd.day, isLeapMonth: sd.isLeapMonth } : {}),
       },
       (token) => setReport((prev) => prev + token),
-      () => setIsStreaming(false),
-      () => { setIsStreaming(false); setReport("生成失敗，請稍後再試。"); }
+      () => { setIsStreaming(false); refetchUsage(); },
+      (code, msg) => {
+        setIsStreaming(false);
+        if (code === "LOGIN_REQUIRED") {
+          setReport("");
+          setStep("topics");
+          window.location.href = getLoginUrl();
+        } else if (code === "QUOTA_EXCEEDED") {
+          setReport("⚠️ " + (msg || "今日免費額度已用盡，明日再來！"));
+        } else {
+          setReport("生成失敗，請稍後再試。");
+        }
+      }
     );
   };
 
   const handleAkashicGenerate = () => {
+    if (!isAuthenticated) {
+      window.location.href = getLoginUrl();
+      return;
+    }
     const needsPersonB = akashicReadingType === "soulMate";
     setAkashicResult("");
     setAkashicError("");
@@ -254,8 +290,17 @@ export default function MysticAnalysis() {
         readingType: akashicReadingType,
       },
       (token) => setAkashicResult((prev) => prev + token),
-      () => setIsStreaming(false),
-      () => { setIsStreaming(false); setAkashicError("解讀生成失敗，請稍後再試。"); }
+      () => { setIsStreaming(false); refetchUsage(); },
+      (code, msg) => {
+        setIsStreaming(false);
+        if (code === "LOGIN_REQUIRED") {
+          window.location.href = getLoginUrl();
+        } else if (code === "QUOTA_EXCEEDED") {
+          setAkashicError("⚠️ " + (msg || "今日免費額度已用盡，明日再來！"));
+        } else {
+          setAkashicError("解讀生成失敗，請稍後再試。");
+        }
+      }
     );
   };
 
@@ -438,7 +483,52 @@ export default function MysticAnalysis() {
     );
   }
 
-  // ─── Standard Analysis Flow ───────────────────────────────────────────────
+  // ─── Standard Analysis Flow ─────────────────────────────────────────────────────
+
+  // Auth loading state
+  if (authLoading) {
+    return (
+      <div className="min-h-screen pt-24 pb-16 px-4 flex items-center justify-center" style={{ background: "oklch(0.08 0.02 270)" }}>
+        <div className="text-center">
+          <div className="w-10 h-10 rounded-full border-2 border-t-transparent animate-spin mx-auto mb-4" style={{ borderColor: "oklch(0.55 0.22 290)" }} />
+          <p className="text-sm" style={{ color: "oklch(0.55 0.03 250)" }}>載入中…</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Not logged in — show login CTA
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen pt-24 pb-16 px-4" style={{ background: "oklch(0.08 0.02 270)" }}>
+        <div className="max-w-md mx-auto text-center">
+          <div className="text-6xl mb-6">🔮</div>
+          <h1 className="text-2xl font-black mb-3" style={{ color: "oklch(0.92 0.05 80)" }}>玄學分析工具</h1>
+          <p className="text-sm mb-2" style={{ color: "oklch(0.65 0.03 250)" }}>登入後即可使用，每日免費 <span className="font-bold" style={{ color: "oklch(0.75 0.20 290)" }}>10 次</span> 玄學分析</p>
+          <p className="text-xs mb-8" style={{ color: "oklch(0.50 0.03 250)" }}>支援中西玄學 12 個派別 · 阿卡西紀錄 · 即時串流回應</p>
+          <div className="rounded-2xl p-6 border mb-6" style={{ background: "oklch(0.11 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.3)" }}>
+            <div className="grid grid-cols-3 gap-4 mb-4">
+              {[{ icon: "🔮", label: "塔羅牌" }, { icon: "⭐", label: "星座占星" }, { icon: "🌙", label: "月亮星座" }, { icon: "☸️", label: "紫微斗數" }, { icon: "🌀", label: "人類圖" }, { icon: "💫", label: "阿卡西紀錄" }].map(({ icon, label }) => (
+              <div key={label} className="flex flex-col items-center gap-1">
+                <span className="text-2xl">{icon}</span>
+                <span className="text-xs" style={{ color: "oklch(0.60 0.03 250)" }}>{label}</span>
+              </div>
+            ))}
+            </div>
+          </div>
+          <button
+            className="w-full py-3.5 rounded-xl font-bold text-base transition-all hover:opacity-90"
+            style={{ background: "oklch(0.55 0.22 290)", color: "oklch(0.95 0.02 80)" }}
+            onClick={() => { window.location.href = getLoginUrl(); }}
+          >
+            🔐 登入 / 註冊開始使用
+          </button>
+          <p className="text-xs mt-3" style={{ color: "oklch(0.45 0.03 250)" }}>測試期間全功能免費体驗，無需信用卡</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen pt-24 pb-16 px-4" style={{ background: "oklch(0.08 0.02 270)" }}>
       <div className="max-w-2xl mx-auto">
@@ -447,6 +537,15 @@ export default function MysticAnalysis() {
           <p className="text-xs font-bold tracking-widest mb-2" style={{ color: "oklch(0.75 0.20 290)" }}>MYSTIC ANALYSIS</p>
           <h1 className="text-2xl md:text-3xl font-black" style={{ color: "oklch(0.92 0.05 80)" }}>玄學分析工具</h1>
           <p className="text-sm mt-2" style={{ color: "oklch(0.60 0.03 250)" }}>輸入一次出生資料，即可解鎖中西玄學全部派別</p>
+          {/* Daily quota badge */}
+          {usageData && (
+            <div className="inline-flex items-center gap-2 mt-3 px-3 py-1.5 rounded-full text-xs" style={{ background: "oklch(0.13 0.03 270)", border: "1px solid oklch(0.55 0.22 290 / 0.3)" }}>
+              <span style={{ color: usageData.remaining > 3 ? "oklch(0.75 0.20 290)" : "oklch(0.75 0.20 25)" }}>
+                ✨ 今日剩餘：{usageData.remaining} / {usageData.limit} 次
+              </span>
+              {usageData.remaining === 0 && <span style={{ color: "oklch(0.65 0.15 25)" }}>— 明日再來！</span>}
+            </div>
+          )}
         </div>
 
         {/* Progress Bar */}

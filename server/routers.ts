@@ -54,6 +54,9 @@ import {
   getHostApplications,
   getHostApplicationById,
   updateHostApplicationStatus,
+  canUseMysticToday,
+  incrementMysticUsage,
+  DAILY_FREE_LIMIT,
 } from "./db";
 import { storagePut } from "./storage";
 import { generateFaqForPost } from "./faqHelper";
@@ -1071,6 +1074,13 @@ ${input.baziSummary}
         });
         const reading = response.choices?.[0]?.message?.content || "解讀生成失敗，請稍後再試。";
         return { reading };
+      }),
+
+    // 查詢今日剩餘使用次數（需登入）
+    getUsage: protectedProcedure
+      .query(async ({ ctx }) => {
+        const { remaining, limit } = await canUseMysticToday(ctx.user.id);
+        return { remaining, limit, used: limit - remaining };
       }),
   }),
 

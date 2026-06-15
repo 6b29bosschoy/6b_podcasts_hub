@@ -11,7 +11,7 @@ const PLANS = [
     borderColor: "oklch(0.55 0.03 250 / 0.3)",
     bgColor: "oklch(0.11 0.02 270)",
     features: [
-      { label: "基本玄學分析（每月 3 次）", included: true },
+      { label: "玄學分析（登入後每日 10 次）", included: true },
       { label: "免費影片觀看", included: true },
       { label: "免費文章閱讀", included: true },
       { label: "玄學家列表瀏覽", included: true },
@@ -87,7 +87,7 @@ export default function MysticPricing() {
               <span className="text-xs font-black px-2 py-0.5 rounded-full" style={{ background: "oklch(0.65 0.20 60)", color: "oklch(0.10 0.02 60)" }}>限時免費體驗中</span>
               <span className="text-sm font-bold" style={{ color: "oklch(0.80 0.15 60)" }}>完整流年分析報告現已免費開放</span>
             </div>
-            <p className="text-xs" style={{ color: "oklch(0.60 0.03 250)" }}>我們正式推出前，先讓大家免費體驗完整玄學分析功能。此功能稍後將成為 Premium 會員專屬，趨快用吧！</p>
+            <p className="text-xs" style={{ color: "oklch(0.60 0.03 250)" }}>測試期間全功能免費開放，登入後每日可免費使用 10 次完整玄學分析。此功能稍後將成為 Premium 會員專屬，趣快體驗！</p>
           </div>
         </div>
 

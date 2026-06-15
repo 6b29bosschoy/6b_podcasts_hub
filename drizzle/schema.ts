@@ -218,3 +218,16 @@ export const hostApplications = mysqlTable("host_applications", {
 
 export type HostApplication = typeof hostApplications.$inferSelect;
 export type InsertHostApplication = typeof hostApplications.$inferInsert;
+
+// Mystic analysis daily usage tracking
+export const mysticUsage = mysqlTable("mystic_usage", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  usageDate: varchar("usageDate", { length: 10 }).notNull(), // YYYY-MM-DD
+  count: int("count").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type MysticUsage = typeof mysticUsage.$inferSelect;
+export type InsertMysticUsage = typeof mysticUsage.$inferInsert;

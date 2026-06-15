@@ -14,6 +14,7 @@ import {
   InsertReaderSubmission,
   InsertSubscription,
   InsertUser,
+  MysticUsage,
   ReaderSubmission,
   Subscription,
   YoutubeCache,
@@ -22,6 +23,7 @@ import {
   comments,
   contacts,
   hostApplications,
+  mysticUsage,
   readerSubmissions,
   subscriptions,
   users,
@@ -391,3 +393,43 @@ export async function updateHostApplicationStatus(id: number, status: "pending" 
     .set({ status })
     .where(eq(hostApplications.id, id));
 }
+
+// ── Mystic Usage Helpers ────────────────────────────────────────────────────
+
+const DAILY_FREE_LIMIT = 10;
+
+/** Get today's usage count for a user. Returns 0 if no record. */
+export async function getMysticUsageToday(userId: number): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD UTC
+  const rows = await db.select()
+    .from(mysticUsage)
+    .where(and(eq(mysticUsage.userId, userId), eq(mysticUsage.usageDate, today)))
+    .limit(1);
+  return rows[0]?.count ?? 0;
+}
+
+/** Check if user can still use mystic analysis today. */
+export async function canUseMysticToday(userId: number): Promise<{ allowed: boolean; remaining: number; limit: number }> {
+  const count = await getMysticUsageToday(userId);
+  const remaining = Math.max(0, DAILY_FREE_LIMIT - count);
+  return { allowed: remaining > 0, remaining, limit: DAILY_FREE_LIMIT };
+}
+
+/** Increment today's usage count for a user. Returns new count. */
+export async function incrementMysticUsage(userId: number): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+  const today = new Date().toISOString().slice(0, 10);
+  // Upsert: insert or increment
+  await db.execute(
+    sql`INSERT INTO mystic_usage (userId, usageDate, count)
+        VALUES (${userId}, ${today}, 1)
+        ON DUPLICATE KEY UPDATE count = count + 1`
+  );
+  return getMysticUsageToday(userId);
+}
+
+export { DAILY_FREE_LIMIT };
+export type { MysticUsage };

@@ -5,6 +5,8 @@
  */
 import { Router, Request, Response } from "express";
 import { ENV } from "./_core/env";
+import { canUseMysticToday, incrementMysticUsage } from "./db";
+import { sdk } from "./_core/sdk";
 
 // 農曆轉公曆（使用 lunar-typescript）
 function lunarToSolar(lunarYear: number, lunarMonth: number, lunarDay: number, isLeap = false): { year: number; month: number; day: number } {
@@ -205,10 +207,29 @@ function buildAkashicPrompts(body: {
   return { systemPrompt, userPrompt };
 }
 
-// ── Routes ─────────────────────────────────────────────────────────────────
+// ── Auth + Quota middleware helper ─────────────────────────────────────────────────────
+
+async function checkAuthAndQuota(req: Request, res: Response): Promise<{ userId: number } | null> {
+  const user = await sdk.authenticateRequest(req);
+  if (!user) {
+    res.status(401).json({ error: "LOGIN_REQUIRED", message: "請先登入以使用玄學分析功能" });
+    return null;
+  }
+  const { allowed, remaining } = await canUseMysticToday(user.id);
+  if (!allowed) {
+    res.status(429).json({ error: "QUOTA_EXCEEDED", message: `今日免費額度已用盡，明日再來！`, remaining: 0 });
+    return null;
+  }
+  return { userId: user.id };
+}
+
+// ── Routes ───────────────────────────────────────────────────────────────────────────
 
 router.post("/stream-report", async (req: Request, res: Response) => {
   try {
+    const auth = await checkAuthAndQuota(req, res);
+    if (!auth) return;
+
     const body = req.body as Parameters<typeof buildReportPrompts>[0];
     // If lunar input, convert to solar first
     if (body.inputMode === "lunar" && body.lunarYear && body.lunarMonth && body.lunarDay) {
@@ -221,6 +242,8 @@ router.post("/stream-report", async (req: Request, res: Response) => {
       res.status(400).json({ error: "Missing required fields" });
       return;
     }
+    // Increment usage before streaming
+    await incrementMysticUsage(auth.userId);
     const { systemPrompt, userPrompt } = buildReportPrompts(body);
     await streamLLM(systemPrompt, userPrompt, res);
   } catch (err) {
@@ -232,11 +255,16 @@ router.post("/stream-report", async (req: Request, res: Response) => {
 
 router.post("/stream-akashic", async (req: Request, res: Response) => {
   try {
+    const auth = await checkAuthAndQuota(req, res);
+    if (!auth) return;
+
     const body = req.body as Parameters<typeof buildAkashicPrompts>[0];
     if (!body.personA?.name || !body.personA?.year || !body.readingType) {
       res.status(400).json({ error: "Missing required fields" });
       return;
     }
+    // Increment usage before streaming
+    await incrementMysticUsage(auth.userId);
     const { systemPrompt, userPrompt } = buildAkashicPrompts(body);
     await streamLLM(systemPrompt, userPrompt, res);
   } catch (err) {
