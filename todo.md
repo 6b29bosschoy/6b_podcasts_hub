@@ -370,3 +370,14 @@
 - [x] 重構 MysticAnalysis.tsx：輸入一次出生資料後可反覆切換中式/西式/派別，不需重新輸入
 - [x] 結果頁加入「換一個派別」按鈕，直接跳回選擇傳統步驟，保留出生資料
 - [x] 阿卡西紀錄選完後直接進入阿卡西流程，完成後可返回選其他派別
+
+## 串流 AI 回應 + 精確農曆功能
+
+- [x] 安裝 lunar-typescript 精確農曆套件
+- [x] 後端 bazi.ts 改用精確農曆計算替換近似版
+- [x] 後端新增 /api/mystic/stream-report SSE 端點（Express route，非 tRPC）
+- [x] 後端新增 /api/mystic/stream-akashic SSE 端點
+- [x] 前端 MysticAnalysis.tsx 加入農曆/陽曆切換輸入選項
+- [x] 前端 MysticAnalysis.tsx 改用串流接收，逐字顯示報告
+- [-] 前端 MysticBazi.tsx AI 分析改用串流顯示（待後續要求）
+- [x] 測試串流及農曆功能正常運作

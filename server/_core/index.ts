@@ -8,6 +8,7 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { getApprovedBlogPosts, getBlogPostBySlug } from "../db";
+import mysticStreamRouter from "../mysticStream";
 
 // Estimate token count (rough approximation: 1 token ≈ 4 chars)
 function estimateTokens(text: string): number {
@@ -429,6 +430,9 @@ A: 有，Instagram 帳號係 @6bpodcasts（https://www.instagram.com/6bpodcasts�
     res.setHeader("Cache-Control", "public, max-age=3600");
     res.send(xml);
   });
+
+  // ── Mystic Stream SSE
+  app.use("/api/mystic", mysticStreamRouter);
 
   // ── tRPC API
   app.use(

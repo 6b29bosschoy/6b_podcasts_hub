@@ -275,22 +275,25 @@ function getLiuNian(birthYear: number, count = 20): Array<{ age: number; year: n
   return result;
 }
 
-// ── 農曆轉換（近似版） ──────────────────────────────────────
+//// ── 農曆轉換（精確版，使用 lunar-typescript） ─────────────────────
 function getLunarDateApprox(year: number, month: number, day: number): string {
-  const lunarMonths = ["正", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"];
-  const lunarDays = [
-    "初一", "初二", "初三", "初四", "初五", "初六", "初七", "初八", "初九", "初十",
-    "十一", "十二", "十三", "十四", "十五", "十六", "十七", "十八", "十九", "二十",
-    "廿一", "廿二", "廿三", "廿四", "廿五", "廿六", "廿七", "廿八", "廿九", "三十",
-  ];
-  const lunarYears = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
-
-  // 非常近似的農曆月份（實際需要完整農曆表）
-  const lunarMonth = ((month - 1 + 11) % 12);
-  const lunarDay = Math.min(day - 1, 29);
-
-  const yearStr = String(year).split("").map(d => lunarYears[parseInt(d)]).join("");
-  return `${yearStr}年 ${lunarMonths[lunarMonth]}月${lunarDays[lunarDay]}`;
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { Lunar, Solar } = require("lunar-typescript") as typeof import("lunar-typescript");
+    const solar = Solar.fromYmd(year, month, day);
+    const lunar = solar.getLunar();
+    const leapStr = lunar.getMonth() < 0 ? "閏" : "";
+    return `${lunar.getYearInChinese()}年 ${leapStr}${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}`;
+  } catch {
+    // fallback
+    const lunarMonths = ["正", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"];
+    const lunarDays = ["初一","初二","初三","初四","初五","初六","初七","初八","初九","初十","十一","十二","十三","十四","十五","十六","十七","十八","十九","二十","廿一","廿二","廿三","廿四","廿五","廿六","廿七","廿八","廿九","三十"];
+    const lunarYears = ["零","一","二","三","四","五","六","七","八","九"];
+    const lunarMonth = ((month - 1 + 11) % 12);
+    const lunarDay = Math.min(day - 1, 29);
+    const yearStr = String(year).split("").map(d => lunarYears[parseInt(d)]).join("");
+    return `${yearStr}年 ${lunarMonths[lunarMonth]}月${lunarDays[lunarDay]}`;
+  }
 }
 
 // ── 時辰名稱 ──────────────────────────────────────────────

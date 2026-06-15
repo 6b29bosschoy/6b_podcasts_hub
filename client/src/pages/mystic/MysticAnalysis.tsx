@@ -7,6 +7,7 @@ import { trpc } from "@/lib/trpc";
 // After result, user can go back to "tradition" step without re-entering birth data
 type Step = "birth" | "tradition" | "method" | "topics" | "result";
 type AkashicStep = "readingType" | "personB" | "result";
+type InputMode = "solar" | "lunar";
 
 interface BirthData {
   name: string;
@@ -15,6 +16,12 @@ interface BirthData {
   day: string;
   hour: string;
   gender: "male" | "female" | "";
+  // Lunar input fields
+  inputMode: InputMode;
+  lunarYear: string;
+  lunarMonth: string;
+  lunarDay: string;
+  isLeapMonth: boolean;
 }
 
 interface PersonData {
@@ -101,11 +108,15 @@ function PersonForm({ data, onChange, title }: { data: PersonData; onChange: (d:
 export default function MysticAnalysis() {
   // Core flow state
   const [step, setStep] = useState<Step>("birth");
-  const [birth, setBirth] = useState<BirthData>({ name: "", year: "", month: "", day: "", hour: "", gender: "" });
+  const [birth, setBirth] = useState<BirthData>({
+    name: "", year: "", month: "", day: "", hour: "", gender: "",
+    inputMode: "solar", lunarYear: "", lunarMonth: "", lunarDay: "", isLeapMonth: false,
+  });
   const [tradition, setTradition] = useState<"chinese" | "western" | "">("");
   const [selectedMethod, setSelectedMethod] = useState("");
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   const [report, setReport] = useState<string>("");
+  const [isStreaming, setIsStreaming] = useState(false);
   const [isPremiumLocked] = useState(false); // 限時免費體驗中，稍後將改為付費功能
 
   // Akashic Records state
@@ -123,6 +134,42 @@ export default function MysticAnalysis() {
       setStep("result");
     },
   });
+
+  // Streaming fetch helper
+  const streamReport = async (body: object, onToken: (t: string) => void, onDone: () => void, onError: () => void) => {
+    const endpoint = (body as { readingType?: string }).readingType !== undefined
+      ? "/api/mystic/stream-akashic"
+      : "/api/mystic/stream-report";
+    try {
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(body),
+      });
+      if (!res.ok || !res.body) { onError(); return; }
+      const reader = res.body.getReader();
+      const dec = new TextDecoder();
+      let buf = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += dec.decode(value, { stream: true });
+        const lines = buf.split("\n");
+        buf = lines.pop() ?? "";
+        for (const line of lines) {
+          const t = line.trim();
+          if (t === "data: [DONE]") { onDone(); return; }
+          if (!t.startsWith("data:")) continue;
+          try {
+            const j = JSON.parse(t.slice(5).trim());
+            if (j.token) onToken(j.token);
+          } catch { /* skip */ }
+        }
+      }
+      onDone();
+    } catch { onError(); }
+  };
 
   const akashicMutation = trpc.mystic.akashicReading.useMutation({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -142,38 +189,74 @@ export default function MysticAnalysis() {
 
   const methods = tradition === "chinese" ? CHINESE_METHODS : tradition === "western" ? WESTERN_METHODS : [];
 
+  // Resolve solar date from birth data (handles lunar input)
+  const getSolarDate = () => {
+    if (birth.inputMode === "lunar" && birth.lunarYear && birth.lunarMonth && birth.lunarDay) {
+      // Use lunar-typescript on client side via a simple lookup
+      // For now pass lunar info to backend; backend will use it in prompt
+      return {
+        year: parseInt(birth.lunarYear),
+        month: parseInt(birth.lunarMonth),
+        day: parseInt(birth.lunarDay),
+        isLunar: true,
+        isLeapMonth: birth.isLeapMonth,
+      };
+    }
+    return { year: parseInt(birth.year), month: parseInt(birth.month), day: parseInt(birth.day), isLunar: false, isLeapMonth: false };
+  };
+
   const handleGenerate = () => {
-    generateMutation.mutate({
-      name: birth.name,
-      year: parseInt(birth.year),
-      month: parseInt(birth.month),
-      day: parseInt(birth.day),
-      hour: birth.hour,
-      gender: birth.gender as "male" | "female",
-      method: selectedMethod,
-      topics: selectedTopics,
-    });
+    const sd = getSolarDate();
+    setReport("");
+    setIsStreaming(true);
+    setStep("result");
+    streamReport(
+      {
+        name: birth.name,
+        year: sd.year,
+        month: sd.month,
+        day: sd.day,
+        hour: birth.hour,
+        gender: birth.gender,
+        method: selectedMethod,
+        topics: selectedTopics,
+        inputMode: birth.inputMode,
+        ...(sd.isLunar ? { lunarYear: sd.year, lunarMonth: sd.month, lunarDay: sd.day, isLeapMonth: sd.isLeapMonth } : {}),
+      },
+      (token) => setReport((prev) => prev + token),
+      () => setIsStreaming(false),
+      () => { setIsStreaming(false); setReport("生成失敗，請稍後再試。"); }
+    );
   };
 
   const handleAkashicGenerate = () => {
     const needsPersonB = akashicReadingType === "soulMate";
-    akashicMutation.mutate({
-      personA: {
-        name: birth.name || "你",
-        year: parseInt(birth.year),
-        month: parseInt(birth.month),
-        day: parseInt(birth.day),
+    setAkashicResult("");
+    setAkashicError("");
+    setIsStreaming(true);
+    setAkashicStep("result");
+    streamReport(
+      {
+        personA: {
+          name: birth.name || "你",
+          year: parseInt(birth.year),
+          month: parseInt(birth.month),
+          day: parseInt(birth.day),
+        },
+        ...(needsPersonB && personB.name && personB.year ? {
+          personB: {
+            name: personB.name,
+            year: parseInt(personB.year),
+            month: parseInt(personB.month),
+            day: parseInt(personB.day),
+          }
+        } : {}),
+        readingType: akashicReadingType,
       },
-      ...(needsPersonB && personB.name && personB.year ? {
-        personB: {
-          name: personB.name,
-          year: parseInt(personB.year),
-          month: parseInt(personB.month),
-          day: parseInt(personB.day),
-        }
-      } : {}),
-      readingType: akashicReadingType as "pastLife" | "soulAge" | "soulMate" | "energyField" | "yearEnergy",
-    });
+      (token) => setAkashicResult((prev) => prev + token),
+      () => setIsStreaming(false),
+      () => { setIsStreaming(false); setAkashicError("解讀生成失敗，請稍後再試。"); }
+    );
   };
 
   // Go back to tradition selection, keeping birth data intact
@@ -191,7 +274,7 @@ export default function MysticAnalysis() {
 
   // Full reset
   const resetAll = () => {
-    setBirth({ name: "", year: "", month: "", day: "", hour: "", gender: "" });
+    setBirth({ name: "", year: "", month: "", day: "", hour: "", gender: "", inputMode: "solar", lunarYear: "", lunarMonth: "", lunarDay: "", isLeapMonth: false });
     setTradition("");
     setSelectedMethod("");
     setSelectedTopics([]);
@@ -208,16 +291,23 @@ export default function MysticAnalysis() {
   const stepNum = { birth: 1, tradition: 2, method: 3, topics: 4, result: 5 }[step];
 
   // Birth info summary chip shown after step 1
-  const BirthSummary = () => birth.year ? (
-    <div className="mb-4 px-4 py-2 rounded-xl flex items-center gap-2 justify-between" style={{ background: "oklch(0.13 0.03 270)", border: "1px solid oklch(0.55 0.22 290 / 0.2)" }}>
-      <span className="text-xs" style={{ color: "oklch(0.65 0.03 250)" }}>
-        👤 {birth.name || "匿名"} · {birth.year}/{birth.month}/{birth.day} · {birth.gender === "male" ? "男" : "女"}
-      </span>
-      <button className="text-xs underline" style={{ color: "oklch(0.65 0.20 290)" }} onClick={() => setStep("birth")}>
-        修改
-      </button>
-    </div>
-  ) : null;
+  const BirthSummary = () => {
+    const hasBirth = birth.inputMode === "solar" ? !!birth.year : !!birth.lunarYear;
+    if (!hasBirth) return null;
+    const dateStr = birth.inputMode === "solar"
+      ? `${birth.year}/${birth.month}/${birth.day}`
+      : `農曆${birth.lunarYear}/${birth.lunarMonth}/${birth.lunarDay}${birth.isLeapMonth ? "（閏）" : ""}`;
+    return (
+      <div className="mb-4 px-4 py-2 rounded-xl flex items-center gap-2 justify-between" style={{ background: "oklch(0.13 0.03 270)", border: "1px solid oklch(0.55 0.22 290 / 0.2)" }}>
+        <span className="text-xs" style={{ color: "oklch(0.65 0.03 250)" }}>
+          👤 {birth.name || "匿名"} · {dateStr} · {birth.gender === "male" ? "男" : "女"}
+        </span>
+        <button className="text-xs underline" style={{ color: "oklch(0.65 0.20 290)" }} onClick={() => setStep("birth")}>
+          修改
+        </button>
+      </div>
+    );
+  };
 
   // ─── Akashic Records Flow ─────────────────────────────────────────────────
   if (isAkashic) {
@@ -396,6 +486,22 @@ export default function MysticAnalysis() {
             <h2 className="text-lg font-bold mb-1" style={{ color: "oklch(0.88 0.03 80)" }}>📋 輸入出生資料</h2>
             <p className="text-xs mb-5" style={{ color: "oklch(0.55 0.03 250)" }}>只需輸入一次，之後可自由切換中西玄學派別</p>
             <div className="space-y-4">
+              {/* 陰曆/陽曆 toggle */}
+              <div className="flex gap-2 p-1 rounded-xl" style={{ background: "oklch(0.13 0.03 270)" }}>
+                {(["solar", "lunar"] as const).map((mode) => (
+                  <button
+                    key={mode}
+                    className="flex-1 py-2 rounded-lg text-sm font-semibold transition-all"
+                    style={{
+                      background: birth.inputMode === mode ? "oklch(0.55 0.22 290)" : "transparent",
+                      color: birth.inputMode === mode ? "oklch(0.95 0.02 80)" : "oklch(0.60 0.03 250)",
+                    }}
+                    onClick={() => setBirth({ ...birth, inputMode: mode })}
+                  >
+                    {mode === "solar" ? "☀️ 公曆（陽曆）" : "🌙 農曆（陰曆）"}
+                  </button>
+                ))}
+              </div>
               <div>
                 <label className="text-sm mb-1.5 block" style={{ color: "oklch(0.70 0.03 250)" }}>稱呼（可匿名）</label>
                 <input
@@ -406,46 +512,96 @@ export default function MysticAnalysis() {
                   onChange={(e) => setBirth({ ...birth, name: e.target.value })}
                 />
               </div>
-              <div className="grid grid-cols-3 gap-3">
-                <div>
-                  <label className="text-sm mb-1.5 block" style={{ color: "oklch(0.70 0.03 250)" }}>出生年份 *</label>
-                  <input
-                    className="w-full px-4 py-2.5 rounded-lg text-sm border outline-none"
-                    style={{ background: "oklch(0.13 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.88 0.03 80)" }}
-                    placeholder="1990"
-                    type="number"
-                    min="1900"
-                    max="2010"
-                    value={birth.year}
-                    onChange={(e) => setBirth({ ...birth, year: e.target.value })}
-                  />
+              {/* 公曆輸入 */}
+              {birth.inputMode === "solar" && (
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <label className="text-sm mb-1.5 block" style={{ color: "oklch(0.70 0.03 250)" }}>公曆年份 *</label>
+                    <input
+                      className="w-full px-4 py-2.5 rounded-lg text-sm border outline-none"
+                      style={{ background: "oklch(0.13 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.88 0.03 80)" }}
+                      placeholder="1990"
+                      type="number" min="1900" max="2010"
+                      value={birth.year}
+                      onChange={(e) => setBirth({ ...birth, year: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm mb-1.5 block" style={{ color: "oklch(0.70 0.03 250)" }}>公曆月份 *</label>
+                    <select
+                      className="w-full px-3 py-2.5 rounded-lg text-sm border outline-none"
+                      style={{ background: "oklch(0.13 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.88 0.03 80)" }}
+                      value={birth.month}
+                      onChange={(e) => setBirth({ ...birth, month: e.target.value })}
+                    >
+                      <option value="">月份</option>
+                      {MONTHS.map((m, i) => <option key={i} value={i + 1}>{m}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-sm mb-1.5 block" style={{ color: "oklch(0.70 0.03 250)" }}>公曆日期 *</label>
+                    <input
+                      className="w-full px-4 py-2.5 rounded-lg text-sm border outline-none"
+                      style={{ background: "oklch(0.13 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.88 0.03 80)" }}
+                      placeholder="15" type="number" min="1" max="31"
+                      value={birth.day}
+                      onChange={(e) => setBirth({ ...birth, day: e.target.value })}
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label className="text-sm mb-1.5 block" style={{ color: "oklch(0.70 0.03 250)" }}>出生月份 *</label>
-                  <select
-                    className="w-full px-3 py-2.5 rounded-lg text-sm border outline-none"
-                    style={{ background: "oklch(0.13 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.88 0.03 80)" }}
-                    value={birth.month}
-                    onChange={(e) => setBirth({ ...birth, month: e.target.value })}
-                  >
-                    <option value="">月份</option>
-                    {MONTHS.map((m, i) => <option key={i} value={i + 1}>{m}</option>)}
-                  </select>
+              )}
+              {/* 農曆輸入 */}
+              {birth.inputMode === "lunar" && (
+                <div className="space-y-3">
+                  <div className="grid grid-cols-3 gap-3">
+                    <div>
+                      <label className="text-sm mb-1.5 block" style={{ color: "oklch(0.70 0.03 250)" }}>農曆年份 *</label>
+                      <input
+                        className="w-full px-4 py-2.5 rounded-lg text-sm border outline-none"
+                        style={{ background: "oklch(0.13 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.88 0.03 80)" }}
+                        placeholder="1990" type="number" min="1900" max="2010"
+                        value={birth.lunarYear}
+                        onChange={(e) => setBirth({ ...birth, lunarYear: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm mb-1.5 block" style={{ color: "oklch(0.70 0.03 250)" }}>農曆月份 *</label>
+                      <select
+                        className="w-full px-3 py-2.5 rounded-lg text-sm border outline-none"
+                        style={{ background: "oklch(0.13 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.88 0.03 80)" }}
+                        value={birth.lunarMonth}
+                        onChange={(e) => setBirth({ ...birth, lunarMonth: e.target.value })}
+                      >
+                        <option value="">月份</option>
+                        {["正","二","三","四","五","六","七","八","九","十","十一","十二"].map((m, i) => (
+                          <option key={i} value={i + 1}>{m}月</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-sm mb-1.5 block" style={{ color: "oklch(0.70 0.03 250)" }}>農曆日期 *</label>
+                      <input
+                        className="w-full px-4 py-2.5 rounded-lg text-sm border outline-none"
+                        style={{ background: "oklch(0.13 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.88 0.03 80)" }}
+                        placeholder="15" type="number" min="1" max="30"
+                        value={birth.lunarDay}
+                        onChange={(e) => setBirth({ ...birth, lunarDay: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="isLeapMonth"
+                      checked={birth.isLeapMonth}
+                      onChange={(e) => setBirth({ ...birth, isLeapMonth: e.target.checked })}
+                      className="w-4 h-4 rounded"
+                    />
+                    <label htmlFor="isLeapMonth" className="text-sm" style={{ color: "oklch(0.70 0.03 250)" }}>閏月（如是閏五月，請勾選）</label>
+                  </div>
+                  <p className="text-xs" style={{ color: "oklch(0.50 0.03 250)" }}>農曆輸入將由系統自動轉換為公曆日期進行分析</p>
                 </div>
-                <div>
-                  <label className="text-sm mb-1.5 block" style={{ color: "oklch(0.70 0.03 250)" }}>出生日期 *</label>
-                  <input
-                    className="w-full px-4 py-2.5 rounded-lg text-sm border outline-none"
-                    style={{ background: "oklch(0.13 0.03 270)", borderColor: "oklch(0.55 0.22 290 / 0.3)", color: "oklch(0.88 0.03 80)" }}
-                    placeholder="15"
-                    type="number"
-                    min="1"
-                    max="31"
-                    value={birth.day}
-                    onChange={(e) => setBirth({ ...birth, day: e.target.value })}
-                  />
-                </div>
-              </div>
+              )}
               <div>
                 <label className="text-sm mb-1.5 block" style={{ color: "oklch(0.70 0.03 250)" }}>出生時辰（可選，中式玄學更準確）</label>
                 <select
@@ -481,7 +637,9 @@ export default function MysticAnalysis() {
             <button
               className="w-full mt-6 py-3 rounded-xl font-bold transition-all hover:scale-[1.02] disabled:opacity-50"
               style={{ background: "linear-gradient(135deg, oklch(0.45 0.22 290), oklch(0.55 0.22 310))", color: "oklch(0.95 0.02 80)" }}
-              disabled={!birth.year || !birth.month || !birth.day || !birth.gender}
+              disabled={birth.inputMode === "solar"
+                ? (!birth.year || !birth.month || !birth.day || !birth.gender)
+                : (!birth.lunarYear || !birth.lunarMonth || !birth.lunarDay || !birth.gender)}
               onClick={() => setStep("tradition")}
             >
               下一步：選擇玄學系統 →
@@ -617,19 +775,14 @@ export default function MysticAnalysis() {
               <button
                 className="flex-1 py-3 rounded-xl font-bold disabled:opacity-50 flex items-center justify-center gap-2"
                 style={{ background: "linear-gradient(135deg, oklch(0.45 0.22 290), oklch(0.55 0.22 310))", color: "oklch(0.95 0.02 80)" }}
-                disabled={selectedTopics.length === 0 || generateMutation.isPending}
+                disabled={selectedTopics.length === 0 || isStreaming}
                 onClick={handleGenerate}
               >
-                {generateMutation.isPending ? (
+                {isStreaming ? (
                   <><span className="animate-spin">⟳</span> 生成中...</>
                 ) : "🔮 生成分析報告"}
               </button>
             </div>
-            {generateMutation.isError && (
-              <p className="mt-3 text-sm text-center" style={{ color: "oklch(0.65 0.20 25)" }}>
-                生成失敗，請稍後再試
-              </p>
-            )}
           </div>
         )}
 
@@ -656,7 +809,10 @@ export default function MysticAnalysis() {
                 })}
               </div>
               <div className="text-sm leading-relaxed whitespace-pre-wrap" style={{ color: "oklch(0.75 0.03 250)" }}>
-                {report.slice(0, 400)}...
+                {isStreaming && !report ? (
+                  <span className="animate-pulse" style={{ color: "oklch(0.55 0.22 290)" }}>✨ AI 正在解讀中...</span>
+                ) : report.slice(0, 400)}
+                {!isStreaming && report.length > 400 ? "..." : ""}
               </div>
             </div>
 
@@ -680,6 +836,7 @@ export default function MysticAnalysis() {
               </div>
               <div className="text-sm leading-relaxed whitespace-pre-wrap" style={{ color: "oklch(0.78 0.03 250)" }}>
                 {report}
+                {isStreaming && <span className="inline-block w-1 h-4 ml-0.5 animate-pulse rounded" style={{ background: "oklch(0.55 0.22 290)" }} />}
               </div>
             </div>
 
