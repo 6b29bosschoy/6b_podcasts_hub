@@ -440,3 +440,14 @@
 - [x] TypeScript 零錯誤，112 個測試全部通過
 - [x] 師傅資料以通用稱謂作佔位，待後續提供真實資料再更新
 - [x] 儲存 checkpoint
+
+## 玄學變現漏斗（第五階段）
+
+- [x] 建立 /mystic/funnel 四層轉換路徑頁面（免費內容/玄學會員/個人服務/高端服務）
+- [x] 首頁 Hero 加入路邊玄學堂 CTA 入口
+- [x] 文章詳情頁（BlogPost.tsx）玄學分類文章底部加入預約玄學服務 + 觀看玄學影片 + YouTube 訂閱 CTA
+- [x] 影片頁（MysticVideos.tsx）底部加入訂閱 YouTube + 預約分析 + 查看服務方案 CTA 橫幅
+- [x] 商業合作頁（Partnership.tsx）加入玄學內容合作區塊（節目贊助/師傅合作/品牌內容）
+- [x] 所有 CTA 文案符合香港觀眾習慣，不突兀
+- [x] TypeScript 零錯誤，112 個測試全部通過
+- [x] 儲存 checkpoint

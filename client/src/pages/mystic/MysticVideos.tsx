@@ -314,11 +314,67 @@ export default function MysticVideos() {
         {/* Footer note */}
         {!isLoading && allVideos.length > 0 && (
           <div className="text-center text-xs pt-2" style={{ color: "oklch(0.40 0.03 260)" }}>
-            更多影片請到{" "}
+            更多影片請到{" "}
             <a href="https://www.youtube.com/@6bfengshui" target="_blank" rel="noopener noreferrer"
               className="underline" style={{ color: "oklch(0.55 0.15 290)" }}>
               YouTube 頻道 @6bfengshui
             </a>
+          </div>
+        )}
+
+        {/* 轉換 CTA 橫幅 */}
+        {!isLoading && (
+          <div
+            className="rounded-2xl p-6"
+            style={{
+              background: "linear-gradient(135deg, oklch(0.10 0.05 290), oklch(0.08 0.02 270))",
+              border: "1px solid oklch(0.22 0.08 290)",
+            }}
+          >
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div>
+                <p className="text-base font-bold mb-1" style={{ color: "oklch(0.88 0.10 290)" }}>
+                  看完影片，想進一步了解自己的命盤？
+                </p>
+                <p className="text-sm" style={{ color: "oklch(0.62 0.05 270)" }}>
+                  預約一對一玄學分析，針對感情、事業、財運或家居風水進行深度解讀。
+                </p>
+              </div>
+              <div className="flex gap-3 flex-shrink-0 flex-wrap justify-center">
+                <a
+                  href="https://www.youtube.com/@6bfengshui?sub_confirmation=1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-5 py-2.5 rounded-xl text-sm font-bold"
+                  style={{ background: "oklch(0.55 0.22 25)", color: "white", textDecoration: "none" }}
+                >
+                  訂閱 YouTube
+                </a>
+                <a
+                  href="/booking"
+                  className="px-5 py-2.5 rounded-xl text-sm font-bold"
+                  style={{
+                    background: "linear-gradient(135deg, oklch(0.55 0.22 290), oklch(0.45 0.20 290))",
+                    color: "white",
+                    textDecoration: "none",
+                  }}
+                >
+                  預約分析
+                </a>
+                <a
+                  href="/mystic/funnel"
+                  className="px-5 py-2.5 rounded-xl text-sm font-bold"
+                  style={{
+                    background: "transparent",
+                    color: "oklch(0.72 0.08 290)",
+                    border: "1px solid oklch(0.28 0.06 290)",
+                    textDecoration: "none",
+                  }}
+                >
+                  查看服務方案
+                </a>
+              </div>
+            </div>
           </div>
         )}
       </div>

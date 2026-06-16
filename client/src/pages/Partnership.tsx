@@ -166,6 +166,58 @@ export default function Partnership() {
         </div>
       </section>
 
+      {/* 玄學內容合作 */}
+      <section className="py-16" style={{ background: "linear-gradient(135deg, oklch(0.09 0.03 290), oklch(0.08 0.01 260))" }}>
+        <div className="container">
+          <div className="text-center mb-10">
+            <div className="text-xs font-bold tracking-widest mb-3" style={{ color: "oklch(0.75 0.20 290)" }}>MYSTIC PARTNERSHIP</div>
+            <h2 className="text-2xl font-black" style={{ color: "oklch(0.92 0.01 60)" }}>玄學內容合作</h2>
+            <p className="text-sm mt-2" style={{ color: "oklch(0.55 0.03 260)" }}>透過路邊玄學堂觸達香港玄學愛好者及對命理有興趣的觀眾</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {[
+              {
+                icon: "✨",
+                title: "玄學節目贊助",
+                desc: "贊助路邊玄學堂的風水、八字、塔羅等節目，自然融入玄學內容，觸達香港玄學愛好者及對命理有興趣的觀眾。",
+                color: "oklch(0.75 0.20 290)",
+              },
+              {
+                icon: "🔮",
+                title: "邀請師傅合作",
+                desc: "如果您是玄學師傅，歡迎加入路邊玄學堂，共同創作玄學內容，擴大個人品牌曝光度。",
+                color: "oklch(0.78 0.15 85)",
+              },
+              {
+                icon: "🏢",
+                title: "品牌內容合作",
+                desc: "品牌命名、Logo 顏色、開業擇日、公司風水，與路邊玄學堂合作創作具有商業價値的玄學內容。",
+                color: "oklch(0.60 0.14 185)",
+              },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="rounded-xl p-6 transition-all hover:scale-[1.02]"
+                style={{ background: "oklch(0.11 0.04 290)", border: `1px solid ${item.color}33` }}
+              >
+                <div className="text-3xl mb-4">{item.icon}</div>
+                <h3 className="text-base font-black mb-2" style={{ color: "oklch(0.92 0.01 60)" }}>{item.title}</h3>
+                <p className="text-sm leading-relaxed mb-4" style={{ color: "oklch(0.60 0.03 270)" }}>{item.desc}</p>
+                <a
+                  href="https://wa.me/85298729990"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all hover:opacity-90"
+                  style={{ background: `${item.color}22`, color: item.color, border: `1px solid ${item.color}44`, textDecoration: "none" }}
+                >
+                  立即查詢 →
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Why Collaborate */}
       <section className="py-16" style={{ background: "oklch(0.10 0.01 260)" }}>
         <div className="container">

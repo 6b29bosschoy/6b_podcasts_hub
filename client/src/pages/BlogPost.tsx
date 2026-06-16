@@ -352,12 +352,51 @@ export default function BlogPost({ slug }: { slug: string }) {
         )}
 
         <div className="mt-8 pt-8" style={{ borderTop: "1px solid oklch(0.20 0.02 260)" }}>
+          {/* 玄學相關文章：加入玄學服務 CTA */}
+          {post.category === "fengshui" && (
+            <div
+              className="rounded-xl p-5 mb-6"
+              style={{
+                background: "linear-gradient(135deg, oklch(0.10 0.04 290), oklch(0.08 0.02 270))",
+                border: "1px solid oklch(0.22 0.06 290)",
+              }}
+            >
+              <div className="flex items-start gap-4 flex-wrap">
+                <div className="flex-1 min-w-[200px]">
+                  <p className="text-sm font-bold mb-1" style={{ color: "oklch(0.78 0.15 290)" }}>✨ 想深入了解自己的命盤？</p>
+                  <p className="text-xs" style={{ color: "oklch(0.62 0.05 270)" }}>預約路邊玄學堂師傅，針對感情、事業、財運進行一對一分析。</p>
+                </div>
+                <div className="flex gap-2 flex-wrap">
+                  <Link href="/booking">
+                    <button
+                      className="px-4 py-2 rounded-lg text-xs font-bold"
+                      style={{ background: "oklch(0.55 0.22 290)", color: "white", border: "none", cursor: "pointer" }}
+                    >
+                      預約玄學服務
+                    </button>
+                  </Link>
+                  <Link href="/mystic/videos">
+                    <button
+                      className="px-4 py-2 rounded-lg text-xs font-bold"
+                      style={{ background: "transparent", color: "oklch(0.75 0.08 290)", border: "1px solid oklch(0.28 0.06 290)", cursor: "pointer" }}
+                    >
+                      觀看玄學影片
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
           <div className="glass-card rounded-xl p-6 text-center">
             <p className="text-sm mb-4" style={{ color: "oklch(0.55 0.02 60)" }}>喜歡這篇文章？追蹤路邊電台獲取更多內容！</p>
             <div className="flex flex-wrap gap-3 justify-center">
               <a href="https://www.youtube.com/@6bpodcasts" target="_blank" rel="noopener noreferrer"
                 className="px-4 py-2 rounded-lg text-sm font-bold" style={{ background: "oklch(0.60 0.22 25)", color: "white" }}>
                 訂閱 YouTube
+              </a>
+              <a href="https://www.youtube.com/@6bfengshui" target="_blank" rel="noopener noreferrer"
+                className="px-4 py-2 rounded-lg text-sm font-bold" style={{ background: "oklch(0.50 0.18 290)", color: "white" }}>
+                玄學 YouTube
               </a>
               <Link href="/blog" className="px-4 py-2 rounded-lg text-sm font-bold" style={{ background: "oklch(0.18 0.02 260)", border: "1px solid oklch(0.28 0.02 260)", color: "oklch(0.85 0.01 60)" }}>
                 更多文章
