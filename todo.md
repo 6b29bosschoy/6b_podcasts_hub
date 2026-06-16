@@ -451,3 +451,14 @@
 - [x] 所有 CTA 文案符合香港觀眾習慣，不突兀
 - [x] TypeScript 零錯誤，112 個測試全部通過
 - [x] 儲存 checkpoint
+
+## YouTube 及社交媒體導流強化（第六階段）
+
+- [x] 建立 /episodes 路邊電台影片頁：5 大分類（兩性關係/人物訪談/都市情感/人生故事/職場與生活）+ 關鍵字篩選、訂閱 CTA
+- [x] 升級影片卡：縮圖、標題、分類標籤、觀看 CTA、相關服務連結
+- [x] 升級 /mystic/videos 玄學影片頁：7 大分類（風水/八字/紫微斗數/塔羅/星座/生命靈數/身心靈）+ 升級影片卡
+- [x] 首頁影片區塊：路邊電台 vs 路邊玄學堂 分開展示，各有訂閱 CTA 及「查看全部」連結
+- [x] 首頁社交追蹤區：7 個平台入口（YouTube×2/Facebook/Instagram/Threads/Apple Podcast/Spotify）
+- [x] 各影片卡加入分類標籤及相關服務連結
+- [x] TypeScript 零錯誤，112 個測試全部通過
+- [x] 儲存 checkpoint

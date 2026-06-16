@@ -4,7 +4,7 @@ import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { JsonLd, buildOrganizationSchema, buildWebSiteSchema } from "@/components/JsonLd";
-import { Play, ChevronRight, Mic, Star, Users, Youtube, Radio, Sparkles, Handshake, Instagram, Facebook, Music } from "lucide-react";
+import { Play, ChevronRight, Mic, Star, Users, Youtube, Radio, Sparkles, Handshake, Instagram, Facebook, Music, MessageCircle } from "lucide-react";
 
 // ── Constants ──────────────────────────────────────────────────────────────────
 const MYSTIC_METHODS = [
@@ -20,6 +20,7 @@ const SOCIAL_PLATFORMS = [
   { name: "YouTube 路邊玄學堂", href: "https://www.youtube.com/@6bfengshui", descKey: "fengshui" as const, fallbackDesc: "訂閱頻道", color: "oklch(0.55 0.20 250)", Icon: Youtube },
   { name: "Facebook", href: "https://www.facebook.com/6bpodcasts", descKey: null, fallbackDesc: "16K 追蹤者", color: "oklch(0.50 0.18 255)", Icon: Facebook },
   { name: "Instagram", href: "https://www.instagram.com/6bpodcasts", descKey: null, fallbackDesc: "@6bpodcasts", color: "oklch(0.60 0.20 330)", Icon: Instagram },
+  { name: "Threads", href: "https://www.threads.net/@6bpodcasts", descKey: null, fallbackDesc: "@6bpodcasts", color: "oklch(0.80 0.01 260)", Icon: MessageCircle },
   { name: "Apple Podcast", href: "https://apple.co/3nhSxy8", descKey: null, fallbackDesc: "免費收聽", color: "oklch(0.65 0.15 290)", Icon: Music },
   { name: "Spotify", href: "https://spoti.fi/30EQPOT", descKey: null, fallbackDesc: "免費收聽", color: "oklch(0.65 0.20 145)", Icon: Music },
 ];
@@ -263,51 +264,96 @@ export default function Home() {
       {/* ── 3. LATEST YOUTUBE VIDEOS ──────────────────────────────────────────── */}
       <section className="py-16 px-4" style={{ borderTop: "1px solid oklch(0.15 0.01 260)" }}>
         <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-bold" style={{ color: "oklch(0.92 0.01 260)" }}>最新 YouTube 影片</h2>
-              <p className="text-sm mt-1" style={{ color: "oklch(0.55 0.02 260)" }}>路邊電台 × 路邊玄學堂最新內容</p>
-            </div>
-            <div className="flex items-center gap-2">
-              {(["all", "podcasts", "fengshui"] as const).map(f => (
-                <button key={f} onClick={() => setVideoFilter(f)}
-                  className="px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200"
-                  style={videoFilter === f
-                    ? { background: f === "fengshui" ? "oklch(0.55 0.20 250)" : "oklch(0.62 0.24 25)", color: "white" }
-                    : { background: "oklch(0.15 0.01 260)", color: "oklch(0.60 0.02 260)", border: "1px solid oklch(0.22 0.02 260)" }}>
-                  {f === "all" ? "全部" : f === "podcasts" ? "路邊電台" : "玄學堂"}
-                </button>
-              ))}
-            </div>
+          {/* 區塊標題 */}
+          <div className="text-center mb-12">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: "oklch(0.92 0.01 260)" }}>最新 YouTube 影片</h2>
+            <p className="text-sm" style={{ color: "oklch(0.55 0.02 260)" }}>路邊電台 × 路邊玄學堂，兩個頻道分開展示</p>
           </div>
-          {videosLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="rounded-xl overflow-hidden animate-pulse" style={{ background: "oklch(0.12 0.01 260)" }}>
-                  <div className="aspect-video" style={{ background: "oklch(0.15 0.01 260)" }} />
-                  <div className="p-3 space-y-2">
-                    <div className="h-3 rounded" style={{ background: "oklch(0.18 0.01 260)", width: "80%" }} />
-                    <div className="h-3 rounded" style={{ background: "oklch(0.18 0.01 260)", width: "50%" }} />
-                  </div>
+
+          {/* 路邊電台區塊 */}
+          <div className="mb-14">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-1 h-6 rounded-full" style={{ background: "oklch(0.62 0.24 25)" }} />
+                <div>
+                  <h3 className="text-lg font-bold" style={{ color: "oklch(0.88 0.05 25)" }}>🎙️ 路邊電台</h3>
+                  <p className="text-xs" style={{ color: "oklch(0.55 0.02 260)" }}>兩性關係、人物訪談、都市情感、人生故事</p>
                 </div>
-              ))}
+              </div>
+              <div className="flex gap-2 flex-shrink-0">
+                <a href="https://www.youtube.com/@6bpodcasts?sub_confirmation=1" target="_blank" rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-all hover:opacity-90"
+                  style={{ background: "linear-gradient(135deg, oklch(0.55 0.22 25), oklch(0.45 0.20 25))", color: "white", textDecoration: "none" }}>
+                  <Youtube className="w-3.5 h-3.5" /> 訂閱路邊電台
+                </a>
+                <Link href="/episodes"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-all hover:opacity-90"
+                  style={{ background: "oklch(0.13 0.02 260)", border: "1px solid oklch(0.25 0.04 25)", color: "oklch(0.75 0.15 25)", textDecoration: "none" }}>
+                  查看全部 <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
             </div>
-          ) : filteredVideos.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {filteredVideos.map(v => (
-                <VideoCard key={v.id} v={v}
-                  isFengshui={!!(v.channelTitle?.includes("玄學") || v.channelId?.includes("fengshui"))} />
-              ))}
+            {videosLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="rounded-xl overflow-hidden animate-pulse" style={{ background: "oklch(0.12 0.01 260)" }}>
+                    <div className="aspect-video" style={{ background: "oklch(0.15 0.01 260)" }} />
+                    <div className="p-3 space-y-2">
+                      <div className="h-3 rounded" style={{ background: "oklch(0.18 0.01 260)", width: "80%" }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {allVideos.filter(v => !v.channelTitle?.includes("玄學") && !v.channelId?.includes("fengshui")).slice(0, 3).map(v => (
+                  <VideoCard key={v.id} v={v} isFengshui={false} />
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* 路邊玄學堂區塊 */}
+          <div>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-1 h-6 rounded-full" style={{ background: "oklch(0.65 0.22 290)" }} />
+                <div>
+                  <h3 className="text-lg font-bold" style={{ color: "oklch(0.85 0.10 290)" }}>🔮 路邊玄學堂</h3>
+                  <p className="text-xs" style={{ color: "oklch(0.55 0.02 260)" }}>風水、八字、紫微斗數、塔羅、星座、身心靈</p>
+                </div>
+              </div>
+              <div className="flex gap-2 flex-shrink-0">
+                <a href="https://www.youtube.com/@6bfengshui?sub_confirmation=1" target="_blank" rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-all hover:opacity-90"
+                  style={{ background: "linear-gradient(135deg, oklch(0.55 0.22 290), oklch(0.45 0.20 290))", color: "white", textDecoration: "none" }}>
+                  <Youtube className="w-3.5 h-3.5" /> 訂閱玄學頻道
+                </a>
+                <Link href="/mystic/videos"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-all hover:opacity-90"
+                  style={{ background: "oklch(0.13 0.02 260)", border: "1px solid oklch(0.25 0.06 290)", color: "oklch(0.75 0.16 290)", textDecoration: "none" }}>
+                  查看全部 <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
             </div>
-          ) : (
-            <div className="text-center py-16" style={{ color: "oklch(0.50 0.02 260)" }}>暫無影片</div>
-          )}
-          <div className="flex justify-center mt-8">
-            <Link href="/episodes"
-              className="flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-sm transition-all duration-200 hover:scale-105"
-              style={{ background: "oklch(0.15 0.01 260)", border: "1px solid oklch(0.25 0.02 260)", color: "oklch(0.70 0.02 260)" }}>
-              查看全部影片 <ChevronRight className="w-4 h-4" />
-            </Link>
+            {videosLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="rounded-xl overflow-hidden animate-pulse" style={{ background: "oklch(0.12 0.01 260)" }}>
+                    <div className="aspect-video" style={{ background: "oklch(0.15 0.01 260)" }} />
+                    <div className="p-3 space-y-2">
+                      <div className="h-3 rounded" style={{ background: "oklch(0.18 0.01 260)", width: "80%" }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {allVideos.filter(v => v.channelTitle?.includes("玄學") || v.channelId?.includes("fengshui")).slice(0, 3).map(v => (
+                  <VideoCard key={v.id} v={v} isFengshui={true} />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>

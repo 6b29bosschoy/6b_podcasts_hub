@@ -1,13 +1,49 @@
 import { useState, useMemo, useEffect } from "react";
+import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { Play, Clock, Eye, Filter } from "lucide-react";
+import {
+  Play, Clock, Eye, Youtube, ExternalLink,
+  Heart, Users, Briefcase, Coffee, Mic,
+  ChevronRight, ArrowRight,
+} from "lucide-react";
 
-const CHANNEL_TABS = [
-  { key: "all", label: "全部節目" },
-  { key: "podcasts", label: "路邊電台" },
-  { key: "fengshui", label: "路邊玄學堂" },
+// ─── 分類定義 ────────────────────────────────────────────────────
+const PODCAST_CATEGORIES = [
+  { key: "all",       label: "全部節目",   icon: "🎙️", color: "oklch(0.62 0.24 25)" },
+  { key: "romance",   label: "兩性關係",   icon: "💕", color: "oklch(0.65 0.22 0)" },
+  { key: "interview", label: "人物訪談",   icon: "🎤", color: "oklch(0.78 0.16 75)" },
+  { key: "emotion",   label: "都市情感",   icon: "☕", color: "oklch(0.60 0.18 200)" },
+  { key: "story",     label: "人生故事",   icon: "📖", color: "oklch(0.55 0.20 290)" },
+  { key: "career",    label: "職場與生活", icon: "💼", color: "oklch(0.65 0.15 145)" },
 ];
 
+// 關鍵字分類映射（根據影片標題自動分類）
+const CATEGORY_KEYWORDS: Record<string, string[]> = {
+  romance:   ["感情", "戀愛", "分手", "拍拖", "出軌", "婚姻", "男友", "女友", "約會", "關係", "兩性", "愛情", "前度", "交往"],
+  interview: ["訪談", "嘉賓", "專訪", "對談", "分享", "故事", "人物", "主持", "訪問"],
+  emotion:   ["情緒", "孤獨", "焦慮", "壓力", "心理", "心情", "傷心", "開心", "都市", "失落"],
+  story:     ["人生", "選擇", "後悔", "改變", "成長", "經歷", "回憶", "決定", "轉變"],
+  career:    ["工作", "職場", "創業", "老闆", "上司", "同事", "薪水", "升職", "生活", "事業"],
+};
+
+function classifyVideo(title: string): string {
+  const t = title.toLowerCase();
+  for (const [cat, keywords] of Object.entries(CATEGORY_KEYWORDS)) {
+    if (keywords.some(kw => t.includes(kw))) return cat;
+  }
+  return "interview"; // 預設分類
+}
+
+// 相關服務映射
+const CATEGORY_RELATED: Record<string, { label: string; href: string; icon: string }> = {
+  romance:   { label: "感情分析", href: "/booking", icon: "💕" },
+  interview: { label: "嘉賓專欄", href: "/blog", icon: "✍️" },
+  emotion:   { label: "身心靈療癒", href: "/mystic/funnel", icon: "🌿" },
+  story:     { label: "人生分析", href: "/mystic/bazi", icon: "🔮" },
+  career:    { label: "事業財運", href: "/booking", icon: "💼" },
+};
+
+// ─── 工具函數 ─────────────────────────────────────────────────────
 function formatDuration(d: string | null | undefined) {
   if (!d) return "";
   const m = d.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
@@ -17,6 +53,13 @@ function formatDuration(d: string | null | undefined) {
   const sec = parseInt(m[3] || "0");
   if (h > 0) return `${h}:${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
   return `${min}:${String(sec).padStart(2, "0")}`;
+}
+
+function formatViewCount(v: string) {
+  const n = parseInt(v || "0");
+  if (n >= 10000) return `${(n / 10000).toFixed(1)}萬`;
+  if (n >= 1000) return `${(n / 1000).toFixed(1)}K`;
+  return String(n);
 }
 
 function timeAgo(dateStr: string) {
@@ -29,182 +72,392 @@ function timeAgo(dateStr: string) {
   return `${Math.floor(days / 365)} 年前`;
 }
 
+// ─── 影片卡元件 ───────────────────────────────────────────────────
+type VideoItem = {
+  id: string;
+  title: string;
+  thumbnail: string | null;
+  url: string;
+  duration: string | null;
+  viewCount: string;
+  publishedAt: string;
+  category: string;
+};
+
+function VideoCard({ video }: { video: VideoItem }) {
+  const [hovered, setHovered] = useState(false);
+  const catInfo = PODCAST_CATEGORIES.find(c => c.key === video.category) ?? PODCAST_CATEGORIES[1];
+  const related = CATEGORY_RELATED[video.category];
+
+  return (
+    <div
+      className="rounded-xl overflow-hidden transition-all duration-300 flex flex-col"
+      style={{
+        background: "oklch(0.10 0.02 260)",
+        border: `1px solid ${hovered ? catInfo.color + "55" : "oklch(0.18 0.02 260)"}`,
+        boxShadow: hovered ? `0 8px 32px oklch(0 0 0 / 0.4)` : "none",
+        transform: hovered ? "translateY(-3px)" : "none",
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {/* Thumbnail */}
+      <a href={video.url} target="_blank" rel="noopener noreferrer" className="block relative aspect-video overflow-hidden flex-shrink-0">
+        {video.thumbnail ? (
+          <img
+            src={video.thumbnail}
+            alt={video.title}
+            className="w-full h-full object-cover transition-transform duration-500"
+            style={{ transform: hovered ? "scale(1.05)" : "scale(1)" }}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center"
+            style={{ background: "linear-gradient(135deg, oklch(0.15 0.04 270), oklch(0.12 0.02 260))" }}>
+            <Play size={32} style={{ color: "oklch(0.40 0.02 260)" }} />
+          </div>
+        )}
+        {/* Play overlay */}
+        <div
+          className="absolute inset-0 flex items-center justify-center transition-opacity duration-200"
+          style={{ background: "oklch(0 0 0 / 0.45)", opacity: hovered ? 1 : 0 }}
+        >
+          <div className="w-14 h-14 rounded-full flex items-center justify-center"
+            style={{ background: catInfo.color }}>
+            <Play size={22} fill="white" style={{ color: "white", marginLeft: 3 }} />
+          </div>
+        </div>
+        {/* Duration */}
+        {video.duration && (
+          <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded text-xs font-mono font-bold"
+            style={{ background: "oklch(0 0 0 / 0.85)", color: "white" }}>
+            {formatDuration(video.duration)}
+          </div>
+        )}
+        {/* Category badge */}
+        <div
+          className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-xs font-bold"
+          style={{ background: catInfo.color + "dd", color: "white" }}
+        >
+          {catInfo.icon} {catInfo.label}
+        </div>
+      </a>
+
+      {/* Info */}
+      <div className="p-4 flex flex-col flex-1">
+        <a href={video.url} target="_blank" rel="noopener noreferrer" className="block mb-3 flex-1">
+          <h3
+            className="text-sm font-semibold leading-snug line-clamp-2 transition-colors duration-200"
+            style={{ color: hovered ? catInfo.color : "oklch(0.88 0.01 60)" }}
+          >
+            {video.title}
+          </h3>
+        </a>
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-3 text-xs" style={{ color: "oklch(0.48 0.02 60)" }}>
+            <span className="flex items-center gap-1">
+              <Eye size={11} /> {formatViewCount(video.viewCount)}
+            </span>
+            <span className="flex items-center gap-1">
+              <Clock size={11} /> {timeAgo(video.publishedAt)}
+            </span>
+          </div>
+          {/* Related service link */}
+          {related && (
+            <Link
+              href={related.href}
+              className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-bold transition-all hover:opacity-90 flex-shrink-0"
+              style={{ background: catInfo.color + "22", color: catInfo.color, textDecoration: "none" }}
+            >
+              {related.icon} {related.label}
+            </Link>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── 主頁面 ───────────────────────────────────────────────────────
 export default function Episodes() {
-  const [channelFilter, setChannelFilter] = useState<"all" | "podcasts" | "fengshui">("all");
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState("all");
 
   useEffect(() => {
-    document.title = "最新節目｜路邊電台 × 路邊玄學堂";
-    const desc = document.querySelector('meta[name="description"]');
-    if (desc) desc.setAttribute("content", "瀏覽路邊電台及路邊玄學堂的最新 YouTube 節目，包括人物訪談、兩性關係、玄學分析等精彩內容。");
+    document.title = "最新節目｜路邊電台";
+    const setMeta = (name: string, content: string, prop = false) => {
+      const attr = prop ? "property" : "name";
+      let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
+      if (!el) { el = document.createElement("meta"); el.setAttribute(attr, name); document.head.appendChild(el); }
+      el.setAttribute("content", content);
+    };
+    setMeta("description", "瀏覽路邊電台最新 YouTube 節目，包括兩性關係、人物訪談、都市情感、人生故事及職場生活等精彩內容。");
+    setMeta("og:title", "最新節目｜路邊電台", true);
+    return () => { document.title = "路邊電台 × 路邊玄學堂｜香港最真實人物訪談"; };
   }, []);
 
-  const channel = channelFilter === "all" ? undefined : channelFilter;
-  const { data, isLoading } = trpc.youtube.getVideos.useQuery(
-    { channel, limit: 50 },
+  const { data: videosData, isLoading } = trpc.youtube.getVideos.useQuery(
+    { channel: "podcasts", limit: 50 },
     { staleTime: 5 * 60 * 1000 }
   );
+  const { data: channelsData } = trpc.youtube.getChannels.useQuery();
+  const podcastsChannel = channelsData?.podcasts as { subscriberCount?: string; videoCount?: string; title?: string } | null | undefined;
 
-  type VideoItem = { id: string; title: string; thumbnail: string | null; url: string; viewCount: string; publishedAt: string; duration: string | null; channelTitle?: string | null };
-  const videos = (data?.videos ?? []) as VideoItem[];
+  // 為每條影片分配分類
+  const categorizedVideos = useMemo(() => {
+    const raw = videosData?.videos ?? videosData ?? [];
+    return (raw as Array<{ id: string; title: string; thumbnail: string | null; url: string; duration: string | null; viewCount: string; publishedAt: string }>).map(v => ({
+      ...v,
+      category: classifyVideo(v.title),
+    }));
+  }, [videosData]);
+
+  // 根據分類篩選
+  const filteredVideos = useMemo(() => {
+    if (activeCategory === "all") return categorizedVideos;
+    return categorizedVideos.filter(v => v.category === activeCategory);
+  }, [categorizedVideos, activeCategory]);
+
+  // 各分類計數
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = { all: categorizedVideos.length };
+    for (const v of categorizedVideos) {
+      counts[v.category] = (counts[v.category] ?? 0) + 1;
+    }
+    return counts;
+  }, [categorizedVideos]);
+
+  const activeCatInfo = PODCAST_CATEGORIES.find(c => c.key === activeCategory) ?? PODCAST_CATEGORIES[0];
+  const _unusedIcons = { Heart, Users, Briefcase, Coffee, Mic }; // suppress unused import warnings
+  void _unusedIcons;
 
   return (
     <div className="min-h-screen pt-20 pb-24 lg:pb-8" style={{ background: "oklch(0.07 0.01 260)" }}>
-      {/* Page Header */}
-      <div
-        className="py-12 px-4 text-center"
-        style={{
-          background: "linear-gradient(180deg, oklch(0.10 0.02 260) 0%, oklch(0.07 0.01 260) 100%)",
-          borderBottom: "1px solid oklch(0.18 0.02 260)",
-        }}
+
+      {/* ── Hero ── */}
+      <section
+        className="py-14 relative overflow-hidden"
+        style={{ background: "linear-gradient(180deg, oklch(0.10 0.02 260) 0%, oklch(0.07 0.01 260) 100%)" }}
       >
-        <div className="max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold mb-4"
-            style={{ background: "oklch(0.62 0.24 25 / 0.15)", color: "oklch(0.75 0.20 25)", border: "1px solid oklch(0.62 0.24 25 / 0.3)" }}>
-            <Play size={12} /> 最新節目
-          </div>
-          <h1 className="text-3xl md:text-4xl font-black mb-3" style={{ color: "oklch(0.92 0.01 60)" }}>
-            全部節目
-          </h1>
-          <p className="text-sm" style={{ color: "oklch(0.55 0.02 60)" }}>
-            路邊電台 × 路邊玄學堂 — 香港最真實的人物訪談與玄學內容
-          </p>
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full opacity-5"
+            style={{ background: "oklch(0.62 0.24 25)", filter: "blur(100px)" }} />
         </div>
-      </div>
-
-      <div className="container max-w-6xl mx-auto px-4 py-8">
-        {/* Channel Filter Tabs */}
-        <div className="flex items-center gap-2 mb-8 flex-wrap">
-          <Filter size={14} style={{ color: "oklch(0.55 0.02 60)" }} />
-          {CHANNEL_TABS.map(tab => (
-            <button
-              key={tab.key}
-              onClick={() => setChannelFilter(tab.key as typeof channelFilter)}
-              className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-200"
-              style={{
-                background: channelFilter === tab.key
-                  ? "linear-gradient(135deg, oklch(0.62 0.24 25), oklch(0.75 0.15 75))"
-                  : "oklch(0.13 0.02 260)",
-                color: channelFilter === tab.key ? "white" : "oklch(0.65 0.02 60)",
-                border: channelFilter === tab.key
-                  ? "1px solid transparent"
-                  : "1px solid oklch(0.22 0.02 260)",
-              }}
-            >
-              {tab.label}
-            </button>
-          ))}
-          {!isLoading && (
-            <span className="ml-auto text-xs" style={{ color: "oklch(0.45 0.02 60)" }}>
-              共 {videos.length} 集
-            </span>
-          )}
-        </div>
-
-        {/* Loading State */}
-        {isLoading && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {Array.from({ length: 9 }).map((_, i) => (
-              <div key={i} className="rounded-xl overflow-hidden animate-pulse" style={{ background: "oklch(0.12 0.02 260)" }}>
-                <div className="aspect-video" style={{ background: "oklch(0.16 0.02 260)" }} />
-                <div className="p-4 space-y-2">
-                  <div className="h-4 rounded" style={{ background: "oklch(0.16 0.02 260)" }} />
-                  <div className="h-3 w-2/3 rounded" style={{ background: "oklch(0.16 0.02 260)" }} />
-                </div>
+        <div className="container relative">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold mb-4"
+                style={{ background: "oklch(0.62 0.24 25 / 0.15)", border: "1px solid oklch(0.62 0.24 25 / 0.3)", color: "oklch(0.75 0.20 25)" }}>
+                🎙️ 路邊電台
               </div>
-            ))}
-          </div>
-        )}
-
-        {/* Video Grid */}
-        {!isLoading && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {videos.map(video => (
+              <h1 className="text-3xl md:text-4xl font-black mb-3" style={{ color: "oklch(0.92 0.01 60)" }}>
+                最新節目
+              </h1>
+              <p className="text-sm max-w-xl leading-relaxed" style={{ color: "oklch(0.60 0.02 60)" }}>
+                香港最真實的人物訪談、兩性關係討論、都市情感故事。每週更新，直播不設限。
+              </p>
+              {podcastsChannel && (
+                <div className="flex items-center gap-4 mt-4">
+                  <span className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>
+                    訂閱人數：<strong style={{ color: "oklch(0.78 0.16 75)" }}>
+                      {parseInt(podcastsChannel.subscriberCount || "0").toLocaleString()}
+                    </strong>
+                  </span>
+                  <span className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>
+                    影片數：<strong style={{ color: "oklch(0.78 0.16 75)" }}>
+                      {parseInt(podcastsChannel.videoCount || "0").toLocaleString()}
+                    </strong>
+                  </span>
+                </div>
+              )}
+            </div>
+            <div className="flex gap-3 flex-shrink-0 flex-wrap">
               <a
-                key={video.id}
-                href={video.url}
+                href="https://www.youtube.com/@6bpodcasts?sub_confirmation=1"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group block rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-1"
-                style={{
-                  background: "oklch(0.11 0.02 260)",
-                  border: "1px solid oklch(0.18 0.02 260)",
-                  boxShadow: hoveredId === video.id ? "0 8px 32px oklch(0 0 0 / 0.5)" : "none",
-                }}
-                onMouseEnter={() => setHoveredId(video.id)}
-                onMouseLeave={() => setHoveredId(null)}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]"
+                style={{ background: "oklch(0.55 0.22 25)", color: "white", textDecoration: "none" }}
               >
-                {/* Thumbnail */}
-                <div className="relative aspect-video overflow-hidden">
-                  {video.thumbnail ? (
-                    <img
-                      src={video.thumbnail}
-                      alt={video.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center"
-                      style={{ background: "linear-gradient(135deg, oklch(0.15 0.04 270), oklch(0.12 0.02 260))" }}>
-                      <Play size={32} style={{ color: "oklch(0.40 0.02 260)" }} />
-                    </div>
-                  )}
-                  {/* Play overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                    style={{ background: "oklch(0 0 0 / 0.4)" }}>
-                    <div className="w-12 h-12 rounded-full flex items-center justify-center"
-                      style={{ background: "oklch(0.62 0.24 25 / 0.9)" }}>
-                      <Play size={20} fill="white" style={{ color: "white", marginLeft: 2 }} />
-                    </div>
-                  </div>
-                  {/* Duration badge */}
-                  {video.duration && (
-                    <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded text-xs font-mono font-bold"
-                      style={{ background: "oklch(0 0 0 / 0.8)", color: "white" }}>
-                      {formatDuration(video.duration)}
-                    </div>
-                  )}
-                  {/* Channel badge */}
-                  {video.channelTitle && (
-                    <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-xs font-bold"
-                      style={{
-                        background: video.channelTitle.includes("玄學") || video.channelTitle.includes("fengshui")
-                          ? "oklch(0.55 0.18 280 / 0.9)"
-                          : "oklch(0.62 0.24 25 / 0.9)",
-                        color: "white",
-                      }}>
-                      {video.channelTitle.includes("玄學") || video.channelTitle.includes("fengshui") ? "玄學堂" : "路邊電台"}
-                    </div>
-                  )}
-                </div>
-
-                {/* Info */}
-                <div className="p-4">
-                  <h3 className="text-sm font-semibold leading-snug line-clamp-2 mb-2 group-hover:text-amber-400 transition-colors duration-200"
-                    style={{ color: "oklch(0.88 0.01 60)" }}>
-                    {video.title}
-                  </h3>
-                  <div className="flex items-center gap-3 text-xs" style={{ color: "oklch(0.48 0.02 60)" }}>
-                    <span className="flex items-center gap-1">
-                      <Eye size={11} /> {video.viewCount}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Clock size={11} /> {timeAgo(video.publishedAt)}
-                    </span>
-                  </div>
-                </div>
+                <Youtube size={16} /> 訂閱頻道
               </a>
-            ))}
+              <Link
+                href="/mystic/videos"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all hover:opacity-90"
+                style={{ background: "oklch(0.13 0.03 270)", border: "1px solid oklch(0.22 0.04 270)", color: "oklch(0.72 0.08 290)", textDecoration: "none" }}
+              >
+                玄學影片 <ChevronRight size={14} />
+              </Link>
+            </div>
           </div>
-        )}
+        </div>
+      </section>
 
-        {/* Empty state */}
-        {!isLoading && videos.length === 0 && (
-          <div className="text-center py-20">
-            <Play size={48} className="mx-auto mb-4" style={{ color: "oklch(0.35 0.02 260)" }} />
-            <p style={{ color: "oklch(0.50 0.02 60)" }}>暫時未有影片</p>
+      {/* ── 分類篩選（sticky） ── */}
+      <div
+        className="sticky top-16 z-20 py-4"
+        style={{ background: "oklch(0.07 0.01 260 / 0.95)", backdropFilter: "blur(12px)", borderBottom: "1px solid oklch(0.15 0.02 260)" }}
+      >
+        <div className="container">
+          <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+            {PODCAST_CATEGORIES.map(cat => {
+              const count = categoryCounts[cat.key] ?? 0;
+              const isActive = activeCategory === cat.key;
+              return (
+                <button
+                  key={cat.key}
+                  onClick={() => setActiveCategory(cat.key)}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 flex-shrink-0"
+                  style={{
+                    background: isActive ? cat.color : "oklch(0.12 0.02 260)",
+                    color: isActive ? "white" : "oklch(0.62 0.02 60)",
+                    border: `1px solid ${isActive ? cat.color : "oklch(0.20 0.02 260)"}`,
+                    boxShadow: isActive ? `0 0 16px ${cat.color}44` : "none",
+                  }}
+                >
+                  {cat.icon} {cat.label}
+                  {count > 0 && (
+                    <span
+                      className="px-1.5 py-0.5 rounded-full text-xs leading-none"
+                      style={{ background: isActive ? "white" : cat.color + "33", color: isActive ? cat.color : cat.color }}
+                    >
+                      {count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
-        )}
+        </div>
       </div>
+
+      {/* ── 影片網格 ── */}
+      <section className="py-10">
+        <div className="container">
+          {/* 分類標題 */}
+          {activeCategory !== "all" && (
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-1 h-6 rounded-full" style={{ background: activeCatInfo.color }} />
+              <h2 className="text-lg font-black" style={{ color: "oklch(0.88 0.01 60)" }}>
+                {activeCatInfo.icon} {activeCatInfo.label}
+              </h2>
+              <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: activeCatInfo.color + "22", color: activeCatInfo.color }}>
+                {filteredVideos.length} 條影片
+              </span>
+            </div>
+          )}
+
+          {/* Loading skeleton */}
+          {isLoading && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="rounded-xl overflow-hidden animate-pulse" style={{ background: "oklch(0.12 0.02 260)" }}>
+                  <div className="aspect-video" style={{ background: "oklch(0.16 0.02 260)" }} />
+                  <div className="p-4 space-y-2">
+                    <div className="h-4 rounded" style={{ background: "oklch(0.16 0.02 260)" }} />
+                    <div className="h-3 w-2/3 rounded" style={{ background: "oklch(0.16 0.02 260)" }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Video grid */}
+          {!isLoading && filteredVideos.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {filteredVideos.map(video => (
+                <VideoCard key={video.id} video={video} />
+              ))}
+            </div>
+          )}
+
+          {/* Empty state */}
+          {!isLoading && filteredVideos.length === 0 && (
+            <div className="text-center py-20">
+              <div className="text-5xl mb-4">🎙️</div>
+              <p className="mb-4" style={{ color: "oklch(0.50 0.02 60)" }}>此分類暫時未有影片</p>
+              <button
+                onClick={() => setActiveCategory("all")}
+                className="px-4 py-2 rounded-lg text-sm font-bold"
+                style={{ background: "oklch(0.62 0.24 25 / 0.15)", color: "oklch(0.62 0.24 25)", border: "1px solid oklch(0.62 0.24 25 / 0.3)" }}
+              >
+                查看全部節目
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ── 底部 CTA ── */}
+      {!isLoading && (
+        <section className="py-12" style={{ background: "oklch(0.10 0.02 260)" }}>
+          <div className="container space-y-4">
+            {/* 訂閱 CTA */}
+            <div
+              className="rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6"
+              style={{ background: "linear-gradient(135deg, oklch(0.13 0.04 25), oklch(0.10 0.02 260))", border: "1px solid oklch(0.62 0.24 25 / 0.2)" }}
+            >
+              <div>
+                <h3 className="text-lg font-black mb-1" style={{ color: "oklch(0.92 0.01 60)" }}>
+                  喜歡路邊電台的內容？
+                </h3>
+                <p className="text-sm" style={{ color: "oklch(0.60 0.02 60)" }}>
+                  訂閱 YouTube 頻道，第一時間收到最新節目通知。
+                </p>
+              </div>
+              <div className="flex gap-3 flex-wrap justify-center flex-shrink-0">
+                <a
+                  href="https://www.youtube.com/@6bpodcasts?sub_confirmation=1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all hover:opacity-90 hover:scale-[1.02]"
+                  style={{ background: "oklch(0.55 0.22 25)", color: "white", textDecoration: "none" }}
+                >
+                  <Youtube size={16} /> 訂閱 @6bpodcasts
+                </a>
+                <a
+                  href="https://www.instagram.com/6bpodcasts"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all hover:opacity-90"
+                  style={{ background: "oklch(0.12 0.02 260)", border: "1px solid oklch(0.25 0.02 260)", color: "oklch(0.85 0.01 60)", textDecoration: "none" }}
+                >
+                  <ExternalLink size={14} /> IG @6bpodcasts
+                </a>
+                <a
+                  href="https://www.threads.net/@6bpodcasts"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all hover:opacity-90"
+                  style={{ background: "oklch(0.12 0.02 260)", border: "1px solid oklch(0.25 0.02 260)", color: "oklch(0.85 0.01 60)", textDecoration: "none" }}
+                >
+                  <ExternalLink size={14} /> Threads
+                </a>
+              </div>
+            </div>
+
+            {/* 玄學堂導流 */}
+            <div
+              className="rounded-xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4"
+              style={{ background: "oklch(0.09 0.04 290)", border: "1px solid oklch(0.20 0.06 290)" }}
+            >
+              <div>
+                <p className="text-sm font-bold mb-1" style={{ color: "oklch(0.88 0.10 290)" }}>
+                  想了解更多玄學內容？
+                </p>
+                <p className="text-xs" style={{ color: "oklch(0.55 0.04 270)" }}>
+                  路邊玄學堂提供風水、八字、塔羅等玄學分析影片
+                </p>
+              </div>
+              <Link
+                href="/mystic/videos"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all hover:opacity-90 flex-shrink-0"
+                style={{ background: "linear-gradient(135deg, oklch(0.55 0.22 290), oklch(0.45 0.20 290))", color: "white", textDecoration: "none" }}
+              >
+                進入玄學影片 <ArrowRight size={14} />
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
