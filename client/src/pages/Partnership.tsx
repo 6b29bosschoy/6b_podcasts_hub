@@ -40,6 +40,7 @@ export default function Partnership() {
     ogTitle: "商業合作｜6B Podcast—品牌訪談、節目贊助、內容共創與玄學合作",
     ogDescription: "品牌訪談、節目贊助、內容共創、玄學節目贊助、師傅合作。觸達香港 16,000+ 粉絲。",
     ogUrl: "https://www.6bpodcasts.com/partnership",
+    ogImage: "https://www.6bpodcasts.com/manus-storage/og-partnership_63ed94db.jpg",
     canonical: "https://www.6bpodcasts.com/partnership",
   });
   const [form, setForm] = useState({
@@ -117,9 +118,18 @@ export default function Partnership() {
     <div className="min-h-screen pt-20">
       <JsonLd data={partnershipSchemas} id="partnership" />
       {/* Hero */}
-      <section className="py-20 relative overflow-hidden" style={{ background: "linear-gradient(180deg, oklch(0.10 0.015 260) 0%, oklch(0.08 0.01 260) 100%)" }}>
+      <section className="py-20 relative overflow-hidden">
+        {/* Background image */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          backgroundImage: "url('/manus-storage/hero-partnership_c94dbb8d.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat"
+        }} />
+        {/* Dark overlay */}
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "oklch(0.08 0.01 260 / 0.82)" }} />
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-10 right-1/4 w-72 h-72 rounded-full opacity-5" style={{ background: "oklch(0.78 0.16 75)", filter: "blur(80px)" }} />
+          <div className="absolute top-10 right-1/4 w-72 h-72 rounded-full opacity-8" style={{ background: "oklch(0.78 0.16 75)", filter: "blur(80px)" }} />
         </div>
         <div className="container relative text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold mb-6" style={{ background: "oklch(0.62 0.24 25 / 0.15)", border: "1px solid oklch(0.62 0.24 25 / 0.3)", color: "oklch(0.62 0.24 25)" }}>

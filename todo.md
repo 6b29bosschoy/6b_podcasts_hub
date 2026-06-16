@@ -479,4 +479,21 @@
 - [x] index.html Open Graph 圖片設定（og:image）+ Twitter Card 圖片
 - [x] index.html 更新首頁 Title、Meta Description、Keywords（按照用戶提供的 13 個關鍵字）
 - [x] TypeScript 零錯誤，112 個測試全部通過
+- [x] 儲存 checkpoint（版本 636966f2）
+
+## Visual System 圖片生成（第八階段）
+
+- [ ] 並行生成 19 張品牌圖片（香港本地感、真實感、避免 stock photo- [x] 生成 19 張圖片（香港本地感、真實感、有溫度）
+- [x] 上傳圖片至 S3 Storage
+- [x] 更新首頁 Hero 背景圖片
+- [x] 更新首頁三大入口卡圖片（路邊電台/路邊玄學堂/商業合作）
+- [x] 更新玄學堂 Hero 圖片
+- [x] 更新玄學分類卡圖片（風水、八字、紫微斗數、塔羅、星座、生命靈數）
+- [x] 更新商業合作頁 Hero 圖片
+- [x] 更新 index.html OG 圖片及 Twitter Card 圖片
+- [x] TypeScript 零錯誤，112 個測試全部通過
+- [x] 更新師傅介紹區背景圖（masters-bg）
+- [x] 更新玄學堂 OG 圖片（og-mystic）
+- [x] 更新商業合作 OG 圖片（og-partnership）
+- [x] TypeScript 零錯誤，112 個測試全部通過
 - [ ] 儲存 checkpoint（待完成）

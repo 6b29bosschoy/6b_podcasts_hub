@@ -194,6 +194,7 @@ export default function MysticHome() {
     ogTitle: "路邊玄學堂｜香港中西玄學、風水命理與身心靈內容平台",
     ogDescription: "集合風水、八字、紫微斗數、塔羅、星座、生命靈數與身心靈療癒內容。用貼地方式理解命運與人生。",
     ogUrl: "https://www.6bpodcasts.com/mystic",
+    ogImage: "https://www.6bpodcasts.com/manus-storage/og-mystic_41914502.jpg",
     canonical: "https://www.6bpodcasts.com/mystic",
   });
 
@@ -236,16 +237,21 @@ export default function MysticHome() {
           1. HERO SECTION
       ══════════════════════════════════════════════════════════════════════ */}
       <section className="relative pt-28 pb-20 px-4 overflow-hidden">
+        {/* Background image */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          backgroundImage: "url('/manus-storage/hero-mystic_5ee95109.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center top",
+          backgroundRepeat: "no-repeat"
+        }} />
+        {/* Dark overlay */}
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "oklch(0.08 0.02 280 / 0.80)" }} />
         {/* Background glows */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] opacity-20"
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] opacity-15"
             style={{ background: "radial-gradient(ellipse, oklch(0.55 0.22 290), transparent 70%)" }} />
           <div className="absolute bottom-0 right-0 w-80 h-80 rounded-full blur-[100px] opacity-10"
             style={{ background: "oklch(0.65 0.20 330)" }} />
-          <div className="absolute top-20 right-16 text-8xl opacity-[0.04] select-none">☯</div>
-          <div className="absolute top-40 left-10 text-5xl opacity-[0.04] select-none">✦</div>
-          <div className="absolute bottom-16 left-1/4 text-6xl opacity-[0.04] select-none">🌙</div>
-          <div className="absolute top-32 right-1/3 text-4xl opacity-[0.04] select-none">⭐</div>
         </div>
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
@@ -332,22 +338,48 @@ export default function MysticHome() {
             <p className="text-sm" style={{ color: TEXT_MUTED }}>中西玄學各派別，一站式深入了解</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
-            {MYSTIC_CATEGORIES.map((cat) => (
-              <Link key={cat.label} href={cat.href}>
-                <div
-                  className="group p-4 rounded-xl cursor-pointer transition-all duration-300 hover:-translate-y-1 text-center"
-                  style={{ background: BG2, border: `1px solid ${BORDER}` }}
-                >
-                  <div className="text-3xl mb-2">{cat.icon}</div>
-                  <div className="font-bold text-sm mb-1" style={{ color: TEXT_PRIMARY }}>{cat.label}</div>
-                  <div className="text-xs leading-snug" style={{ color: TEXT_MUTED }}>{cat.desc}</div>
-                  <div className="mt-2 flex items-center justify-center gap-1 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity"
-                    style={{ color: cat.color }}>
-                    了解更多 <ArrowRight size={10} />
+            {MYSTIC_CATEGORIES.map((cat) => {
+              // Map category labels to image paths
+              const imgMap: Record<string, string> = {
+                "風水": "/manus-storage/card-fengshui_74f6f725.jpg",
+                "八字命理": "/manus-storage/card-bazi_362f5a10.jpg",
+                "紫微斗數": "/manus-storage/card-ziwei_c0d5ccac.jpg",
+                "塔羅占卜": "/manus-storage/card-tarot_4d0881c2.jpg",
+                "星座分析": "/manus-storage/card-astrology_39b038e0.jpg",
+                "生命靈數": "/manus-storage/card-numerology_212aa873.jpg",
+              };
+              const imgSrc = imgMap[cat.label];
+              return (
+                <Link key={cat.label} href={cat.href}>
+                  <div
+                    className="group rounded-xl cursor-pointer transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+                    style={{ border: `1px solid ${BORDER}` }}
+                  >
+                    {imgSrc ? (
+                      <div className="relative h-28 overflow-hidden">
+                        <img src={imgSrc} alt={cat.label} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 30%, oklch(0.08 0.02 280 / 0.85))" }} />
+                        <div className="absolute bottom-2 left-0 right-0 text-center">
+                          <span className="text-sm font-bold" style={{ color: TEXT_PRIMARY }}>{cat.label}</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="h-28 flex flex-col items-center justify-center" style={{ background: BG2 }}>
+                        <div className="text-3xl mb-1">{cat.icon}</div>
+                        <div className="font-bold text-sm" style={{ color: TEXT_PRIMARY }}>{cat.label}</div>
+                      </div>
+                    )}
+                    <div className="p-3" style={{ background: BG2 }}>
+                      <div className="text-xs leading-snug" style={{ color: TEXT_MUTED }}>{cat.desc}</div>
+                      <div className="mt-2 flex items-center justify-center gap-1 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity"
+                        style={{ color: cat.color }}>
+                        了解更多 <ArrowRight size={10} />
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -490,8 +522,9 @@ export default function MysticHome() {
       {/* ══════════════════════════════════════════════════════════════════════
           5. MASTERS
       ══════════════════════════════════════════════════════════════════════ */}
-      <section className="py-16 px-4" style={{ background: BG2, borderTop: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}` }}>
-        <div className="max-w-5xl mx-auto">
+      <section className="py-16 px-4 relative overflow-hidden" style={{ background: BG2, borderTop: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}` }}>
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `url(/manus-storage/masters-bg_8a1d37af.jpg)`, backgroundSize: "cover", backgroundPosition: "center" }} />
+        <div className="relative max-w-5xl mx-auto">
           <div className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl font-black mb-2" style={{ color: TEXT_PRIMARY }}>師傅介紹</h2>
             <p className="text-sm" style={{ color: TEXT_MUTED }}>各派別專業玄學師傅，為你提供深度解讀</p>

@@ -124,14 +124,23 @@ export default function Home() {
 
       {/* ── 1. HERO ──────────────────────────────────────────────────────────── */}
       <section className="relative min-h-[92vh] flex flex-col items-center justify-center overflow-hidden px-4 pt-20 pb-16">
-        {/* Background grid */}
+        {/* Background image */}
         <div className="absolute inset-0 pointer-events-none" style={{
-          backgroundImage: "linear-gradient(oklch(0.22 0.02 260 / 0.15) 1px, transparent 1px), linear-gradient(90deg, oklch(0.22 0.02 260 / 0.15) 1px, transparent 1px)",
+          backgroundImage: "url('/manus-storage/hero-main_12cca13c.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat"
+        }} />
+        {/* Dark overlay */}
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "oklch(0.08 0.01 260 / 0.75)" }} />
+        {/* Background grid overlay */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          backgroundImage: "linear-gradient(oklch(0.22 0.02 260 / 0.10) 1px, transparent 1px), linear-gradient(90deg, oklch(0.22 0.02 260 / 0.10) 1px, transparent 1px)",
           backgroundSize: "60px 60px"
         }} />
         {/* Glow orbs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl pointer-events-none" style={{ background: "oklch(0.62 0.24 25 / 0.08)" }} />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-3xl pointer-events-none" style={{ background: "oklch(0.55 0.20 250 / 0.08)" }} />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl pointer-events-none" style={{ background: "oklch(0.62 0.24 25 / 0.12)" }} />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-3xl pointer-events-none" style={{ background: "oklch(0.55 0.20 250 / 0.12)" }} />
 
         <div className="relative z-10 max-w-4xl mx-auto text-center">
           {/* Badge */}
@@ -218,53 +227,71 @@ export default function Home() {
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Card 1: 路邊電台 */}
-            <Link href="/podcasts" className="group block rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
-              style={{ background: "oklch(0.12 0.015 260 / 0.8)", border: "1px solid oklch(0.22 0.02 260)", boxShadow: "0 4px 24px oklch(0 0 0 / 0.3)" }}>
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110"
-                style={{ background: "oklch(0.62 0.24 25 / 0.15)", border: "1px solid oklch(0.62 0.24 25 / 0.3)" }}>
-                <Mic className="w-6 h-6" style={{ color: "oklch(0.75 0.20 25)" }} />
+            <Link href="/podcasts" className="group block rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
+              style={{ border: "1px solid oklch(0.22 0.02 260)", boxShadow: "0 4px 24px oklch(0 0 0 / 0.4)" }}>
+              {/* Card image */}
+              <div className="relative h-44 overflow-hidden">
+                <img src="/manus-storage/card-podcasts_635bb2ff.jpg" alt="路邊電台 - 香港真實人物訪談 Podcast" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 40%, oklch(0.10 0.015 260 / 0.9))" }} />
+                <div className="absolute bottom-3 left-4">
+                  <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ background: "oklch(0.62 0.24 25 / 0.9)", color: "white" }}>🎙️ Podcast</span>
+                </div>
               </div>
-              <h3 className="text-xl font-bold mb-2" style={{ color: "oklch(0.92 0.01 260)" }}>路邊電台</h3>
-              <p className="text-sm leading-relaxed mb-4" style={{ color: "oklch(0.60 0.02 260)" }}>
-                真實人物訪談、兩性關係、都市情感、人生故事
-              </p>
-              <div className="flex items-center gap-1.5 text-sm font-medium group-hover:gap-2.5 transition-all duration-200"
-                style={{ color: "oklch(0.75 0.20 25)" }}>
-                觀看節目 <ChevronRight className="w-4 h-4" />
+              <div className="p-5" style={{ background: "oklch(0.12 0.015 260 / 0.95)" }}>
+                <h3 className="text-xl font-bold mb-2" style={{ color: "oklch(0.92 0.01 260)" }}>路邊電台</h3>
+                <p className="text-sm leading-relaxed mb-4" style={{ color: "oklch(0.60 0.02 260)" }}>
+                  真實人物訪談、兩性關係、都市情感、人生故事
+                </p>
+                <div className="flex items-center gap-1.5 text-sm font-medium group-hover:gap-2.5 transition-all duration-200"
+                  style={{ color: "oklch(0.75 0.20 25)" }}>
+                  觀看節目 <ChevronRight className="w-4 h-4" />
+                </div>
               </div>
             </Link>
 
             {/* Card 2: 路邊玄學堂 */}
-            <Link href="/mystic" className="group block rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
-              style={{ background: "oklch(0.12 0.015 260 / 0.8)", border: "1px solid oklch(0.22 0.02 260)", boxShadow: "0 4px 24px oklch(0 0 0 / 0.3)" }}>
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110"
-                style={{ background: "oklch(0.55 0.20 250 / 0.15)", border: "1px solid oklch(0.55 0.20 250 / 0.3)" }}>
-                <Sparkles className="w-6 h-6" style={{ color: "oklch(0.70 0.18 250)" }} />
+            <Link href="/mystic" className="group block rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
+              style={{ border: "1px solid oklch(0.22 0.02 260)", boxShadow: "0 4px 24px oklch(0 0 0 / 0.4)" }}>
+              {/* Card image */}
+              <div className="relative h-44 overflow-hidden">
+                <img src="/manus-storage/card-mystic_655df03c.jpg" alt="路邊玄學堂 - 香港中西玄學內容平台" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 40%, oklch(0.10 0.015 260 / 0.9))" }} />
+                <div className="absolute bottom-3 left-4">
+                  <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ background: "oklch(0.45 0.18 280 / 0.9)", color: "white" }}>🔮 玄學</span>
+                </div>
               </div>
-              <h3 className="text-xl font-bold mb-2" style={{ color: "oklch(0.92 0.01 260)" }}>路邊玄學堂</h3>
-              <p className="text-sm leading-relaxed mb-4" style={{ color: "oklch(0.60 0.02 260)" }}>
-                風水、八字、紫微斗數、塔羅、星座、生命靈數、身心靈
-              </p>
-              <div className="flex items-center gap-1.5 text-sm font-medium group-hover:gap-2.5 transition-all duration-200"
-                style={{ color: "oklch(0.70 0.18 250)" }}>
-                探索玄學內容 <ChevronRight className="w-4 h-4" />
+              <div className="p-5" style={{ background: "oklch(0.12 0.015 260 / 0.95)" }}>
+                <h3 className="text-xl font-bold mb-2" style={{ color: "oklch(0.92 0.01 260)" }}>路邊玄學堂</h3>
+                <p className="text-sm leading-relaxed mb-4" style={{ color: "oklch(0.60 0.02 260)" }}>
+                  風水、八字、紫微斗數、塔羅、星座、生命靈數、身心靈
+                </p>
+                <div className="flex items-center gap-1.5 text-sm font-medium group-hover:gap-2.5 transition-all duration-200"
+                  style={{ color: "oklch(0.70 0.18 250)" }}>
+                  探索玄學內容 <ChevronRight className="w-4 h-4" />
+                </div>
               </div>
             </Link>
 
             {/* Card 3: 商業合作 */}
-            <Link href="/partnership" className="group block rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
-              style={{ background: "oklch(0.12 0.015 260 / 0.8)", border: "1px solid oklch(0.22 0.02 260)", boxShadow: "0 4px 24px oklch(0 0 0 / 0.3)" }}>
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110"
-                style={{ background: "oklch(0.65 0.15 80 / 0.15)", border: "1px solid oklch(0.65 0.15 80 / 0.3)" }}>
-                <Handshake className="w-6 h-6" style={{ color: "oklch(0.78 0.15 80)" }} />
+            <Link href="/partnership" className="group block rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
+              style={{ border: "1px solid oklch(0.22 0.02 260)", boxShadow: "0 4px 24px oklch(0 0 0 / 0.4)" }}>
+              {/* Card image */}
+              <div className="relative h-44 overflow-hidden">
+                <img src="/manus-storage/card-partnership_7db8dac3.jpg" alt="6B Podcast 商業合作 - 品牌訪談、節目贊助" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 40%, oklch(0.10 0.015 260 / 0.9))" }} />
+                <div className="absolute bottom-3 left-4">
+                  <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ background: "oklch(0.55 0.12 80 / 0.9)", color: "white" }}>💼 商業</span>
+                </div>
               </div>
-              <h3 className="text-xl font-bold mb-2" style={{ color: "oklch(0.92 0.01 260)" }}>商業合作</h3>
-              <p className="text-sm leading-relaxed mb-4" style={{ color: "oklch(0.60 0.02 260)" }}>
-                品牌訪談、節目製作、嘉賓曝光、贊助合作
-              </p>
-              <div className="flex items-center gap-1.5 text-sm font-medium group-hover:gap-2.5 transition-all duration-200"
-                style={{ color: "oklch(0.78 0.15 80)" }}>
-                查詢合作方案 <ChevronRight className="w-4 h-4" />
+              <div className="p-5" style={{ background: "oklch(0.12 0.015 260 / 0.95)" }}>
+                <h3 className="text-xl font-bold mb-2" style={{ color: "oklch(0.92 0.01 260)" }}>商業合作</h3>
+                <p className="text-sm leading-relaxed mb-4" style={{ color: "oklch(0.60 0.02 260)" }}>
+                  品牌訪談、節目製作、嘉賓曝光、贊助合作
+                </p>
+                <div className="flex items-center gap-1.5 text-sm font-medium group-hover:gap-2.5 transition-all duration-200"
+                  style={{ color: "oklch(0.78 0.15 80)" }}>
+                  查詢合作方案 <ChevronRight className="w-4 h-4" />
+                </div>
               </div>
             </Link>
           </div>
