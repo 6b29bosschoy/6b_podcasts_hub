@@ -4,7 +4,7 @@ import { trpc } from "@/lib/trpc";
 import { useSEO } from "@/hooks/useSEO";
 import {
   Play, Calendar, Star, ChevronDown, ChevronUp,
-  Sparkles, Eye, Clock, Users, ArrowRight, Check
+  Sparkles, Eye, Clock, Users, ArrowRight, Check, Youtube, MessageCircle
 } from "lucide-react";
 
 // ─── Mystic Categories ───────────────────────────────────────────────────────
@@ -239,7 +239,7 @@ export default function MysticHome() {
       <section className="relative pt-28 pb-20 px-4 overflow-hidden">
         {/* Background image */}
         <div className="absolute inset-0 pointer-events-none" style={{
-          backgroundImage: "url('/manus-storage/hero-mystic_5ee95109.jpg')",
+          backgroundImage: "url('/manus-storage/hero-mystic_0e642ac2.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center top",
           backgroundRepeat: "no-repeat"
@@ -303,17 +303,21 @@ export default function MysticHome() {
                 boxShadow: `0 0 24px ${PURPLE}58`,
               }}
             >
-              <Play size={16} fill="white" /> 觀看玄學節目
+              <Play size={16} fill="white" /> 觀看玄學影片
             </a>
-            <Link href="/booking">
-              <span className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm transition-all duration-200 hover:opacity-90 cursor-pointer"
-                style={{
-                  background: "linear-gradient(135deg, oklch(0.62 0.24 25), oklch(0.55 0.20 45))",
-                  color: "white",
-                }}>
-                <Calendar size={16} /> 預約玄學服務
-              </span>
-            </Link>
+            <a
+              href="https://wa.me/85200000000"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm transition-all duration-200 hover:opacity-90 hover:scale-105"
+              style={{
+                background: "linear-gradient(135deg, oklch(0.55 0.20 145), oklch(0.45 0.18 145))",
+                color: "white",
+                boxShadow: "0 0 24px oklch(0.55 0.20 145 / 0.4)",
+              }}
+            >
+              <MessageCircle size={16} /> WhatsApp 預約
+            </a>
             <Link href="/mystic/pricing">
               <span className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm transition-all duration-200 hover:opacity-90 cursor-pointer border"
                 style={{
@@ -324,6 +328,36 @@ export default function MysticHome() {
                 <Star size={16} /> 加入會員
               </span>
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          YOUTUBE SUBSCRIPTION BANNER
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section className="py-6 px-4" style={{ background: "oklch(0.09 0.025 280)", borderTop: `1px solid ${BORDER}` }}>
+        <div className="max-w-4xl mx-auto">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl px-6 py-4"
+            style={{ background: `linear-gradient(135deg, oklch(0.12 0.04 280), oklch(0.10 0.03 300))`, border: `1px solid ${PURPLE}40` }}>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                style={{ background: `${PURPLE}25`, border: `1px solid ${PURPLE}50` }}>
+                <Youtube className="w-5 h-5" style={{ color: PURPLE_LIGHT }} />
+              </div>
+              <div>
+                <div className="font-bold text-sm" style={{ color: TEXT_PRIMARY }}>訂閱 @6bfengshui 玄學頻道</div>
+                <div className="text-xs" style={{ color: TEXT_MUTED }}>每週更新風水、八字、塔羅影片，免費學習中西玄學</div>
+              </div>
+            </div>
+            <a
+              href="https://www.youtube.com/@6bfengshui?sub_confirmation=1"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all hover:opacity-90 hover:scale-105"
+              style={{ background: `linear-gradient(135deg, ${PURPLE}, oklch(0.45 0.18 300))`, color: "white" }}
+            >
+              <Youtube className="w-4 h-4" /> 立即訂閱
+            </a>
           </div>
         </div>
       </section>
@@ -665,7 +699,20 @@ export default function MysticHome() {
             立即預約合適的玄學師傅，透過命盤分析、風水勘察或塔羅解讀，
             為你提供清晰的方向指引，協助你做出更有把握的人生選擇。
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center flex-wrap">
+            <a
+              href="https://wa.me/85200000000"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-bold text-sm transition-all hover:opacity-90 hover:scale-105"
+              style={{
+                background: "linear-gradient(135deg, oklch(0.55 0.20 145), oklch(0.45 0.18 145))",
+                color: "white",
+                boxShadow: "0 0 24px oklch(0.55 0.20 145 / 0.35)",
+              }}
+            >
+              <MessageCircle size={16} /> WhatsApp 立即預約
+            </a>
             <Link href="/booking">
               <span className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-bold text-sm cursor-pointer transition-all hover:opacity-90 hover:scale-105"
                 style={{
@@ -673,7 +720,7 @@ export default function MysticHome() {
                   color: "white",
                   boxShadow: "0 0 24px oklch(0.62 0.24 25 / 0.3)",
                 }}>
-                <Calendar size={16} /> 立即預約師傅
+                <Calendar size={16} /> 預約師傅諮詢
               </span>
             </Link>
             <Link href="/mystic/services">

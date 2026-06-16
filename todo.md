@@ -496,4 +496,15 @@
 - [x] 更新玄學堂 OG 圖片（og-mystic）
 - [x] 更新商業合作 OG 圖片（og-partnership）
 - [x] TypeScript 零錯誤，112 個測試全部通過
-- [ ] 儲存 checkpoint（待完成）
+- [x] 儲存 checkpoint（版本 d7c76e03）
+## 玄學堂 Landing Page 升級 + 圖片系統更新（第六階段）
+
+- [x] 更新首頁 Hero 背景圖為新版本（/manus-storage/hero-main_e8a05c5e.jpg）
+- [x] 更新三大入口卡圖片（card-podcasts、card-mystic、card-partnership）
+- [x] 更新玄學堂 Hero 背景圖（/manus-storage/hero-mystic_0e642ac2.jpg）
+- [x] 玄學堂 Hero CTA：加入 WhatsApp 預約按鈕（綠色漸層）
+- [x] 玄學堂 Hero CTA：「節目」改為「影片」
+- [x] 玄學堂：加入 YouTube 訂閱橫幅（@6bfengshui，立即訂閱按鈕）
+- [x] 玄學堂預約 CTA 區塊：加入 WhatsApp 立即預約按鈕（主要 CTA）
+- [x] 生成 mystic-booking.jpg 及 mystic-membership.jpg 新圖片
+- [x] TypeScript 零錯誤，112 個測試全部通過

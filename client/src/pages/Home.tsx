@@ -126,7 +126,7 @@ export default function Home() {
       <section className="relative min-h-[92vh] flex flex-col items-center justify-center overflow-hidden px-4 pt-20 pb-16">
         {/* Background image */}
         <div className="absolute inset-0 pointer-events-none" style={{
-          backgroundImage: "url('/manus-storage/hero-main_12cca13c.jpg')",
+          backgroundImage: "url('/manus-storage/hero-main_e8a05c5e.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat"
@@ -231,7 +231,7 @@ export default function Home() {
               style={{ border: "1px solid oklch(0.22 0.02 260)", boxShadow: "0 4px 24px oklch(0 0 0 / 0.4)" }}>
               {/* Card image */}
               <div className="relative h-44 overflow-hidden">
-                <img src="/manus-storage/card-podcasts_635bb2ff.jpg" alt="路邊電台 - 香港真實人物訪談 Podcast" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <img src="/manus-storage/card-podcasts_faab5444.jpg" alt="路邊電台 - 香港真實人物訪談 Podcast" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 40%, oklch(0.10 0.015 260 / 0.9))" }} />
                 <div className="absolute bottom-3 left-4">
                   <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ background: "oklch(0.62 0.24 25 / 0.9)", color: "white" }}>🎙️ Podcast</span>
@@ -254,7 +254,7 @@ export default function Home() {
               style={{ border: "1px solid oklch(0.22 0.02 260)", boxShadow: "0 4px 24px oklch(0 0 0 / 0.4)" }}>
               {/* Card image */}
               <div className="relative h-44 overflow-hidden">
-                <img src="/manus-storage/card-mystic_655df03c.jpg" alt="路邊玄學堂 - 香港中西玄學內容平台" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <img src="/manus-storage/card-mystic_a3c0b90e.jpg" alt="路邊玄學堂 - 香港中西玄學內容平台" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 40%, oklch(0.10 0.015 260 / 0.9))" }} />
                 <div className="absolute bottom-3 left-4">
                   <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ background: "oklch(0.45 0.18 280 / 0.9)", color: "white" }}>🔮 玄學</span>
@@ -277,7 +277,7 @@ export default function Home() {
               style={{ border: "1px solid oklch(0.22 0.02 260)", boxShadow: "0 4px 24px oklch(0 0 0 / 0.4)" }}>
               {/* Card image */}
               <div className="relative h-44 overflow-hidden">
-                <img src="/manus-storage/card-partnership_7db8dac3.jpg" alt="6B Podcast 商業合作 - 品牌訪談、節目贊助" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <img src="/manus-storage/card-partnership_1944350a.jpg" alt="6B Podcast 商業合作 - 品牌訪談、節目贊助" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 40%, oklch(0.10 0.015 260 / 0.9))" }} />
                 <div className="absolute bottom-3 left-4">
                   <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ background: "oklch(0.55 0.12 80 / 0.9)", color: "white" }}>💼 商業</span>
