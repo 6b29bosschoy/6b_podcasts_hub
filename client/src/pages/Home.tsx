@@ -126,7 +126,7 @@ export default function Home() {
       <section className="relative min-h-[92vh] flex flex-col items-center justify-center overflow-hidden px-4 pt-20 pb-16">
         {/* Background image */}
         <div className="absolute inset-0 pointer-events-none" style={{
-          backgroundImage: "url('/manus-storage/hero-main_e8a05c5e.jpg')",
+          backgroundImage: "url('https://d2xsxph8kpxj0f.cloudfront.net/310519663073423209/XJagJnJEiagVDDmfVeExSL/hero-main-v2-mRdcmLDrjMCzzP9EK5KfY3.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat"
