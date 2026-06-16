@@ -306,7 +306,7 @@ export default function MysticHome() {
               <Play size={16} fill="white" /> 觀看玄學影片
             </a>
             <a
-              href="https://wa.me/85200000000"
+              href="https://wa.me/85298729990"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm transition-all duration-200 hover:opacity-90 hover:scale-105"
@@ -701,7 +701,7 @@ export default function MysticHome() {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center flex-wrap">
             <a
-              href="https://wa.me/85200000000"
+              href="https://wa.me/85298729990"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-bold text-sm transition-all hover:opacity-90 hover:scale-105"
