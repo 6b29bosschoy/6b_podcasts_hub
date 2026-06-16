@@ -1,4 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@300;400;500;700;900&family=Noto+Serif+HK:wght@400;700;900&display=swap');
+@font-face {
+  font-family: 'Noto Sans TC';
+  src: url('/manus-storage/NotoSansTC-VariableFont_wght_da43fd5a.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -146,10 +154,10 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Noto Sans HK', sans-serif;
+    font-family: 'Noto Sans TC', 'Noto Sans HK', sans-serif;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Noto Serif HK', serif;
+    font-family: 'Noto Sans TC', 'Noto Serif TC', 'Noto Sans HK', serif;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
