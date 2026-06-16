@@ -1,6 +1,6 @@
-import { useEffect } from "react";
 import { Link } from "wouter";
 import { JsonLd, buildOrganizationSchema, buildBreadcrumbSchema, SITE_URL, LOGO_URL } from "@/components/JsonLd";
+import { useSEO } from "@/hooks/useSEO";
 
 const CORE_VALUES = [
   {
@@ -44,20 +44,15 @@ const WHY_US = [
 ];
 
 export default function About() {
-  useEffect(() => {
-    document.title = "關於我們｜路邊電台 × 路邊玄學堂 Ray Choy";
-    const setMeta = (name: string, content: string, prop = false) => {
-      const attr = prop ? "property" : "name";
-      let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
-      if (!el) { el = document.createElement("meta"); el.setAttribute(attr, name); document.head.appendChild(el); }
-      el.setAttribute("content", content);
-    };
-    setMeta("description", "認識路邊電台創辦人 Ray Choy，了解路邊玄學堂的品牌故事、核心價值與創作理念。香港最真實人物訪談節目背後的故事。");
-    setMeta("keywords", "Ray Choy,路邊電台創辦人,路邊玄學堂,香港Podcast,品牌故事,訪談節目,玄學師傅");
-    setMeta("og:title", "關於我們｜路邊電台 × 路邊玄學堂", true);
-    setMeta("og:description", "認識路邊電台創辦人 Ray Choy，了解品牌故事、核心價值與創作理念。", true);
-    return () => { document.title = "路邊電台 × 路邊玄學堂｜香港最真實人物訪談"; };
-  }, []);
+  useSEO({
+    title: "關於 6B｜路邊電台 × 路邊玄學堂—香港內容平台品牌故事",
+    description: "認識 6B Podcast 路邊電台與路邊玄學堂的品牌故事、創作理念與核心價値。香港原創人物訪談與中西玄學內容平台背後的故事。",
+    keywords: "6B Podcast,路邊電台,路邊玄學堂,品牌故事,香港 Podcast,創作理念,訪談節目",
+    ogTitle: "關於 6B｜路邊電台 × 路邊玄學堂—香港內容平台品牌故事",
+    ogDescription: "認識 6B Podcast 路邊電台與路邊玄學堂的品牌故事、創作理念與核心價値。",
+    ogUrl: "https://www.6bpodcasts.com/about",
+    canonical: "https://www.6bpodcasts.com/about",
+  });
   const aboutSchemas = [
     buildOrganizationSchema(),
     {

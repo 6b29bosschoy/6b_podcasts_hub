@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useSEO } from "@/hooks/useSEO";
 import { JsonLd, buildBreadcrumbSchema, SITE_URL } from "@/components/JsonLd";
 
 const PODCAST_PLATFORMS = [
@@ -46,20 +46,15 @@ const FEATURES = [
 ];
 
 export default function PodcastsPage() {
-  useEffect(() => {
-    document.title = "收聽聲音 PODCASTS｜ Apple Podcasts 及 Spotify 收聽";
-    const setMeta = (name: string, content: string, prop = false) => {
-      const attr = prop ? "property" : "name";
-      let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
-      if (!el) { el = document.createElement("meta"); el.setAttribute(attr, name); document.head.appendChild(el); }
-      el.setAttribute("content", content);
-    };
-    setMeta("description", "在 Apple Podcasts、Spotify 收聽「路邊電台」香港最真實訪談 Podcast，隨時隨地收聽兩性關係、玄學命理、都市感情等精彩內容。");
-    setMeta("keywords", "Apple Podcasts,Spotify收聽,路邊電台Podcast,香港Podcast,兩性關係節目,玄學訪談,香港訪談節目");
-    setMeta("og:title", "收聽聲音 PODCASTS｜路邊電台 × 路邊玄學堂", true);
-    setMeta("og:description", "在 Apple Podcasts、Spotify 收聽香港最真實訪談 Podcast，隨時隨地收聽兩性關係、玄學命理等精彩內容。", true);
-    return () => { document.title = "路邊電台 × 路邊玄學堂｜香港最真實人物訪談"; };
-  }, []);
+  useSEO({
+    title: "路邊電台｜香港真實人物訪談、兩性關係 Podcast 節目",
+    description: "路邊電台是香港原創訪談節目，探討兩性關係、都市情感、人生故事與職場生活。在 Apple Podcasts、Spotify 免費收聽，超過 486 集精彩內容。",
+    keywords: "路邊電台,Apple Podcasts,Spotify 收聽,香港 Podcast,兩性關係,人物訪談,都市情感",
+    ogTitle: "路邊電台｜香港真實人物訪談、兩性關係 Podcast 節目",
+    ogDescription: "香港原創訪談節目，探討兩性關係、都市情感、人生故事。在 Apple Podcasts、Spotify 免費收聽。",
+    ogUrl: "https://www.6bpodcasts.com/podcasts",
+    canonical: "https://www.6bpodcasts.com/podcasts",
+  });
   const podcastSchemas = [
     {
       "@context": "https://schema.org",

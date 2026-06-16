@@ -462,3 +462,21 @@
 - [x] 各影片卡加入分類標籤及相關服務連結
 - [x] TypeScript 零錯誤，112 個測試全部通過
 - [x] 儲存 checkpoint
+
+## SEO 基礎設定（第七階段）
+
+- [x] 建立共用 useSEO hook（client/src/hooks/useSEO.ts）動態設定 title、meta description、OG tags、canonical
+- [x] 首頁：Title「6B Podcast｜香港真實人物訪談、兩性關係、中西玄學內容平台」+ Meta Description + OG
+- [x] 最新節目（/episodes）：獨立 Title + Meta Description + OG
+- [x] 路邊電台（/podcasts）：獨立 Title + Meta Description + OG
+- [x] 路邊玄學堂（/mystic）：獨立 Title + Meta Description + OG
+- [x] 玄學服務（/mystic/services）：獨立 Title + Meta Description + OG
+- [x] 嘉賓專欄（/blog）：獨立 Title + Meta Description + OG
+- [x] 商業合作（/partnership）：獨立 Title + Meta Description + OG
+- [x] 關於 6B（/about）：獨立 Title + Meta Description + OG
+- [x] 聯絡我們（/contact）：獨立 Title + Meta Description + OG
+- [x] 每頁 Title 及 Meta Description 不重複
+- [x] index.html Open Graph 圖片設定（og:image）+ Twitter Card 圖片
+- [x] index.html 更新首頁 Title、Meta Description、Keywords（按照用戶提供的 13 個關鍵字）
+- [x] TypeScript 零錯誤，112 個測試全部通過
+- [ ] 儲存 checkpoint（待完成）

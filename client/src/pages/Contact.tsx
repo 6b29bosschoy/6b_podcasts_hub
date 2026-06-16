@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { CheckCircle, Mail, Phone, Youtube, Instagram, Facebook } from "lucide-react";
 import { Link } from "wouter";
 import { JsonLd, buildBreadcrumbSchema, SITE_URL } from "@/components/JsonLd";
+import { useSEO } from "@/hooks/useSEO";
 
 const INQUIRY_TYPES = [
   { value: "collaboration", label: "商業合作", desc: "廣告、品牌合作、贊助" },
@@ -13,20 +14,15 @@ const INQUIRY_TYPES = [
 ];
 
 export default function Contact() {
-  useEffect(() => {
-    document.title = "聯絡我們｜商業合作、嘉賓邀請、觀眾反饵";
-    const setMeta = (name: string, content: string, prop = false) => {
-      const attr = prop ? "property" : "name";
-      let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
-      if (!el) { el = document.createElement("meta"); el.setAttribute(attr, name); document.head.appendChild(el); }
-      el.setAttribute("content", content);
-    };
-    setMeta("description", "聯絡路邊電台：商業合作洽談、嘉賓邀請申請、觀眾反饵意見，我們會在 48 小時內回覆。");
-    setMeta("keywords", "聯絡路邊電台,商業合作查詢,嘉賓邀請,觀眾反饵,香港Podcast聯絡,路邊玄學堂聯絡");
-    setMeta("og:title", "聯絡我們｜路邊電台 × 路邊玄學堂", true);
-    setMeta("og:description", "商業合作洽談、嘉賓邀請申請、觀眾反饵意見，48 小時內回覆。", true);
-    return () => { document.title = "路邊電台 × 路邊玄學堂｜香港最真實人物訪談"; };
-  }, []);
+  useSEO({
+    title: "聯絡我們｜6B Podcast—商業合作查詢、嘉賓邀請與觀眾反饲",
+    description: "聯絡 6B Podcast 路邊電台：商業合作洽談、嘉賓邀請申請、觀眾反饲意見。我們會在 48 小時內回覆。亦可直接 WhatsApp 查詢玄學服務預約。",
+    keywords: "聯絡 6B Podcast,商業合作查詢,嘉賓邀請,觀眾反饲,香港 Podcast 聯絡,玄學服務預約",
+    ogTitle: "聯絡我們｜6B Podcast—商業合作查詢、嘉賓邀請與觀眾反饲",
+    ogDescription: "商業合作洽談、嘉賓邀請申請、觀眾反饲意見。我們會在 48 小時內回覆。",
+    ogUrl: "https://www.6bpodcasts.com/contact",
+    canonical: "https://www.6bpodcasts.com/contact",
+  });
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
     name: "",

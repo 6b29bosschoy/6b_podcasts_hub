@@ -1,7 +1,7 @@
-import { useEffect } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { JsonLd, buildBreadcrumbSchema, SITE_URL } from "@/components/JsonLd";
+import { useSEO } from "@/hooks/useSEO";
 
 const CATEGORY_LABELS: Record<string, string> = {
   relationship: "兩性關係",
@@ -39,20 +39,15 @@ function getFirstImage(imagesJson: string | null | undefined): string | null {
 }
 
 export default function Blog() {
-  useEffect(() => {
-    document.title = "嘉賓專欄｜路邊電台嘉賓心得與幕後故事";
-    const setMeta = (name: string, content: string, prop = false) => {
-      const attr = prop ? "property" : "name";
-      let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
-      if (!el) { el = document.createElement("meta"); el.setAttribute(attr, name); document.head.appendChild(el); }
-      el.setAttribute("content", content);
-    };
-    setMeta("description", "路邊電台嘉賓專欄：嘉賓分享訪談後的心得、幕後故事與深度觀點，涉及兩性關係、玄學風水、生活態度等主題。");
-    setMeta("keywords", "嘉賓專欄,路邊電台專欄,心得分享,玄學博客,兩性關係,香港Podcast專欄,訪談幕後故事");
-    setMeta("og:title", "嘉賓專欄｜路邊電台 × 路邊玄學堂", true);
-    setMeta("og:description", "嘉賓分享訪談後的心得、幕後故事與深度觀點，涉及兩性關係、玄學風水、生活態度等主題。", true);
-    return () => { document.title = "路邊電台 × 路邊玄學堂｜香港最真實人物訪談"; };
-  }, []);
+  useSEO({
+    title: "嘉賓專欄｜路邊電台嘉賓心得、幕後故事與深度觀點",
+    description: "路邊電台嘉賓專欄：嘉賓分享訪談後的心得、幕後故事與深度觀點，涉及兩性關係、玄學風水、生活態度等主題。由路邊電台嘉賓親自撰寫。",
+    keywords: "嘉賓專欄,路邊電台專欄,心得分享,玄學博客,兩性關係,香港 Podcast 專欄,訪談幕後故事",
+    ogTitle: "嘉賓專欄｜路邊電台嘉賓心得、幕後故事與深度觀點",
+    ogDescription: "嘉賓分享訪談後的心得、幕後故事與深度觀點，涉及兩性關係、玄學風水、生活態度等主題。",
+    ogUrl: "https://www.6bpodcasts.com/blog",
+    canonical: "https://www.6bpodcasts.com/blog",
+  });
 
   const { data: posts, isLoading } = trpc.blog.list.useQuery({ limit: 20, offset: 0 });
 

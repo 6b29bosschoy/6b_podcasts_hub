@@ -5,6 +5,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { JsonLd, buildOrganizationSchema, buildWebSiteSchema } from "@/components/JsonLd";
 import { Play, ChevronRight, Mic, Star, Users, Youtube, Radio, Sparkles, Handshake, Instagram, Facebook, Music, MessageCircle } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 // ── Constants ──────────────────────────────────────────────────────────────────
 const MYSTIC_METHODS = [
@@ -73,6 +74,15 @@ function VideoCard({ v, isFengshui }: {
 
 // ── Main Component ─────────────────────────────────────────────────────────────
 export default function Home() {
+  useSEO({
+    title: "6B Podcast｜香港真實人物訪談、兩性關係、中西玄學內容平台",
+    description: "6B Podcast 是香港本地內容平台，集合真實人物訪談、兩性關係、都市情感、中西玄學、風水命理、身心靈及 YouTube 節目內容。",
+    keywords: "6B Podcast,路邊電台,路邊玄學堂,香港 Podcast,香港 YouTube 訪談,兩性關係 Podcast,香港玄學,風水命理,八字分析,紫微斗數,塔羅占卜,生命靈數,身心靈香港",
+    ogTitle: "6B Podcast｜香港真實人物訪談、兩性關係、中西玄學內容平台",
+    ogDescription: "6B Podcast 是香港本地內容平台，集合真實人物訪談、兩性關係、中西玄學、風水命理、身心靈及 YouTube 節目內容。",
+    ogUrl: "https://www.6bpodcasts.com/home",
+    canonical: "https://www.6bpodcasts.com/home",
+  });
   const { user } = useAuth();
   const [videoFilter, setVideoFilter] = useState<"all" | "podcasts" | "fengshui">("all");
   const videoQueryInput = useMemo(() => ({ channel: "all" as const, limit: 9 }), []);

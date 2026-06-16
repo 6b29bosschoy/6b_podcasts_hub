@@ -1,6 +1,7 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
+import { useSEO } from "@/hooks/useSEO";
 import {
   Play, Clock, Eye, Youtube, ExternalLink,
   Heart, Users, Briefcase, Coffee, Mic,
@@ -181,18 +182,15 @@ function VideoCard({ video }: { video: VideoItem }) {
 export default function Episodes() {
   const [activeCategory, setActiveCategory] = useState("all");
 
-  useEffect(() => {
-    document.title = "最新節目｜路邊電台";
-    const setMeta = (name: string, content: string, prop = false) => {
-      const attr = prop ? "property" : "name";
-      let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
-      if (!el) { el = document.createElement("meta"); el.setAttribute(attr, name); document.head.appendChild(el); }
-      el.setAttribute("content", content);
-    };
-    setMeta("description", "瀏覽路邊電台最新 YouTube 節目，包括兩性關係、人物訪談、都市情感、人生故事及職場生活等精彩內容。");
-    setMeta("og:title", "最新節目｜路邊電台", true);
-    return () => { document.title = "路邊電台 × 路邊玄學堂｜香港最真實人物訪談"; };
-  }, []);
+  useSEO({
+    title: "最新節目｜路邊電台 YouTube 影片全集",
+    description: "瀏覽路邊電台最新 YouTube 節目，包括兩性關係、人物訪談、都市情感、人生故事及職場生活等精彩內容。訂閱 @6bpodcasts 不错過任何新集。",
+    keywords: "路邊電台,香港 Podcast,兩性關係,人物訪談,都市情感,YouTube 節目,香港訪談",
+    ogTitle: "最新節目｜路邊電台 YouTube 影片全集",
+    ogDescription: "兩性關係、人物訪談、都市情感、人生故事、職場生活——路邊電台最新 YouTube 內容全集。",
+    ogUrl: "https://www.6bpodcasts.com/episodes",
+    canonical: "https://www.6bpodcasts.com/episodes",
+  });
 
   const { data: videosData, isLoading } = trpc.youtube.getVideos.useQuery(
     { channel: "podcasts", limit: 50 },

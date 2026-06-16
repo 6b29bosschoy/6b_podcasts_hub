@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
+import { useSEO } from "@/hooks/useSEO";
 import {
   Play, Calendar, Star, ChevronDown, ChevronUp,
   Sparkles, Eye, Clock, Users, ArrowRight, Check
@@ -186,11 +187,15 @@ function formatDuration(d: string | null | undefined) {
 export default function MysticHome() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  useEffect(() => {
-    document.title = "路邊玄學堂｜中西玄學、命理與身心靈內容平台";
-    const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute("content", "從風水、八字、紫微斗數到塔羅、星座與生命靈數，用貼地方式理解命運、關係、事業與人生選擇。");
-  }, []);
+  useSEO({
+    title: "路邊玄學堂｜香港中西玄學、風水命理與身心靈內容平台",
+    description: "路邊玄學堂集合風水、八字、紫微斗數、塔羅占卜、星座分析、生命靈數與身心靈療癒內容。用貼地方式理解命運、感情關係、事業財運與人生選擇。",
+    keywords: "路邊玄學堂,香港玄學,風水命理,八字分析,紫微斗數,塔羅占卜,星座分析,生命靈數,身心靈療癒",
+    ogTitle: "路邊玄學堂｜香港中西玄學、風水命理與身心靈內容平台",
+    ogDescription: "集合風水、八字、紫微斗數、塔羅、星座、生命靈數與身心靈療癒內容。用貼地方式理解命運與人生。",
+    ogUrl: "https://www.6bpodcasts.com/mystic",
+    canonical: "https://www.6bpodcasts.com/mystic",
+  });
 
   // Fetch @6bfengshui videos
   const { data: videoData, isLoading: videosLoading } = trpc.youtube.getVideos.useQuery(

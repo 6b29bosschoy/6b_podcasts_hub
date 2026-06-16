@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { JsonLd, buildBreadcrumbSchema, SITE_URL } from "@/components/JsonLd";
+import { useSEO } from "@/hooks/useSEO";
 
 const COLLAB_TYPES = [
   {
@@ -32,20 +33,15 @@ const WHY_COLLAB = [
 ];
 
 export default function Partnership() {
-  useEffect(() => {
-    document.title = "合作洽談｜品牌置入、內容共創、整合行销";
-    const setMeta = (name: string, content: string, prop = false) => {
-      const attr = prop ? "property" : "name";
-      let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
-      if (!el) { el = document.createElement("meta"); el.setAttribute(attr, name); document.head.appendChild(el); }
-      el.setAttribute("content", content);
-    };
-    setMeta("description", "與路邊電台合作：品牌置入、內容共創、整合行销方案，觸達香港 16,000+ 粉絲，提升品牌曝光度與轉化率。");
-    setMeta("keywords", "品牌合作,內容共創,整合行销,YouTube廣告,香港Podcast合作,路邊電台合作,KOL合作");
-    setMeta("og:title", "合作洽談｜路邊電台 × 路邊玄學堂", true);
-    setMeta("og:description", "品牌置入、內容共創、整合行销方案，觸達香港 16,000+ 粉絲，提升品牌曝光度與轉化率。", true);
-    return () => { document.title = "路邊電台 × 路邊玄學堂｜香港最真實人物訪談"; };
-  }, []);
+  useSEO({
+    title: "商業合作｜6B Podcast—品牌訪談、節目贊助、內容共創與玄學合作",
+    description: "與 6B Podcast 路邊電台合作：品牌訪談、節目贊助、內容共創、玄學節目贊助、師傅合作。觸達香港 16,000+ 粉絲，提升品牌曝光度與轉化率。",
+    keywords: "商業合作,品牌訪談,節目贊助,內容共創,YouTube 廣告,香港 Podcast 合作,KOL 合作,玄學合作",
+    ogTitle: "商業合作｜6B Podcast—品牌訪談、節目贊助、內容共創與玄學合作",
+    ogDescription: "品牌訪談、節目贊助、內容共創、玄學節目贊助、師傅合作。觸達香港 16,000+ 粉絲。",
+    ogUrl: "https://www.6bpodcasts.com/partnership",
+    canonical: "https://www.6bpodcasts.com/partnership",
+  });
   const [form, setForm] = useState({
     name: "",
     company: "",

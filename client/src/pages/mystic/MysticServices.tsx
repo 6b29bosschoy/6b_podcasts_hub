@@ -1,6 +1,6 @@
-import { useEffect } from "react";
 import { Link } from "wouter";
 import { Sparkles, Calendar, Star, ArrowRight } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 const SERVICES = [
   {
@@ -62,11 +62,15 @@ const SERVICES = [
 ];
 
 export default function MysticServices() {
-  useEffect(() => {
-    document.title = "玄學服務｜路邊玄學堂 — 八字、風水、塔羅、占星";
-    const desc = document.querySelector('meta[name="description"]');
-    if (desc) desc.setAttribute("content", "路邊玄學堂提供八字命盤、紫微斗數、風水勘察、塔羅占卜、星座占星、生命靈數及阿卡西紀錄等專業玄學服務。");
-  }, []);
+  useSEO({
+    title: "玄學服務｜路邊玄學堂—八字命盤、風水勘察、塔羅占卜、占星服務",
+    description: "路邊玄學堂提供香港專業玄學服務：八字命盤、紫微斗數、風水勘察、塔羅占卜、星座占星、生命靈數及阿卡西紀錄。立即預約合適的玄學師傅。",
+    keywords: "玄學服務,香港玄學,八字命盤,風水勘察,塔羅占卜,占星服務,生命靈數,阿卡西紀錄",
+    ogTitle: "玄學服務｜路邊玄學堂—八字命盤、風水勘察、塔羅占卜、占星服務",
+    ogDescription: "香港專業玄學服務：八字命盤、紫微斗數、風水勘察、塔羅占卜、占星服務。立即預約合適的玄學師傅。",
+    ogUrl: "https://www.6bpodcasts.com/mystic/services",
+    canonical: "https://www.6bpodcasts.com/mystic/services",
+  });
 
   return (
     <div className="min-h-screen pt-20 pb-24 lg:pb-8" style={{ background: "oklch(0.07 0.01 260)" }}>
