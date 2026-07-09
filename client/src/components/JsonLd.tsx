@@ -166,6 +166,123 @@ export function buildFAQSchema(faqs: { question: string; answer: string }[]) {
   };
 }
 
+/** PodcastSeries schema for /podcasts and /episodes pages */
+export function buildPodcastSeriesSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "PodcastSeries",
+    "@id": `${SITE_URL}/#podcast`,
+    name: "路邊電台 6B Podcasts",
+    description: "香港最真實人物訪談 Podcast，探索兩性關係、人生選擇、都市情感與香港人的內心世界。",
+    url: `${SITE_URL}/podcasts`,
+    image: LOGO_URL,
+    inLanguage: "zh-HK",
+    author: {
+      "@type": "Person",
+      name: "Ray Choy",
+      jobTitle: "創辦人 / 主持人",
+    },
+    publisher: {
+      "@id": `${SITE_URL}/#organization`,
+    },
+    webFeed: [
+      { "@type": "DataFeed", url: "https://anchor.fm/s/6bpodcasts/podcast/rss" },
+    ],
+    sameAs: [
+      "https://www.youtube.com/@6bpodcasts",
+      "https://podcasts.apple.com/hk/podcast/id1548484952",
+      "https://open.spotify.com/show/6bpodcasts",
+    ],
+  };
+}
+
+/** PodcastEpisode schema for individual video/episode items */
+export function buildPodcastEpisodeSchema(episode: {
+  id: string;
+  title: string;
+  description?: string;
+  url: string;
+  thumbnail?: string | null;
+  publishedAt: string;
+  duration?: string | null;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "PodcastEpisode",
+    "@id": episode.url,
+    name: episode.title,
+    description: episode.description || episode.title,
+    url: episode.url,
+    image: episode.thumbnail || LOGO_URL,
+    datePublished: episode.publishedAt,
+    duration: episode.duration || undefined,
+    partOfSeries: {
+      "@id": `${SITE_URL}/#podcast`,
+    },
+    inLanguage: "zh-HK",
+  };
+}
+
+/** Person schema for mystic master profiles */
+export function buildPersonSchema(master: {
+  id: string;
+  name: string;
+  title: string;
+  specialties: string[];
+  description: string;
+  imageUrl?: string | null;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": `${SITE_URL}/mystic/masters/${master.id}#person`,
+    name: master.name,
+    jobTitle: master.title,
+    description: master.description,
+    image: master.imageUrl || LOGO_URL,
+    knowsAbout: master.specialties,
+    worksFor: {
+      "@id": `${SITE_URL}/#organization`,
+    },
+    url: `${SITE_URL}/mystic/masters/${master.id}`,
+  };
+}
+
+/** Service + Offer schema for mystic services / pricing pages */
+export function buildServiceSchema(service: {
+  name: string;
+  description: string;
+  url: string;
+  price?: string;
+  priceCurrency?: string;
+}) {
+  const schema: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: service.name,
+    description: service.description,
+    url: service.url,
+    provider: {
+      "@id": `${SITE_URL}/#organization`,
+    },
+    areaServed: {
+      "@type": "Place",
+      name: "Hong Kong",
+    },
+    inLanguage: "zh-HK",
+  };
+  if (service.price) {
+    schema.offers = {
+      "@type": "Offer",
+      price: service.price,
+      priceCurrency: service.priceCurrency || "HKD",
+      availability: "https://schema.org/InStock",
+      url: service.url,
+    };
+  }
+  return schema;
+}
+
 /** BreadcrumbList schema helper */
 export function buildBreadcrumbSchema(
   items: { name: string; url: string }[]

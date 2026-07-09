@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { useSEO } from "@/hooks/useSEO";
+import { JsonLd, buildPodcastSeriesSchema, buildBreadcrumbSchema, SITE_URL } from "@/components/JsonLd";
 import {
   Play, Clock, Eye, Youtube, ExternalLink,
   Heart, Users, Briefcase, Coffee, Mic,
@@ -229,6 +230,16 @@ export default function Episodes() {
 
   return (
     <div className="min-h-screen pt-20 pb-24 lg:pb-8" style={{ background: "oklch(0.07 0.01 260)" }}>
+      <JsonLd
+        id="episodes-schema"
+        data={[
+          buildPodcastSeriesSchema(),
+          buildBreadcrumbSchema([
+            { name: "首頁", url: SITE_URL },
+            { name: "最新節目", url: `${SITE_URL}/episodes` },
+          ]),
+        ]}
+      />
 
       {/* ── Hero ── */}
       <section

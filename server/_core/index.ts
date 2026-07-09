@@ -409,26 +409,53 @@ A: 有，Instagram 帳號係 @6bpodcasts（https://www.instagram.com/6bpodcasts�
   });
 
   // ── Sitemap ──────────────────────────────────────────────────────────────────
-  app.get("/sitemap.xml", (_req, res) => {
+  app.get("/sitemap.xml", async (_req, res) => {
     const baseUrl = "https://6bpodcasts.com";
     const now = new Date().toISOString().split("T")[0];
-    const pages = [
-      { loc: "/",           changefreq: "daily",   priority: "1.0" },
-      { loc: "/about",      changefreq: "monthly",  priority: "0.8" },
-      { loc: "/services",   changefreq: "monthly",  priority: "0.8" },
-      { loc: "/booking",    changefreq: "weekly",   priority: "0.9" },
-      { loc: "/blog",       changefreq: "daily",   priority: "0.9" },
-      { loc: "/podcasts",   changefreq: "weekly",   priority: "0.8" },
-      { loc: "/partnership",changefreq: "monthly",  priority: "0.7" },
-      { loc: "/contact",    changefreq: "monthly",  priority: "0.6" },
+    const staticPages = [
+      { loc: "/",                      changefreq: "daily",   priority: "1.0" },
+      { loc: "/home",                  changefreq: "daily",   priority: "0.9" },
+      { loc: "/about",                 changefreq: "monthly", priority: "0.8" },
+      { loc: "/services",              changefreq: "monthly", priority: "0.8" },
+      { loc: "/booking",               changefreq: "weekly",  priority: "0.9" },
+      { loc: "/blog",                  changefreq: "daily",   priority: "0.9" },
+      { loc: "/podcasts",              changefreq: "weekly",  priority: "0.8" },
+      { loc: "/episodes",              changefreq: "daily",   priority: "0.8" },
+      { loc: "/partnership",           changefreq: "monthly", priority: "0.7" },
+      { loc: "/contact",               changefreq: "monthly", priority: "0.6" },
+      { loc: "/host-recruitment",      changefreq: "monthly", priority: "0.7" },
+      { loc: "/investors",             changefreq: "monthly", priority: "0.7" },
+      { loc: "/mystic",                changefreq: "weekly",  priority: "0.9" },
+      { loc: "/mystic/analysis",       changefreq: "weekly",  priority: "0.8" },
+      { loc: "/mystic/masters",        changefreq: "weekly",  priority: "0.8" },
+      { loc: "/mystic/videos",         changefreq: "daily",   priority: "0.7" },
+      { loc: "/mystic/articles",       changefreq: "daily",   priority: "0.7" },
+      { loc: "/mystic/pricing",        changefreq: "monthly", priority: "0.8" },
+      { loc: "/mystic/bazi",           changefreq: "monthly", priority: "0.7" },
+      { loc: "/mystic/services",       changefreq: "monthly", priority: "0.8" },
     ];
-    const urls = pages
-      .map(
-        (p) =>
-          `  <url>\n    <loc>${baseUrl}${p.loc}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>${p.changefreq}</changefreq>\n    <priority>${p.priority}</priority>\n  </url>`
-      )
-      .join("\n");
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>`;
+
+    // Dynamically include published blog posts
+    let blogUrls: string[] = [];
+    try {
+      const { getApprovedBlogPosts } = await import("../db");
+      const posts = await getApprovedBlogPosts(200, 0);
+      blogUrls = posts.map((p: { slug: string; updatedAt?: Date | null }) => {
+        const lastmod = p.updatedAt
+          ? new Date(p.updatedAt).toISOString().split("T")[0]
+          : now;
+        return `  <url>\n    <loc>${baseUrl}/blog/${p.slug}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>`;
+      });
+    } catch {
+      // DB unavailable — skip dynamic blog URLs
+    }
+
+    const staticUrls = staticPages.map(
+      (p) =>
+        `  <url>\n    <loc>${baseUrl}${p.loc}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>${p.changefreq}</changefreq>\n    <priority>${p.priority}</priority>\n  </url>`
+    );
+    const allUrls = [...staticUrls, ...blogUrls].join("\n");
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${allUrls}\n</urlset>`;
     res.setHeader("Content-Type", "application/xml; charset=utf-8");
     res.setHeader("Cache-Control", "public, max-age=3600");
     res.send(xml);

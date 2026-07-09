@@ -195,22 +195,24 @@ export default function Home() {
 
           {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            {/* Primary CTA: 免費命盤分析 */}
+            <Link href="/mystic/analysis"
+              className="flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-base transition-all duration-200 hover:scale-105 hover:brightness-110"
+              style={{ background: "linear-gradient(135deg, oklch(0.55 0.22 290), oklch(0.45 0.20 270))", color: "white", boxShadow: "0 4px 24px oklch(0.55 0.22 290 / 0.45)" }}>
+              <Sparkles className="w-5 h-5" />
+              ✨ 立即免費命盤分析
+            </Link>
+            {/* Secondary CTAs */}
             <a href="https://www.youtube.com/@6bpodcasts" target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-base transition-all duration-200 hover:scale-105 hover:brightness-110"
-              style={{ background: "oklch(0.62 0.24 25)", color: "white", boxShadow: "0 4px 20px oklch(0.62 0.24 25 / 0.4)" }}>
-              <Youtube className="w-5 h-5" />
+              className="flex items-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 hover:scale-105"
+              style={{ background: "oklch(0.62 0.24 25 / 0.15)", border: "1px solid oklch(0.62 0.24 25 / 0.5)", color: "oklch(0.80 0.18 25)" }}>
+              <Youtube className="w-4 h-4" />
               觀看最新節目
             </a>
-            <Link href="/mystic"
-              className="flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-base transition-all duration-200 hover:scale-105"
-              style={{ background: "oklch(0.55 0.20 250 / 0.15)", border: "1px solid oklch(0.55 0.20 250 / 0.4)", color: "oklch(0.75 0.15 250)" }}>
-              <Sparkles className="w-5 h-5" />
-              進入路邊玄學堂
-            </Link>
             <Link href="/partnership"
-              className="flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-base transition-all duration-200 hover:scale-105"
+              className="flex items-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 hover:scale-105"
               style={{ background: "transparent", border: "1px solid oklch(0.30 0.02 260)", color: "oklch(0.65 0.02 260)" }}>
-              <Handshake className="w-5 h-5" />
+              <Handshake className="w-4 h-4" />
               查詢合作
             </Link>
           </div>

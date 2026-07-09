@@ -35,6 +35,8 @@ export default function Footer() {
                 { label: "玄學服務預約", href: "/booking" },
                 { label: "聯絡我們", href: "/contact" },
                 { label: "嘉賓投稿", href: "/blog/submit" },
+                { label: "主持招募", href: "/host-recruitment" },
+                { label: "投資者關係", href: "/investors" },
               ].map((item) => (
                 <Link key={item.href} href={item.href} className="text-sm hover:text-primary transition-colors" style={{ color: "oklch(0.55 0.02 60)" }}>
                   {item.label}

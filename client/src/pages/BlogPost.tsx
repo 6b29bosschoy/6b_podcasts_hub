@@ -352,7 +352,7 @@ export default function BlogPost({ slug }: { slug: string }) {
         )}
 
         <div className="mt-8 pt-8" style={{ borderTop: "1px solid oklch(0.20 0.02 260)" }}>
-          {/* 玄學相關文章：加入玄學服務 CTA */}
+          {/* 玄學相關文章：加入免費命盤分析主 CTA */}
           {post.category === "fengshui" && (
             <div
               className="rounded-xl p-5 mb-6"
@@ -364,23 +364,25 @@ export default function BlogPost({ slug }: { slug: string }) {
               <div className="flex items-start gap-4 flex-wrap">
                 <div className="flex-1 min-w-[200px]">
                   <p className="text-sm font-bold mb-1" style={{ color: "oklch(0.78 0.15 290)" }}>✨ 想深入了解自己的命盤？</p>
-                  <p className="text-xs" style={{ color: "oklch(0.62 0.05 270)" }}>預約路邊玄學堂師傅，針對感情、事業、財運進行一對一分析。</p>
+                  <p className="text-xs" style={{ color: "oklch(0.62 0.05 270)" }}>輸入出生日期，即可獲得八字命理、紫微斗數、塔羅占卜等多種派別 AI 深度分析報告。現正限時免費體驗。</p>
                 </div>
                 <div className="flex gap-2 flex-wrap">
-                  <Link href="/booking">
+                  {/* Primary CTA */}
+                  <Link href="/mystic/analysis">
                     <button
                       className="px-4 py-2 rounded-lg text-xs font-bold"
-                      style={{ background: "oklch(0.55 0.22 290)", color: "white", border: "none", cursor: "pointer" }}
+                      style={{ background: "linear-gradient(135deg, oklch(0.55 0.22 290), oklch(0.45 0.20 270))", color: "white", border: "none", cursor: "pointer" }}
                     >
-                      預約玄學服務
+                      ✨ 立即免費命盤分析
                     </button>
                   </Link>
-                  <Link href="/mystic/videos">
+                  {/* Secondary CTA */}
+                  <Link href="/booking">
                     <button
                       className="px-4 py-2 rounded-lg text-xs font-bold"
                       style={{ background: "transparent", color: "oklch(0.75 0.08 290)", border: "1px solid oklch(0.28 0.06 290)", cursor: "pointer" }}
                     >
-                      觀看玄學影片
+                      預約師傅諾詢
                     </button>
                   </Link>
                 </div>

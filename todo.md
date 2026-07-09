@@ -509,3 +509,26 @@
 - [x] 玄學堂預約 CTA 區塊：加入 WhatsApp 立即預約按鈕（主要 CTA）
 - [x] 生成 mystic-booking.jpg 及 mystic-membership.jpg 新圖片
 - [x] TypeScript 零錯誤，112 個測試全部通過
+
+## 優化需求文件 v1.0（2026-07）— 三軌轉化引擎升級
+
+### P0 — 技術 SEO 地基
+- [ ] 1.1 評估並實施 CSR 可見性方案（prerender / SSG / 初始 HTML 內容） — 待確認方案
+- [x] 1.2 每頁獨立 Meta Tags 全面覆蓋（blog/:slug、師傅頁 /mystic/masters/:id 動態路由）
+- [x] 1.3 更新 robots.txt（確認排除 /admin，指向 sitemap）
+- [x] 1.3 更新 sitemap.xml（加入所有新增頁面，blog 文章動態加入）
+- [x] 1.4 補齊 JSON-LD（PodcastEpisode、Article with author/datePublished/image、Person、Service+Offer）
+- [x] 1.5 JS bundle code splitting / lazy load（拆出 admin、mystic 分析工具等非首屏模組）
+- [x] 1.5 移除 viewport maximum-scale=1（accessibility 問題）
+
+### P1 — 轉化架構重整
+- [x] 2.1 移除全站 Google AdSense script 及廣告位
+- [x] 2.2 全站 CTA 收斂為「✨ 立即免費命盤分析」主 CTA（首頁 hero 下、blog 文尾）
+- [ ] 2.2 次 CTA 降級（YouTube 訂閱、WhatsApp 預約僅保留在 /booking 及師傅頁）
+- [ ] 2.2 免費分析結果頁加入分流（➊ 預約師傅深度諮詢 ➋ 落點算 App）
+- [ ] 2.3 首頁重整（Hero 定位句+最新一集、三大內容支柱、數據列、主 CTA 區、Footer 分流）
+
+### P2 — 新增頁面
+- [x] 3.1 新增 /investors 頁（平台定位、Traction 數據、生態模型、收入模式、聯絡 CTA）
+- [ ] 3.2 /host-recruitment 升級為篩選 Funnel（4 條 qualifying 問題、48h 回覆訊息、CSV export） — 待實施
+- [ ] 3.3 師傅頁（/mystic/masters/:id）加轉化故事線 — 待實施

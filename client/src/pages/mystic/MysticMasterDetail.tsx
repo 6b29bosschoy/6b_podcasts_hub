@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "wouter";
 import { MYSTIC_MASTERS, MYSTIC_VIDEOS, MYSTIC_ARTICLES } from "@/data/mysticData";
+import { JsonLd, buildPersonSchema, buildBreadcrumbSchema, SITE_URL } from "@/components/JsonLd";
 
 interface Props {
   id: string;
@@ -31,6 +32,24 @@ export default function MysticMasterDetail({ id }: Props) {
 
   return (
     <div className="min-h-screen pt-24 pb-16 px-4" style={{ background: "oklch(0.08 0.02 270)" }}>
+      <JsonLd
+        id={`master-${master.id}-schema`}
+        data={[
+          buildPersonSchema({
+            id: master.id,
+            name: master.name,
+            title: master.title,
+            specialties: master.specialty,
+            description: master.bio,
+          }),
+          buildBreadcrumbSchema([
+            { name: "首頁", url: SITE_URL },
+            { name: "路邊玄學堂", url: `${SITE_URL}/mystic` },
+            { name: "玄學家列表", url: `${SITE_URL}/mystic/masters` },
+            { name: master.name, url: `${SITE_URL}/mystic/masters/${master.id}` },
+          ]),
+        ]}
+      />
       <div className="max-w-4xl mx-auto">
         {/* Back */}
         <Link href="/mystic/masters">

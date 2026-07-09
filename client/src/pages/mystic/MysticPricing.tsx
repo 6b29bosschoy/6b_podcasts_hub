@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "wouter";
+import { JsonLd, buildServiceSchema, buildBreadcrumbSchema, SITE_URL } from "@/components/JsonLd";
 
 const PLANS = [
   {
@@ -78,6 +79,26 @@ export default function MysticPricing() {
 
   return (
     <div className="min-h-screen pt-24 pb-16 px-4" style={{ background: "oklch(0.08 0.02 270)" }}>
+      <JsonLd
+        id="pricing-schema"
+        data={[
+          buildServiceSchema({
+            name: "路邊玄學堂 玄學分析服務",
+            description: "香港專業玄學分析服務，涵蓋風水命理、八字小山、紫微斗數、塔羅占卜、星座分析、生命靈數等多種派別。登入後每日免費使用 10 次完整分析。",
+            url: `${SITE_URL}/mystic/pricing`,
+          }),
+          buildServiceSchema({
+            name: "路邊玄學堂 個人玄學諾詢服務",
+            description: "由專業玄學師傅一對一深度諾詢，涵蓋風水居家、婚姻合婚、事業財運等各類問題。可通過 WhatsApp 預約。",
+            url: `${SITE_URL}/booking`,
+          }),
+          buildBreadcrumbSchema([
+            { name: "首頁", url: SITE_URL },
+            { name: "路邊玄學堂", url: `${SITE_URL}/mystic` },
+            { name: "會員方案", url: `${SITE_URL}/mystic/pricing` },
+          ]),
+        ]}
+      />
       <div className="max-w-5xl mx-auto">
         {/* Limited Time Free Banner */}
         <div className="mb-8 rounded-2xl p-4 border flex items-center gap-4" style={{ background: "oklch(0.12 0.06 60 / 0.3)", borderColor: "oklch(0.65 0.20 60 / 0.5)" }}>
