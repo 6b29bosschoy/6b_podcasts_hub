@@ -122,7 +122,9 @@ export default function Navbar() {
                 style={{
                   background: "transparent",
                   color: "var(--gold)",
-                  border: "1px solid var(--gold-dim)",
+                  borderWidth: "1px",
+                  borderStyle: "solid",
+                  borderColor: "var(--gold-dim)",
                   borderRadius: "var(--radius)",
                 }}
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--gold)"; }}
@@ -200,7 +202,9 @@ export default function Navbar() {
                   style={{
                     background: "var(--bg-raise)",
                     color: "var(--text-3)",
-                    border: "1px solid var(--line)",
+                    borderWidth: "1px",
+                    borderStyle: "solid",
+                    borderColor: "var(--line)",
                     borderRadius: "var(--radius)",
                   }}
                   onMouseEnter={e => {

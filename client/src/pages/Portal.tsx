@@ -125,11 +125,12 @@ function ChannelCard({
             className="w-12 h-12 flex items-center justify-center mb-5"
             style={{
               background: "var(--bg-raise)",
-              border: "1px solid var(--line)",
+              borderWidth: "1px",
+              borderStyle: "solid",
+              borderColor: isHovered ? "var(--gold-dim)" : "var(--line)",
               color: "var(--gold)",
               borderRadius: "var(--radius)",
               transition: "border-color 0.3s",
-              ...(isHovered ? { borderColor: "var(--gold-dim)" } : {}),
             }}
           >
             {cfg.icon}
@@ -273,7 +274,7 @@ export default function Portal() {
             >
               <div
                 className="w-5 h-5 flex items-center justify-center"
-                style={{ background: "var(--bg-card)", borderRadius: "50%", border: "1px solid var(--line)" }}
+                style={{ background: "var(--bg-card)", borderRadius: "50%", borderWidth: "1px", borderStyle: "solid", borderColor: "var(--line)" }}
               >
                 <span className="text-xs" style={{ color: "var(--text-3)" }}>{user.name?.[0] ?? "U"}</span>
               </div>
@@ -285,13 +286,15 @@ export default function Portal() {
               className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium transition-all duration-200"
               style={{
                 background: "var(--bg-raise)",
-                border: "1px solid var(--line)",
+                borderWidth: "1px",
+                borderStyle: "solid",
+                borderColor: "var(--line)",
                 color: "var(--text-2)",
                 borderRadius: "var(--radius)",
                 minHeight: "36px",
               }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--gold-dim)"; (e.currentTarget as HTMLElement).style.color = "var(--gold)"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--line)"; (e.currentTarget as HTMLElement).style.color = "var(--text-2)"; }}
+              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = "var(--gold-dim)"; el.style.color = "var(--gold)"; }}
+              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = "var(--line)"; el.style.color = "var(--text-2)"; }}
             >
               登入
             </a>

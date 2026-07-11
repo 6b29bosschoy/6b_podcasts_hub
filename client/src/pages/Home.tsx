@@ -306,14 +306,14 @@ export default function Home() {
               <div className="flex gap-2 flex-shrink-0">
                 <a href="https://www.youtube.com/@6bpodcasts?sub_confirmation=1" target="_blank" rel="noopener noreferrer"
                   className="flex items-center gap-1.5 px-4 py-2 text-xs font-medium transition-all"
-                  style={{ border: "1px solid var(--line)", color: "var(--text-2)", borderRadius: "var(--radius)" }}
+                  style={{ borderWidth: "1px", borderStyle: "solid", borderColor: "var(--line)", color: "var(--text-2)", borderRadius: "var(--radius)" }}
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--gold)"; (e.currentTarget as HTMLElement).style.color = "var(--gold)"; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--line)"; (e.currentTarget as HTMLElement).style.color = "var(--text-2)"; }}>
                   <Youtube className="w-3.5 h-3.5" /> 訂閱頻道
                 </a>
                 <Link href="/episodes"
                   className="flex items-center gap-1.5 px-4 py-2 text-xs font-medium transition-all"
-                  style={{ border: "1px solid var(--line)", color: "var(--text-2)", borderRadius: "var(--radius)" }}
+                  style={{ borderWidth: "1px", borderStyle: "solid", borderColor: "var(--line)", color: "var(--text-2)", borderRadius: "var(--radius)" }}
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--gold)"; (e.currentTarget as HTMLElement).style.color = "var(--gold)"; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--line)"; (e.currentTarget as HTMLElement).style.color = "var(--text-2)"; }}>
                   查看全部 <ChevronRight className="w-3.5 h-3.5" />
@@ -352,14 +352,14 @@ export default function Home() {
               <div className="flex gap-2 flex-shrink-0">
                 <a href="https://www.youtube.com/@6bfengshui?sub_confirmation=1" target="_blank" rel="noopener noreferrer"
                   className="flex items-center gap-1.5 px-4 py-2 text-xs font-medium transition-all"
-                  style={{ border: "1px solid var(--line)", color: "var(--text-2)", borderRadius: "var(--radius)" }}
+                  style={{ borderWidth: "1px", borderStyle: "solid", borderColor: "var(--line)", color: "var(--text-2)", borderRadius: "var(--radius)" }}
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--gold)"; (e.currentTarget as HTMLElement).style.color = "var(--gold)"; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--line)"; (e.currentTarget as HTMLElement).style.color = "var(--text-2)"; }}>
                   <Youtube className="w-3.5 h-3.5" /> 訂閱頻道
                 </a>
                 <Link href="/mystic/videos"
                   className="flex items-center gap-1.5 px-4 py-2 text-xs font-medium transition-all"
-                  style={{ border: "1px solid var(--line)", color: "var(--text-2)", borderRadius: "var(--radius)" }}
+                  style={{ borderWidth: "1px", borderStyle: "solid", borderColor: "var(--line)", color: "var(--text-2)", borderRadius: "var(--radius)" }}
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--gold)"; (e.currentTarget as HTMLElement).style.color = "var(--gold)"; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--line)"; (e.currentTarget as HTMLElement).style.color = "var(--text-2)"; }}>
                   查看全部 <ChevronRight className="w-3.5 h-3.5" />
