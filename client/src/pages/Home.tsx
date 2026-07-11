@@ -8,23 +8,55 @@ import { Play, ChevronRight, Mic, Star, Users, Youtube, Radio, Sparkles, Handsha
 import { useSEO } from "@/hooks/useSEO";
 
 // ── Constants ──────────────────────────────────────────────────────────────────
-const MYSTIC_METHODS = [
-  { icon: "☯", label: "八字命理" }, { icon: "🌟", label: "紫微斗數" },
-  { icon: "🔮", label: "塔羅占卜" }, { icon: "♈", label: "星座占星" },
-  { icon: "🌙", label: "月亮星座" }, { icon: "🔢", label: "生命靈數" },
-  { icon: "🧬", label: "人類圖" }, { icon: "🏠", label: "風水流年" },
-  { icon: "✨", label: "阿卡西紀錄" }, { icon: "🌀", label: "奇門遁甲" },
+const MYSTIC_CHARS = [
+  { char: "命", label: "八字命理" }, { char: "紫", label: "紫微斗數" },
+  { char: "塔", label: "塔羅占卜" }, { char: "星", label: "星座占星" },
+  { char: "月", label: "月亮星座" }, { char: "數", label: "生命靈數" },
+  { char: "圖", label: "人類圖" },   { char: "風", label: "風水流年" },
+  { char: "阿", label: "阿卡西紀錄" }, { char: "奇", label: "奇門遁甲" },
 ];
 
 const SOCIAL_PLATFORMS = [
-  { name: "YouTube 路邊電台", href: "https://www.youtube.com/@6bpodcasts", descKey: "podcasts" as const, fallbackDesc: "訂閱頻道", color: "oklch(0.62 0.24 25)", Icon: Youtube },
-  { name: "YouTube 路邊玄學堂", href: "https://www.youtube.com/@6bfengshui", descKey: "fengshui" as const, fallbackDesc: "訂閱頻道", color: "oklch(0.55 0.20 250)", Icon: Youtube },
-  { name: "Facebook", href: "https://www.facebook.com/6bpodcasts", descKey: null, fallbackDesc: "16K 追蹤者", color: "oklch(0.50 0.18 255)", Icon: Facebook },
-  { name: "Instagram", href: "https://www.instagram.com/6bpodcasts", descKey: null, fallbackDesc: "@6bpodcasts", color: "oklch(0.60 0.20 330)", Icon: Instagram },
-  { name: "Threads", href: "https://www.threads.net/@6bpodcasts", descKey: null, fallbackDesc: "@6bpodcasts", color: "oklch(0.80 0.01 260)", Icon: MessageCircle },
-  { name: "Apple Podcast", href: "https://apple.co/3nhSxy8", descKey: null, fallbackDesc: "免費收聽", color: "oklch(0.65 0.15 290)", Icon: Music },
-  { name: "Spotify", href: "https://spoti.fi/30EQPOT", descKey: null, fallbackDesc: "免費收聽", color: "oklch(0.65 0.20 145)", Icon: Music },
+  { name: "YouTube 路邊電台", href: "https://www.youtube.com/@6bpodcasts", descKey: "podcasts" as const, fallbackDesc: "訂閱頻道", Icon: Youtube },
+  { name: "YouTube 路邊玄學堂", href: "https://www.youtube.com/@6bfengshui", descKey: "fengshui" as const, fallbackDesc: "訂閱頻道", Icon: Youtube },
+  { name: "Facebook", href: "https://www.facebook.com/6bpodcasts", descKey: null, fallbackDesc: "16K 追蹤者", Icon: Facebook },
+  { name: "Instagram", href: "https://www.instagram.com/6bpodcasts", descKey: null, fallbackDesc: "@6bpodcasts", Icon: Instagram },
+  { name: "Threads", href: "https://www.threads.net/@6bpodcasts", descKey: null, fallbackDesc: "@6bpodcasts", Icon: MessageCircle },
+  { name: "Apple Podcast", href: "https://apple.co/3nhSxy8", descKey: null, fallbackDesc: "免費收聽", Icon: Music },
+  { name: "Spotify", href: "https://spoti.fi/30EQPOT", descKey: null, fallbackDesc: "免費收聽", Icon: Music },
 ];
+
+// ── Bagua SVG (decorative, no text) ───────────────────────────────────────────
+function BaguaSVG() {
+  return (
+    <svg viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full bagua-rotate" aria-hidden="true">
+      <circle cx="120" cy="120" r="118" stroke="currentColor" strokeWidth="0.5" />
+      <circle cx="120" cy="120" r="95" stroke="currentColor" strokeWidth="0.5" />
+      <circle cx="120" cy="120" r="72" stroke="currentColor" strokeWidth="0.5" />
+      <circle cx="120" cy="120" r="48" stroke="currentColor" strokeWidth="0.5" />
+      <circle cx="120" cy="120" r="24" stroke="currentColor" strokeWidth="0.5" />
+      {/* 8 radial lines */}
+      {Array.from({ length: 8 }).map((_, i) => {
+        const angle = (i * 45 * Math.PI) / 180;
+        const x1 = 120 + 24 * Math.cos(angle);
+        const y1 = 120 + 24 * Math.sin(angle);
+        const x2 = 120 + 118 * Math.cos(angle);
+        const y2 = 120 + 118 * Math.sin(angle);
+        return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="currentColor" strokeWidth="0.5" />;
+      })}
+      {/* Tick marks on outer ring */}
+      {Array.from({ length: 64 }).map((_, i) => {
+        const angle = (i * (360 / 64) * Math.PI) / 180;
+        const r1 = i % 8 === 0 ? 108 : i % 4 === 0 ? 112 : 115;
+        const x1 = 120 + r1 * Math.cos(angle);
+        const y1 = 120 + r1 * Math.sin(angle);
+        const x2 = 120 + 118 * Math.cos(angle);
+        const y2 = 120 + 118 * Math.sin(angle);
+        return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="currentColor" strokeWidth="0.4" />;
+      })}
+    </svg>
+  );
+}
 
 // ── VideoCard ──────────────────────────────────────────────────────────────────
 function VideoCard({ v, isFengshui }: {
@@ -33,39 +65,42 @@ function VideoCard({ v, isFengshui }: {
 }) {
   return (
     <div
-      className="rounded-xl overflow-hidden group transition-all duration-300 hover:scale-[1.02] cursor-pointer"
-      style={{ background: "oklch(0.12 0.015 260 / 0.9)", border: "1px solid oklch(0.22 0.02 260)", boxShadow: "0 4px 24px oklch(0 0 0 / 0.3)" }}
+      className="card-line group cursor-pointer"
       onClick={() => window.open(v.url, "_blank", "noopener,noreferrer")}
     >
-      <div className="aspect-video relative overflow-hidden" style={{ background: "oklch(0.10 0.01 260)" }}>
+      {/* Thumbnail */}
+      <div className="aspect-video relative overflow-hidden" style={{ background: "var(--bg-raise)" }}>
         {v.thumbnail ? (
-          <img src={v.thumbnail} alt={v.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
+          <img src={v.thumbnail} alt={v.title} className="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-90" loading="lazy" />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <Play className="w-10 h-10 opacity-30" style={{ color: "oklch(0.62 0.24 25)" }} />
+            <Play className="w-8 h-8" style={{ color: "var(--text-3)" }} />
           </div>
         )}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200" style={{ background: "oklch(0 0 0 / 0.5)" }}>
-          <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{ background: isFengshui ? "oklch(0.55 0.20 250 / 0.95)" : "oklch(0.62 0.24 25 / 0.95)", boxShadow: `0 0 30px ${isFengshui ? "oklch(0.55 0.20 250 / 0.6)" : "oklch(0.62 0.24 25 / 0.6)"}` }}>
-            <Play className="w-6 h-6 text-white fill-white ml-1" />
+        {/* Play overlay */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200" style={{ background: "rgba(0,0,0,0.45)" }}>
+          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "var(--gold)", color: "#141210" }}>
+            <Play className="w-5 h-5 fill-current ml-0.5" />
           </div>
         </div>
-        <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-xs font-bold z-10"
-          style={{ background: isFengshui ? "oklch(0.55 0.20 250 / 0.92)" : "oklch(0.62 0.24 25 / 0.92)", color: "white", backdropFilter: "blur(4px)" }}>
-          {isFengshui ? "🔮 玄學堂" : "🎙️ 路邊電台"}
+        {/* Channel tag */}
+        <div className={`absolute top-2 left-2 text-xs font-medium px-2 py-0.5 ${isFengshui ? "channel-tag-gold" : "channel-tag-red"}`}
+          style={{ background: "rgba(13,12,10,0.75)", paddingLeft: "0.5rem", paddingRight: "0.5rem" }}>
+          {isFengshui ? "玄學堂" : "路邊電台"}
         </div>
+        {/* Duration */}
         {v.duration && (
-          <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded text-xs font-mono z-10"
-            style={{ background: "oklch(0 0 0 / 0.75)", color: "white" }}>
+          <div className="absolute bottom-2 right-2 px-1.5 py-0.5 text-xs" style={{ background: "rgba(0,0,0,0.75)", color: "var(--text-2)", fontFamily: "'Cormorant Garamond', serif" }}>
             {v.duration}
           </div>
         )}
       </div>
+      {/* Info */}
       <div className="p-3">
-        <p className="text-sm font-medium leading-snug line-clamp-2" style={{ color: "oklch(0.92 0.01 260)" }}>{v.title}</p>
-        <div className="flex items-center gap-3 mt-2 text-xs" style={{ color: "oklch(0.55 0.02 260)" }}>
+        <p className="text-sm leading-snug line-clamp-2 mb-2" style={{ fontFamily: "'Noto Serif TC', serif", fontWeight: 600, color: "var(--text)" }}>{v.title}</p>
+        <div className="flex items-center gap-3 text-xs" style={{ color: "var(--text-3)" }}>
           {v.viewCount && <span className="flex items-center gap-1"><Play className="w-3 h-3" />{v.viewCount}</span>}
-          <span>{new Date(v.publishedAt).toLocaleDateString("zh-HK", { month: "short", day: "numeric" })}</span>
+          <span style={{ fontFamily: "'Cormorant Garamond', serif" }}>{new Date(v.publishedAt).toLocaleDateString("zh-HK", { month: "short", day: "numeric" })}</span>
         </div>
       </div>
     </div>
@@ -83,6 +118,7 @@ export default function Home() {
     ogUrl: "https://www.6bpodcasts.com/home",
     canonical: "https://www.6bpodcasts.com/home",
   });
+
   const { user } = useAuth();
   const [videoFilter, setVideoFilter] = useState<"all" | "podcasts" | "fengshui">("all");
   const videoQueryInput = useMemo(() => ({ channel: "all" as const, limit: 9 }), []);
@@ -92,13 +128,6 @@ export default function Home() {
 
   type VideoItem = { id: string; title: string; thumbnail: string | null; url: string; viewCount: string; publishedAt: string; duration: string | null; channelTitle?: string | null; channelId?: string | null };
   const allVideos = (videosData?.videos ?? []) as VideoItem[];
-  const filteredVideos = useMemo(() => {
-    if (videoFilter === "all") return allVideos.slice(0, 9);
-    return allVideos.filter(v => videoFilter === "fengshui"
-      ? (v.channelTitle?.includes("玄學") || v.channelId?.includes("fengshui"))
-      : (!v.channelTitle?.includes("玄學") && !v.channelId?.includes("fengshui"))
-    ).slice(0, 9);
-  }, [allVideos, videoFilter]);
 
   type ChannelInfo = { subscriberCount?: string; id?: string; title?: string };
   const podcastsChannel = channelsData?.podcasts as ChannelInfo | null | undefined;
@@ -117,217 +146,176 @@ export default function Home() {
     return s;
   };
 
+  const podcastVideos = allVideos.filter(v => !v.channelTitle?.includes("玄學") && !v.channelId?.includes("fengshui")).slice(0, 3);
+  const fengshuiVideos = allVideos.filter(v => v.channelTitle?.includes("玄學") || v.channelId?.includes("fengshui")).slice(0, 3);
+
   return (
-    <div className="min-h-screen" style={{ background: "oklch(0.08 0.01 260)", color: "oklch(0.92 0.01 260)" }}>
+    <div className="min-h-screen" style={{ background: "var(--bg)", color: "var(--text)" }}>
       <JsonLd data={buildOrganizationSchema()} />
       <JsonLd data={buildWebSiteSchema()} />
 
       {/* ── 1. HERO ──────────────────────────────────────────────────────────── */}
-      <section className="relative min-h-[92vh] flex flex-col items-center justify-center overflow-hidden px-4 pt-20 pb-16">
-        {/* Background image */}
-        <div className="absolute inset-0 pointer-events-none" style={{
-          backgroundImage: "url('https://d2xsxph8kpxj0f.cloudfront.net/310519663073423209/XJagJnJEiagVDDmfVeExSL/hero-main-v2-mRdcmLDrjMCzzP9EK5KfY3.webp')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat"
-        }} />
-        {/* Dark overlay */}
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "oklch(0.08 0.01 260 / 0.75)" }} />
-        {/* Background grid overlay */}
-        <div className="absolute inset-0 pointer-events-none" style={{
-          backgroundImage: "linear-gradient(oklch(0.22 0.02 260 / 0.10) 1px, transparent 1px), linear-gradient(90deg, oklch(0.22 0.02 260 / 0.10) 1px, transparent 1px)",
-          backgroundSize: "60px 60px"
-        }} />
-        {/* Glow orbs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl pointer-events-none" style={{ background: "oklch(0.62 0.24 25 / 0.12)" }} />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-3xl pointer-events-none" style={{ background: "oklch(0.55 0.20 250 / 0.12)" }} />
+      <section className="relative min-h-[92vh] flex flex-col items-center justify-center overflow-hidden px-4 pt-24 pb-20">
+        {/* Bagua decoration — right side, very faint */}
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[480px] h-[480px] opacity-[0.07] pointer-events-none hidden lg:block"
+          style={{ color: "var(--gold)" }}>
+          <BaguaSVG />
+        </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium mb-8"
-            style={{ background: "oklch(0.62 0.24 25 / 0.12)", border: "1px solid oklch(0.62 0.24 25 / 0.3)", color: "oklch(0.75 0.15 25)" }}>
-            <Radio className="w-3.5 h-3.5" />
-            香港原創 Podcast 內容平台
-          </div>
+        <div className="relative z-10 max-w-3xl mx-auto text-center">
+          {/* Kicker */}
+          <p className="kicker mb-6">HONG KONG · VOICES &amp; FORTUNE</p>
 
           {/* H1 */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight mb-6">
-            <span style={{ color: "oklch(0.92 0.01 260)" }}>6B Podcast</span>
+          <h1 className="mb-6" style={{
+            fontFamily: "'Noto Serif TC', serif",
+            fontWeight: 900,
+            fontSize: "clamp(2.25rem, 6vw, 4rem)",
+            lineHeight: 1.2,
+            color: "var(--text)",
+          }}>
+            6B Podcast
             <br />
-            <span style={{
-              background: "linear-gradient(135deg, oklch(0.75 0.20 25), oklch(0.70 0.18 330), oklch(0.65 0.20 250))",
-              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text"
-            }}>
-              香港真實人物、關係、玄學
-            </span>
+            <span style={{ color: "var(--gold)" }}>香港真實人物</span>、關係、玄學
             <br />
-            <span style={{ color: "oklch(0.92 0.01 260)" }}>與生活文化內容平台</span>
+            與生活文化內容平台
           </h1>
 
           {/* Subtitle */}
-          <p className="text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed" style={{ color: "oklch(0.65 0.02 260)" }}>
+          <p className="max-w-xl mx-auto mb-10 text-base leading-relaxed" style={{ color: "var(--text-2)", fontWeight: 300 }}>
             由真實訪談出發，探索兩性關係、人生選擇、中西玄學、身心靈與香港人的內心世界。
           </p>
 
+          {/* CTA row */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14">
+            {/* Primary: gold solid */}
+            <Link href="/mystic/analysis" className="btn-gold">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              免費命盤分析
+            </Link>
+            {/* Secondary: ghost */}
+            <a href="https://www.youtube.com/@6bpodcasts" target="_blank" rel="noopener noreferrer" className="btn-ghost">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/>
+              </svg>
+              觀看最新影片
+            </a>
+          </div>
+
           {/* Stats row */}
+          <hr className="divider mb-8 max-w-md mx-auto" />
           {totalSubs && (
-            <div className="flex items-center justify-center gap-6 mb-10 flex-wrap">
+            <div className="flex items-end justify-center gap-10 flex-wrap">
               {podcastsSubs && (
                 <div className="text-center">
-                  <div className="text-2xl font-bold" style={{ color: "oklch(0.75 0.20 25)" }}>{formatSubs(podcastsSubs)}</div>
-                  <div className="text-xs mt-0.5" style={{ color: "oklch(0.55 0.02 260)" }}>路邊電台訂閱</div>
+                  <div className="stat-num">{formatSubs(podcastsSubs)}</div>
+                  <div className="text-xs mt-1 tracking-widest uppercase" style={{ color: "var(--text-3)", fontFamily: "'Noto Sans TC', sans-serif", letterSpacing: "0.12em" }}>路邊電台訂閱</div>
                 </div>
               )}
-              <div className="w-px h-10" style={{ background: "oklch(0.25 0.02 260)" }} />
               {fengshuiSubs && (
                 <div className="text-center">
-                  <div className="text-2xl font-bold" style={{ color: "oklch(0.65 0.20 250)" }}>{formatSubs(fengshuiSubs)}</div>
-                  <div className="text-xs mt-0.5" style={{ color: "oklch(0.55 0.02 260)" }}>路邊玄學堂訂閱</div>
+                  <div className="stat-num">{formatSubs(fengshuiSubs)}</div>
+                  <div className="text-xs mt-1 tracking-widest uppercase" style={{ color: "var(--text-3)", fontFamily: "'Noto Sans TC', sans-serif", letterSpacing: "0.12em" }}>路邊玄學堂訂閱</div>
                 </div>
               )}
-              <div className="w-px h-10" style={{ background: "oklch(0.25 0.02 260)" }} />
               <div className="text-center">
-                <div className="text-2xl font-bold" style={{ color: "oklch(0.85 0.05 260)" }}>{formatSubs(totalSubs)}</div>
-                <div className="text-xs mt-0.5" style={{ color: "oklch(0.55 0.02 260)" }}>總訂閱人數</div>
+                <div className="stat-num">{formatSubs(totalSubs)}</div>
+                <div className="text-xs mt-1 tracking-widest uppercase" style={{ color: "var(--text-3)", fontFamily: "'Noto Sans TC', sans-serif", letterSpacing: "0.12em" }}>總訂閱人數</div>
               </div>
             </div>
           )}
-
-          {/* CTA buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            {/* Primary CTA: 免費命盤分析 */}
-            <Link href="/mystic/analysis"
-              className="flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-base transition-all duration-200 hover:scale-105 hover:brightness-110"
-              style={{ background: "linear-gradient(135deg, oklch(0.55 0.22 290), oklch(0.45 0.20 270))", color: "white", boxShadow: "0 4px 24px oklch(0.55 0.22 290 / 0.45)" }}>
-              <Sparkles className="w-5 h-5" />
-              ✨ 立即免費命盤分析
-            </Link>
-            {/* Secondary CTAs */}
-            <a href="https://www.youtube.com/@6bpodcasts" target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 hover:scale-105"
-              style={{ background: "oklch(0.62 0.24 25 / 0.15)", border: "1px solid oklch(0.62 0.24 25 / 0.5)", color: "oklch(0.80 0.18 25)" }}>
-              <Youtube className="w-4 h-4" />
-              觀看最新節目
-            </a>
-            <Link href="/partnership"
-              className="flex items-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 hover:scale-105"
-              style={{ background: "transparent", border: "1px solid oklch(0.30 0.02 260)", color: "oklch(0.65 0.02 260)" }}>
-              <Handshake className="w-4 h-4" />
-              查詢合作
-            </Link>
-          </div>
-        </div>
-
-        {/* Scroll hint */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
-          <div className="w-px h-12 rounded-full" style={{ background: "linear-gradient(to bottom, transparent, oklch(0.62 0.24 25))" }} />
         </div>
       </section>
 
       {/* ── 2. THREE ENTRY CARDS ──────────────────────────────────────────────── */}
-      <section className="py-16 px-4">
+      <section className="px-4 pb-16" style={{ borderTop: "1px solid var(--line)" }}>
         <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3" style={{ border: "1px solid var(--line)" }}>
+
             {/* Card 1: 路邊電台 */}
-            <Link href="/podcasts" className="group block rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
-              style={{ border: "1px solid oklch(0.22 0.02 260)", boxShadow: "0 4px 24px oklch(0 0 0 / 0.4)" }}>
-              {/* Card image */}
-              <div className="relative h-44 overflow-hidden">
-                <img src="/manus-storage/card-podcasts_faab5444.jpg" alt="路邊電台 - 香港真實人物訪談 Podcast" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 40%, oklch(0.10 0.015 260 / 0.9))" }} />
-                <div className="absolute bottom-3 left-4">
-                  <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ background: "oklch(0.62 0.24 25 / 0.9)", color: "white" }}>🎙️ Podcast</span>
-                </div>
+            <Link href="/podcasts" className="group block p-8 transition-all duration-300" style={{ borderRight: "1px solid var(--line)", background: "var(--bg-card)" }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "var(--bg-raise)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "var(--bg-card)"; }}>
+              {/* Icon */}
+              <div className="w-11 h-11 rounded-full flex items-center justify-center mb-5" style={{ border: "1px solid var(--gold-dim)" }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+                </svg>
               </div>
-              <div className="p-5" style={{ background: "oklch(0.12 0.015 260 / 0.95)" }}>
-                <h3 className="text-xl font-bold mb-2" style={{ color: "oklch(0.92 0.01 260)" }}>路邊電台</h3>
-                <p className="text-sm leading-relaxed mb-4" style={{ color: "oklch(0.60 0.02 260)" }}>
-                  真實人物訪談、兩性關係、都市情感、人生故事
-                </p>
-                <div className="flex items-center gap-1.5 text-sm font-medium group-hover:gap-2.5 transition-all duration-200"
-                  style={{ color: "oklch(0.75 0.20 25)" }}>
-                  觀看節目 <ChevronRight className="w-4 h-4" />
-                </div>
-              </div>
+              <p className="kicker mb-2">THE RADIO</p>
+              <h3 className="text-xl mb-2" style={{ fontFamily: "'Noto Serif TC', serif", fontWeight: 700, color: "var(--text)" }}>路邊電台</h3>
+              <p className="text-sm mb-5 leading-relaxed" style={{ color: "var(--text-2)", fontWeight: 300 }}>真實人物訪談、兩性關係、都市情感、人生故事</p>
+              <span className="text-sm font-medium transition-colors" style={{ color: "var(--gold)" }}>
+                觀看影片 →
+              </span>
             </Link>
 
             {/* Card 2: 路邊玄學堂 */}
-            <Link href="/mystic" className="group block rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
-              style={{ border: "1px solid oklch(0.22 0.02 260)", boxShadow: "0 4px 24px oklch(0 0 0 / 0.4)" }}>
-              {/* Card image */}
-              <div className="relative h-44 overflow-hidden">
-                <img src="/manus-storage/card-mystic_a3c0b90e.jpg" alt="路邊玄學堂 - 香港中西玄學內容平台" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 40%, oklch(0.10 0.015 260 / 0.9))" }} />
-                <div className="absolute bottom-3 left-4">
-                  <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ background: "oklch(0.45 0.18 280 / 0.9)", color: "white" }}>🔮 玄學</span>
-                </div>
+            <Link href="/mystic" className="group block p-8 transition-all duration-300" style={{ borderRight: "1px solid var(--line)", background: "var(--bg-card)" }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "var(--bg-raise)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "var(--bg-card)"; }}>
+              <div className="w-11 h-11 rounded-full flex items-center justify-center mb-5" style={{ border: "1px solid var(--gold-dim)" }}>
+                {/* Taiji line icon */}
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"/><path d="M12 2a5 5 0 0 1 0 10 5 5 0 0 0 0 10"/><circle cx="12" cy="7" r="1" fill="var(--gold)" stroke="none"/><circle cx="12" cy="17" r="1" fill="var(--gold)" stroke="none"/>
+                </svg>
               </div>
-              <div className="p-5" style={{ background: "oklch(0.12 0.015 260 / 0.95)" }}>
-                <h3 className="text-xl font-bold mb-2" style={{ color: "oklch(0.92 0.01 260)" }}>路邊玄學堂</h3>
-                <p className="text-sm leading-relaxed mb-4" style={{ color: "oklch(0.60 0.02 260)" }}>
-                  風水、八字、紫微斗數、塔羅、星座、生命靈數、身心靈
-                </p>
-                <div className="flex items-center gap-1.5 text-sm font-medium group-hover:gap-2.5 transition-all duration-200"
-                  style={{ color: "oklch(0.70 0.18 250)" }}>
-                  探索玄學內容 <ChevronRight className="w-4 h-4" />
-                </div>
-              </div>
+              <p className="kicker mb-2">THE MYSTIC</p>
+              <h3 className="text-xl mb-2" style={{ fontFamily: "'Noto Serif TC', serif", fontWeight: 700, color: "var(--text)" }}>路邊玄學堂</h3>
+              <p className="text-sm mb-5 leading-relaxed" style={{ color: "var(--text-2)", fontWeight: 300 }}>風水、八字、紫微斗數、塔羅、星座、生命靈數、身心靈</p>
+              <span className="text-sm font-medium transition-colors" style={{ color: "var(--gold)" }}>
+                探索玄學 →
+              </span>
             </Link>
 
             {/* Card 3: 商業合作 */}
-            <Link href="/partnership" className="group block rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
-              style={{ border: "1px solid oklch(0.22 0.02 260)", boxShadow: "0 4px 24px oklch(0 0 0 / 0.4)" }}>
-              {/* Card image */}
-              <div className="relative h-44 overflow-hidden">
-                <img src="/manus-storage/card-partnership_1944350a.jpg" alt="6B Podcast 商業合作 - 品牌訪談、節目贊助" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 40%, oklch(0.10 0.015 260 / 0.9))" }} />
-                <div className="absolute bottom-3 left-4">
-                  <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ background: "oklch(0.55 0.12 80 / 0.9)", color: "white" }}>💼 商業</span>
-                </div>
+            <Link href="/partnership" className="group block p-8 transition-all duration-300" style={{ background: "var(--bg-card)" }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "var(--bg-raise)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "var(--bg-card)"; }}>
+              <div className="w-11 h-11 rounded-full flex items-center justify-center mb-5" style={{ border: "1px solid var(--gold-dim)" }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
               </div>
-              <div className="p-5" style={{ background: "oklch(0.12 0.015 260 / 0.95)" }}>
-                <h3 className="text-xl font-bold mb-2" style={{ color: "oklch(0.92 0.01 260)" }}>商業合作</h3>
-                <p className="text-sm leading-relaxed mb-4" style={{ color: "oklch(0.60 0.02 260)" }}>
-                  品牌訪談、節目製作、嘉賓曝光、贊助合作
-                </p>
-                <div className="flex items-center gap-1.5 text-sm font-medium group-hover:gap-2.5 transition-all duration-200"
-                  style={{ color: "oklch(0.78 0.15 80)" }}>
-                  查詢合作方案 <ChevronRight className="w-4 h-4" />
-                </div>
-              </div>
+              <p className="kicker mb-2">PARTNERSHIP</p>
+              <h3 className="text-xl mb-2" style={{ fontFamily: "'Noto Serif TC', serif", fontWeight: 700, color: "var(--text)" }}>商業合作</h3>
+              <p className="text-sm mb-5 leading-relaxed" style={{ color: "var(--text-2)", fontWeight: 300 }}>品牌訪談、節目製作、嘉賓曝光、贊助合作</p>
+              <span className="text-sm font-medium transition-colors" style={{ color: "var(--gold)" }}>
+                查詢方案 →
+              </span>
             </Link>
           </div>
         </div>
       </section>
 
       {/* ── 3. LATEST YOUTUBE VIDEOS ──────────────────────────────────────────── */}
-      <section className="py-16 px-4" style={{ borderTop: "1px solid oklch(0.15 0.01 260)" }}>
+      <section className="py-16 px-4" style={{ borderTop: "1px solid var(--line)" }}>
         <div className="max-w-6xl mx-auto">
-          {/* 區塊標題 */}
-          <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: "oklch(0.92 0.01 260)" }}>最新 YouTube 影片</h2>
-            <p className="text-sm" style={{ color: "oklch(0.55 0.02 260)" }}>路邊電台 × 路邊玄學堂，兩個頻道分開展示</p>
-          </div>
-
-          {/* 路邊電台區塊 */}
+          {/* 路邊電台 */}
           <div className="mb-14">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-1 h-6 rounded-full" style={{ background: "oklch(0.62 0.24 25)" }} />
-                <div>
-                  <h3 className="text-lg font-bold" style={{ color: "oklch(0.88 0.05 25)" }}>🎙️ 路邊電台</h3>
-                  <p className="text-xs" style={{ color: "oklch(0.55 0.02 260)" }}>兩性關係、人物訪談、都市情感、人生故事</p>
-                </div>
+              <div>
+                <p className="kicker mb-1">LATEST VIDEOS</p>
+                <h2 className="text-xl" style={{ fontFamily: "'Noto Serif TC', serif", fontWeight: 700, color: "var(--text)" }}>
+                  <span className="channel-tag-red mr-2" style={{ fontSize: "0.75rem" }}>路邊電台</span>
+                  最新影片
+                </h2>
               </div>
               <div className="flex gap-2 flex-shrink-0">
                 <a href="https://www.youtube.com/@6bpodcasts?sub_confirmation=1" target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-all hover:opacity-90"
-                  style={{ background: "linear-gradient(135deg, oklch(0.55 0.22 25), oklch(0.45 0.20 25))", color: "white", textDecoration: "none" }}>
-                  <Youtube className="w-3.5 h-3.5" /> 訂閱路邊電台
+                  className="flex items-center gap-1.5 px-4 py-2 text-xs font-medium transition-all"
+                  style={{ border: "1px solid var(--line)", color: "var(--text-2)", borderRadius: "var(--radius)" }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--gold)"; (e.currentTarget as HTMLElement).style.color = "var(--gold)"; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--line)"; (e.currentTarget as HTMLElement).style.color = "var(--text-2)"; }}>
+                  <Youtube className="w-3.5 h-3.5" /> 訂閱頻道
                 </a>
                 <Link href="/episodes"
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-all hover:opacity-90"
-                  style={{ background: "oklch(0.13 0.02 260)", border: "1px solid oklch(0.25 0.04 25)", color: "oklch(0.75 0.15 25)", textDecoration: "none" }}>
+                  className="flex items-center gap-1.5 px-4 py-2 text-xs font-medium transition-all"
+                  style={{ border: "1px solid var(--line)", color: "var(--text-2)", borderRadius: "var(--radius)" }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--gold)"; (e.currentTarget as HTMLElement).style.color = "var(--gold)"; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--line)"; (e.currentTarget as HTMLElement).style.color = "var(--text-2)"; }}>
                   查看全部 <ChevronRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
@@ -335,42 +323,45 @@ export default function Home() {
             {videosLoading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="rounded-xl overflow-hidden animate-pulse" style={{ background: "oklch(0.12 0.01 260)" }}>
-                    <div className="aspect-video" style={{ background: "oklch(0.15 0.01 260)" }} />
+                  <div key={i} className="animate-pulse" style={{ background: "var(--bg-card)", border: "1px solid var(--line)", borderRadius: "var(--radius)" }}>
+                    <div className="aspect-video" style={{ background: "var(--bg-raise)" }} />
                     <div className="p-3 space-y-2">
-                      <div className="h-3 rounded" style={{ background: "oklch(0.18 0.01 260)", width: "80%" }} />
+                      <div className="h-3 rounded" style={{ background: "var(--line)", width: "80%" }} />
+                      <div className="h-3 rounded" style={{ background: "var(--line)", width: "50%" }} />
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {allVideos.filter(v => !v.channelTitle?.includes("玄學") && !v.channelId?.includes("fengshui")).slice(0, 3).map(v => (
-                  <VideoCard key={v.id} v={v} isFengshui={false} />
-                ))}
+                {podcastVideos.map(v => <VideoCard key={v.id} v={v} isFengshui={false} />)}
               </div>
             )}
           </div>
 
-          {/* 路邊玄學堂區塊 */}
+          {/* 路邊玄學堂 */}
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-1 h-6 rounded-full" style={{ background: "oklch(0.65 0.22 290)" }} />
-                <div>
-                  <h3 className="text-lg font-bold" style={{ color: "oklch(0.85 0.10 290)" }}>🔮 路邊玄學堂</h3>
-                  <p className="text-xs" style={{ color: "oklch(0.55 0.02 260)" }}>風水、八字、紫微斗數、塔羅、星座、身心靈</p>
-                </div>
+              <div>
+                <p className="kicker mb-1">MYSTIC CHANNEL</p>
+                <h2 className="text-xl" style={{ fontFamily: "'Noto Serif TC', serif", fontWeight: 700, color: "var(--text)" }}>
+                  <span className="channel-tag-gold mr-2" style={{ fontSize: "0.75rem" }}>路邊玄學堂</span>
+                  最新影片
+                </h2>
               </div>
               <div className="flex gap-2 flex-shrink-0">
                 <a href="https://www.youtube.com/@6bfengshui?sub_confirmation=1" target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-all hover:opacity-90"
-                  style={{ background: "linear-gradient(135deg, oklch(0.55 0.22 290), oklch(0.45 0.20 290))", color: "white", textDecoration: "none" }}>
-                  <Youtube className="w-3.5 h-3.5" /> 訂閱玄學頻道
+                  className="flex items-center gap-1.5 px-4 py-2 text-xs font-medium transition-all"
+                  style={{ border: "1px solid var(--line)", color: "var(--text-2)", borderRadius: "var(--radius)" }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--gold)"; (e.currentTarget as HTMLElement).style.color = "var(--gold)"; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--line)"; (e.currentTarget as HTMLElement).style.color = "var(--text-2)"; }}>
+                  <Youtube className="w-3.5 h-3.5" /> 訂閱頻道
                 </a>
                 <Link href="/mystic/videos"
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-all hover:opacity-90"
-                  style={{ background: "oklch(0.13 0.02 260)", border: "1px solid oklch(0.25 0.06 290)", color: "oklch(0.75 0.16 290)", textDecoration: "none" }}>
+                  className="flex items-center gap-1.5 px-4 py-2 text-xs font-medium transition-all"
+                  style={{ border: "1px solid var(--line)", color: "var(--text-2)", borderRadius: "var(--radius)" }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--gold)"; (e.currentTarget as HTMLElement).style.color = "var(--gold)"; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--line)"; (e.currentTarget as HTMLElement).style.color = "var(--text-2)"; }}>
                   查看全部 <ChevronRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
@@ -378,112 +369,95 @@ export default function Home() {
             {videosLoading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="rounded-xl overflow-hidden animate-pulse" style={{ background: "oklch(0.12 0.01 260)" }}>
-                    <div className="aspect-video" style={{ background: "oklch(0.15 0.01 260)" }} />
+                  <div key={i} className="animate-pulse" style={{ background: "var(--bg-card)", border: "1px solid var(--line)", borderRadius: "var(--radius)" }}>
+                    <div className="aspect-video" style={{ background: "var(--bg-raise)" }} />
                     <div className="p-3 space-y-2">
-                      <div className="h-3 rounded" style={{ background: "oklch(0.18 0.01 260)", width: "80%" }} />
+                      <div className="h-3 rounded" style={{ background: "var(--line)", width: "80%" }} />
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {allVideos.filter(v => v.channelTitle?.includes("玄學") || v.channelId?.includes("fengshui")).slice(0, 3).map(v => (
-                  <VideoCard key={v.id} v={v} isFengshui={true} />
-                ))}
+                {fengshuiVideos.map(v => <VideoCard key={v.id} v={v} isFengshui={true} />)}
               </div>
             )}
           </div>
         </div>
       </section>
 
-      {/* ── 4. PROGRAMME CATEGORIES ───────────────────────────────────────────── */}
-      <section className="py-16 px-4" style={{ borderTop: "1px solid oklch(0.15 0.01 260)" }}>
+      {/* ── 4. MYSTIC METHODS (10 characters grid) ───────────────────────────── */}
+      <section className="py-16 px-4" style={{ borderTop: "1px solid var(--line)" }}>
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-3" style={{ color: "oklch(0.92 0.01 260)" }}>熱門節目分類</h2>
-            <p className="text-sm" style={{ color: "oklch(0.55 0.02 260)" }}>多元內容線，總有一個適合你</p>
+          <div className="mb-10">
+            <p className="kicker mb-2">CHINESE & WESTERN METAPHYSICS</p>
+            <h2 className="text-2xl" style={{ fontFamily: "'Noto Serif TC', serif", fontWeight: 700, color: "var(--text)" }}>十種玄學方法</h2>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {[
-              { icon: "💑", label: "兩性關係", desc: "愛情、分手、婚姻真相", color: "oklch(0.62 0.24 25)" },
-              { icon: "🎤", label: "人物訪談", desc: "真實人生故事", color: "oklch(0.60 0.22 330)" },
-              { icon: "🏙️", label: "都市情感", desc: "香港人的感情困境", color: "oklch(0.55 0.18 200)" },
-              { icon: "💼", label: "商業人生", desc: "創業、職場、人生選擇", color: "oklch(0.65 0.15 80)" },
-            ].map(cat => (
-              <Link href="/podcasts" key={cat.label}
-                className="group rounded-xl p-5 text-center transition-all duration-300 hover:scale-[1.03] cursor-pointer"
-                style={{ background: "oklch(0.12 0.015 260 / 0.8)", border: "1px solid oklch(0.20 0.02 260)" }}>
-                <div className="text-3xl mb-3">{cat.icon}</div>
-                <div className="font-semibold text-sm mb-1" style={{ color: cat.color }}>{cat.label}</div>
-                <div className="text-xs" style={{ color: "oklch(0.55 0.02 260)" }}>{cat.desc}</div>
-              </Link>
+          <div className="grid grid-cols-5 sm:grid-cols-10" style={{ border: "1px solid var(--line)" }}>
+            {MYSTIC_CHARS.map((m, i) => (
+              <div key={m.label} className="mystic-cell" style={{ borderRight: i < 9 ? "1px solid var(--line)" : "none" }}>
+                <span className="char">{m.char}</span>
+                <span className="label">{m.label}</span>
+              </div>
             ))}
+          </div>
+          <div className="mt-6 flex justify-end">
+            <Link href="/mystic/analysis" className="btn-gold text-sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              免費命盤分析
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* ── 5. MYSTIC HIGHLIGHT ───────────────────────────────────────────────── */}
-      <section className="py-16 px-4" style={{ borderTop: "1px solid oklch(0.15 0.01 260)" }}>
+      {/* ── 5. MYSTIC AI HIGHLIGHT ────────────────────────────────────────────── */}
+      <section className="py-16 px-4" style={{ borderTop: "1px solid var(--line)" }}>
         <div className="max-w-5xl mx-auto">
-          <div className="rounded-2xl overflow-hidden" style={{ background: "linear-gradient(135deg, oklch(0.12 0.03 260), oklch(0.10 0.04 280))", border: "1px solid oklch(0.25 0.05 270)" }}>
-            <div className="p-8 sm:p-12">
-              <div className="flex flex-col lg:flex-row gap-10 items-center">
-                <div className="flex-1">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-5"
-                    style={{ background: "oklch(0.55 0.20 250 / 0.15)", border: "1px solid oklch(0.55 0.20 250 / 0.3)", color: "oklch(0.70 0.15 250)" }}>
-                    <Sparkles className="w-3 h-3" /> 路邊玄學堂精選
-                  </div>
-                  <h2 className="text-2xl sm:text-3xl font-bold mb-4" style={{ color: "oklch(0.92 0.01 260)" }}>
-                    AI 玄學分析
-                    <span className="block text-lg font-normal mt-1" style={{ color: "oklch(0.65 0.02 260)" }}>
-                      10 種中西派別，一次輸入，反覆解讀
-                    </span>
-                  </h2>
-                  <p className="text-sm leading-relaxed mb-6" style={{ color: "oklch(0.60 0.02 260)" }}>
-                    只需輸入出生日期，即可獲得八字命理、紫微斗數、塔羅占卜、西洋占星、生命靈數等多種玄學派別的 AI 深度分析報告。現正限時免費體驗。
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {MYSTIC_METHODS.map(m => (
-                      <span key={m.label} className="px-3 py-1 rounded-full text-xs"
-                        style={{ background: "oklch(0.55 0.20 250 / 0.10)", border: "1px solid oklch(0.55 0.20 250 / 0.2)", color: "oklch(0.70 0.12 250)" }}>
-                        {m.icon} {m.label}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    {user ? (
-                      <Link href="/mystic/analysis"
-                        className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200 hover:scale-105"
-                        style={{ background: "oklch(0.55 0.20 250)", color: "white", boxShadow: "0 4px 20px oklch(0.55 0.20 250 / 0.4)" }}>
-                        <Sparkles className="w-4 h-4" /> 立即免費分析
-                      </Link>
-                    ) : (
-                      <a href={getLoginUrl()}
-                        className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200 hover:scale-105"
-                        style={{ background: "oklch(0.55 0.20 250)", color: "white", boxShadow: "0 4px 20px oklch(0.55 0.20 250 / 0.4)" }}>
-                        <Sparkles className="w-4 h-4" /> 登入免費體驗
-                      </a>
-                    )}
-                    <Link href="/mystic"
-                      className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200 hover:scale-105"
-                      style={{ background: "transparent", border: "1px solid oklch(0.35 0.05 270)", color: "oklch(0.70 0.10 260)" }}>
-                      了解更多 <ChevronRight className="w-4 h-4" />
+          <div className="card-line p-8 sm:p-12">
+            <div className="flex flex-col lg:flex-row gap-10 items-start">
+              <div className="flex-1">
+                <p className="kicker mb-4">AI METAPHYSICS ANALYSIS</p>
+                <h2 className="text-2xl sm:text-3xl mb-4" style={{ fontFamily: "'Noto Serif TC', serif", fontWeight: 700, color: "var(--text)" }}>
+                  AI 玄學分析
+                  <span className="block text-base font-normal mt-2" style={{ color: "var(--text-2)", fontFamily: "'Noto Sans TC', sans-serif", fontWeight: 300 }}>
+                    10 種中西派別，一次輸入，反覆解讀
+                  </span>
+                </h2>
+                <p className="text-sm leading-relaxed mb-6" style={{ color: "var(--text-2)", fontWeight: 300 }}>
+                  只需輸入出生日期，即可獲得八字命理、紫微斗數、塔羅占卜、西洋占星、生命靈數等多種玄學派別的 AI 深度分析報告。現正限時免費體驗。
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  {user ? (
+                    <Link href="/mystic/analysis" className="btn-gold">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                      </svg>
+                      立即免費分析
                     </Link>
-                  </div>
+                  ) : (
+                    <a href={getLoginUrl()} className="btn-gold">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                      </svg>
+                      登入免費體驗
+                    </a>
+                  )}
+                  <Link href="/mystic" className="btn-ghost">
+                    了解更多 <ChevronRight className="w-4 h-4" />
+                  </Link>
                 </div>
-                {/* Right visual */}
-                <div className="hidden lg:flex flex-col items-center gap-3">
-                  <div className="grid grid-cols-3 gap-3">
-                    {MYSTIC_METHODS.map(m => (
-                      <div key={m.label} className="w-20 h-20 rounded-xl flex flex-col items-center justify-center gap-1 transition-all duration-300 hover:scale-110"
-                        style={{ background: "oklch(0.15 0.04 270 / 0.8)", border: "1px solid oklch(0.28 0.06 270)" }}>
-                        <span className="text-2xl">{m.icon}</span>
-                        <span className="text-xs text-center leading-tight" style={{ color: "oklch(0.65 0.08 260)" }}>{m.label}</span>
-                      </div>
-                    ))}
+              </div>
+              {/* Right: character grid */}
+              <div className="hidden lg:grid grid-cols-5 gap-0 flex-shrink-0" style={{ width: "220px", border: "1px solid var(--line)" }}>
+                {MYSTIC_CHARS.map((m, i) => (
+                  <div key={m.label} className="flex flex-col items-center justify-center py-3 px-1"
+                    style={{ borderRight: i % 5 !== 4 ? "1px solid var(--line)" : "none", borderBottom: i < 5 ? "1px solid var(--line)" : "none" }}>
+                    <span style={{ fontFamily: "'Noto Serif TC', serif", fontWeight: 700, fontSize: "1.125rem", color: "var(--gold)", lineHeight: 1 }}>{m.char}</span>
+                    <span style={{ fontSize: "0.5625rem", color: "var(--text-3)", marginTop: "0.25rem", textAlign: "center" }}>{m.label}</span>
                   </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -491,35 +465,37 @@ export default function Home() {
       </section>
 
       {/* ── 6. MYSTIC SERVICE CTA ─────────────────────────────────────────────── */}
-      <section className="py-12 px-4" style={{ borderTop: "1px solid oklch(0.15 0.01 260)" }}>
+      <section className="py-12 px-4" style={{ borderTop: "1px solid var(--line)" }}>
         <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-0" style={{ border: "1px solid var(--line)" }}>
             <Link href="/mystic/services"
-              className="group flex items-center gap-5 rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02]"
-              style={{ background: "oklch(0.12 0.015 260 / 0.8)", border: "1px solid oklch(0.22 0.02 260)" }}>
-              <div className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ background: "oklch(0.55 0.20 250 / 0.15)", border: "1px solid oklch(0.55 0.20 250 / 0.3)" }}>
-                <Star className="w-7 h-7" style={{ color: "oklch(0.70 0.18 250)" }} />
+              className="group flex items-center gap-5 p-6 transition-all duration-200"
+              style={{ borderRight: "1px solid var(--line)", background: "var(--bg-card)" }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "var(--bg-raise)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "var(--bg-card)"; }}>
+              <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style={{ border: "1px solid var(--gold-dim)" }}>
+                <Star className="w-5 h-5" style={{ color: "var(--gold)" }} strokeWidth={1.5} />
               </div>
               <div>
-                <div className="font-bold mb-1" style={{ color: "oklch(0.92 0.01 260)" }}>預約玄學服務</div>
-                <div className="text-sm" style={{ color: "oklch(0.55 0.02 260)" }}>師傅一對一諮詢、命盤解讀、風水勘察</div>
-                <div className="flex items-center gap-1 text-xs mt-2 font-medium" style={{ color: "oklch(0.70 0.18 250)" }}>
+                <div className="font-semibold mb-1" style={{ fontFamily: "'Noto Serif TC', serif", color: "var(--text)" }}>預約玄學服務</div>
+                <div className="text-sm" style={{ color: "var(--text-2)", fontWeight: 300 }}>師傅一對一諮詢、命盤解讀、風水勘察</div>
+                <div className="flex items-center gap-1 text-xs mt-2" style={{ color: "var(--gold)" }}>
                   立即預約 <ChevronRight className="w-3 h-3" />
                 </div>
               </div>
             </Link>
             <Link href="/mystic/pricing"
-              className="group flex items-center gap-5 rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02]"
-              style={{ background: "oklch(0.12 0.015 260 / 0.8)", border: "1px solid oklch(0.22 0.02 260)" }}>
-              <div className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ background: "oklch(0.65 0.15 80 / 0.15)", border: "1px solid oklch(0.65 0.15 80 / 0.3)" }}>
-                <Users className="w-7 h-7" style={{ color: "oklch(0.78 0.15 80)" }} />
+              className="group flex items-center gap-5 p-6 transition-all duration-200"
+              style={{ background: "var(--bg-card)" }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "var(--bg-raise)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "var(--bg-card)"; }}>
+              <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style={{ border: "1px solid var(--gold-dim)" }}>
+                <Users className="w-5 h-5" style={{ color: "var(--gold)" }} strokeWidth={1.5} />
               </div>
               <div>
-                <div className="font-bold mb-1" style={{ color: "oklch(0.92 0.01 260)" }}>會員訂閱方案</div>
-                <div className="text-sm" style={{ color: "oklch(0.55 0.02 260)" }}>無限 AI 分析、專屬報告、優先服務</div>
-                <div className="flex items-center gap-1 text-xs mt-2 font-medium" style={{ color: "oklch(0.78 0.15 80)" }}>
+                <div className="font-semibold mb-1" style={{ fontFamily: "'Noto Serif TC', serif", color: "var(--text)" }}>會員訂閱方案</div>
+                <div className="text-sm" style={{ color: "var(--text-2)", fontWeight: 300 }}>無限 AI 分析、專屬報告、優先服務</div>
+                <div className="flex items-center gap-1 text-xs mt-2" style={{ color: "var(--gold)" }}>
                   查看方案 <ChevronRight className="w-3 h-3" />
                 </div>
               </div>
@@ -530,35 +506,35 @@ export default function Home() {
 
       {/* ── 7. GUEST COLUMN / BLOG ────────────────────────────────────────────── */}
       {blogData && blogData.length > 0 && (
-        <section className="py-16 px-4" style={{ borderTop: "1px solid oklch(0.15 0.01 260)" }}>
+        <section className="py-16 px-4" style={{ borderTop: "1px solid var(--line)" }}>
           <div className="max-w-5xl mx-auto">
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-end justify-between mb-8">
               <div>
-                <h2 className="text-2xl sm:text-3xl font-bold" style={{ color: "oklch(0.92 0.01 260)" }}>嘉賓專欄</h2>
-                <p className="text-sm mt-1" style={{ color: "oklch(0.55 0.02 260)" }}>精選文章、節目延伸內容、人物故事</p>
+                <p className="kicker mb-2">GUEST COLUMN</p>
+                <h2 className="text-2xl" style={{ fontFamily: "'Noto Serif TC', serif", fontWeight: 700, color: "var(--text)" }}>嘉賓專欄</h2>
               </div>
-              <Link href="/blog" className="flex items-center gap-1 text-sm font-medium transition-all duration-200 hover:gap-2"
-                style={{ color: "oklch(0.62 0.24 25)" }}>
-                全部文章 <ChevronRight className="w-4 h-4" />
+              <Link href="/blog" className="text-sm transition-colors" style={{ color: "var(--gold)" }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = "0.75"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}>
+                全部文章 →
               </Link>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-              {blogData.slice(0, 3).map(post => (
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-0" style={{ border: "1px solid var(--line)" }}>
+              {blogData.slice(0, 3).map((post, i) => (
                 <Link href={`/blog/${post.slug}`} key={post.id}
-                  className="group block rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.02]"
-                  style={{ background: "oklch(0.12 0.015 260 / 0.8)", border: "1px solid oklch(0.20 0.02 260)" }}>
+                  className="group block transition-all duration-200"
+                  style={{ borderRight: i < 2 ? "1px solid var(--line)" : "none", background: "var(--bg-card)" }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "var(--bg-raise)"; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "var(--bg-card)"; }}>
                   {post.coverImage && (
-                    <div className="aspect-video overflow-hidden">
-                      <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
+                    <div className="aspect-video overflow-hidden" style={{ borderBottom: "1px solid var(--line)" }}>
+                      <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-85" loading="lazy" />
                     </div>
                   )}
-                  <div className="p-4">
-                    <div className="text-xs mb-2 px-2 py-0.5 rounded-full inline-block"
-                      style={{ background: "oklch(0.62 0.24 25 / 0.12)", color: "oklch(0.75 0.15 25)" }}>
-                      {post.authorName}
-                    </div>
-                    <h3 className="font-semibold text-sm leading-snug line-clamp-2 mb-2" style={{ color: "oklch(0.88 0.01 260)" }}>{post.title}</h3>
-                    {post.excerpt && <p className="text-xs line-clamp-2 leading-relaxed" style={{ color: "oklch(0.55 0.02 260)" }}>{post.excerpt}</p>}
+                  <div className="p-5">
+                    <div className="text-xs mb-2" style={{ color: "var(--gold)", fontFamily: "'Cormorant Garamond', serif" }}>{post.authorName}</div>
+                    <h3 className="text-sm leading-snug line-clamp-2 mb-2" style={{ fontFamily: "'Noto Serif TC', serif", fontWeight: 600, color: "var(--text)" }}>{post.title}</h3>
+                    {post.excerpt && <p className="text-xs line-clamp-2 leading-relaxed" style={{ color: "var(--text-3)", fontWeight: 300 }}>{post.excerpt}</p>}
                   </div>
                 </Link>
               ))}
@@ -568,55 +544,57 @@ export default function Home() {
       )}
 
       {/* ── 8. PARTNERSHIP ────────────────────────────────────────────────────── */}
-      <section className="py-16 px-4" style={{ borderTop: "1px solid oklch(0.15 0.01 260)" }}>
+      <section className="py-16 px-4" style={{ borderTop: "1px solid var(--line)" }}>
         <div className="max-w-4xl mx-auto">
-          <div className="rounded-2xl p-8 sm:p-12 text-center" style={{ background: "oklch(0.11 0.015 260)", border: "1px solid oklch(0.20 0.02 260)" }}>
-            <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-5"
-              style={{ background: "oklch(0.65 0.15 80 / 0.15)", border: "1px solid oklch(0.65 0.15 80 / 0.3)" }}>
-              <Handshake className="w-7 h-7" style={{ color: "oklch(0.78 0.15 80)" }} />
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold mb-3" style={{ color: "oklch(0.92 0.01 260)" }}>商業合作</h2>
-            <p className="text-sm sm:text-base leading-relaxed max-w-xl mx-auto mb-8" style={{ color: "oklch(0.60 0.02 260)" }}>
+          <div className="card-line p-8 sm:p-12 text-center">
+            <p className="kicker mb-4">BUSINESS COLLABORATION</p>
+            <h2 className="text-2xl sm:text-3xl mb-3" style={{ fontFamily: "'Noto Serif TC', serif", fontWeight: 700, color: "var(--text)" }}>商業合作</h2>
+            <p className="text-sm leading-relaxed max-w-xl mx-auto mb-8" style={{ color: "var(--text-2)", fontWeight: 300 }}>
               品牌訪談、節目製作、嘉賓曝光、贊助合作。我們為品牌提供真實、有深度的內容合作方案，觸達香港真實受眾。
             </p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-              {["品牌訪談", "節目贊助", "嘉賓曝光", "活動合作"].map(item => (
-                <div key={item} className="rounded-xl py-3 px-4 text-sm font-medium"
-                  style={{ background: "oklch(0.65 0.15 80 / 0.08)", border: "1px solid oklch(0.65 0.15 80 / 0.2)", color: "oklch(0.78 0.12 80)" }}>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-0 mb-8" style={{ border: "1px solid var(--line)" }}>
+              {["品牌訪談", "節目贊助", "嘉賓曝光", "活動合作"].map((item, i) => (
+                <div key={item} className="py-3 px-4 text-sm text-center"
+                  style={{ borderRight: i < 3 ? "1px solid var(--line)" : "none", color: "var(--text-2)", fontWeight: 300 }}>
                   {item}
                 </div>
               ))}
             </div>
-            <Link href="/partnership"
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 hover:scale-105"
-              style={{ background: "oklch(0.65 0.15 80)", color: "oklch(0.10 0.01 80)", boxShadow: "0 4px 20px oklch(0.65 0.15 80 / 0.3)" }}>
-              立即查詢合作方案 <ChevronRight className="w-4 h-4" />
+            <Link href="/partnership" className="btn-gold">
+              查詢合作方案 <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
       </section>
 
       {/* ── 9. SOCIAL FOLLOW ──────────────────────────────────────────────────── */}
-      <section className="py-16 px-4" style={{ borderTop: "1px solid oklch(0.15 0.01 260)" }}>
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-3" style={{ color: "oklch(0.92 0.01 260)" }}>追蹤我們</h2>
-          <p className="text-sm mb-10" style={{ color: "oklch(0.55 0.02 260)" }}>在你最常用的平台上追蹤路邊電台，不錯過任何新內容</p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {SOCIAL_PLATFORMS.map(p => {
+      <section className="py-16 px-4" style={{ borderTop: "1px solid var(--line)" }}>
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-8">
+            <p className="kicker mb-2">FOLLOW US</p>
+            <h2 className="text-2xl" style={{ fontFamily: "'Noto Serif TC', serif", fontWeight: 700, color: "var(--text)" }}>追蹤我們</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-0" style={{ border: "1px solid var(--line)" }}>
+            {SOCIAL_PLATFORMS.map((p, i) => {
               const subsText = p.descKey
                 ? (p.descKey === "podcasts" ? (podcastsSubs ? formatSubs(podcastsSubs) + " 訂閱" : p.fallbackDesc) : (fengshuiSubs ? formatSubs(fengshuiSubs) + " 訂閱" : p.fallbackDesc))
                 : p.fallbackDesc;
               return (
                 <a key={p.name} href={p.href} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-4 rounded-xl p-4 transition-all duration-300 hover:scale-[1.03]"
-                  style={{ background: "oklch(0.12 0.015 260 / 0.8)", border: "1px solid oklch(0.20 0.02 260)" }}>
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
-                    style={{ background: `${p.color} / 0.15`.replace(" / ", " / "), backgroundColor: `color-mix(in oklch, ${p.color} 15%, transparent)`, border: `1px solid color-mix(in oklch, ${p.color} 30%, transparent)` }}>
-                    <p.Icon className="w-5 h-5" style={{ color: p.color }} />
+                  className="flex items-center gap-4 p-4 transition-all duration-200"
+                  style={{
+                    borderBottom: i < SOCIAL_PLATFORMS.length - 2 ? "1px solid var(--line)" : "none",
+                    borderRight: i % 2 === 0 ? "1px solid var(--line)" : "none",
+                    background: "var(--bg-card)",
+                  }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "var(--bg-raise)"; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "var(--bg-card)"; }}>
+                  <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style={{ border: "1px solid var(--line)" }}>
+                    <p.Icon className="w-4 h-4" style={{ color: "var(--gold)" }} strokeWidth={1.5} />
                   </div>
-                  <div className="text-left">
-                    <div className="text-sm font-medium" style={{ color: "oklch(0.85 0.01 260)" }}>{p.name}</div>
-                    <div className="text-xs mt-0.5" style={{ color: "oklch(0.55 0.02 260)" }}>{subsText}</div>
+                  <div>
+                    <div className="text-sm font-medium" style={{ color: "var(--text)" }}>{p.name}</div>
+                    <div className="text-xs mt-0.5" style={{ color: "var(--text-3)", fontFamily: "'Cormorant Garamond', serif" }}>{subsText}</div>
                   </div>
                 </a>
               );
@@ -624,70 +602,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* ── 10. FOOTER ────────────────────────────────────────────────────────── */}
-      <footer className="py-12 px-4" style={{ borderTop: "1px solid oklch(0.15 0.01 260)", background: "oklch(0.07 0.01 260)" }}>
-        <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-8 mb-10">
-            <div className="sm:col-span-2">
-              <div className="text-xl font-bold mb-3" style={{ color: "oklch(0.92 0.01 260)" }}>6B Podcasts</div>
-              <p className="text-sm leading-relaxed mb-4" style={{ color: "oklch(0.50 0.02 260)" }}>
-                香港原創 Podcast 內容平台。路邊電台 × 路邊玄學堂，探索真實人物、兩性關係與中西玄學。
-              </p>
-              <div className="flex items-center gap-3">
-                {[
-                  { href: "https://www.youtube.com/@6bpodcasts", Icon: Youtube },
-                  { href: "https://www.facebook.com/6bpodcasts", Icon: Facebook },
-                  { href: "https://www.instagram.com/6bpodcasts", Icon: Instagram },
-                ].map(({ href, Icon }) => (
-                  <a key={href} href={href} target="_blank" rel="noopener noreferrer"
-                    className="w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-110"
-                    style={{ background: "oklch(0.15 0.01 260)", border: "1px solid oklch(0.22 0.02 260)", color: "oklch(0.60 0.02 260)" }}>
-                    <Icon className="w-4 h-4" />
-                  </a>
-                ))}
-              </div>
-            </div>
-            <div>
-              <div className="text-sm font-semibold mb-3" style={{ color: "oklch(0.75 0.02 260)" }}>內容頻道</div>
-              <div className="space-y-2">
-                {[
-                  { href: "/podcasts", label: "路邊電台" },
-                  { href: "/mystic", label: "路邊玄學堂" },
-                  { href: "/episodes", label: "最新節目" },
-                  { href: "/blog", label: "嘉賓專欄" },
-                ].map(l => (
-                  <Link key={l.href} href={l.href} className="block text-sm transition-colors hover:opacity-80"
-                    style={{ color: "oklch(0.50 0.02 260)" }}>{l.label}</Link>
-                ))}
-              </div>
-            </div>
-            <div>
-              <div className="text-sm font-semibold mb-3" style={{ color: "oklch(0.75 0.02 260)" }}>更多資訊</div>
-              <div className="space-y-2">
-                {[
-                  { href: "/mystic/services", label: "玄學服務" },
-                  { href: "/partnership", label: "商業合作" },
-                  { href: "/about", label: "關於 6B" },
-                  { href: "/contact", label: "聯絡我們" },
-                ].map(l => (
-                  <Link key={l.href} href={l.href} className="block text-sm transition-colors hover:opacity-80"
-                    style={{ color: "oklch(0.50 0.02 260)" }}>{l.label}</Link>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6" style={{ borderTop: "1px solid oklch(0.13 0.01 260)" }}>
-            <div className="text-xs" style={{ color: "oklch(0.40 0.02 260)" }}>
-              © 2024 6B Podcasts. All rights reserved.
-            </div>
-            <div className="flex items-center gap-4">
-              <Link href="/privacy" className="text-xs transition-colors hover:opacity-80" style={{ color: "oklch(0.40 0.02 260)" }}>私隱政策</Link>
-              <Link href="/terms" className="text-xs transition-colors hover:opacity-80" style={{ color: "oklch(0.40 0.02 260)" }}>使用條款</Link>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
