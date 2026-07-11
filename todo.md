@@ -572,3 +572,28 @@
 - [ ] P2-2: / 與 /home 各有獨立 title/meta，logo 與導航「首頁」連結統一
 - [ ] P2-3: sitemap.xml 確保 Content-Type 為 application/xml、明文 XML、non-www URL
 - [ ] P2-4: 重寫 llms.txt 與 llms-full.txt（訂閱數、集數、連結、價格、電郵全部更新）
+
+## 改版任務 v2：加人味・提轉化（2026-07-11）
+
+- [ ] 項目 4：/home 文案廣東話化（標題、副標、CTA 按鈕）
+- [ ] 項目 4：/mystic 文案廣東話化（師傅服務描述、CTA）
+- [ ] 項目 4：/mystic/services 文案廣東話化
+- [ ] 項目 4：/booking 文案廣東話化
+- [ ] 項目 4：/services 文案廣東話化
+- [ ] 項目 4：/about 文案廣東話化
+- [ ] 項目 4：/welcome 文案廣東話化
+- [ ] 項目 4：/partnership 文案廣東話化
+- [ ] 項目 1：師傅卡改為 Ray 引薦 frame（placeholder 結構，待 Ray 提供相片）
+- [ ] 項目 1：師傅卡加入名、資歷、語錄、影片連結、WhatsApp CTA（帶師傅名）
+- [ ] 項目 2：/home 新增「真實反饋」版塊（placeholder 卡，待 Ray 提供截圖）
+- [ ] 項目 2：/mystic 新增「真實反饋」版塊
+- [ ] 項目 2：/booking 新增「真實反饋」版塊
+- [ ] 項目 3：/home Hero 加入 Ray 元素 placeholder + 廣東話標語
+- [ ] 項目 5：/booking 新增三步流程圖（揀服務→確認時間→見師傅）
+- [ ] 項目 5：/booking 加入服務價錢（八字 $800 等）
+- [ ] 項目 5：/mystic/services 價錢與 /booking 統一
+- [ ] 項目 5：會員方案加框架文案「一日三蚊唔夠，睇清楚成個月點行」
+- [ ] 項目 5：服務卡加常見疑慮回應文案
+- [ ] 項目 6：首屏入場動畫縮短至 1 秒內可見
+- [ ] 項目 6：師傅卡、反饋卡加 hover 效果
+- [ ] 項目 6：手機版 390px 檢查

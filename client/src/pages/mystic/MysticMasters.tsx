@@ -70,9 +70,12 @@ export default function MysticMasters() {
                   ))}
                 </div>
 
-                <div className="flex items-center justify-between text-xs pt-3 border-t" style={{ borderColor: "rgba(201,164,92,0.15)", color: "var(--text-2)" }}>
-                  <span>⭐ {m.rating} ({m.reviewCount})</span>
-                  <span>{m.videoCount} 影片 · {m.articleCount} 文章</span>
+                <div className="text-xs pt-3 border-t" style={{ borderColor: "rgba(201,164,92,0.15)" }}>
+                  {m.rayEndorsement && !m.rayEndorsement.includes('待 Ray') ? (
+                    <p className="italic line-clamp-2" style={{ color: "var(--gold)", fontFamily: "'Noto Serif TC', serif" }}>「{m.rayEndorsement}」</p>
+                  ) : (
+                    <p style={{ color: "var(--text-3)" }}>Ray Choy 推薦師傅</p>
+                  )}
                 </div>
               </div>
             </Link>

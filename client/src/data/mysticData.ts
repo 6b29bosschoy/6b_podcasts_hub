@@ -7,11 +7,10 @@ export interface MysticMaster {
   specialty: string[];
   tradition: "chinese" | "western";
   bio: string;
-  avatar: string;
+  avatar: string; // 【待 Ray 提供：真實相片 URL】
   videoCount: number;
   articleCount: number;
-  rating: number;
-  reviewCount: number;
+  rayEndorsement: string; // Ray 親身推薦語（廣東話）
   tags: string[];
 }
 
@@ -45,62 +44,59 @@ export interface MysticArticle {
 
 // ─── Masters ────────────────────────────────────────────────────────────────
 
+// 【待 Ray 提供：師傅真實姓名、相片、資歷數字、一句自我介紹（廣東話）】
 export const MYSTIC_MASTERS: MysticMaster[] = [
   {
     id: "master-1",
-    name: "紫微師傅 陳天命",
-    title: "紫微斗數宗師",
+    name: "【待 Ray 提供師傅姓名】",
+    title: "紫微斗數 / 奇門遁甲",
     specialty: ["紫微斗數", "奇門遁甲", "流年運程"],
     tradition: "chinese",
-    bio: "從事紫微斗數研究逾 20 年，擅長以斗數命盤分析事業、財運及感情走向。曾為逾千名客戶進行深度命盤分析，準確率廣受好評。",
-    avatar: "🌟",
-    videoCount: 24,
-    articleCount: 18,
-    rating: 4.9,
-    reviewCount: 312,
-    tags: ["紫微斗數", "奇門遁甲", "流年", "事業運"],
+    bio: "【待 Ray 提供：師傅簡介，建議包含實際資歷年數、擅長領域、服務區域】",
+    avatar: "【待提供相片 URL】",
+    videoCount: 0,
+    articleCount: 0,
+    rayEndorsement: "【待 Ray 提供：親身推薦語，廣東話，30 字以內】",
+    tags: ["紫微斗數", "奇門遁甲", "流年"],
   },
   {
     id: "master-2",
-    name: "奇門師傅 李玄機",
-    title: "奇門遁甲研究者",
-    specialty: ["奇門遁甲", "八字命理", "風水流年"],
+    name: "【待 Ray 提供師傅姓名】",
+    title: "八字命理 / 風水勘察",
+    specialty: ["八字命理", "風水勘察", "奇門遁甲"],
     tradition: "chinese",
-    bio: "專研奇門遁甲及八字命理，擅長以時空能量分析個人運勢走向。尤其擅長財運及事業轉機分析，幫助客戶把握人生關鍵時機。",
-    avatar: "☯",
-    videoCount: 18,
-    articleCount: 12,
-    rating: 4.8,
-    reviewCount: 245,
-    tags: ["奇門遁甲", "八字", "財運", "時機分析"],
+    bio: "【待 Ray 提供：師傅簡介】",
+    avatar: "【待提供相片 URL】",
+    videoCount: 0,
+    articleCount: 0,
+    rayEndorsement: "【待 Ray 提供：親身推薦語】",
+    tags: ["八字命理", "風水", "財運"],
   },
   {
     id: "master-3",
-    name: "星座師傅 Stella 星",
-    title: "西洋占星師",
+    name: "【待 Ray 提供師傅姓名】",
+    title: "西洋占星 / 星座分析",
     specialty: ["星座占星", "月亮星座", "西洋占星流年"],
     tradition: "western",
-    bio: "擁有英國占星學院認證，專注西洋占星及月亮星座分析。以現代心理占星角度解讀星盤，幫助客戶了解自身性格模式及感情關係。",
-    avatar: "⭐",
-    videoCount: 32,
-    articleCount: 28,
-    rating: 4.9,
-    reviewCount: 489,
-    tags: ["星座", "占星", "月亮星座", "感情運"],
+    bio: "【待 Ray 提供：師傅簡介】",
+    avatar: "【待提供相片 URL】",
+    videoCount: 0,
+    articleCount: 0,
+    rayEndorsement: "【待 Ray 提供：親身推薦語】",
+    tags: ["星座", "占星", "月亮星座"],
   },
   {
     id: "master-4",
-    name: "靈數師傅 數字王",
-    title: "生命靈數導師",
+    name: "【待 Ray 提供師傅姓名】",
+    title: "生命靈數 / 塔羅占卜",
     specialty: ["生命靈數", "塔羅牌", "人類圖"],
     tradition: "western",
-    bio: "深研生命靈數及塔羅超過 15 年，以數字能量解讀人生課題。擅長以生命靈數分析個人天賦、感情模式及人生使命。",
-    avatar: "🔢",
-    videoCount: 21,
-    articleCount: 16,
-    rating: 4.7,
-    reviewCount: 198,
-    tags: ["生命靈數", "塔羅", "人類圖", "人生使命"],
+    bio: "【待 Ray 提供：師傅簡介】",
+    avatar: "【待提供相片 URL】",
+    videoCount: 0,
+    articleCount: 0,
+    rayEndorsement: "【待 Ray 提供：親身推薦語】",
+    tags: ["生命靈數", "塔羅", "人類圖"],
   },
 ];
 

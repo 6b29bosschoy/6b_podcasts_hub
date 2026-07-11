@@ -68,9 +68,9 @@ export default function Booking() {
       <div className="min-h-screen pt-24 flex items-center justify-center">
         <div className="text-center max-w-md mx-auto px-4">
           <CheckCircle size={48} className="mx-auto mb-4" style={{ color: "var(--gold)" }} />
-          <h2 className="text-2xl font-black mb-3" style={{ color: "var(--text)" }}>預約成功！</h2>
-          <p className="text-sm mb-6" style={{ color: "var(--text-3)" }}>
-            我們已收到你的預約申請，團隊會在 24 小時內透過電郵聯絡你確認詳情。
+          <h2 className="text-2xl mb-3" style={{ color: "var(--text)", fontFamily: "'Noto Serif TC', serif", fontWeight: 700 }}>收到啦！</h2>
+          <p className="text-sm mb-6 leading-relaxed" style={{ color: "var(--text-2)", fontWeight: 300 }}>
+            我們已收到你的預約申請，會在 48 小時內透過 WhatsApp 或電郵回覆你確認詳情。
           </p>
           <div className="flex gap-3 justify-center">
             <Link href="/" className="px-5 py-2.5 rounded-lg text-sm font-bold" style={{ background: "var(--red)", color: "white" }}>
@@ -193,19 +193,51 @@ export default function Booking() {
     <div className="min-h-screen pt-24 pb-16">
       <JsonLd data={bookingSchemas} id="booking" />
       {/* Header */}
-      <div className="py-12 text-center" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--line)" }}>
-        <div className="text-xs font-bold tracking-widest mb-2" style={{ color: "var(--gold)" }}>BOOKING</div>
-        <h1 className="text-3xl md:text-4xl font-black mb-3" style={{ color: "var(--text)" }}>玄學服務預約</h1>
-        <p className="text-sm max-w-lg mx-auto" style={{ color: "var(--text-3)" }}>
-          由專業玄學師傅提供一對一諮詢服務，助你解惑人生疑問
+      <div className="py-16 text-center" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--line)" }}>
+        <p className="kicker mb-4">BOOKING</p>
+        <h1 className="mb-4" style={{ fontFamily: "'Noto Serif TC', serif", fontWeight: 900, fontSize: "clamp(1.75rem, 4vw, 2.5rem)" }}>搵師傅傾吓</h1>
+        <p className="text-sm max-w-lg mx-auto leading-relaxed" style={{ color: "var(--text-2)", fontWeight: 300 }}>
+          唔使即刻落訂。填表或 WhatsApp 我們，確認師傅同收費後再預約。
         </p>
+      </div>
+
+      {/* How It Works */}
+      <div style={{ borderBottom: "1px solid var(--line)" }}>
+        <div className="container py-12">
+          <div className="max-w-3xl mx-auto">
+            <p className="kicker mb-6 text-center">HOW IT WORKS</p>
+            <div className="grid grid-cols-1 md:grid-cols-3" style={{ border: "1px solid var(--line)" }}>
+              {[
+                { step: "01", title: "WhatsApp 問吓先", desc: "詢問服務類型、師傅及大概收費，我們會幫你配對。" },
+                { step: "02", title: "確認時間同收費", desc: "師傅確認時間、方式（視像/上門）及實際收費，冇隱藏費用。" },
+                { step: "03", title: "開始諮詢", desc: "按時進行，完成後師傅會整理報告俾你。有問題可以繼續追問。" },
+              ].map((s, i) => (
+                <div key={s.step} className="p-8" style={{ borderRight: i < 2 ? "1px solid var(--line)" : "none" }}>
+                  <div className="mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "2.5rem", fontWeight: 700, color: "var(--gold)", lineHeight: 1, opacity: 0.6 }}>{s.step}</div>
+                  <h3 className="mb-2 text-sm" style={{ fontFamily: "'Noto Serif TC', serif", fontWeight: 700 }}>{s.title}</h3>
+                  <p className="text-xs leading-relaxed" style={{ color: "var(--text-2)", fontWeight: 300 }}>{s.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="container py-12">
         <div className="max-w-3xl mx-auto">
+          {/* WhatsApp Alternative */}
+          <div className="mb-8 p-6" style={{ background: "var(--bg-card)", border: "1px solid var(--line)" }}>
+            <p className="text-sm font-semibold mb-1" style={{ color: "var(--text)", fontFamily: "'Noto Serif TC', serif" }}>想直接問吓？</p>
+            <p className="text-xs mb-4" style={{ color: "var(--text-2)", fontWeight: 300 }}>如果你未決定選哪種服務，或想先了解更多，WhatsApp 我們問吓先。</p>
+            <a href="https://wa.me/85298729990?text=你好，我想了解玄學服務" target="_blank" rel="noopener noreferrer"
+              className="btn-gold inline-flex items-center gap-2 text-sm">
+              WhatsApp 問吓先
+            </a>
+          </div>
+
           {/* Service Selection */}
           <div className="mb-8">
-            <h2 className="text-lg font-black mb-4" style={{ color: "var(--text)" }}>選擇服務</h2>
+            <h2 className="text-base font-bold mb-4" style={{ color: "var(--text)", fontFamily: "'Noto Serif TC', serif" }}>或者先選服務類型</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {SERVICES.map((s) => (
                 <button
@@ -215,8 +247,7 @@ export default function Booking() {
                   className="glass-card rounded-xl p-4 text-left transition-all duration-200 hover:scale-[1.02]"
                   style={selectedService === s.value ? { border: "1px solid var(--red)", boxShadow: "none" } : {}}
                 >
-                  <div className="text-2xl mb-2">{s.icon}</div>
-                  <div className="text-sm font-bold mb-1" style={{ color: selectedService === s.value ? "var(--red)" : "var(--text)" }}>
+                  <div className="text-sm font-bold mb-1" style={{ color: selectedService === s.value ? "var(--gold)" : "var(--text)", fontFamily: "'Noto Serif TC', serif" }}>
                     {s.label}
                   </div>
                   <div className="text-xs leading-relaxed" style={{ color: "var(--text-3)" }}>{s.desc}</div>
@@ -267,14 +298,14 @@ export default function Booking() {
             <button
               type="submit"
               disabled={bookingMutation.isPending || !selectedService}
-              className="w-full py-3 rounded-lg font-bold text-sm transition-all hover:opacity-90 disabled:opacity-50"
-              style={{ background: "linear-gradient(135deg, var(--gold), var(--red))", color: "white" }}
+              className="w-full py-3 font-bold text-sm transition-all hover:opacity-90 disabled:opacity-50"
+              style={{ background: "var(--gold)", color: "var(--bg)", borderRadius: "0" }}
             >
-              {bookingMutation.isPending ? "提交中..." : "確認預約"}
+              {bookingMutation.isPending ? "提交中..." : "提交預約申請"}
             </button>
 
             <p className="text-xs text-center" style={{ color: "var(--text-3)" }}>
-              提交後我們會在 24 小時內透過電郵確認預約詳情
+              提交後我們會在 48 小時內透過 WhatsApp 或電郵回覆你確認詳情
             </p>
           </form>
         </div>

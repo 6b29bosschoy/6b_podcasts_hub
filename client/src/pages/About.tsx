@@ -4,42 +4,42 @@ import { useSEO } from "@/hooks/useSEO";
 
 const CORE_VALUES = [
   {
-    icon: "🏆",
-    title: "專業至上",
-    desc: "從策劃到執行，每個環節都追求卓越，確保每一個作品都達到最高標準。",
+    icon: "",
+    title: "真實人物",
+    desc: "每一集都是真實訪談，唔就劇本、唔就小天使。我們相信真實的故事最有力量。",
   },
   {
-    icon: "💬",
-    title: "真誠溝通",
-    desc: "我們相信真誠的對話能建立信任，用心傾聽每個嘉賓與觀眾的需求與願景。",
+    icon: "",
+    title: "廣東話文化",
+    desc: "我們用廣東話講香港人的故事，保留最原汁的本地聲音與表達方式。",
   },
   {
-    icon: "💡",
-    title: "創新思維",
-    desc: "不斷探索新的表達方式與技術，為觀眾創造獨特且具有競爭力的內容。",
+    icon: "",
+    title: "深度訪談",
+    desc: "不做表面文章，每集都有備戦、有深度，讓嘉賓真正講出心裡話。",
   },
   {
-    icon: "📊",
-    title: "成果導向",
-    desc: "以數據為依據，持續優化策略，確保每個節目都能達成最大影響力。",
+    icon: "",
+    title: "玻璃心制作",
+    desc: "從剪輯到封面設計，每個細節都認真對待，因為我們知道觀眾值得最好的。",
   },
 ];
 
 const WHY_US = [
   {
-    icon: "🎬",
-    title: "豐富製作經驗",
-    desc: "多年的媒體製作與行銷經驗，深諳如何打造吸引人的訪談內容。",
+    icon: "",
+    title: "22,700+ 訂閱者",
+    desc: "香港原創訪談內容，持續有真實觀眾居安訂閱。",
   },
   {
-    icon: "🎯",
-    title: "量身定制內容",
-    desc: "根據每一位嘉賓的獨特故事，提供客製化的訪談方向與呈現方式。",
+    icon: "",
+    title: "一對一訪談",
+    desc: "每一集都是獨家深度訪談，唔就剩料、唔就廣告。",
   },
   {
-    icon: "🔄",
-    title: "全程製作支援",
-    desc: "從前期策劃到後期推廣，提供一站式的專業服務與支援。",
+    icon: "",
+    title: "玄學內容生態",
+    desc: "路邊玄學堂提供訪談以外的實用玄學服務，形成完整內容生態。",
   },
 ];
 
@@ -94,11 +94,11 @@ export default function About() {
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold mb-6" style={{ background: "var(--red)", border: "1px solid var(--red)", color: "var(--red)" }}>
             ABOUT US
           </div>
-          <h1 className="text-4xl md:text-5xl font-black mb-6" style={{ color: "var(--text)" }}>
-            關於我們
+          <h1 className="text-4xl md:text-5xl font-black mb-6" style={{ color: "var(--text)", fontFamily: "'Noto Serif TC', serif" }}>
+            我們是誰
           </h1>
-          <p className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: "var(--text-2)" }}>
-            KT CREATIVE FIRM LTD（路天邊制作有限公司）致力於透過專業的媒體製作與創新的行銷策略，幫助品牌與個人在數位時代中建立獨特的聲音與影響力。訪談節目在香港越來越受到重視，收聴與收看觀眾持續增長，成為品牌推廣的重要平台。
+          <p className="text-base max-w-2xl mx-auto leading-relaxed" style={{ color: "var(--text-2)", fontWeight: 300 }}>
+            路邊電台由 Ray Choy 創辦，專訪香港真實人物、兩性關係、玄學命理與都市生活文化。每一集都用廣東話講香港人的故事。
           </p>
         </div>
       </section>
@@ -111,15 +111,15 @@ export default function About() {
               <div className="text-xs font-bold tracking-widest mb-3" style={{ color: "var(--red)" }}>OUR STORY</div>
               <h2 className="text-3xl font-black" style={{ color: "var(--text)" }}>我們的故事</h2>
             </div>
-            <div className="glass-card rounded-2xl p-8 md:p-10 space-y-5" style={{ border: "1px solid var(--red)" }}>
-              <p className="leading-relaxed" style={{ color: "var(--text-2)" }}>
-                訪談節目在香港的受歡迎程度持續上升。在資訊爆炸的時代，觀眾渴望真實、有深度的內容，而訪談節目恰好提供了這種價値。
+            <div className="p-8 md:p-10 space-y-5" style={{ border: "1px solid var(--line)" }}>
+              <p className="leading-relaxed" style={{ color: "var(--text-2)", fontWeight: 300 }}>
+                2021 年，Ray Choy 开始訪談香港人。最初只是想記錄真實的香港故事——兩性關係、家庭矛盾、人生選擇。
               </p>
-              <p className="leading-relaxed" style={{ color: "var(--text-2)" }}>
-                KT CREATIVE FIRM 從「路邊 PODCASTS」這個旗艦頻道起步，透過一集又一集的深度訪談，我們學會了如何捕捉最真實的故事，並將其轉化為能夠感動人心的內容。
+              <p className="leading-relaxed" style={{ color: "var(--text-2)", fontWeight: 300 }}>
+                慢慢地，路邊電台成為了香港人講心裡話的地方。嘉賓不就劇本、觀眾不就小天使。每一集都是真實的。
               </p>
-              <p className="leading-relaxed" style={{ color: "var(--text-2)" }}>
-                如今，我們將這些經驗與專業技術結合，為客戶提供從內容策劃、拍攝製作到推廣行銷的一站式服務。我們不僅是製作團隊，更是您品牌故事的共同創作者。
+              <p className="leading-relaxed" style={{ color: "var(--text-2)", fontWeight: 300 }}>
+                後來加入了玄學。香港人對命理、風水、塔羅的好奇心很強，但市面上有很多不靠譜的內容。路邊玄學堂想做的，是讓大家找到真正靠譜的師傅。
               </p>
             </div>
           </div>
@@ -178,11 +178,11 @@ export default function About() {
                   </div>
                   <h3 className="text-2xl font-black mb-4" style={{ color: "var(--text)" }}>Ray Choy 蔡力泓</h3>
                   <div className="space-y-3">
-                    <p className="text-sm leading-relaxed" style={{ color: "var(--text-2)" }}>
-                      Ray Choy 是 KT CREATIVE FIRM 的創辦人，也是「路邊 PODCASTS」的靈魂人物。從第一集節目開始，他就明白一個真實的故事能夠深刻觸動人心，而這份感動正是品牌與受眾建立連結的最強力量。
+                    <p className="text-sm leading-relaxed" style={{ color: "var(--text-2)", fontWeight: 300 }}>
+                      Ray Choy 是路邊電台的創辦人同主持人。他相信真實的對話最有力量，所以每一集都就實話實說、不就劇本。
                     </p>
-                    <p className="text-sm leading-relaxed" style={{ color: "var(--text-2)" }}>
-                      憑藉對內容製作的熱情與多年實戰經驗，Ray 帶領團隊為眾多品牌與個人打造了極具影響力的節目。他深信，好的內容不僅要能感動人，更要透過精準的流量優化與策略推廣，讓這份感動傳遞給更多人。
+                    <p className="text-sm leading-relaxed" style={{ color: "var(--text-2)", fontWeight: 300 }}>
+                      除了訪談，他也對玄學有深度研究，將命理、風水與塔羅帶入路邊的內容生態，幫香港人找到真正靠譜的玄學師傅。
                     </p>
                   </div>
                   {/* Contact info */}
@@ -191,10 +191,10 @@ export default function About() {
                       href="https://wa.me/85298729990"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all hover:opacity-90"
-                      style={{ background: "var(--gold)", color: "white" }}
+                      className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold transition-all hover:opacity-90"
+                      style={{ background: "var(--gold)", color: "var(--bg)" }}
                     >
-                      📱 WhatsApp 聯絡
+                      WhatsApp 聯絡
                     </a>
                     <a
                       href="mailto:hello@6bpodcasts.com"

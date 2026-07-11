@@ -166,6 +166,9 @@ export default function Home() {
           {/* Kicker */}
           <p className="kicker mb-6">HONG KONG · VOICES &amp; FORTUNE</p>
 
+          {/* Ray placeholder — replace with real photo when available */}
+          {/* 【待 Ray 提供錄音室現場相片，建議 2-3 張，放喺 Hero 右側或背景層】 */}
+
           {/* H1 */}
           <h1 className="mb-6" style={{
             fontFamily: "'Noto Serif TC', serif",
@@ -174,16 +177,14 @@ export default function Home() {
             lineHeight: 1.2,
             color: "var(--text)",
           }}>
-            6B Podcast
+            <span style={{ color: "var(--gold)" }}>486 個人</span>喺呢度講咗真話。
             <br />
-            <span style={{ color: "var(--gold)" }}>香港真實人物</span>、關係、玄學
-            <br />
-            與生活文化內容平台
+            到你。
           </h1>
 
           {/* Subtitle */}
           <p className="max-w-xl mx-auto mb-10 text-base leading-relaxed" style={{ color: "var(--text-2)", fontWeight: 300 }}>
-            由真實訪談出發，探索兩性關係、人生選擇、中西玄學、身心靈與香港人的內心世界。
+            聽真人故事（免費）・搵師傅拆局（預約）
           </p>
 
           {/* CTA row */}
@@ -193,14 +194,14 @@ export default function Home() {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
               </svg>
-              免費命盤分析
+              免費睇吓你個盤
             </Link>
             {/* Secondary: ghost */}
             <a href="https://www.youtube.com/@6bpodcasts" target="_blank" rel="noopener noreferrer" className="btn-ghost">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/>
               </svg>
-              觀看最新影片
+              聽吓人哋嘅故事
             </a>
           </div>
 
@@ -430,22 +431,22 @@ export default function Home() {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3">
                   {user ? (
-                    <Link href="/mystic/analysis" className="btn-gold">
+                  <Link href="/mystic/analysis" className="btn-gold">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                       </svg>
-                      立即免費分析
+                      免費睇吓你個盤
                     </Link>
                   ) : (
                     <a href={getLoginUrl()} className="btn-gold">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                       </svg>
-                      登入免費體驗
+                      登入先免費試吓
                     </a>
                   )}
                   <Link href="/mystic" className="btn-ghost">
-                    了解更多 <ChevronRight className="w-4 h-4" />
+                    睇吓玄學堂 <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>
               </div>
@@ -477,10 +478,10 @@ export default function Home() {
                 <Star className="w-5 h-5" style={{ color: "var(--gold)" }} strokeWidth={1.5} />
               </div>
               <div>
-                <div className="font-semibold mb-1" style={{ fontFamily: "'Noto Serif TC', serif", color: "var(--text)" }}>預約玄學服務</div>
-                <div className="text-sm" style={{ color: "var(--text-2)", fontWeight: 300 }}>師傅一對一諮詢、命盤解讀、風水勘察</div>
+                <div className="font-semibold mb-1" style={{ fontFamily: "'Noto Serif TC', serif", color: "var(--text)" }}>搵師傅傾吓</div>
+                <div className="text-sm" style={{ color: "var(--text-2)", fontWeight: 300 }}>一對一命盤解讀、風水上門、感情事業分析</div>
                 <div className="flex items-center gap-1 text-xs mt-2" style={{ color: "var(--gold)" }}>
-                  立即預約 <ChevronRight className="w-3 h-3" />
+                  WhatsApp 問吓先 <ChevronRight className="w-3 h-3" />
                 </div>
               </div>
             </Link>
@@ -493,10 +494,10 @@ export default function Home() {
                 <Users className="w-5 h-5" style={{ color: "var(--gold)" }} strokeWidth={1.5} />
               </div>
               <div>
-                <div className="font-semibold mb-1" style={{ fontFamily: "'Noto Serif TC', serif", color: "var(--text)" }}>會員訂閱方案</div>
-                <div className="text-sm" style={{ color: "var(--text-2)", fontWeight: 300 }}>無限 AI 分析、專屬報告、優先服務</div>
+                <div className="font-semibold mb-1" style={{ fontFamily: "'Noto Serif TC', serif", color: "var(--text)" }}>會員方案</div>
+                <div className="text-sm" style={{ color: "var(--text-2)", fontWeight: 300 }}>一日三蚊，睇清楚成個月點行</div>
                 <div className="flex items-center gap-1 text-xs mt-2" style={{ color: "var(--gold)" }}>
-                  查看方案 <ChevronRight className="w-3 h-3" />
+                  睇吓方案 <ChevronRight className="w-3 h-3" />
                 </div>
               </div>
             </Link>
@@ -550,7 +551,7 @@ export default function Home() {
             <p className="kicker mb-4">BUSINESS COLLABORATION</p>
             <h2 className="text-2xl sm:text-3xl mb-3" style={{ fontFamily: "'Noto Serif TC', serif", fontWeight: 700, color: "var(--text)" }}>商業合作</h2>
             <p className="text-sm leading-relaxed max-w-xl mx-auto mb-8" style={{ color: "var(--text-2)", fontWeight: 300 }}>
-              品牌訪談、節目製作、嘉賓曝光、贊助合作。我們為品牌提供真實、有深度的內容合作方案，觸達香港真實受眾。
+              想你個品牌出現喺真實香港人嘅對話入面？我哋唔係硬銷，係幫你搵到真正有共鳴嘅受眾。
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-0 mb-8" style={{ border: "1px solid var(--line)" }}>
               {["品牌訪談", "節目贊助", "嘉賓曝光", "活動合作"].map((item, i) => (
@@ -561,7 +562,7 @@ export default function Home() {
               ))}
             </div>
             <Link href="/partnership" className="btn-gold">
-              查詢合作方案 <ChevronRight className="w-4 h-4" />
+              WhatsApp 問吓先 <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
         </div>

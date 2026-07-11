@@ -69,21 +69,25 @@ export default function MysticMasterDetail({ id }: Props) {
                 ))}
               </div>
               <p className="text-sm leading-relaxed mb-4" style={{ color: "var(--text-2)" }}>{master.bio}</p>
+              {master.rayEndorsement && !master.rayEndorsement.includes('待 Ray') && (
+                <blockquote className="text-sm italic mb-4 pl-3" style={{ color: "var(--gold)", borderLeft: "2px solid var(--gold-dim)", fontFamily: "'Noto Serif TC', serif" }}>
+                  「{master.rayEndorsement}」
+                  <span className="block text-xs mt-1 not-italic" style={{ color: "var(--text-3)" }}>— Ray Choy 推薦</span>
+                </blockquote>
+              )}
               <div className="flex gap-6 text-sm" style={{ color: "var(--text-2)" }}>
-                <span>⭐ {master.rating} 評分</span>
-                <span>{master.reviewCount} 評價</span>
-                <span>{master.videoCount} 影片</span>
-                <span>{master.articleCount} 文章</span>
+                {master.videoCount > 0 && <span>{master.videoCount} 影片</span>}
+                {master.articleCount > 0 && <span>{master.articleCount} 文章</span>}
               </div>
             </div>
           </div>
           <div className="mt-6 flex gap-3">
             <Link href="/mystic/analysis">
               <span
-                className="inline-block px-5 py-2.5 rounded-xl font-bold text-sm cursor-pointer transition-all hover:scale-105"
-                style={{ background: "var(--bg-card)", color: "var(--text)" }}
+                className="inline-block px-5 py-2.5 rounded-xl font-bold text-sm cursor-pointer transition-all hover:opacity-90"
+                style={{ background: "var(--gold)", color: "var(--bg)" }}
               >
-                🔮 立即分析
+                ✨ 免費 AI 命盤分析
               </span>
             </Link>
             <Link href="/booking">
@@ -91,7 +95,7 @@ export default function MysticMasterDetail({ id }: Props) {
                 className="inline-block px-5 py-2.5 rounded-xl font-bold text-sm cursor-pointer border transition-all hover:scale-105"
                 style={{ borderColor: "rgba(201,164,92,0.4)", color: "var(--gold)" }}
               >
-                📅 預約諮詢
+                WhatsApp 預約師傅
               </span>
             </Link>
           </div>
