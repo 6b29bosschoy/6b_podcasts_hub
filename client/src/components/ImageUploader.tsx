@@ -56,12 +56,12 @@ export default function ImageUploader({ images, onImagesChange, disabled = false
   const uploadMutation = trpc.submission.uploadImage.useMutation();
 
   // ── colour tokens ──────────────────────────────────────────────────────────
-  const bg = dark ? "oklch(0.14 0.018 260)" : "oklch(0.97 0.005 260)";
-  const border = dark ? "oklch(0.24 0.025 260)" : "oklch(0.82 0.01 260)";
-  const borderActive = "oklch(0.62 0.24 25)";
-  const textMuted = dark ? "oklch(0.50 0.02 60)" : "oklch(0.45 0.02 60)";
-  const textMain = dark ? "oklch(0.88 0.01 60)" : "oklch(0.15 0.01 60)";
-  const accent = "oklch(0.62 0.24 25)";
+  const bg = dark ? "var(--bg-card)" : "var(--text)";
+  const border = dark ? "var(--line)" : "var(--text)";
+  const borderActive = "var(--red)";
+  const textMuted = dark ? "var(--text-3)" : "var(--text-3)";
+  const textMain = dark ? "var(--text)" : "var(--bg-raise)";
+  const accent = "var(--red)";
 
   const processFiles = useCallback(async (files: FileList | File[]) => {
     const fileArr = Array.from(files);
@@ -194,7 +194,7 @@ export default function ImageUploader({ images, onImagesChange, disabled = false
             <div
               key={img.url}
               className="relative rounded-lg overflow-hidden group"
-              style={{ aspectRatio: "1/1", background: dark ? "oklch(0.16 0.02 260)" : "oklch(0.93 0.005 260)" }}
+              style={{ aspectRatio: "1/1", background: dark ? "var(--bg-raise)" : "var(--text)" }}
             >
               <img
                 src={img.localPreview}
@@ -207,7 +207,7 @@ export default function ImageUploader({ images, onImagesChange, disabled = false
                   type="button"
                   onClick={() => removeImage(idx)}
                   className="absolute top-1 right-1 w-5 h-5 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                  style={{ background: "oklch(0 0 0 / 0.7)" }}
+                  style={{ background: "rgba(13,12,10,0.7)" }}
                   title="移除圖片"
                 >
                   <X size={11} color="white" />
@@ -216,7 +216,7 @@ export default function ImageUploader({ images, onImagesChange, disabled = false
               {/* Index badge */}
               <div
                 className="absolute bottom-1 left-1 text-xs px-1 rounded"
-                style={{ background: "oklch(0 0 0 / 0.55)", color: "white", fontSize: "10px" }}
+                style={{ background: "rgba(13,12,10,0.55)", color: "white", fontSize: "10px" }}
               >
                 {idx + 1}/{MAX_FILES}
               </div>
@@ -240,7 +240,7 @@ export default function ImageUploader({ images, onImagesChange, disabled = false
 
       {/* Limit warning */}
       {images.length >= MAX_FILES && (
-        <div className="flex items-center gap-1.5 text-xs" style={{ color: "oklch(0.78 0.16 75)" }}>
+        <div className="flex items-center gap-1.5 text-xs" style={{ color: "var(--gold)" }}>
           <AlertCircle size={12} />
           已達 {MAX_FILES} 張上限
         </div>

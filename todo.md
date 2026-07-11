@@ -532,3 +532,22 @@
 - [x] 3.1 新增 /investors 頁（平台定位、Traction 數據、生態模型、收入模式、聯絡 CTA）
 - [ ] 3.2 /host-recruitment 升級為篩選 Funnel（4 條 qualifying 問題、48h 回覆訊息、CSV export） — 待實施
 - [ ] 3.3 師傅頁（/mystic/masters/:id）加轉化故事線 — 待實施
+
+## 第二階段：全站 Design Token 統一（2026-07）
+
+- [x] Navbar.tsx — 移除霓虹色，套用金色 + 暖黑 + 細線風格
+- [x] Footer.tsx — 套用新 token，移除 gradient-text
+- [x] Portal.tsx — 選台頁套用新設計系統
+- [x] MysticNavbar.tsx — 移除紫色霓虹，套用金色 + 暖黑
+- [x] MysticHome.tsx — 全面套用新 token
+- [x] MysticMasterDetail.tsx — 套用新 token
+- [x] MysticPricing.tsx — 套用新 token
+- [x] MysticServices.tsx — 套用新 token
+- [x] BlogPost.tsx — 套用新 token
+- [x] BlogList.tsx — 套用新 token
+- [x] Episodes.tsx — 套用新 token
+- [x] Podcasts.tsx — 套用新 token
+- [x] About.tsx — 套用新 token
+- [x] Contact.tsx — 套用新 token
+- [x] Partnership.tsx — 套用新 token
+- [x] Investors.tsx — 確認已使用新 token

@@ -45,7 +45,7 @@ export default function ChatBot() {
       <button
         onClick={() => setOpen(!open)}
         className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110"
-        style={{ background: "linear-gradient(135deg, oklch(0.60 0.22 25), oklch(0.75 0.15 75))", boxShadow: "0 0 20px oklch(0.62 0.24 25 / 0.5)" }}
+        style={{ background: "linear-gradient(135deg, var(--red), var(--gold))", boxShadow: "none" }}
       >
         {open ? <X size={22} color="white" /> : <MessageCircle size={22} color="white" />}
       </button>
@@ -54,10 +54,10 @@ export default function ChatBot() {
       {open && (
         <div
           className="fixed bottom-24 right-6 z-50 w-80 sm:w-96 rounded-2xl overflow-hidden shadow-2xl flex flex-col"
-          style={{ height: "480px", background: "oklch(0.10 0.01 260)", border: "1px solid oklch(0.25 0.02 260)", boxShadow: "0 0 30px oklch(0.62 0.24 25 / 0.2)" }}
+          style={{ height: "480px", background: "var(--bg-card)", border: "1px solid var(--line)", boxShadow: "none" }}
         >
           {/* Header */}
-          <div className="px-4 py-3 flex items-center gap-3" style={{ background: "linear-gradient(135deg, oklch(0.60 0.22 25), oklch(0.75 0.15 75))" }}>
+          <div className="px-4 py-3 flex items-center gap-3" style={{ background: "linear-gradient(135deg, var(--red), var(--gold))" }}>
             <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
               <Bot size={16} color="white" />
             </div>
@@ -75,8 +75,8 @@ export default function ChatBot() {
                   className="max-w-[80%] px-3 py-2 rounded-xl text-sm leading-relaxed whitespace-pre-wrap"
                   style={
                     msg.role === "user"
-                      ? { background: "oklch(0.60 0.22 25)", color: "white" }
-                      : { background: "oklch(0.18 0.02 260)", color: "oklch(0.85 0.01 60)", border: "1px solid oklch(0.25 0.02 260)" }
+                      ? { background: "var(--red)", color: "white" }
+                      : { background: "var(--line)", color: "var(--text)", border: "1px solid var(--line)" }
                   }
                 >
                   {msg.content}
@@ -85,7 +85,7 @@ export default function ChatBot() {
             ))}
             {chatMutation.isPending && (
               <div className="flex justify-start">
-                <div className="px-3 py-2 rounded-xl text-sm" style={{ background: "oklch(0.18 0.02 260)", color: "oklch(0.55 0.02 60)" }}>
+                <div className="px-3 py-2 rounded-xl text-sm" style={{ background: "var(--line)", color: "var(--text-3)" }}>
                   思考中...
                 </div>
               </div>
@@ -94,20 +94,20 @@ export default function ChatBot() {
           </div>
 
           {/* Input */}
-          <div className="p-3 flex gap-2" style={{ borderTop: "1px solid oklch(0.18 0.02 260)" }}>
+          <div className="p-3 flex gap-2" style={{ borderTop: "1px solid var(--line)" }}>
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="問我任何問題..."
               className="flex-1 px-3 py-2 rounded-lg text-sm outline-none"
-              style={{ background: "oklch(0.15 0.015 260)", border: "1px solid oklch(0.22 0.02 260)", color: "oklch(0.92 0.01 60)" }}
+              style={{ background: "var(--bg-card)", border: "1px solid var(--line)", color: "var(--text)" }}
             />
             <button
               onClick={sendMessage}
               disabled={chatMutation.isPending || !input.trim()}
               className="w-9 h-9 rounded-lg flex items-center justify-center transition-all disabled:opacity-40"
-              style={{ background: "oklch(0.60 0.22 25)" }}
+              style={{ background: "var(--red)" }}
             >
               <Send size={16} color="white" />
             </button>

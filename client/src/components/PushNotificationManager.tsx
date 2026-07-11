@@ -123,12 +123,12 @@ export function PushBellButton() {
       className="fixed bottom-24 left-4 z-40 w-11 h-11 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 active:scale-95"
       style={{
         background: isSubscribed
-          ? "oklch(0.62 0.24 25)"
-          : "oklch(0.14 0.01 260)",
-        border: `1px solid ${isSubscribed ? "oklch(0.62 0.24 25)" : "oklch(0.25 0.02 260)"}`,
+          ? "var(--red)"
+          : "var(--bg-raise)",
+        border: `1px solid ${isSubscribed ? "var(--red)" : "var(--line)"}`,
         boxShadow: isSubscribed
-          ? "0 0 12px oklch(0.62 0.24 25 / 0.5)"
-          : "0 4px 12px oklch(0 0 0 / 0.4)",
+          ? "none"
+          : "0 4px 12px rgba(13,12,10,0.4)",
       }}
     >
       {isLoading ? (
@@ -136,7 +136,7 @@ export function PushBellButton() {
       ) : isSubscribed ? (
         <Bell className="w-4 h-4 text-white fill-white" />
       ) : (
-        <BellOff className="w-4 h-4" style={{ color: "oklch(0.60 0.02 60)" }} />
+        <BellOff className="w-4 h-4" style={{ color: "var(--text-2)" }} />
       )}
     </button>
   );
@@ -175,15 +175,15 @@ export function PushPromptBanner() {
     <div
       className="fixed bottom-4 left-4 right-4 md:left-auto md:right-6 md:max-w-sm z-50 rounded-xl p-4 shadow-2xl"
       style={{
-        background: "oklch(0.12 0.01 260)",
-        border: "1px solid oklch(0.62 0.24 25 / 0.4)",
-        boxShadow: "0 0 30px oklch(0.62 0.24 25 / 0.15), 0 8px 32px oklch(0 0 0 / 0.5)",
+        background: "var(--bg-card)",
+        border: "1px solid var(--red)",
+        boxShadow: "none",
       }}
     >
       <button
         onClick={dismiss}
         className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-full transition-colors hover:bg-white/10"
-        style={{ color: "oklch(0.50 0.02 60)" }}
+        style={{ color: "var(--text-3)" }}
       >
         <X className="w-3.5 h-3.5" />
       </button>
@@ -191,15 +191,15 @@ export function PushPromptBanner() {
       <div className="flex items-start gap-3 pr-4">
         <div
           className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-          style={{ background: "oklch(0.62 0.24 25 / 0.15)", border: "1px solid oklch(0.62 0.24 25 / 0.3)" }}
+          style={{ background: "var(--red)", border: "1px solid var(--red)" }}
         >
-          <Bell className="w-5 h-5" style={{ color: "oklch(0.62 0.24 25)" }} />
+          <Bell className="w-5 h-5" style={{ color: "var(--red)" }} />
         </div>
         <div>
-          <p className="text-sm font-bold mb-1" style={{ color: "oklch(0.92 0.01 60)" }}>
+          <p className="text-sm font-bold mb-1" style={{ color: "var(--text)" }}>
             訂閱推送通知
           </p>
-          <p className="text-xs leading-relaxed mb-3" style={{ color: "oklch(0.60 0.02 60)" }}>
+          <p className="text-xs leading-relaxed mb-3" style={{ color: "var(--text-2)" }}>
             第一時間收到最新節目上線、嘉賓公告及玄學資訊，即使不在網站也不會錯過！
           </p>
           <div className="flex gap-2">
@@ -207,7 +207,7 @@ export function PushPromptBanner() {
               onClick={handleSubscribe}
               disabled={isLoading}
               className="flex-1 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 hover:opacity-90 flex items-center justify-center gap-1.5"
-              style={{ background: "oklch(0.62 0.24 25)", color: "white" }}
+              style={{ background: "var(--red)", color: "white" }}
             >
               {isLoading ? (
                 <Loader2 className="w-3 h-3 animate-spin" />
@@ -219,7 +219,7 @@ export function PushPromptBanner() {
             <button
               onClick={dismiss}
               className="px-3 py-1.5 rounded-lg text-xs transition-colors hover:bg-white/5"
-              style={{ color: "oklch(0.50 0.02 60)", border: "1px solid oklch(0.25 0.02 260)" }}
+              style={{ color: "var(--text-3)", border: "1px solid var(--line)" }}
             >
               稍後
             </button>

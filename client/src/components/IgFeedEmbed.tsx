@@ -27,14 +27,14 @@ export default function IgFeedEmbed() {
       <div className="max-w-4xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-10">
-          <p className="text-sm font-semibold tracking-widest uppercase mb-2" style={{ color: "oklch(0.75 0.18 30)" }}>
+          <p className="text-sm font-semibold tracking-widest uppercase mb-2" style={{ color: "var(--red)" }}>
             FOLLOW US ON
           </p>
           <h2 className="text-3xl md:text-4xl font-black mb-3">
-            <span style={{ color: "oklch(0.92 0.05 80)" }}>Instagram</span>
-            <span className="ml-2" style={{ color: "oklch(0.75 0.18 30)" }}>@6bpodcasts</span>
+            <span style={{ color: "var(--text)" }}>Instagram</span>
+            <span className="ml-2" style={{ color: "var(--red)" }}>@6bpodcasts</span>
           </h2>
-          <p className="text-sm" style={{ color: "oklch(0.65 0.05 250)" }}>
+          <p className="text-sm" style={{ color: "var(--text-2)" }}>
             追蹤我哋嘅 IG，睇最新幕後花絮同嘉賓金句
           </p>
         </div>
@@ -43,7 +43,7 @@ export default function IgFeedEmbed() {
         <div
           ref={containerRef}
           className="w-full rounded-2xl overflow-hidden"
-          style={{ background: "oklch(0.12 0.02 250)" }}
+          style={{ background: "var(--bg-card)" }}
         >
           <iframe
             src="https://snapwidget.com/embed/1121118"
@@ -69,8 +69,8 @@ export default function IgFeedEmbed() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm transition-all hover:scale-105"
             style={{
-              background: "linear-gradient(135deg, oklch(0.65 0.22 0), oklch(0.65 0.22 330), oklch(0.65 0.22 280))",
-              color: "oklch(0.98 0.01 80)",
+              background: "var(--bg-card))",
+              color: "var(--text)",
             }}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">

@@ -59,8 +59,8 @@ export default function Admin() {
       <div className="min-h-screen pt-24 flex items-center justify-center">
         <div className="text-center">
           <div className="text-4xl mb-4">🔒</div>
-          <h2 className="text-xl font-bold mb-2" style={{ color: "oklch(0.75 0.01 60)" }}>需要管理員權限</h2>
-          <Link href="/" className="text-sm" style={{ color: "oklch(0.62 0.24 25)" }}>← 返回首頁</Link>
+          <h2 className="text-xl font-bold mb-2" style={{ color: "var(--text-2)" }}>需要管理員權限</h2>
+          <Link href="/" className="text-sm" style={{ color: "var(--red)" }}>← 返回首頁</Link>
         </div>
       </div>
     );
@@ -80,8 +80,8 @@ export default function Admin() {
     <div className="min-h-screen pt-24 pb-16">
       <div className="container py-8">
         <div className="mb-8">
-          <div className="text-xs font-bold tracking-widest mb-2" style={{ color: "oklch(0.62 0.24 25)" }}>ADMIN</div>
-          <h1 className="text-2xl font-black" style={{ color: "oklch(0.92 0.01 60)" }}>管理後台</h1>
+          <div className="text-xs font-bold tracking-widest mb-2" style={{ color: "var(--red)" }}>ADMIN</div>
+          <h1 className="text-2xl font-black" style={{ color: "var(--text)" }}>管理後台</h1>
         </div>
 
         {/* Tabs */}
@@ -90,12 +90,12 @@ export default function Admin() {
             <button key={t.id} onClick={() => setTab(t.id)}
               className="px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2"
               style={tab === t.id
-                ? { background: "oklch(0.60 0.22 25)", color: "white" }
-                : { background: "oklch(0.15 0.015 260)", border: "1px solid oklch(0.25 0.02 260)", color: "oklch(0.70 0.01 60)" }
+                ? { background: "var(--red)", color: "white" }
+                : { background: "var(--bg-card)", border: "1px solid var(--line)", color: "var(--text-2)" }
               }>
               {t.label}
               {(t.count ?? 0) > 0 && (
-                <span className="w-5 h-5 rounded-full text-xs flex items-center justify-center" style={{ background: "oklch(0.62 0.24 25 / 0.3)", color: "oklch(0.62 0.24 25)" }}>
+                <span className="w-5 h-5 rounded-full text-xs flex items-center justify-center" style={{ background: "var(--red)", color: "var(--red)" }}>
                   {t.count}
                 </span>
               )}
@@ -106,11 +106,11 @@ export default function Admin() {
         {/* Blog Posts */}
         {tab === "blogs" && (
           <div className="flex flex-col gap-4">
-            {!blogs?.length ? <p style={{ color: "oklch(0.55 0.02 60)" }}>暫時沒有投稿</p> : blogs.map((post) => {
+            {!blogs?.length ? <p style={{ color: "var(--text-3)" }}>暫時沒有投稿</p> : blogs.map((post) => {
               const postImages: string[] = (() => { try { return JSON.parse(post.images || "[]"); } catch { return []; } })();
               const postLinks: { title: string; url: string }[] = (() => { try { return JSON.parse(post.links || "[]"); } catch { return []; } })();
-              const statusBg = post.status === "pending" ? "oklch(0.78 0.16 75 / 0.2)" : post.status === "approved" ? "oklch(0.65 0.20 145 / 0.2)" : "oklch(0.55 0.22 25 / 0.2)";
-              const statusColor = post.status === "pending" ? "oklch(0.78 0.16 75)" : post.status === "approved" ? "oklch(0.65 0.20 145)" : "oklch(0.55 0.22 25)";
+              const statusBg = post.status === "pending" ? "var(--gold)" : post.status === "approved" ? "rgba(201,164,92,0.2)" : "rgba(210,60,60,0.2)";
+              const statusColor = post.status === "pending" ? "var(--gold)" : post.status === "approved" ? "var(--gold)" : "var(--red)";
               return (
                 <div key={post.id} className="glass-card rounded-xl p-5">
                   <div className="flex items-start justify-between gap-4">
@@ -119,22 +119,22 @@ export default function Admin() {
                         <span className="text-xs px-2 py-0.5 rounded font-bold" style={{ background: statusBg, color: statusColor }}>
                           {post.status === "pending" ? "待審核" : post.status === "approved" ? "已發佈" : "已拒絕"}
                         </span>
-                        <span className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>{CATEGORY_LABELS[post.category]}</span>
+                        <span className="text-xs" style={{ color: "var(--text-3)" }}>{CATEGORY_LABELS[post.category]}</span>
                         {postImages.length > 0 && (
-                          <span className="text-xs px-2 py-0.5 rounded" style={{ background: "oklch(0.25 0.04 260)", color: "oklch(0.70 0.08 260)" }}>
+                          <span className="text-xs px-2 py-0.5 rounded" style={{ background: "var(--line)", color: "var(--text-2)" }}>
                             🖼 {postImages.length} 張圖片
                           </span>
                         )}
                         {postLinks.length > 0 && (
-                          <span className="text-xs px-2 py-0.5 rounded" style={{ background: "oklch(0.22 0.04 200)", color: "oklch(0.65 0.12 200)" }}>
+                          <span className="text-xs px-2 py-0.5 rounded" style={{ background: "var(--line)", color: "var(--gold)" }}>
                             🔗 {postLinks.length} 條連結
                           </span>
                         )}
                       </div>
-                      <h3 className="font-bold mb-1" style={{ color: "oklch(0.88 0.01 60)" }}>{post.title}</h3>
-                      <p className="text-xs" style={{ color: "oklch(0.55 0.02 60)" }}>{post.authorName} · {post.authorEmail}</p>
-                      {post.authorBio && <p className="text-xs mt-0.5 italic" style={{ color: "oklch(0.48 0.02 60)" }}>{post.authorBio}</p>}
-                      {post.excerpt && <p className="text-xs mt-2 line-clamp-2" style={{ color: "oklch(0.50 0.02 60)" }}>{post.excerpt}</p>}
+                      <h3 className="font-bold mb-1" style={{ color: "var(--text)" }}>{post.title}</h3>
+                      <p className="text-xs" style={{ color: "var(--text-3)" }}>{post.authorName} · {post.authorEmail}</p>
+                      {post.authorBio && <p className="text-xs mt-0.5 italic" style={{ color: "var(--text-3)" }}>{post.authorBio}</p>}
+                      {post.excerpt && <p className="text-xs mt-2 line-clamp-2" style={{ color: "var(--text-3)" }}>{post.excerpt}</p>}
 
                       {/* Image thumbnails */}
                       {postImages.length > 0 && (
@@ -164,7 +164,7 @@ export default function Admin() {
                               target="_blank"
                               rel="noopener noreferrer"
                               className="inline-flex items-center gap-1.5 text-xs hover:opacity-80 transition-opacity"
-                              style={{ color: "oklch(0.62 0.18 200)" }}
+                              style={{ color: "var(--gold)" }}
                             >
                               <ExternalLink size={11} />
                               {link.title || link.url}
@@ -176,11 +176,11 @@ export default function Admin() {
                     {post.status === "pending" && (
                       <div className="flex gap-2 flex-shrink-0">
                         <button onClick={() => approveBlog.mutate({ id: post.id, status: "approved" })}
-                          className="px-3 py-1.5 rounded text-xs font-bold" style={{ background: "oklch(0.65 0.20 145)", color: "white" }}>
+                          className="px-3 py-1.5 rounded text-xs font-bold" style={{ background: "var(--gold)", color: "white" }}>
                           批准
                         </button>
                         <button onClick={() => approveBlog.mutate({ id: post.id, status: "rejected" })}
-                          className="px-3 py-1.5 rounded text-xs font-bold" style={{ background: "oklch(0.55 0.22 25)", color: "white" }}>
+                          className="px-3 py-1.5 rounded text-xs font-bold" style={{ background: "var(--red)", color: "white" }}>
                           拒絕
                         </button>
                       </div>
@@ -195,31 +195,31 @@ export default function Admin() {
         {/* Bookings */}
         {tab === "bookings" && (
           <div className="flex flex-col gap-4">
-            {!bookings?.length ? <p style={{ color: "oklch(0.55 0.02 60)" }}>暫時沒有預約</p> : bookings.map((b) => (
+            {!bookings?.length ? <p style={{ color: "var(--text-3)" }}>暫時沒有預約</p> : bookings.map((b) => (
               <div key={b.id} className="glass-card rounded-xl p-5">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs px-2 py-0.5 rounded font-bold" style={{ background: b.status === "pending" ? "oklch(0.78 0.16 75 / 0.2)" : b.status === "confirmed" ? "oklch(0.65 0.20 145 / 0.2)" : "oklch(0.55 0.22 25 / 0.2)", color: b.status === "pending" ? "oklch(0.78 0.16 75)" : b.status === "confirmed" ? "oklch(0.65 0.20 145)" : "oklch(0.55 0.22 25)" }}>
+                      <span className="text-xs px-2 py-0.5 rounded font-bold" style={{ background: b.status === "pending" ? "var(--gold)" : b.status === "confirmed" ? "rgba(201,164,92,0.2)" : "rgba(210,60,60,0.2)", color: b.status === "pending" ? "var(--gold)" : b.status === "confirmed" ? "var(--gold)" : "var(--red)" }}>
                         {b.status === "pending" ? "待確認" : b.status === "confirmed" ? "已確認" : "已取消"}
                       </span>
-                      <span className="text-xs font-bold" style={{ color: "oklch(0.78 0.16 75)" }}>{SERVICE_LABELS[b.serviceType]}</span>
+                      <span className="text-xs font-bold" style={{ color: "var(--gold)" }}>{SERVICE_LABELS[b.serviceType]}</span>
                     </div>
-                    <h3 className="font-bold mb-1" style={{ color: "oklch(0.88 0.01 60)" }}>{b.name}</h3>
-                    <p className="text-xs" style={{ color: "oklch(0.55 0.02 60)" }}>{b.email} {b.phone && `· ${b.phone}`}</p>
+                    <h3 className="font-bold mb-1" style={{ color: "var(--text)" }}>{b.name}</h3>
+                    <p className="text-xs" style={{ color: "var(--text-3)" }}>{b.email} {b.phone && `· ${b.phone}`}</p>
                     {(b.preferredDate || b.preferredTime) && (
-                      <p className="text-xs mt-1" style={{ color: "oklch(0.55 0.02 60)" }}>希望時間：{b.preferredDate} {b.preferredTime}</p>
+                      <p className="text-xs mt-1" style={{ color: "var(--text-3)" }}>希望時間：{b.preferredDate} {b.preferredTime}</p>
                     )}
-                    {b.message && <p className="text-xs mt-1 line-clamp-2" style={{ color: "oklch(0.50 0.02 60)" }}>{b.message}</p>}
+                    {b.message && <p className="text-xs mt-1 line-clamp-2" style={{ color: "var(--text-3)" }}>{b.message}</p>}
                   </div>
                   {b.status === "pending" && (
                     <div className="flex gap-2 flex-shrink-0">
                       <button onClick={() => updateBooking.mutate({ id: b.id, status: "confirmed" })}
-                        className="px-3 py-1.5 rounded text-xs font-bold" style={{ background: "oklch(0.65 0.20 145)", color: "white" }}>
+                        className="px-3 py-1.5 rounded text-xs font-bold" style={{ background: "var(--gold)", color: "white" }}>
                         確認
                       </button>
                       <button onClick={() => updateBooking.mutate({ id: b.id, status: "cancelled" })}
-                        className="px-3 py-1.5 rounded text-xs font-bold" style={{ background: "oklch(0.55 0.22 25)", color: "white" }}>
+                        className="px-3 py-1.5 rounded text-xs font-bold" style={{ background: "var(--red)", color: "white" }}>
                         取消
                       </button>
                     </div>
@@ -233,17 +233,17 @@ export default function Admin() {
         {/* Contacts */}
         {tab === "contacts" && (
           <div className="flex flex-col gap-4">
-            {!contacts?.length ? <p style={{ color: "oklch(0.55 0.02 60)" }}>暫時沒有查詢</p> : contacts.map((c) => (
+            {!contacts?.length ? <p style={{ color: "var(--text-3)" }}>暫時沒有查詢</p> : contacts.map((c) => (
               <div key={c.id} className="glass-card rounded-xl p-5">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xs px-2 py-0.5 rounded font-bold" style={{ background: "oklch(0.62 0.24 25 / 0.15)", color: "oklch(0.62 0.24 25)" }}>
+                  <span className="text-xs px-2 py-0.5 rounded font-bold" style={{ background: "var(--red)", color: "var(--red)" }}>
                     {INQUIRY_LABELS[c.inquiryType]}
                   </span>
-                  <span className="text-xs" style={{ color: "oklch(0.45 0.02 60)" }}>{new Date(c.createdAt).toLocaleDateString("zh-HK")}</span>
+                  <span className="text-xs" style={{ color: "var(--text-3)" }}>{new Date(c.createdAt).toLocaleDateString("zh-HK")}</span>
                 </div>
-                <h3 className="font-bold mb-1" style={{ color: "oklch(0.88 0.01 60)" }}>{c.subject}</h3>
-                <p className="text-xs mb-2" style={{ color: "oklch(0.55 0.02 60)" }}>{c.name} · {c.email} {c.phone && `· ${c.phone}`}</p>
-                <p className="text-sm leading-relaxed" style={{ color: "oklch(0.70 0.01 60)" }}>{c.message}</p>
+                <h3 className="font-bold mb-1" style={{ color: "var(--text)" }}>{c.subject}</h3>
+                <p className="text-xs mb-2" style={{ color: "var(--text-3)" }}>{c.name} · {c.email} {c.phone && `· ${c.phone}`}</p>
+                <p className="text-sm leading-relaxed" style={{ color: "var(--text-2)" }}>{c.message}</p>
               </div>
             ))}
           </div>
@@ -252,13 +252,13 @@ export default function Admin() {
         {/* Subscriptions */}
         {tab === "subscriptions" && (
           <div>
-            <p className="text-sm mb-4" style={{ color: "oklch(0.55 0.02 60)" }}>共 {subscriptions?.length ?? 0} 位訂閱者</p>
+            <p className="text-sm mb-4" style={{ color: "var(--text-3)" }}>共 {subscriptions?.length ?? 0} 位訂閱者</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {subscriptions?.map((s) => (
                 <div key={s.id} className="glass-card rounded-lg p-4">
-                  <div className="text-sm font-bold" style={{ color: "oklch(0.85 0.01 60)" }}>{s.name || "匿名"}</div>
-                  <div className="text-xs" style={{ color: "oklch(0.55 0.02 60)" }}>{s.email}</div>
-                  <div className="text-xs mt-1" style={{ color: "oklch(0.45 0.02 60)" }}>{new Date(s.createdAt).toLocaleDateString("zh-HK")}</div>
+                  <div className="text-sm font-bold" style={{ color: "var(--text)" }}>{s.name || "匿名"}</div>
+                  <div className="text-xs" style={{ color: "var(--text-3)" }}>{s.email}</div>
+                  <div className="text-xs mt-1" style={{ color: "var(--text-3)" }}>{new Date(s.createdAt).toLocaleDateString("zh-HK")}</div>
                 </div>
               ))}
             </div>
@@ -271,32 +271,32 @@ export default function Admin() {
             {/* Stats */}
             <div className="glass-card rounded-xl p-5 mb-6">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full flex items-center justify-center text-lg" style={{ background: "oklch(0.62 0.24 25 / 0.15)", border: "1px solid oklch(0.62 0.24 25 / 0.3)" }}>🔔</div>
+                <div className="w-10 h-10 rounded-full flex items-center justify-center text-lg" style={{ background: "var(--red)", border: "1px solid var(--red)" }}>🔔</div>
                 <div>
-                  <div className="text-2xl font-black" style={{ color: "oklch(0.62 0.24 25)" }}>{pushSubCount?.count ?? 0}</div>
-                  <div className="text-xs" style={{ color: "oklch(0.55 0.02 60)" }}>目前活躍訂閱者</div>
+                  <div className="text-2xl font-black" style={{ color: "var(--red)" }}>{pushSubCount?.count ?? 0}</div>
+                  <div className="text-xs" style={{ color: "var(--text-3)" }}>目前活躍訂閱者</div>
                 </div>
               </div>
             </div>
 
             {/* Compose */}
             <div className="glass-card rounded-xl p-6 mb-6">
-              <h3 className="font-bold mb-4" style={{ color: "oklch(0.88 0.01 60)" }}>發送推送通知</h3>
+              <h3 className="font-bold mb-4" style={{ color: "var(--text)" }}>發送推送通知</h3>
               <div className="flex flex-col gap-4">
                 <div>
-                  <label className="text-xs font-bold block mb-1.5" style={{ color: "oklch(0.65 0.02 60)" }}>標題 *</label>
+                  <label className="text-xs font-bold block mb-1.5" style={{ color: "var(--text-2)" }}>標題 *</label>
                   <input
                     value={pushTitle}
                     onChange={(e) => setPushTitle(e.target.value)}
                     placeholder="例：🎙️ 新節目上線！「路邊電台」最新訪談"
                     maxLength={100}
                     className="w-full px-3 py-2.5 rounded-lg text-sm outline-none transition-all"
-                    style={{ background: "oklch(0.10 0.01 260)", border: "1px solid oklch(0.25 0.02 260)", color: "oklch(0.88 0.01 60)" }}
+                    style={{ background: "var(--bg-card)", border: "1px solid var(--line)", color: "var(--text)" }}
                   />
-                  <div className="text-right text-xs mt-1" style={{ color: "oklch(0.45 0.02 60)" }}>{pushTitle.length}/100</div>
+                  <div className="text-right text-xs mt-1" style={{ color: "var(--text-3)" }}>{pushTitle.length}/100</div>
                 </div>
                 <div>
-                  <label className="text-xs font-bold block mb-1.5" style={{ color: "oklch(0.65 0.02 60)" }}>內容 *</label>
+                  <label className="text-xs font-bold block mb-1.5" style={{ color: "var(--text-2)" }}>內容 *</label>
                   <textarea
                     value={pushBody}
                     onChange={(e) => setPushBody(e.target.value)}
@@ -304,25 +304,25 @@ export default function Admin() {
                     maxLength={300}
                     rows={3}
                     className="w-full px-3 py-2.5 rounded-lg text-sm outline-none transition-all resize-none"
-                    style={{ background: "oklch(0.10 0.01 260)", border: "1px solid oklch(0.25 0.02 260)", color: "oklch(0.88 0.01 60)" }}
+                    style={{ background: "var(--bg-card)", border: "1px solid var(--line)", color: "var(--text)" }}
                   />
-                  <div className="text-right text-xs mt-1" style={{ color: "oklch(0.45 0.02 60)" }}>{pushBody.length}/300</div>
+                  <div className="text-right text-xs mt-1" style={{ color: "var(--text-3)" }}>{pushBody.length}/300</div>
                 </div>
                 <div>
-                  <label className="text-xs font-bold block mb-1.5" style={{ color: "oklch(0.65 0.02 60)" }}>連結 URL（點擊通知後跳轉）</label>
+                  <label className="text-xs font-bold block mb-1.5" style={{ color: "var(--text-2)" }}>連結 URL（點擊通知後跳轉）</label>
                   <input
                     value={pushUrl}
                     onChange={(e) => setPushUrl(e.target.value)}
                     placeholder="/"
                     className="w-full px-3 py-2.5 rounded-lg text-sm outline-none transition-all"
-                    style={{ background: "oklch(0.10 0.01 260)", border: "1px solid oklch(0.25 0.02 260)", color: "oklch(0.88 0.01 60)" }}
+                    style={{ background: "var(--bg-card)", border: "1px solid var(--line)", color: "var(--text)" }}
                   />
                 </div>
                 <button
                   onClick={() => sendPush.mutate({ title: pushTitle, body: pushBody, url: pushUrl })}
                   disabled={!pushTitle.trim() || !pushBody.trim() || sendPush.isPending || (pushSubCount?.count ?? 0) === 0}
                   className="w-full py-3 rounded-lg font-bold text-sm transition-all duration-200 hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                  style={{ background: "oklch(0.62 0.24 25)", color: "white" }}
+                  style={{ background: "var(--red)", color: "white" }}
                 >
                   {sendPush.isPending ? (
                     <>⏳ 發送中...</>
@@ -331,7 +331,7 @@ export default function Admin() {
                   )}
                 </button>
                 {(pushSubCount?.count ?? 0) === 0 && (
-                  <p className="text-xs text-center" style={{ color: "oklch(0.50 0.02 60)" }}>目前沒有訂閱者，推廣網站後即可開始累積</p>
+                  <p className="text-xs text-center" style={{ color: "var(--text-3)" }}>目前沒有訂閱者，推廣網站後即可開始累積</p>
                 )}
               </div>
             </div>
@@ -339,19 +339,19 @@ export default function Admin() {
             {/* History */}
             {pushHistory && pushHistory.length > 0 && (
               <div>
-                <h3 className="font-bold mb-3" style={{ color: "oklch(0.88 0.01 60)" }}>發送記錄</h3>
+                <h3 className="font-bold mb-3" style={{ color: "var(--text)" }}>發送記錄</h3>
                 <div className="flex flex-col gap-3">
                   {pushHistory.map((h) => (
                     <div key={h.id} className="glass-card rounded-lg p-4">
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1">
-                          <div className="font-bold text-sm mb-1" style={{ color: "oklch(0.88 0.01 60)" }}>{h.title}</div>
-                          <div className="text-xs mb-2" style={{ color: "oklch(0.60 0.02 60)" }}>{h.body}</div>
-                          <div className="text-xs" style={{ color: "oklch(0.45 0.02 60)" }}>{new Date(h.sentAt).toLocaleString("zh-HK")}</div>
+                          <div className="font-bold text-sm mb-1" style={{ color: "var(--text)" }}>{h.title}</div>
+                          <div className="text-xs mb-2" style={{ color: "var(--text-2)" }}>{h.body}</div>
+                          <div className="text-xs" style={{ color: "var(--text-3)" }}>{new Date(h.sentAt).toLocaleString("zh-HK")}</div>
                         </div>
                         <div className="text-right flex-shrink-0">
-                          <div className="text-sm font-bold" style={{ color: "oklch(0.65 0.20 145)" }}>✓ {h.sentCount}</div>
-                          {h.failedCount > 0 && <div className="text-xs" style={{ color: "oklch(0.55 0.22 25)" }}>✗ {h.failedCount}</div>}
+                          <div className="text-sm font-bold" style={{ color: "var(--gold)" }}>✓ {h.sentCount}</div>
+                          {h.failedCount > 0 && <div className="text-xs" style={{ color: "var(--red)" }}>✗ {h.failedCount}</div>}
                         </div>
                       </div>
                     </div>
@@ -369,20 +369,20 @@ export default function Admin() {
       {tab === "submissions" && (
         <div className="flex flex-col gap-4">
             {/* Legend */}
-            <div className="flex gap-3 text-xs flex-wrap" style={{ color: "oklch(0.50 0.02 60)" }}>
+            <div className="flex gap-3 text-xs flex-wrap" style={{ color: "var(--text-3)" }}>
               <span>🟡 待審核</span>
               <span>🟢 已批准（首頁/嘉賓欄）</span>
               <span>🔵 已發放</span>
               <span>🔴 已拒絕</span>
             </div>
             {!submissions?.items?.length ? (
-              <p style={{ color: "oklch(0.55 0.02 60)" }}>暫時沒有投稿</p>
+              <p style={{ color: "var(--text-3)" }}>暫時沒有投稿</p>
             ) : submissions.items.map((s) => {
               // Parse images
               let imgs: string[] = [];
               try { if (s.images && s.images !== "[]") imgs = JSON.parse(s.images as string); } catch {}
 
-              const statusColor = s.status === "pending" ? "oklch(0.78 0.16 75)" : s.status === "approved" ? "oklch(0.65 0.20 145)" : s.status === "published" ? "oklch(0.60 0.20 250)" : "oklch(0.55 0.22 25)";
+              const statusColor = s.status === "pending" ? "var(--gold)" : s.status === "approved" ? "var(--gold)" : s.status === "published" ? "var(--red)" : "var(--red)";
               const statusBg = statusColor.replace(")", " / 0.15)");
               const statusLabel = s.status === "pending" ? "🟡 待審核" : s.status === "approved" ? "🟢 已批准" : s.status === "published" ? "🔵 已發放" : "🔴 已拒絕";
 
@@ -395,23 +395,23 @@ export default function Admin() {
                       <span className="text-xs px-2 py-0.5 rounded font-bold" style={{ background: statusBg, color: statusColor }}>
                         {statusLabel}
                       </span>
-                      <span className="text-xs px-2 py-0.5 rounded" style={{ background: "oklch(0.16 0.02 260)", color: "oklch(0.60 0.02 60)" }}>
+                      <span className="text-xs px-2 py-0.5 rounded" style={{ background: "var(--bg-raise)", color: "var(--text-2)" }}>
                         {s.category === "relationship" ? "💕 感情故事" : s.category === "fengshui" ? "🔮 玄學奇遇" : s.category === "confession" ? "💬 心底話" : s.category === "question" ? "🙋 問題想問" : "✨ 其他"}
                       </span>
                       {imgs.length > 0 && (
-                        <span className="text-xs px-2 py-0.5 rounded" style={{ background: "oklch(0.16 0.02 260)", color: "oklch(0.65 0.20 250)" }}>
+                        <span className="text-xs px-2 py-0.5 rounded" style={{ background: "var(--bg-raise)", color: "var(--red)" }}>
                           📷 {imgs.length} 張圖片
                         </span>
                       )}
                       {s.publishTarget && s.status !== "pending" && (
-                        <span className="text-xs px-2 py-0.5 rounded" style={{ background: "oklch(0.16 0.02 260)", color: "oklch(0.65 0.20 145)" }}>
+                        <span className="text-xs px-2 py-0.5 rounded" style={{ background: "var(--bg-raise)", color: "var(--gold)" }}>
                           {s.publishTarget === "home" ? "🏠 首頁" : "📝 嘉賓專欄"}
                         </span>
                       )}
-                      <span className="text-xs" style={{ color: "oklch(0.45 0.02 60)" }}>
+                      <span className="text-xs" style={{ color: "var(--text-3)" }}>
                         {new Date(s.createdAt).toLocaleString("zh-HK")}
                       </span>
-                      <span className="text-xs" style={{ color: "oklch(0.55 0.22 25)" }}>♥ {s.likes}</span>
+                      <span className="text-xs" style={{ color: "var(--red)" }}>♥ {s.likes}</span>
                     </div>
                   </div>
 
@@ -424,7 +424,7 @@ export default function Admin() {
                           type="button"
                           onClick={() => openLightbox(imgs, i)}
                           className="rounded-lg overflow-hidden transition-all hover:scale-105 hover:opacity-90"
-                          style={{ width: 80, height: 80, flexShrink: 0, border: "1px solid oklch(0.22 0.025 260)" }}
+                          style={{ width: 80, height: 80, flexShrink: 0, border: "1px solid var(--line)" }}
                           title="點擊放大"
                         >
                           <img src={url} alt={`圖片${i+1}`} className="w-full h-full object-cover" />
@@ -434,31 +434,31 @@ export default function Admin() {
                   )}
 
                   {/* Content */}
-                  <p className="text-sm leading-relaxed" style={{ color: "oklch(0.82 0.01 60)" }}>{s.content}</p>
-                  <p className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>— {s.isAnonymous ? "匿名讀者" : s.nickname}</p>
+                  <p className="text-sm leading-relaxed" style={{ color: "var(--text)" }}>{s.content}</p>
+                  <p className="text-xs" style={{ color: "var(--text-3)" }}>— {s.isAnonymous ? "匿名讀者" : s.nickname}</p>
 
                   {/* Admin note */}
                   {s.adminNote && (
-                    <p className="text-xs px-3 py-2 rounded-lg" style={{ background: "oklch(0.14 0.018 260)", color: "oklch(0.60 0.02 60)", borderLeft: "3px solid oklch(0.78 0.16 75)" }}>
+                    <p className="text-xs px-3 py-2 rounded-lg" style={{ background: "var(--bg-card)", color: "var(--text-2)", borderLeft: "3px solid var(--gold)" }}>
                       管理員備注：{s.adminNote}
                     </p>
                   )}
 
                   {/* Action buttons */}
                   {(s.status === "pending" || s.status === "approved") && (
-                    <div className="flex gap-2 flex-wrap pt-1" style={{ borderTop: "1px solid oklch(0.18 0.02 260)" }}>
+                    <div className="flex gap-2 flex-wrap pt-1" style={{ borderTop: "1px solid var(--line)" }}>
                       {s.status === "pending" && (
                         <>
                           <button onClick={() => updateSubmission.mutate({ id: s.id, status: "approved", publishTarget: "home" })}
-                            className="px-3 py-1.5 rounded text-xs font-bold transition-opacity hover:opacity-80" style={{ background: "oklch(0.65 0.20 145)", color: "white" }}>
+                            className="px-3 py-1.5 rounded text-xs font-bold transition-opacity hover:opacity-80" style={{ background: "var(--gold)", color: "white" }}>
                             ✓ 批准（首頁）
                           </button>
                           <button onClick={() => updateSubmission.mutate({ id: s.id, status: "approved", publishTarget: "blog" })}
-                            className="px-3 py-1.5 rounded text-xs font-bold transition-opacity hover:opacity-80" style={{ background: "oklch(0.60 0.20 145)", color: "white" }}>
+                            className="px-3 py-1.5 rounded text-xs font-bold transition-opacity hover:opacity-80" style={{ background: "var(--gold)", color: "white" }}>
                             ✓ 批准（嘉賓欄）
                           </button>
                           <button onClick={() => updateSubmission.mutate({ id: s.id, status: "rejected" })}
-                            className="px-3 py-1.5 rounded text-xs font-bold transition-opacity hover:opacity-80" style={{ background: "oklch(0.55 0.22 25)", color: "white" }}>
+                            className="px-3 py-1.5 rounded text-xs font-bold transition-opacity hover:opacity-80" style={{ background: "var(--red)", color: "white" }}>
                             ✗ 拒絕
                           </button>
                         </>
@@ -466,11 +466,11 @@ export default function Admin() {
                       {s.status === "approved" && (
                         <>
                           <button onClick={() => updateSubmission.mutate({ id: s.id, status: "published", publishTarget: (s.publishTarget as "home" | "blog") ?? "home" })}
-                            className="px-3 py-1.5 rounded text-xs font-bold transition-opacity hover:opacity-80" style={{ background: "oklch(0.60 0.20 250)", color: "white" }}>
+                            className="px-3 py-1.5 rounded text-xs font-bold transition-opacity hover:opacity-80" style={{ background: "var(--red)", color: "white" }}>
                             🚀 發放至{s.publishTarget === "blog" ? "嘉賓專欄" : "首頁"}
                           </button>
                           <button onClick={() => updateSubmission.mutate({ id: s.id, status: "rejected" })}
-                            className="px-3 py-1.5 rounded text-xs font-bold transition-opacity hover:opacity-80" style={{ background: "oklch(0.55 0.22 25)", color: "white" }}>
+                            className="px-3 py-1.5 rounded text-xs font-bold transition-opacity hover:opacity-80" style={{ background: "var(--red)", color: "white" }}>
                             ✗ 撤回
                           </button>
                         </>

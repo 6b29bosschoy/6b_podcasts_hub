@@ -9,14 +9,14 @@ import {
 
 // ─── Mystic Categories ───────────────────────────────────────────────────────
 const MYSTIC_CATEGORIES = [
-  { icon: "🏠", label: "風水", desc: "家居、辦公室及商業場所氣場分析", href: "/mystic/videos", color: "oklch(0.62 0.24 25)" },
-  { icon: "📅", label: "八字命理", desc: "四柱八字、十神關係、大運流年推算", href: "/mystic/bazi", color: "oklch(0.55 0.18 280)" },
-  { icon: "⭐", label: "紫微斗數", desc: "十二宮位命盤，洞察人生各方面運勢", href: "/mystic/analysis", color: "oklch(0.65 0.20 330)" },
-  { icon: "🌀", label: "奇門遁甲", desc: "時空能量分析，把握人生關鍵時機", href: "/mystic/analysis", color: "oklch(0.55 0.22 290)" },
-  { icon: "🃏", label: "塔羅占卜", desc: "牌陣解讀，感情事業人際指引", href: "/mystic/analysis", color: "oklch(0.62 0.20 160)" },
-  { icon: "♈", label: "星座分析", desc: "本命盤及流年，了解星座能量影響", href: "/mystic/analysis", color: "oklch(0.65 0.18 200)" },
-  { icon: "🔢", label: "生命靈數", desc: "出生日期靈數，探索靈魂使命與天賦", href: "/mystic/analysis", color: "oklch(0.70 0.18 75)" },
-  { icon: "🌸", label: "身心靈療癒", desc: "阿卡西紀錄、能量療癒、靈魂探索", href: "/mystic/analysis", color: "oklch(0.65 0.15 350)" },
+  { icon: "🏠", label: "風水", desc: "家居、辦公室及商業場所氣場分析", href: "/mystic/videos", color: "var(--red)" },
+  { icon: "📅", label: "八字命理", desc: "四柱八字、十神關係、大運流年推算", href: "/mystic/bazi", color: "var(--gold)" },
+  { icon: "⭐", label: "紫微斗數", desc: "十二宮位命盤，洞察人生各方面運勢", href: "/mystic/analysis", color: "var(--gold)" },
+  { icon: "🌀", label: "奇門遁甲", desc: "時空能量分析，把握人生關鍵時機", href: "/mystic/analysis", color: "var(--gold)" },
+  { icon: "🃏", label: "塔羅占卜", desc: "牌陣解讀，感情事業人際指引", href: "/mystic/analysis", color: "var(--gold)" },
+  { icon: "♈", label: "星座分析", desc: "本命盤及流年，了解星座能量影響", href: "/mystic/analysis", color: "var(--gold)" },
+  { icon: "🔢", label: "生命靈數", desc: "出生日期靈數，探索靈魂使命與天賦", href: "/mystic/analysis", color: "var(--gold)" },
+  { icon: "🌸", label: "身心靈療癒", desc: "阿卡西紀錄、能量療癒、靈魂探索", href: "/mystic/analysis", color: "var(--gold)" },
 ];
 
 // ─── Featured Themes ─────────────────────────────────────────────────────────
@@ -40,7 +40,7 @@ const MASTERS = [
     emoji: "🏠",
     videoHref: "/mystic/videos",
     bookingHref: "/booking",
-    accentColor: "oklch(0.62 0.24 25)",
+    accentColor: "var(--red)",
   },
   {
     id: "master-bazi",
@@ -51,7 +51,7 @@ const MASTERS = [
     emoji: "📅",
     videoHref: "/mystic/bazi",
     bookingHref: "/booking",
-    accentColor: "oklch(0.55 0.18 280)",
+    accentColor: "var(--gold)",
   },
   {
     id: "master-tarot",
@@ -62,7 +62,7 @@ const MASTERS = [
     emoji: "🃏",
     videoHref: "/mystic/videos",
     bookingHref: "/booking",
-    accentColor: "oklch(0.65 0.20 330)",
+    accentColor: "var(--gold)",
   },
   {
     id: "master-akashic",
@@ -73,7 +73,7 @@ const MASTERS = [
     emoji: "🌸",
     videoHref: "/mystic/videos",
     bookingHref: "/booking",
-    accentColor: "oklch(0.65 0.15 350)",
+    accentColor: "var(--gold)",
   },
 ];
 
@@ -93,7 +93,7 @@ const MEMBERSHIP_TIERS = [
     ],
     cta: "立即觀看",
     ctaHref: "/mystic/videos",
-    accentColor: "oklch(0.55 0.02 60)",
+    accentColor: "var(--text-3)",
   },
   {
     id: "member",
@@ -111,7 +111,7 @@ const MEMBERSHIP_TIERS = [
     ],
     cta: "加入會員",
     ctaHref: "/mystic/pricing",
-    accentColor: "oklch(0.55 0.18 280)",
+    accentColor: "var(--gold)",
   },
   {
     id: "personal",
@@ -129,7 +129,7 @@ const MEMBERSHIP_TIERS = [
     ],
     cta: "預約服務",
     ctaHref: "/booking",
-    accentColor: "oklch(0.62 0.24 25)",
+    accentColor: "var(--red)",
   },
 ];
 
@@ -221,14 +221,14 @@ export default function MysticHome() {
   const fengshuiChannel = (channelData as { podcasts?: ChannelInfo; fengshui?: ChannelInfo } | undefined)?.fengshui;
   const subCount = fengshuiChannel?.subscriberCount ?? null;
 
-  const BG = "oklch(0.07 0.015 270)";
-  const BG2 = "oklch(0.10 0.02 270)";
-  const BORDER = "oklch(0.18 0.02 270)";
-  const PURPLE = "oklch(0.55 0.18 280)";
-  const PURPLE_LIGHT = "oklch(0.70 0.15 280)";
-  const GOLD = "oklch(0.75 0.18 75)";
-  const TEXT_PRIMARY = "oklch(0.92 0.01 60)";
-  const TEXT_MUTED = "oklch(0.55 0.02 60)";
+  const BG = "var(--bg)";
+  const BG2 = "var(--bg-card)";
+  const BORDER = "var(--line)";
+  const PURPLE = "var(--gold)";
+  const PURPLE_LIGHT = "var(--gold)";
+  const GOLD = "var(--gold)";
+  const TEXT_PRIMARY = "var(--text)";
+  const TEXT_MUTED = "var(--text-3)";
 
   return (
     <div className="min-h-screen pb-20 lg:pb-0" style={{ background: BG }}>
@@ -245,13 +245,13 @@ export default function MysticHome() {
           backgroundRepeat: "no-repeat"
         }} />
         {/* Dark overlay */}
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "oklch(0.08 0.02 280 / 0.80)" }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "rgba(13,12,10,0.8)" }} />
         {/* Background glows */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] opacity-15"
-            style={{ background: "radial-gradient(ellipse, oklch(0.55 0.22 290), transparent 70%)" }} />
+            style={{ background: "radial-gradient(ellipse, var(--gold), transparent 70%)" }} />
           <div className="absolute bottom-0 right-0 w-80 h-80 rounded-full blur-[100px] opacity-10"
-            style={{ background: "oklch(0.65 0.20 330)" }} />
+            style={{ background: "var(--gold)" }} />
         </div>
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
@@ -285,7 +285,7 @@ export default function MysticHome() {
           {subCount && (
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs mb-6"
               style={{ background: BG2, border: `1px solid ${BORDER}`, color: TEXT_MUTED }}>
-              <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "oklch(0.62 0.24 25)" }} />
+              <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--red)" }} />
               @6bfengshui · {subCount} 訂閱
             </div>
           )}
@@ -298,7 +298,7 @@ export default function MysticHome() {
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm transition-all duration-200 hover:opacity-90 hover:scale-105"
               style={{
-                background: `linear-gradient(135deg, ${PURPLE}, oklch(0.45 0.18 300))`,
+                background: `linear-gradient(135deg, ${PURPLE}, var(--gold))`,
                 color: "white",
                 boxShadow: `0 0 24px ${PURPLE}58`,
               }}
@@ -311,9 +311,9 @@ export default function MysticHome() {
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm transition-all duration-200 hover:opacity-90 hover:scale-105"
               style={{
-                background: "linear-gradient(135deg, oklch(0.55 0.20 145), oklch(0.45 0.18 145))",
+                background: "var(--bg-card)",
                 color: "white",
-                boxShadow: "0 0 24px oklch(0.55 0.20 145 / 0.4)",
+                boxShadow: "none",
               }}
             >
               <MessageCircle size={16} /> WhatsApp 預約
@@ -335,10 +335,10 @@ export default function MysticHome() {
       {/* ══════════════════════════════════════════════════════════════════════
           YOUTUBE SUBSCRIPTION BANNER
       ══════════════════════════════════════════════════════════════════════ */}
-      <section className="py-6 px-4" style={{ background: "oklch(0.09 0.025 280)", borderTop: `1px solid ${BORDER}` }}>
+      <section className="py-6 px-4" style={{ background: "var(--bg)", borderTop: `1px solid ${BORDER}` }}>
         <div className="max-w-4xl mx-auto">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl px-6 py-4"
-            style={{ background: `linear-gradient(135deg, oklch(0.12 0.04 280), oklch(0.10 0.03 300))`, border: `1px solid ${PURPLE}40` }}>
+            style={{ background: `linear-gradient(135deg, var(--bg-card), var(--bg-card))`, border: `1px solid ${PURPLE}40` }}>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
                 style={{ background: `${PURPLE}25`, border: `1px solid ${PURPLE}50` }}>
@@ -354,7 +354,7 @@ export default function MysticHome() {
               target="_blank"
               rel="noopener noreferrer"
               className="flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all hover:opacity-90 hover:scale-105"
-              style={{ background: `linear-gradient(135deg, ${PURPLE}, oklch(0.45 0.18 300))`, color: "white" }}
+              style={{ background: `linear-gradient(135deg, ${PURPLE}, var(--gold))`, color: "white" }}
             >
               <Youtube className="w-4 h-4" /> 立即訂閱
             </a>
@@ -392,7 +392,7 @@ export default function MysticHome() {
                     {imgSrc ? (
                       <div className="relative h-28 overflow-hidden">
                         <img src={imgSrc} alt={cat.label} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 30%, oklch(0.08 0.02 280 / 0.85))" }} />
+                        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 30%, rgba(13,12,10,0.85))" }} />
                         <div className="absolute bottom-2 left-0 right-0 text-center">
                           <span className="text-sm font-bold" style={{ color: TEXT_PRIMARY }}>{cat.label}</span>
                         </div>
@@ -475,7 +475,7 @@ export default function MysticHome() {
                       </div>
                     )}
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                      style={{ background: "oklch(0 0 0 / 0.45)" }}>
+                      style={{ background: "rgba(13,12,10,0.45)" }}>
                       <div className="w-12 h-12 rounded-full flex items-center justify-center"
                         style={{ background: `${PURPLE}e6` }}>
                         <Play size={20} fill="white" style={{ color: "white", marginLeft: 2 }} />
@@ -483,7 +483,7 @@ export default function MysticHome() {
                     </div>
                     {video.duration && (
                       <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded text-xs font-mono font-bold"
-                        style={{ background: "oklch(0 0 0 / 0.8)", color: "white" }}>
+                        style={{ background: "rgba(13,12,10,0.8)", color: "white" }}>
                         {formatDuration(video.duration)}
                       </div>
                     )}
@@ -633,7 +633,7 @@ export default function MysticHome() {
                 className="rounded-2xl p-6 flex flex-col relative"
                 style={{
                   background: tier.highlight
-                    ? `linear-gradient(160deg, oklch(0.13 0.04 280), oklch(0.11 0.03 300))`
+                    ? `linear-gradient(160deg, var(--bg-card), var(--bg-card))`
                     : BG2,
                   border: tier.highlight
                     ? `1px solid ${PURPLE}80`
@@ -666,7 +666,7 @@ export default function MysticHome() {
                     className="block w-full text-center py-3 rounded-xl font-bold text-sm cursor-pointer transition-all hover:opacity-90"
                     style={{
                       background: tier.highlight
-                        ? `linear-gradient(135deg, ${PURPLE}, oklch(0.45 0.15 300))`
+                        ? `linear-gradient(135deg, ${PURPLE}, var(--gold))`
                         : `${tier.accentColor}20`,
                       color: tier.highlight ? "white" : tier.accentColor,
                       border: tier.highlight ? "none" : `1px solid ${tier.accentColor}4d`,
@@ -687,7 +687,7 @@ export default function MysticHome() {
       <section className="py-16 px-4" style={{ background: BG2, borderTop: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}` }}>
         <div className="max-w-3xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold mb-6"
-            style={{ background: "oklch(0.62 0.24 25 / 0.12)", color: GOLD, border: "1px solid oklch(0.62 0.24 25 / 0.3)" }}>
+            style={{ background: "var(--red)", color: GOLD, border: "1px solid var(--red)" }}>
             <Users size={12} /> 個人玄學諮詢
           </div>
           <h2 className="text-2xl md:text-3xl font-black mb-4" style={{ color: TEXT_PRIMARY }}>
@@ -706,9 +706,9 @@ export default function MysticHome() {
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-bold text-sm transition-all hover:opacity-90 hover:scale-105"
               style={{
-                background: "linear-gradient(135deg, oklch(0.55 0.20 145), oklch(0.45 0.18 145))",
+                background: "var(--bg-card)",
                 color: "white",
-                boxShadow: "0 0 24px oklch(0.55 0.20 145 / 0.35)",
+                boxShadow: "none",
               }}
             >
               <MessageCircle size={16} /> WhatsApp 立即預約
@@ -716,9 +716,9 @@ export default function MysticHome() {
             <Link href="/booking">
               <span className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-bold text-sm cursor-pointer transition-all hover:opacity-90 hover:scale-105"
                 style={{
-                  background: "linear-gradient(135deg, oklch(0.62 0.24 25), oklch(0.55 0.20 45))",
+                  background: "linear-gradient(135deg, var(--red), var(--red))",
                   color: "white",
-                  boxShadow: "0 0 24px oklch(0.62 0.24 25 / 0.3)",
+                  boxShadow: "none",
                 }}>
                 <Calendar size={16} /> 預約師傅諮詢
               </span>

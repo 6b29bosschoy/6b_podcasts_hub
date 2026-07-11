@@ -23,16 +23,16 @@ export default function SubscribeBox() {
   };
 
   return (
-    <section className="py-16" style={{ background: "linear-gradient(135deg, oklch(0.12 0.015 260), oklch(0.10 0.01 260))" }}>
+    <section className="py-16" style={{ background: "linear-gradient(135deg, var(--bg-card), var(--bg-card))" }}>
       <div className="container">
         <div className="max-w-2xl mx-auto text-center">
-          <div className="text-xs font-bold tracking-widest mb-3" style={{ color: "oklch(0.62 0.24 25)" }}>
+          <div className="text-xs font-bold tracking-widest mb-3" style={{ color: "var(--red)" }}>
             電子報訂閱
           </div>
-          <h2 className="text-2xl md:text-3xl font-black mb-3" style={{ color: "oklch(0.92 0.01 60)" }}>
+          <h2 className="text-2xl md:text-3xl font-black mb-3" style={{ color: "var(--text)" }}>
             訂閱獨家內容
           </h2>
-          <p className="text-sm mb-8" style={{ color: "oklch(0.55 0.02 60)" }}>
+          <p className="text-sm mb-8" style={{ color: "var(--text-3)" }}>
             定期獲取節目預告、玄學小貼士及嘉賓獨家心得，成為「路邊人」大家庭的一份子。
           </p>
           <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
@@ -42,7 +42,7 @@ export default function SubscribeBox() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="flex-1 px-4 py-3 rounded-lg text-sm outline-none"
-              style={{ background: "oklch(0.18 0.02 260)", border: "1px solid oklch(0.25 0.02 260)", color: "oklch(0.92 0.01 60)" }}
+              style={{ background: "var(--line)", border: "1px solid var(--line)", color: "var(--text)" }}
             />
             <input
               type="email"
@@ -51,13 +51,13 @@ export default function SubscribeBox() {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="flex-1 px-4 py-3 rounded-lg text-sm outline-none"
-              style={{ background: "oklch(0.18 0.02 260)", border: "1px solid oklch(0.25 0.02 260)", color: "oklch(0.92 0.01 60)" }}
+              style={{ background: "var(--line)", border: "1px solid var(--line)", color: "var(--text)" }}
             />
             <button
               type="submit"
               disabled={subscribeMutation.isPending}
               className="px-6 py-3 rounded-lg text-sm font-bold transition-all duration-200 hover:opacity-90 disabled:opacity-50"
-              style={{ background: "linear-gradient(135deg, oklch(0.60 0.22 25), oklch(0.75 0.15 75))", color: "oklch(0.98 0.005 0)" }}
+              style={{ background: "linear-gradient(135deg, var(--red), var(--gold))", color: "var(--text)" }}
             >
               {subscribeMutation.isPending ? "訂閱中..." : "立即訂閱"}
             </button>

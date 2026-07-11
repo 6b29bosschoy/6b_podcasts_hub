@@ -33,14 +33,14 @@ export default function Lightbox({ images, currentIndex, onClose, onPrev, onNext
   return (
     <div
       className="fixed inset-0 z-[9999] flex items-center justify-center"
-      style={{ background: "oklch(0 0 0 / 0.92)" }}
+      style={{ background: "rgba(13,12,10,0.92)" }}
       onClick={onClose}
     >
       {/* Close button */}
       <button
         onClick={onClose}
         className="absolute top-4 right-4 p-2 rounded-full transition-all hover:opacity-80"
-        style={{ background: "oklch(0.20 0.02 260)", color: "white" }}
+        style={{ background: "var(--line)", color: "white" }}
         aria-label="關閉"
       >
         <X size={20} />
@@ -50,7 +50,7 @@ export default function Lightbox({ images, currentIndex, onClose, onPrev, onNext
       {images.length > 1 && (
         <div
           className="absolute top-4 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-xs font-bold"
-          style={{ background: "oklch(0.20 0.02 260)", color: "oklch(0.85 0.01 60)" }}
+          style={{ background: "var(--line)", color: "var(--text)" }}
         >
           {currentIndex + 1} / {images.length}
         </div>
@@ -61,7 +61,7 @@ export default function Lightbox({ images, currentIndex, onClose, onPrev, onNext
         <button
           onClick={(e) => { e.stopPropagation(); onPrev(); }}
           className="absolute left-4 p-2 rounded-full transition-all hover:opacity-80"
-          style={{ background: "oklch(0.20 0.02 260)", color: "white" }}
+          style={{ background: "var(--line)", color: "white" }}
           aria-label="上一張"
         >
           <ChevronLeft size={24} />
@@ -73,7 +73,7 @@ export default function Lightbox({ images, currentIndex, onClose, onPrev, onNext
         <button
           onClick={(e) => { e.stopPropagation(); onNext(); }}
           className="absolute right-4 p-2 rounded-full transition-all hover:opacity-80"
-          style={{ background: "oklch(0.20 0.02 260)", color: "white" }}
+          style={{ background: "var(--line)", color: "white" }}
           aria-label="下一張"
         >
           <ChevronRight size={24} />
@@ -89,7 +89,7 @@ export default function Lightbox({ images, currentIndex, onClose, onPrev, onNext
           src={images[currentIndex]}
           alt={`圖片 ${currentIndex + 1}`}
           className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
-          style={{ boxShadow: "0 25px 60px oklch(0 0 0 / 0.8)" }}
+          style={{ boxShadow: "0 25px 60px rgba(13,12,10,0.8)" }}
         />
       </div>
 
@@ -112,7 +112,7 @@ export default function Lightbox({ images, currentIndex, onClose, onPrev, onNext
               style={{
                 width: 44,
                 height: 44,
-                border: idx === currentIndex ? "2px solid oklch(0.62 0.24 25)" : "2px solid transparent",
+                border: idx === currentIndex ? "2px solid var(--red)" : "2px solid transparent",
                 opacity: idx === currentIndex ? 1 : 0.5,
               }}
             >

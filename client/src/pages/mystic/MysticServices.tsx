@@ -73,35 +73,35 @@ export default function MysticServices() {
   });
 
   return (
-    <div className="min-h-screen pt-20 pb-24 lg:pb-8" style={{ background: "oklch(0.07 0.01 260)" }}>
+    <div className="min-h-screen pt-20 pb-24 lg:pb-8" style={{ background: "var(--bg)" }}>
       {/* Header */}
       <div
         className="py-12 px-4 text-center"
         style={{
-          background: "linear-gradient(180deg, oklch(0.10 0.02 260) 0%, oklch(0.07 0.01 260) 100%)",
-          borderBottom: "1px solid oklch(0.18 0.02 260)",
+          background: "linear-gradient(180deg, var(--bg-card) 0%, var(--bg) 100%)",
+          borderBottom: "1px solid var(--line)",
         }}
       >
         <div className="max-w-2xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold mb-4"
-            style={{ background: "oklch(0.55 0.18 280 / 0.15)", color: "oklch(0.70 0.15 280)", border: "1px solid oklch(0.55 0.18 280 / 0.3)" }}>
+            style={{ background: "rgba(201,164,92,0.15)", color: "var(--gold)", border: "1px solid rgba(201,164,92,0.3)" }}>
             <Sparkles size={12} /> 玄學服務
           </div>
-          <h1 className="text-3xl md:text-4xl font-black mb-3" style={{ color: "oklch(0.92 0.01 60)" }}>
+          <h1 className="text-3xl md:text-4xl font-black mb-3" style={{ color: "var(--text)" }}>
             路邊玄學堂服務
           </h1>
-          <p className="text-sm mb-6" style={{ color: "oklch(0.55 0.02 60)" }}>
+          <p className="text-sm mb-6" style={{ color: "var(--text-3)" }}>
             中西玄學 AI 分析平台，提供個人化命理解讀與靈性探索服務
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/mystic/analysis"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-200 hover:opacity-90"
-              style={{ background: "linear-gradient(135deg, oklch(0.55 0.18 280), oklch(0.45 0.15 300))", color: "white" }}>
+              style={{ background: "var(--bg-card)", color: "white" }}>
               <Sparkles size={16} /> 立即 AI 分析
             </Link>
             <Link href="/booking"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-200 hover:opacity-90"
-              style={{ background: "oklch(0.14 0.02 260)", color: "oklch(0.75 0.02 60)", border: "1px solid oklch(0.25 0.02 260)" }}>
+              style={{ background: "var(--bg-raise)", color: "var(--text-2)", border: "1px solid var(--line)" }}>
               <Calendar size={16} /> 預約人工服務
             </Link>
           </div>
@@ -117,30 +117,30 @@ export default function MysticServices() {
               href={svc.href}
               className="group block rounded-xl p-5 transition-all duration-300 hover:-translate-y-1"
               style={{
-                background: "oklch(0.11 0.02 260)",
-                border: "1px solid oklch(0.18 0.02 260)",
+                background: "var(--bg-card)",
+                border: "1px solid var(--line)",
               }}
             >
               <div className="flex items-start gap-3 mb-3">
                 <span className="text-3xl">{svc.icon}</span>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-bold text-sm" style={{ color: "oklch(0.88 0.01 60)" }}>{svc.title}</h3>
+                    <h3 className="font-bold text-sm" style={{ color: "var(--text)" }}>{svc.title}</h3>
                     <span className="text-xs px-1.5 py-0.5 rounded-full"
                       style={{
-                        background: svc.tag === "中式玄學" ? "oklch(0.62 0.24 25 / 0.15)" : svc.tag === "西方玄學" ? "oklch(0.55 0.18 280 / 0.15)" : "oklch(0.55 0.18 200 / 0.15)",
-                        color: svc.tag === "中式玄學" ? "oklch(0.75 0.20 25)" : svc.tag === "西方玄學" ? "oklch(0.70 0.15 280)" : "oklch(0.70 0.15 200)",
+                        background: svc.tag === "中式玄學" ? "var(--red)" : svc.tag === "西方玄學" ? "rgba(201,164,92,0.15)" : "rgba(201,164,92,0.15)",
+                        color: svc.tag === "中式玄學" ? "var(--red)" : svc.tag === "西方玄學" ? "var(--gold)" : "var(--gold)",
                       }}>
                       {svc.tag}
                     </span>
                   </div>
                 </div>
               </div>
-              <p className="text-xs leading-relaxed mb-4" style={{ color: "oklch(0.55 0.02 60)" }}>{svc.desc}</p>
+              <p className="text-xs leading-relaxed mb-4" style={{ color: "var(--text-3)" }}>{svc.desc}</p>
               <div className="flex items-center justify-between">
-                <span className="text-sm font-bold" style={{ color: "oklch(0.75 0.20 25)" }}>{svc.price}</span>
+                <span className="text-sm font-bold" style={{ color: "var(--red)" }}>{svc.price}</span>
                 <div className="flex items-center gap-1 text-xs font-medium transition-all duration-200 group-hover:gap-2"
-                  style={{ color: "oklch(0.55 0.18 280)" }}>
+                  style={{ color: "var(--gold)" }}>
                   了解更多 <ArrowRight size={12} />
                 </div>
               </div>
@@ -150,17 +150,17 @@ export default function MysticServices() {
 
         {/* AI Analysis CTA */}
         <div className="mt-10 rounded-2xl p-8 text-center"
-          style={{ background: "linear-gradient(135deg, oklch(0.14 0.04 280), oklch(0.12 0.03 300))", border: "1px solid oklch(0.25 0.06 280)" }}>
-          <Star size={32} className="mx-auto mb-3" style={{ color: "oklch(0.70 0.15 280)" }} />
-          <h2 className="text-xl font-black mb-2" style={{ color: "oklch(0.92 0.01 60)" }}>
+          style={{ background: "linear-gradient(135deg, var(--bg-raise), var(--bg-card))", border: "1px solid var(--line)" }}>
+          <Star size={32} className="mx-auto mb-3" style={{ color: "var(--gold)" }} />
+          <h2 className="text-xl font-black mb-2" style={{ color: "var(--text)" }}>
             免費 AI 玄學分析
           </h2>
-          <p className="text-sm mb-5" style={{ color: "oklch(0.55 0.02 60)" }}>
+          <p className="text-sm mb-5" style={{ color: "var(--text-3)" }}>
             輸入出生資料，即時獲得八字、塔羅、星座、生命靈數等 AI 解讀
           </p>
           <Link href="/mystic/analysis"
             className="inline-flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-sm transition-all duration-200 hover:opacity-90 hover:scale-105"
-            style={{ background: "linear-gradient(135deg, oklch(0.55 0.18 280), oklch(0.45 0.15 300))", color: "white" }}>
+            style={{ background: "var(--bg-card)", color: "white" }}>
             <Sparkles size={16} /> 立即體驗免費分析
           </Link>
         </div>

@@ -20,13 +20,13 @@ import {
 } from "lucide-react";
 
 // ─── Colour tokens ───────────────────────────────────────────────
-const BG = "oklch(0.07 0.015 270)";
-const BG2 = "oklch(0.10 0.02 270)";
-const BORDER = "oklch(0.18 0.02 270)";
-const GOLD = "oklch(0.78 0.15 85)";
-const PURPLE = "oklch(0.55 0.22 290)";
-const TEAL = "oklch(0.60 0.14 185)";
-const RED = "oklch(0.55 0.20 25)";
+const BG = "var(--bg)";
+const BG2 = "var(--bg-card)";
+const BORDER = "var(--line)";
+const GOLD = "var(--gold)";
+const PURPLE = "var(--gold)";
+const TEAL = "var(--gold)";
+const RED = "var(--red)";
 
 // ─── Data ────────────────────────────────────────────────────────
 const TIERS = [
@@ -130,7 +130,7 @@ const SERVICES_DETAIL = [
   {
     category: "感情 / 姻緣",
     icon: <Heart size={20} />,
-    color: "oklch(0.60 0.20 0)",
+    color: "var(--text-2)",
     services: ["八字合婚分析", "塔羅感情解讀", "紫微斗數夫妻宮", "桃花運改善建議"],
   },
   {
@@ -168,7 +168,7 @@ export default function MysticFunnel() {
       {/* ── Hero ── */}
       <section
         style={{
-          background: `linear-gradient(135deg, oklch(0.08 0.03 290) 0%, oklch(0.06 0.02 270) 50%, oklch(0.09 0.04 85) 100%)`,
+          background: `var(--bg-card) 100%)`,
           padding: "80px 24px 60px",
           textAlign: "center",
           borderBottom: `1px solid ${BORDER}`,
@@ -180,12 +180,12 @@ export default function MysticFunnel() {
               display: "inline-flex",
               alignItems: "center",
               gap: 8,
-              background: "oklch(0.55 0.22 290 / 0.15)",
-              border: `1px solid oklch(0.55 0.22 290 / 0.4)`,
+              background: "rgba(201,164,92,0.15)",
+              border: `1px solid rgba(201,164,92,0.4)`,
               borderRadius: 20,
               padding: "6px 16px",
               fontSize: 13,
-              color: "oklch(0.75 0.15 290)",
+              color: "var(--gold)",
               marginBottom: 24,
             }}
           >
@@ -198,7 +198,7 @@ export default function MysticFunnel() {
               fontWeight: 800,
               lineHeight: 1.25,
               marginBottom: 16,
-              background: `linear-gradient(135deg, #fff 0%, oklch(0.78 0.15 85) 100%)`,
+              background: `linear-gradient(135deg, #fff 0%, var(--gold) 100%)`,
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
@@ -207,7 +207,7 @@ export default function MysticFunnel() {
             <br />
             按自己步伐了解玄學
           </h1>
-          <p style={{ fontSize: 17, color: "oklch(0.70 0.05 270)", lineHeight: 1.7, marginBottom: 32 }}>
+          <p style={{ fontSize: 17, color: "var(--text-2)", lineHeight: 1.7, marginBottom: 32 }}>
             無論你是第一次接觸玄學，還是想深入了解自己的命盤，
             路邊玄學堂都有適合你的方案。從免費內容開始，隨時升級。
           </p>
@@ -215,7 +215,7 @@ export default function MysticFunnel() {
             <Link href="/booking">
               <button
                 style={{
-                  background: `linear-gradient(135deg, ${PURPLE}, oklch(0.45 0.20 290))`,
+                  background: `linear-gradient(135deg, ${PURPLE}, var(--gold))`,
                   color: "#fff",
                   border: "none",
                   borderRadius: 10,
@@ -263,7 +263,7 @@ export default function MysticFunnel() {
         <h2 style={{ textAlign: "center", fontSize: 26, fontWeight: 700, marginBottom: 8 }}>
           你的玄學之旅
         </h2>
-        <p style={{ textAlign: "center", color: "oklch(0.65 0.05 270)", marginBottom: 40, fontSize: 15 }}>
+        <p style={{ textAlign: "center", color: "var(--text-2)", marginBottom: 40, fontSize: 15 }}>
           四個階段，由認識到深度應用
         </p>
         <div
@@ -321,7 +321,7 @@ export default function MysticFunnel() {
                 STEP {s.step}
               </div>
               <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>{s.title}</div>
-              <div style={{ fontSize: 13, color: "oklch(0.65 0.05 270)", lineHeight: 1.6 }}>{s.desc}</div>
+              <div style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.6 }}>{s.desc}</div>
             </div>
           ))}
         </div>
@@ -332,7 +332,7 @@ export default function MysticFunnel() {
         <h2 style={{ textAlign: "center", fontSize: 26, fontWeight: 700, marginBottom: 8 }}>
           選擇適合你的方案
         </h2>
-        <p style={{ textAlign: "center", color: "oklch(0.65 0.05 270)", marginBottom: 40, fontSize: 15 }}>
+        <p style={{ textAlign: "center", color: "var(--text-2)", marginBottom: 40, fontSize: 15 }}>
           由免費開始，隨時按需要升級
         </p>
         <div
@@ -402,12 +402,12 @@ export default function MysticFunnel() {
                 {tier.label.toUpperCase()}
               </div>
               <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 4 }}>{tier.label}</div>
-              <div style={{ fontSize: 13, color: "oklch(0.65 0.05 270)", marginBottom: 12 }}>{tier.tagline}</div>
+              <div style={{ fontSize: 13, color: "var(--text-2)", marginBottom: 12 }}>{tier.tagline}</div>
               <div style={{ fontSize: 22, fontWeight: 800, color: tier.color, marginBottom: 16 }}>{tier.price}</div>
 
               <ul style={{ listStyle: "none", padding: 0, margin: "0 0 20px", display: "flex", flexDirection: "column", gap: 8 }}>
                 {tier.items.map((item, i) => (
-                  <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 13, color: "oklch(0.75 0.05 270)" }}>
+                  <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 13, color: "var(--text)" }}>
                     <span style={{ color: tier.color, flexShrink: 0, marginTop: 1 }}>{item.icon}</span>
                     {item.text}
                   </li>
@@ -474,7 +474,7 @@ export default function MysticFunnel() {
                       justifyContent: "center",
                       gap: 8,
                       background: "transparent",
-                      color: "oklch(0.70 0.05 270)",
+                      color: "var(--text-2)",
                       border: `1px solid ${BORDER}`,
                       borderRadius: 10,
                       padding: "10px 20px",
@@ -499,7 +499,7 @@ export default function MysticFunnel() {
           <h2 style={{ textAlign: "center", fontSize: 26, fontWeight: 700, marginBottom: 8 }}>
             按主題選擇服務
           </h2>
-          <p style={{ textAlign: "center", color: "oklch(0.65 0.05 270)", marginBottom: 40, fontSize: 15 }}>
+          <p style={{ textAlign: "center", color: "var(--text-2)", marginBottom: 40, fontSize: 15 }}>
             針對你最關心的人生課題
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 20 }}>
@@ -533,7 +533,7 @@ export default function MysticFunnel() {
                 </div>
                 <ul style={{ listStyle: "none", padding: 0, margin: "0 0 16px", display: "flex", flexDirection: "column", gap: 8 }}>
                   {cat.services.map((s) => (
-                    <li key={s} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "oklch(0.72 0.05 270)" }}>
+                    <li key={s} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "var(--text)" }}>
                       <span style={{ color: cat.color, fontSize: 10 }}>◆</span>
                       {s}
                     </li>
@@ -572,7 +572,7 @@ export default function MysticFunnel() {
         style={{
           padding: "70px 24px",
           textAlign: "center",
-          background: `linear-gradient(135deg, oklch(0.08 0.04 290) 0%, oklch(0.07 0.015 270) 100%)`,
+          background: `var(--bg-card)`,
         }}
       >
         <div style={{ maxWidth: 600, margin: "0 auto" }}>
@@ -580,7 +580,7 @@ export default function MysticFunnel() {
           <h2 style={{ fontSize: 28, fontWeight: 800, marginBottom: 12 }}>
             想了解自己未來一年的運勢？
           </h2>
-          <p style={{ color: "oklch(0.68 0.05 270)", fontSize: 16, lineHeight: 1.7, marginBottom: 32 }}>
+          <p style={{ color: "var(--text-2)", fontSize: 16, lineHeight: 1.7, marginBottom: 32 }}>
             感情、事業、財運或家居風水，立即預約合適的玄學師傅，
             用貼地方式理解你的命盤與機遇。
           </p>
@@ -588,7 +588,7 @@ export default function MysticFunnel() {
             <Link href="/booking">
               <button
                 style={{
-                  background: `linear-gradient(135deg, ${GOLD}, oklch(0.68 0.15 75))`,
+                  background: `linear-gradient(135deg, ${GOLD}, var(--gold))`,
                   color: "#000",
                   border: "none",
                   borderRadius: 10,
@@ -626,7 +626,7 @@ export default function MysticFunnel() {
               </button>
             </Link>
           </div>
-          <p style={{ marginTop: 20, fontSize: 12, color: "oklch(0.50 0.03 270)" }}>
+          <p style={{ marginTop: 20, fontSize: 12, color: "var(--text-2)" }}>
             玄學分析僅供參考，不構成投資、醫療或法律建議。
           </p>
         </div>

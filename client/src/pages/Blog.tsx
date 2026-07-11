@@ -12,20 +12,20 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  relationship: "oklch(0.62 0.24 25)",
-  fengshui: "oklch(0.55 0.20 250)",
-  lifestyle: "oklch(0.65 0.20 145)",
-  interview: "oklch(0.78 0.16 75)",
-  other: "oklch(0.55 0.02 60)",
+  relationship: "var(--red)",
+  fengshui: "var(--gold)",
+  lifestyle: "var(--gold)",
+  interview: "var(--gold)",
+  other: "var(--text-3)",
 };
 
 // Gradient placeholders for posts without images
 const PLACEHOLDER_GRADIENTS = [
-  "linear-gradient(135deg, oklch(0.18 0.04 25), oklch(0.12 0.02 260))",
-  "linear-gradient(135deg, oklch(0.14 0.04 250), oklch(0.18 0.03 145))",
-  "linear-gradient(135deg, oklch(0.16 0.05 75), oklch(0.12 0.02 25))",
-  "linear-gradient(135deg, oklch(0.12 0.03 145), oklch(0.16 0.04 250))",
-  "linear-gradient(135deg, oklch(0.18 0.03 300), oklch(0.12 0.02 25))",
+  "linear-gradient(135deg, var(--line), var(--bg-card))",
+  "linear-gradient(135deg, var(--bg-raise), var(--line))",
+  "linear-gradient(135deg, var(--bg-card), var(--bg-card))",
+  "linear-gradient(135deg, var(--bg-card), var(--bg-raise))",
+  "linear-gradient(135deg, var(--line), var(--bg-card))",
 ];
 
 /** Extract first image URL from a JSON string like '["url1","url2"]' */
@@ -76,17 +76,17 @@ export default function Blog() {
       <JsonLd data={blogSchemas} id="blog" />
 
       {/* Page header */}
-      <div className="py-12 text-center" style={{ background: "oklch(0.10 0.01 260)", borderBottom: "1px solid oklch(0.18 0.02 260)" }}>
-        <div className="text-xs font-bold tracking-widest mb-2" style={{ color: "oklch(0.62 0.24 25)" }}>GUEST COLUMN</div>
-        <h1 className="text-3xl md:text-4xl font-black mb-3" style={{ color: "oklch(0.92 0.01 60)" }}>嘉賓專欄</h1>
-        <p className="text-sm max-w-lg mx-auto" style={{ color: "oklch(0.55 0.02 60)" }}>
+      <div className="py-12 text-center" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--line)" }}>
+        <div className="text-xs font-bold tracking-widest mb-2" style={{ color: "var(--red)" }}>GUEST COLUMN</div>
+        <h1 className="text-3xl md:text-4xl font-black mb-3" style={{ color: "var(--text)" }}>嘉賓專欄</h1>
+        <p className="text-sm max-w-lg mx-auto" style={{ color: "var(--text-3)" }}>
           嘉賓訪談後的深度心得、幕後故事，以及各界人士的真實分享
         </p>
         <div className="mt-6">
           <Link
             href="/blog/submit"
             className="inline-block px-6 py-2.5 rounded-lg font-bold text-sm transition-all hover:opacity-90"
-            style={{ background: "linear-gradient(135deg, oklch(0.60 0.22 25), oklch(0.75 0.15 75))", color: "white" }}
+            style={{ background: "linear-gradient(135deg, var(--red), var(--gold))", color: "white" }}
           >
             投稿分享你的故事 →
           </Link>
@@ -99,11 +99,11 @@ export default function Blog() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
               <div key={i} className="glass-card rounded-xl overflow-hidden animate-pulse">
-                <div className="w-full" style={{ aspectRatio: "16/9", background: "oklch(0.16 0.02 260)" }} />
+                <div className="w-full" style={{ aspectRatio: "16/9", background: "var(--bg-raise)" }} />
                 <div className="p-5 flex flex-col gap-3">
-                  <div className="h-3 rounded" style={{ background: "oklch(0.20 0.02 260)", width: "40%" }} />
-                  <div className="h-5 rounded" style={{ background: "oklch(0.20 0.02 260)" }} />
-                  <div className="h-4 rounded" style={{ background: "oklch(0.18 0.02 260)", width: "80%" }} />
+                  <div className="h-3 rounded" style={{ background: "var(--line)", width: "40%" }} />
+                  <div className="h-5 rounded" style={{ background: "var(--line)" }} />
+                  <div className="h-4 rounded" style={{ background: "var(--line)", width: "80%" }} />
                 </div>
               </div>
             ))}
@@ -112,12 +112,12 @@ export default function Blog() {
           /* Empty state */
           <div className="text-center py-20">
             <div className="text-4xl mb-4">✍️</div>
-            <h3 className="text-lg font-bold mb-2" style={{ color: "oklch(0.75 0.01 60)" }}>暫時未有文章</h3>
-            <p className="text-sm mb-6" style={{ color: "oklch(0.50 0.02 60)" }}>成為第一位投稿的嘉賓！</p>
+            <h3 className="text-lg font-bold mb-2" style={{ color: "var(--text-2)" }}>暫時未有文章</h3>
+            <p className="text-sm mb-6" style={{ color: "var(--text-3)" }}>成為第一位投稿的嘉賓！</p>
             <Link
               href="/blog/submit"
               className="inline-block px-6 py-2.5 rounded-lg font-bold text-sm"
-              style={{ background: "oklch(0.60 0.22 25)", color: "white" }}
+              style={{ background: "var(--red)", color: "white" }}
             >
               立即投稿
             </Link>
@@ -127,7 +127,7 @@ export default function Blog() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {posts.map((post, idx) => {
               const coverImage = getFirstImage((post as { images?: string }).images);
-              const catColor = CATEGORY_COLORS[post.category] ?? "oklch(0.55 0.02 60)";
+              const catColor = CATEGORY_COLORS[post.category] ?? "var(--text-3)";
               const placeholderBg = PLACEHOLDER_GRADIENTS[idx % PLACEHOLDER_GRADIENTS.length];
 
               return (
@@ -167,7 +167,7 @@ export default function Blog() {
                         <span
                           className="text-xs font-bold px-2 py-0.5 rounded backdrop-blur-sm"
                           style={{
-                            background: `color-mix(in oklch, ${catColor} 20%, oklch(0 0 0 / 0.55))`,
+                            background: `color-mix(in oklch, ${catColor} 20%, rgba(13,12,10,0.55))`,
                             color: catColor,
                             border: `1px solid color-mix(in oklch, ${catColor} 40%, transparent)`,
                           }}
@@ -184,7 +184,7 @@ export default function Blog() {
                             return (
                               <div
                                 className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded text-xs font-bold"
-                                style={{ background: "oklch(0 0 0 / 0.60)", color: "white" }}
+                                style={{ background: "rgba(13,12,10,0.6)", color: "white" }}
                               >
                                 📷 {imgs.length}
                               </div>
@@ -199,7 +199,7 @@ export default function Blog() {
                     <div className="p-5 flex flex-col flex-1">
                       <h2
                         className="font-black text-base leading-snug mb-2 line-clamp-2"
-                        style={{ color: "oklch(0.90 0.01 60)" }}
+                        style={{ color: "var(--text)" }}
                       >
                         {post.title}
                       </h2>
@@ -207,7 +207,7 @@ export default function Blog() {
                       {post.excerpt && (
                         <p
                           className="text-sm leading-relaxed mb-4 line-clamp-2 flex-1"
-                          style={{ color: "oklch(0.55 0.02 60)" }}
+                          style={{ color: "var(--text-3)" }}
                         >
                           {post.excerpt}
                         </p>
@@ -215,17 +215,17 @@ export default function Blog() {
 
                       <div
                         className="flex items-center justify-between mt-auto pt-3"
-                        style={{ borderTop: "1px solid oklch(0.20 0.02 260)" }}
+                        style={{ borderTop: "1px solid var(--line)" }}
                       >
                         <div>
-                          <div className="text-xs font-bold" style={{ color: "oklch(0.75 0.01 60)" }}>
+                          <div className="text-xs font-bold" style={{ color: "var(--text-2)" }}>
                             {post.authorName}
                           </div>
-                          <div className="text-xs" style={{ color: "oklch(0.45 0.02 60)" }}>
+                          <div className="text-xs" style={{ color: "var(--text-3)" }}>
                             {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString("zh-HK") : ""}
                           </div>
                         </div>
-                        <span className="text-xs font-medium" style={{ color: "oklch(0.62 0.24 25)" }}>
+                        <span className="text-xs font-medium" style={{ color: "var(--red)" }}>
                           閱讀全文 →
                         </span>
                       </div>

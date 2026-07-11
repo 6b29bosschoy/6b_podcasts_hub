@@ -23,8 +23,8 @@ export default function ShareButtons({ url, title, excerpt }: ShareButtonsProps)
         </svg>
       ),
       href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-      color: "oklch(0.45 0.18 250)",
-      hoverColor: "oklch(0.50 0.20 250)",
+      color: "var(--gold)",
+      hoverColor: "var(--gold)",
     },
     {
       name: "Threads",
@@ -34,8 +34,8 @@ export default function ShareButtons({ url, title, excerpt }: ShareButtonsProps)
         </svg>
       ),
       href: `https://www.threads.net/intent/post?text=${shareText}`,
-      color: "oklch(0.25 0.01 260)",
-      hoverColor: "oklch(0.30 0.01 260)",
+      color: "var(--line)",
+      hoverColor: "var(--text-3)",
     },
     {
       name: "WhatsApp",
@@ -45,8 +45,8 @@ export default function ShareButtons({ url, title, excerpt }: ShareButtonsProps)
         </svg>
       ),
       href: `https://wa.me/?text=${shareText}`,
-      color: "oklch(0.55 0.18 145)",
-      hoverColor: "oklch(0.60 0.20 145)",
+      color: "var(--gold)",
+      hoverColor: "var(--gold)",
     },
     {
       name: "X (Twitter)",
@@ -56,8 +56,8 @@ export default function ShareButtons({ url, title, excerpt }: ShareButtonsProps)
         </svg>
       ),
       href: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`,
-      color: "oklch(0.20 0.01 260)",
-      hoverColor: "oklch(0.25 0.01 260)",
+      color: "var(--line)",
+      hoverColor: "var(--line)",
     },
   ];
 
@@ -80,8 +80,8 @@ export default function ShareButtons({ url, title, excerpt }: ShareButtonsProps)
   };
 
   return (
-    <div className="mt-8 p-5 rounded-xl" style={{ background: "oklch(0.12 0.015 260)", border: "1px solid oklch(0.20 0.02 260)" }}>
-      <p className="text-sm font-bold mb-4" style={{ color: "oklch(0.65 0.01 60)" }}>
+    <div className="mt-8 p-5 rounded-xl" style={{ background: "var(--bg-card)", border: "1px solid var(--line)" }}>
+      <p className="text-sm font-bold mb-4" style={{ color: "var(--text-2)" }}>
         分享這篇文章
       </p>
       <div className="flex flex-wrap gap-3">
@@ -105,8 +105,8 @@ export default function ShareButtons({ url, title, excerpt }: ShareButtonsProps)
           onClick={handleCopy}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all hover:opacity-90 hover:scale-105"
           style={{
-            background: copied ? "oklch(0.55 0.18 145)" : "oklch(0.22 0.02 260)",
-            border: "1px solid oklch(0.30 0.02 260)",
+            background: copied ? "var(--gold)" : "var(--line)",
+            border: "1px solid var(--text-3)",
             color: "white",
           }}
           aria-label="複製連結"

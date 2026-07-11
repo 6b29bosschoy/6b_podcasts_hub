@@ -57,8 +57,8 @@ export default function BlogPost({ slug }: { slug: string }) {
     return (
       <div className="min-h-screen pt-24 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-8 h-8 rounded-full border-2 border-t-transparent animate-spin mx-auto mb-3" style={{ borderColor: "oklch(0.62 0.24 25)" }} />
-          <p className="text-sm" style={{ color: "oklch(0.55 0.02 60)" }}>載入中...</p>
+          <div className="w-8 h-8 rounded-full border-2 border-t-transparent animate-spin mx-auto mb-3" style={{ borderColor: "var(--red)" }} />
+          <p className="text-sm" style={{ color: "var(--text-3)" }}>載入中...</p>
         </div>
       </div>
     );
@@ -69,8 +69,8 @@ export default function BlogPost({ slug }: { slug: string }) {
       <div className="min-h-screen pt-24 flex items-center justify-center">
         <div className="text-center">
           <div className="text-4xl mb-4">😕</div>
-          <h2 className="text-xl font-bold mb-2" style={{ color: "oklch(0.75 0.01 60)" }}>文章不存在</h2>
-          <Link href="/blog" className="text-sm" style={{ color: "oklch(0.62 0.24 25)" }}>← 返回嘉賓專欄</Link>
+          <h2 className="text-xl font-bold mb-2" style={{ color: "var(--text-2)" }}>文章不存在</h2>
+          <Link href="/blog" className="text-sm" style={{ color: "var(--red)" }}>← 返回嘉賓專欄</Link>
         </div>
       </div>
     );
@@ -108,33 +108,33 @@ export default function BlogPost({ slug }: { slug: string }) {
       {faqSchema && <JsonLd data={faqSchema} id={`faq-${slug}`} />}
 
       <div className="container max-w-3xl mx-auto py-10">
-        <Link href="/blog" className="inline-flex items-center gap-2 text-sm mb-8 hover:opacity-80 transition-opacity" style={{ color: "oklch(0.62 0.24 25)" }}>
+        <Link href="/blog" className="inline-flex items-center gap-2 text-sm mb-8 hover:opacity-80 transition-opacity" style={{ color: "var(--red)" }}>
           <ArrowLeft size={16} />
           返回嘉賓專欄
         </Link>
 
         <article>
           <div className="mb-6">
-            <span className="text-xs font-bold px-2 py-0.5 rounded" style={{ background: "oklch(0.62 0.24 25 / 0.15)", color: "oklch(0.62 0.24 25)" }}>
+            <span className="text-xs font-bold px-2 py-0.5 rounded" style={{ background: "var(--red)", color: "var(--red)" }}>
               {CATEGORY_LABELS[post.category] ?? post.category}
             </span>
           </div>
 
-          <h1 className="text-2xl md:text-4xl font-black mb-6 leading-tight" style={{ color: "oklch(0.92 0.01 60)" }}>
+          <h1 className="text-2xl md:text-4xl font-black mb-6 leading-tight" style={{ color: "var(--text)" }}>
             {post.title}
           </h1>
 
-          <div className="flex items-center justify-between mb-8 pb-8" style={{ borderBottom: "1px solid oklch(0.20 0.02 260)" }}>
+          <div className="flex items-center justify-between mb-8 pb-8" style={{ borderBottom: "1px solid var(--line)" }}>
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center font-black text-sm" style={{ background: "linear-gradient(135deg, oklch(0.60 0.22 25), oklch(0.75 0.15 75))", color: "white" }}>
+              <div className="w-10 h-10 rounded-full flex items-center justify-center font-black text-sm" style={{ background: "linear-gradient(135deg, var(--red), var(--gold))", color: "white" }}>
                 {post.authorName.charAt(0)}
               </div>
               <div>
-                <div className="text-sm font-bold" style={{ color: "oklch(0.85 0.01 60)" }}>{post.authorName}</div>
-                {post.authorBio && <div className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>{post.authorBio}</div>}
+                <div className="text-sm font-bold" style={{ color: "var(--text)" }}>{post.authorName}</div>
+                {post.authorBio && <div className="text-xs" style={{ color: "var(--text-3)" }}>{post.authorBio}</div>}
               </div>
             </div>
-            <div className="flex items-center gap-6 text-xs" style={{ color: "oklch(0.55 0.02 60)" }}>
+            <div className="flex items-center gap-6 text-xs" style={{ color: "var(--text-3)" }}>
               <div>{post.publishedAt ? new Date(post.publishedAt).toLocaleDateString("zh-HK") : ""}</div>
               <div className="flex items-center gap-1.5">
                 <Eye size={14} />
@@ -144,14 +144,14 @@ export default function BlogPost({ slug }: { slug: string }) {
           </div>
 
           {post.excerpt && (
-            <p className="text-base italic mb-8 p-4 rounded-lg" style={{ background: "oklch(0.12 0.015 260)", borderLeft: "3px solid oklch(0.62 0.24 25)", color: "oklch(0.70 0.01 60)" }}>
+            <p className="text-base italic mb-8 p-4 rounded-lg" style={{ background: "var(--bg-card)", borderLeft: "3px solid var(--red)", color: "var(--text-2)" }}>
               {post.excerpt}
             </p>
           )}
 
           {/* ── Image Gallery ──────────────────────────────────────── */}
           {images.length > 0 && (
-            <div className="mb-8 rounded-xl overflow-hidden" style={{ background: "oklch(0.11 0.015 260)" }}>
+            <div className="mb-8 rounded-xl overflow-hidden" style={{ background: "var(--bg)" }}>
               {/* Main image with carousel */}
               <div className="relative" style={{ aspectRatio: "16/9" }}>
                 <img
@@ -169,7 +169,7 @@ export default function BlogPost({ slug }: { slug: string }) {
                       onClick={() => setCarouselIndex((i) => Math.max(0, i - 1))}
                       disabled={carouselIndex === 0}
                       className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full transition-all disabled:opacity-30 hover:opacity-80"
-                      style={{ background: "oklch(0 0 0 / 0.55)" }}
+                      style={{ background: "rgba(13,12,10,0.55)" }}
                     >
                       <ChevronLeft size={20} style={{ color: "white" }} />
                     </button>
@@ -177,7 +177,7 @@ export default function BlogPost({ slug }: { slug: string }) {
                       onClick={() => setCarouselIndex((i) => Math.min(images.length - 1, i + 1))}
                       disabled={carouselIndex === images.length - 1}
                       className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full transition-all disabled:opacity-30 hover:opacity-80"
-                      style={{ background: "oklch(0 0 0 / 0.55)" }}
+                      style={{ background: "rgba(13,12,10,0.55)" }}
                     >
                       <ChevronRight size={20} style={{ color: "white" }} />
                     </button>
@@ -188,7 +188,7 @@ export default function BlogPost({ slug }: { slug: string }) {
                 {images.length > 1 && (
                   <div
                     className="absolute bottom-2 right-2 px-2 py-0.5 rounded-full text-xs font-bold"
-                    style={{ background: "oklch(0 0 0 / 0.6)", color: "white" }}
+                    style={{ background: "rgba(13,12,10,0.6)", color: "white" }}
                   >
                     {carouselIndex + 1} / {images.length}
                   </div>
@@ -206,7 +206,7 @@ export default function BlogPost({ slug }: { slug: string }) {
                       style={{
                         width: 60,
                         height: 60,
-                        border: idx === carouselIndex ? "2px solid oklch(0.62 0.24 25)" : "2px solid transparent",
+                        border: idx === carouselIndex ? "2px solid var(--red)" : "2px solid transparent",
                         opacity: idx === carouselIndex ? 1 : 0.55,
                       }}
                     >
@@ -219,18 +219,18 @@ export default function BlogPost({ slug }: { slug: string }) {
           )}
 
           {/* ── Article content ──────────────────────────────────── */}
-          <div className="prose prose-invert max-w-none" style={{ color: "oklch(0.75 0.01 60)", lineHeight: "1.9" }}>
+          <div className="prose prose-invert max-w-none" style={{ color: "var(--text-2)", lineHeight: "1.9" }}>
             {post.content.split("\n").map((para, i) =>
               para.trim() ? (
-                <p key={i} className="mb-4" style={{ color: "oklch(0.75 0.01 60)" }}>{para}</p>
+                <p key={i} className="mb-4" style={{ color: "var(--text-2)" }}>{para}</p>
               ) : <br key={i} />
             )}
           </div>
 
           {/* ── Related Links ─────────────────────────────────────── */}
           {links.length > 0 && (
-            <div className="mt-8 p-5 rounded-xl" style={{ background: "oklch(0.12 0.015 260)", border: "1px solid oklch(0.20 0.02 260)" }}>
-              <h3 className="text-sm font-bold mb-3" style={{ color: "oklch(0.70 0.01 60)" }}>相關連結</h3>
+            <div className="mt-8 p-5 rounded-xl" style={{ background: "var(--bg-card)", border: "1px solid var(--line)" }}>
+              <h3 className="text-sm font-bold mb-3" style={{ color: "var(--text-2)" }}>相關連結</h3>
               <div className="flex flex-col gap-2">
                 {links.map((link, idx) => (
                   <a
@@ -239,7 +239,7 @@ export default function BlogPost({ slug }: { slug: string }) {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-sm hover:opacity-80 transition-opacity group"
-                    style={{ color: "oklch(0.62 0.18 200)" }}
+                    style={{ color: "var(--gold)" }}
                   >
                     <ExternalLink size={14} className="flex-shrink-0" />
                     <span className="underline underline-offset-2 group-hover:no-underline">{link.title || link.url}</span>
@@ -252,26 +252,26 @@ export default function BlogPost({ slug }: { slug: string }) {
 
         {/* ── FAQ Section ──────────────────────────────────── */}
         {faqs.length > 0 && (
-          <div className="mt-10 rounded-xl overflow-hidden" style={{ border: "1px solid oklch(0.22 0.02 260)" }}>
-            <div className="px-5 py-4" style={{ background: "oklch(0.13 0.015 260)" }}>
-              <h2 className="text-sm font-black tracking-widest uppercase" style={{ color: "oklch(0.62 0.24 25)" }}>常見問題 FAQ</h2>
+          <div className="mt-10 rounded-xl overflow-hidden" style={{ border: "1px solid var(--line)" }}>
+            <div className="px-5 py-4" style={{ background: "var(--bg-card)" }}>
+              <h2 className="text-sm font-black tracking-widest uppercase" style={{ color: "var(--red)" }}>常見問題 FAQ</h2>
             </div>
-            <div className="divide-y" style={{ borderColor: "oklch(0.20 0.02 260)" }}>
+            <div className="divide-y" style={{ borderColor: "var(--line)" }}>
               {faqs.map((faq, idx) => (
                 <div key={idx}>
                   <button
                     onClick={() => setOpenFaqIndex(openFaqIndex === idx ? null : idx)}
                     className="w-full flex items-center justify-between gap-3 px-5 py-4 text-left hover:opacity-80 transition-opacity"
-                    style={{ background: "oklch(0.11 0.015 260)" }}
+                    style={{ background: "var(--bg)" }}
                   >
-                    <span className="text-sm font-bold" style={{ color: "oklch(0.88 0.01 60)" }}>{faq.question}</span>
+                    <span className="text-sm font-bold" style={{ color: "var(--text)" }}>{faq.question}</span>
                     {openFaqIndex === idx
-                      ? <ChevronUp size={16} style={{ color: "oklch(0.62 0.24 25)", flexShrink: 0 }} />
-                      : <ChevronDown size={16} style={{ color: "oklch(0.50 0.02 60)", flexShrink: 0 }} />}
+                      ? <ChevronUp size={16} style={{ color: "var(--red)", flexShrink: 0 }} />
+                      : <ChevronDown size={16} style={{ color: "var(--text-3)", flexShrink: 0 }} />}
                   </button>
                   {openFaqIndex === idx && (
-                    <div className="px-5 py-4" style={{ background: "oklch(0.10 0.012 260)", borderTop: "1px solid oklch(0.18 0.02 260)" }}>
-                      <p className="text-sm leading-relaxed" style={{ color: "oklch(0.70 0.01 60)" }}>{faq.answer}</p>
+                    <div className="px-5 py-4" style={{ background: "var(--bg)", borderTop: "1px solid var(--line)" }}>
+                      <p className="text-sm leading-relaxed" style={{ color: "var(--text-2)" }}>{faq.answer}</p>
                     </div>
                   )}
                 </div>
@@ -289,11 +289,11 @@ export default function BlogPost({ slug }: { slug: string }) {
 
         {/* ── Related Articles ──────────────────────────────── */}
         {relatedPosts.length > 0 && (
-          <div className="mt-12 pt-10" style={{ borderTop: "1px solid oklch(0.20 0.02 260)" }}>
+          <div className="mt-12 pt-10" style={{ borderTop: "1px solid var(--line)" }}>
             <div className="flex items-center gap-3 mb-6">
-              <div className="h-px flex-1" style={{ background: "oklch(0.22 0.02 260)" }} />
-              <h2 className="text-sm font-black tracking-widest uppercase" style={{ color: "oklch(0.62 0.24 25)" }}>相關文章</h2>
-              <div className="h-px flex-1" style={{ background: "oklch(0.22 0.02 260)" }} />
+              <div className="h-px flex-1" style={{ background: "var(--line)" }} />
+              <h2 className="text-sm font-black tracking-widest uppercase" style={{ color: "var(--red)" }}>相關文章</h2>
+              <div className="h-px flex-1" style={{ background: "var(--line)" }} />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {relatedPosts.map((related) => {
@@ -301,7 +301,7 @@ export default function BlogPost({ slug }: { slug: string }) {
                 return (
                   <Link key={related.slug} href={`/blog/${related.slug}`}
                     className="group rounded-xl overflow-hidden flex flex-col hover:opacity-90 transition-opacity"
-                    style={{ background: "oklch(0.12 0.015 260)", border: "1px solid oklch(0.20 0.02 260)" }}
+                    style={{ background: "var(--bg-card)", border: "1px solid var(--line)" }}
                   >
                     {/* Cover */}
                     <div className="relative overflow-hidden" style={{ aspectRatio: "16/9" }}>
@@ -310,22 +310,22 @@ export default function BlogPost({ slug }: { slug: string }) {
                       ) : related.coverImage ? (
                         <img src={related.coverImage} alt={related.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-2xl" style={{ background: "linear-gradient(135deg, oklch(0.18 0.03 260), oklch(0.22 0.05 300))" }}>
+                        <div className="w-full h-full flex items-center justify-center text-2xl" style={{ background: "linear-gradient(135deg, var(--line), var(--line))" }}>
                           {CATEGORY_LABELS[related.category] === "兩性關係" ? "💕" : CATEGORY_LABELS[related.category] === "玄學風水" ? "✨" : "📝"}
                         </div>
                       )}
                       <div className="absolute top-2 left-2">
-                        <span className="text-xs font-bold px-2 py-0.5 rounded" style={{ background: "oklch(0.62 0.24 25 / 0.85)", color: "white" }}>
+                        <span className="text-xs font-bold px-2 py-0.5 rounded" style={{ background: "var(--red)", color: "white" }}>
                           {CATEGORY_LABELS[related.category] ?? related.category}
                         </span>
                       </div>
                     </div>
                     {/* Text */}
                     <div className="p-3 flex flex-col gap-1.5 flex-1">
-                      <h3 className="text-sm font-bold leading-snug line-clamp-2" style={{ color: "oklch(0.88 0.01 60)" }}>{related.title}</h3>
+                      <h3 className="text-sm font-bold leading-snug line-clamp-2" style={{ color: "var(--text)" }}>{related.title}</h3>
                       <div className="flex items-center justify-between mt-auto pt-1">
-                        <span className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>{related.authorName}</span>
-                        <span className="text-xs" style={{ color: "oklch(0.45 0.02 60)" }}>
+                        <span className="text-xs" style={{ color: "var(--text-3)" }}>{related.authorName}</span>
+                        <span className="text-xs" style={{ color: "var(--text-3)" }}>
                           {related.publishedAt ? new Date(related.publishedAt).toLocaleDateString("zh-HK") : ""}
                         </span>
                       </div>
@@ -340,38 +340,38 @@ export default function BlogPost({ slug }: { slug: string }) {
                 <button
                   onClick={handleNextBatch}
                   className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold transition-all hover:opacity-80 active:scale-95"
-                  style={{ background: "oklch(0.18 0.02 260)", border: "1px solid oklch(0.30 0.03 260)", color: "oklch(0.70 0.01 60)" }}
+                  style={{ background: "var(--line)", border: "1px solid var(--text-3)", color: "var(--text-2)" }}
                 >
                   <span style={{ fontSize: "1rem" }}>🔄</span>
                   換一批
-                  <span className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>({relatedTotal} 篇同類文章)</span>
+                  <span className="text-xs" style={{ color: "var(--text-3)" }}>({relatedTotal} 篇同類文章)</span>
                 </button>
               </div>
             )}
           </div>
         )}
 
-        <div className="mt-8 pt-8" style={{ borderTop: "1px solid oklch(0.20 0.02 260)" }}>
+        <div className="mt-8 pt-8" style={{ borderTop: "1px solid var(--line)" }}>
           {/* 玄學相關文章：加入免費命盤分析主 CTA */}
           {post.category === "fengshui" && (
             <div
               className="rounded-xl p-5 mb-6"
               style={{
-                background: "linear-gradient(135deg, oklch(0.10 0.04 290), oklch(0.08 0.02 270))",
-                border: "1px solid oklch(0.22 0.06 290)",
+                background: "linear-gradient(135deg, var(--bg-card), var(--bg))",
+                border: "1px solid var(--line)",
               }}
             >
               <div className="flex items-start gap-4 flex-wrap">
                 <div className="flex-1 min-w-[200px]">
-                  <p className="text-sm font-bold mb-1" style={{ color: "oklch(0.78 0.15 290)" }}>✨ 想深入了解自己的命盤？</p>
-                  <p className="text-xs" style={{ color: "oklch(0.62 0.05 270)" }}>輸入出生日期，即可獲得八字命理、紫微斗數、塔羅占卜等多種派別 AI 深度分析報告。現正限時免費體驗。</p>
+                  <p className="text-sm font-bold mb-1" style={{ color: "var(--gold)" }}>✨ 想深入了解自己的命盤？</p>
+                  <p className="text-xs" style={{ color: "var(--text-2)" }}>輸入出生日期，即可獲得八字命理、紫微斗數、塔羅占卜等多種派別 AI 深度分析報告。現正限時免費體驗。</p>
                 </div>
                 <div className="flex gap-2 flex-wrap">
                   {/* Primary CTA */}
                   <Link href="/mystic/analysis">
                     <button
                       className="px-4 py-2 rounded-lg text-xs font-bold"
-                      style={{ background: "linear-gradient(135deg, oklch(0.55 0.22 290), oklch(0.45 0.20 270))", color: "white", border: "none", cursor: "pointer" }}
+                      style={{ background: "var(--bg-card)", color: "white", border: "none", cursor: "pointer" }}
                     >
                       ✨ 立即免費命盤分析
                     </button>
@@ -380,7 +380,7 @@ export default function BlogPost({ slug }: { slug: string }) {
                   <Link href="/booking">
                     <button
                       className="px-4 py-2 rounded-lg text-xs font-bold"
-                      style={{ background: "transparent", color: "oklch(0.75 0.08 290)", border: "1px solid oklch(0.28 0.06 290)", cursor: "pointer" }}
+                      style={{ background: "transparent", color: "var(--text)", border: "1px solid var(--line)", cursor: "pointer" }}
                     >
                       預約師傅諾詢
                     </button>
@@ -390,17 +390,17 @@ export default function BlogPost({ slug }: { slug: string }) {
             </div>
           )}
           <div className="glass-card rounded-xl p-6 text-center">
-            <p className="text-sm mb-4" style={{ color: "oklch(0.55 0.02 60)" }}>喜歡這篇文章？追蹤路邊電台獲取更多內容！</p>
+            <p className="text-sm mb-4" style={{ color: "var(--text-3)" }}>喜歡這篇文章？追蹤路邊電台獲取更多內容！</p>
             <div className="flex flex-wrap gap-3 justify-center">
               <a href="https://www.youtube.com/@6bpodcasts" target="_blank" rel="noopener noreferrer"
-                className="px-4 py-2 rounded-lg text-sm font-bold" style={{ background: "oklch(0.60 0.22 25)", color: "white" }}>
+                className="px-4 py-2 rounded-lg text-sm font-bold" style={{ background: "var(--red)", color: "white" }}>
                 訂閱 YouTube
               </a>
               <a href="https://www.youtube.com/@6bfengshui" target="_blank" rel="noopener noreferrer"
-                className="px-4 py-2 rounded-lg text-sm font-bold" style={{ background: "oklch(0.50 0.18 290)", color: "white" }}>
+                className="px-4 py-2 rounded-lg text-sm font-bold" style={{ background: "var(--gold)", color: "white" }}>
                 玄學 YouTube
               </a>
-              <Link href="/blog" className="px-4 py-2 rounded-lg text-sm font-bold" style={{ background: "oklch(0.18 0.02 260)", border: "1px solid oklch(0.28 0.02 260)", color: "oklch(0.85 0.01 60)" }}>
+              <Link href="/blog" className="px-4 py-2 rounded-lg text-sm font-bold" style={{ background: "var(--line)", border: "1px solid var(--text-3)", color: "var(--text)" }}>
                 更多文章
               </Link>
             </div>

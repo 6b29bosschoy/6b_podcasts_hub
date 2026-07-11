@@ -27,11 +27,11 @@ import ImageUploader, { type UploadedImage } from "@/components/ImageUploader";
 type Category = "relationship" | "fengshui" | "confession" | "question" | "other";
 
 const CATEGORY_LABELS: Record<Category, { label: string; emoji: string; color: string }> = {
-  relationship: { label: "感情故事", emoji: "💕", color: "oklch(0.62 0.24 25)" },
-  fengshui:     { label: "玄學奇遇", emoji: "🔮", color: "oklch(0.65 0.20 290)" },
-  confession:   { label: "心底話",   emoji: "💬", color: "oklch(0.60 0.18 200)" },
-  question:     { label: "問題想問", emoji: "🙋", color: "oklch(0.65 0.20 145)" },
-  other:        { label: "其他",     emoji: "✨", color: "oklch(0.78 0.16 75)" },
+  relationship: { label: "感情故事", emoji: "💕", color: "var(--red)" },
+  fengshui:     { label: "玄學奇遇", emoji: "🔮", color: "var(--gold)" },
+  confession:   { label: "心底話",   emoji: "💬", color: "var(--gold)" },
+  question:     { label: "問題想問", emoji: "🙋", color: "var(--gold)" },
+  other:        { label: "其他",     emoji: "✨", color: "var(--gold)" },
 };
 
 // ─── Image Carousel ───────────────────────────────────────────────────────────
@@ -44,7 +44,7 @@ function ImageCarousel({ urls }: { urls: string[] }) {
   const next = () => setIdx((i) => (i + 1) % urls.length);
 
   return (
-    <div className="relative rounded-xl overflow-hidden mb-3" style={{ aspectRatio: "16/9", background: "oklch(0.08 0.01 260)" }}>
+    <div className="relative rounded-xl overflow-hidden mb-3" style={{ aspectRatio: "16/9", background: "var(--bg)" }}>
       <img
         src={urls[idx]}
         alt={`圖片 ${idx + 1}`}
@@ -55,14 +55,14 @@ function ImageCarousel({ urls }: { urls: string[] }) {
           <button
             onClick={prev}
             className="absolute left-1.5 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center transition-opacity hover:opacity-100 opacity-70"
-            style={{ background: "oklch(0 0 0 / 0.6)" }}
+            style={{ background: "rgba(13,12,10,0.6)" }}
           >
             <ChevronLeft size={14} color="white" />
           </button>
           <button
             onClick={next}
             className="absolute right-1.5 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center transition-opacity hover:opacity-100 opacity-70"
-            style={{ background: "oklch(0 0 0 / 0.6)" }}
+            style={{ background: "rgba(13,12,10,0.6)" }}
           >
             <ChevronRight size={14} color="white" />
           </button>
@@ -73,14 +73,14 @@ function ImageCarousel({ urls }: { urls: string[] }) {
                 key={i}
                 onClick={() => setIdx(i)}
                 className="w-1.5 h-1.5 rounded-full transition-all"
-                style={{ background: i === idx ? "white" : "oklch(1 0 0 / 0.4)" }}
+                style={{ background: i === idx ? "white" : "rgba(236,229,216,0.4)" }}
               />
             ))}
           </div>
           {/* Counter */}
           <div
             className="absolute top-2 right-2 text-xs px-1.5 py-0.5 rounded"
-            style={{ background: "oklch(0 0 0 / 0.55)", color: "white", fontSize: "10px" }}
+            style={{ background: "rgba(13,12,10,0.55)", color: "white", fontSize: "10px" }}
           >
             {idx + 1}/{urls.length}
           </div>
@@ -141,9 +141,9 @@ function SubmissionCard({
     <div
       className="flex flex-col rounded-2xl overflow-hidden transition-all hover:translate-y-[-2px]"
       style={{
-        background: "oklch(0.11 0.015 260)",
-        border: "1px solid oklch(0.20 0.02 260)",
-        boxShadow: "0 2px 12px oklch(0 0 0 / 0.2)",
+        background: "var(--bg)",
+        border: "1px solid var(--line)",
+        boxShadow: "0 2px 12px rgba(13,12,10,0.2)",
       }}
     >
       {/* Image carousel (if any) */}
@@ -168,12 +168,12 @@ function SubmissionCard({
           </span>
           <div className="flex items-center gap-1.5">
             {imageUrls.length > 0 && (
-              <span className="flex items-center gap-0.5 text-xs" style={{ color: "oklch(0.42 0.01 60)" }}>
+              <span className="flex items-center gap-0.5 text-xs" style={{ color: "var(--text-3)" }}>
                 <ImageIcon size={10} />
                 {imageUrls.length}
               </span>
             )}
-            <span className="text-xs" style={{ color: "oklch(0.42 0.01 60)" }}>
+            <span className="text-xs" style={{ color: "var(--text-3)" }}>
               {dateStr}
             </span>
           </div>
@@ -182,23 +182,23 @@ function SubmissionCard({
         {/* Content */}
         <p
           className="flex-1 text-sm leading-relaxed line-clamp-5 mb-4"
-          style={{ color: "oklch(0.78 0.01 60)" }}
+          style={{ color: "var(--text)" }}
         >
           {item.content}
         </p>
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-3" style={{ borderTop: "1px solid oklch(0.18 0.02 260)" }}>
-          <span className="text-xs font-medium" style={{ color: "oklch(0.50 0.02 60)" }}>
+        <div className="flex items-center justify-between pt-3" style={{ borderTop: "1px solid var(--line)" }}>
+          <span className="text-xs font-medium" style={{ color: "var(--text-3)" }}>
             — {displayName}
           </span>
           <button
             onClick={handleLike}
             className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold transition-all hover:scale-110"
             style={{
-              background: liked ? "oklch(0.62 0.24 25 / 0.15)" : "oklch(0.16 0.02 260)",
-              border: `1px solid ${liked ? "oklch(0.62 0.24 25 / 0.5)" : "oklch(0.22 0.02 260)"}`,
-              color: liked ? "oklch(0.62 0.24 25)" : "oklch(0.50 0.02 60)",
+              background: liked ? "var(--red)" : "var(--bg-raise)",
+              border: `1px solid ${liked ? "var(--red)" : "var(--line)"}`,
+              color: liked ? "var(--red)" : "var(--text-3)",
             }}
             aria-label="讚好"
           >
@@ -268,14 +268,14 @@ function SubmitDialog({
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent
         className="max-w-lg max-h-[90vh] overflow-y-auto"
-        style={{ background: "oklch(0.10 0.015 260)", border: "1px solid oklch(0.22 0.025 260)" }}
+        style={{ background: "var(--bg)", border: "1px solid var(--line)" }}
       >
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-lg" style={{ color: "oklch(0.92 0.01 60)" }}>
-            <MessageSquareHeart size={20} style={{ color: "oklch(0.78 0.16 75)" }} />
+          <DialogTitle className="flex items-center gap-2 text-lg" style={{ color: "var(--text)" }}>
+            <MessageSquareHeart size={20} style={{ color: "var(--gold)" }} />
             向路邊電台投稿
           </DialogTitle>
-          <DialogDescription style={{ color: "oklch(0.55 0.02 60)" }}>
+          <DialogDescription style={{ color: "var(--text-3)" }}>
             分享你嘅故事、問題或心底話，精選投稿將展示喺首頁，讓更多人知道你唔孤單。
           </DialogDescription>
         </DialogHeader>
@@ -283,14 +283,14 @@ function SubmitDialog({
         <form onSubmit={handleSubmit} className="space-y-4 mt-2">
           {/* Category */}
           <div className="space-y-1.5">
-            <Label style={{ color: "oklch(0.75 0.01 60)" }}>投稿類別</Label>
+            <Label style={{ color: "var(--text-2)" }}>投稿類別</Label>
             <Select value={category} onValueChange={(v) => setCategory(v as Category)}>
-              <SelectTrigger style={{ background: "oklch(0.14 0.018 260)", border: "1px solid oklch(0.25 0.025 260)", color: "oklch(0.85 0.01 60)" }}>
+              <SelectTrigger style={{ background: "var(--bg-card)", border: "1px solid var(--line)", color: "var(--text)" }}>
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent style={{ background: "oklch(0.12 0.018 260)", border: "1px solid oklch(0.22 0.025 260)" }}>
+              <SelectContent style={{ background: "var(--bg-card)", border: "1px solid var(--line)" }}>
                 {(Object.entries(CATEGORY_LABELS) as [Category, typeof CATEGORY_LABELS[Category]][]).map(([val, meta]) => (
-                  <SelectItem key={val} value={val} style={{ color: "oklch(0.85 0.01 60)" }}>
+                  <SelectItem key={val} value={val} style={{ color: "var(--text)" }}>
                     {meta.emoji} {meta.label}
                   </SelectItem>
                 ))}
@@ -300,9 +300,9 @@ function SubmitDialog({
 
           {/* Content */}
           <div className="space-y-1.5">
-            <Label style={{ color: "oklch(0.75 0.01 60)" }}>
+            <Label style={{ color: "var(--text-2)" }}>
               你嘅故事 / 問題
-              <span className="ml-1 text-xs" style={{ color: "oklch(0.45 0.02 60)" }}>
+              <span className="ml-1 text-xs" style={{ color: "var(--text-3)" }}>
                 ({content.length}/1000)
               </span>
             </Label>
@@ -313,18 +313,18 @@ function SubmitDialog({
               rows={5}
               className="resize-none"
               style={{
-                background: "oklch(0.14 0.018 260)",
-                border: "1px solid oklch(0.25 0.025 260)",
-                color: "oklch(0.85 0.01 60)",
+                background: "var(--bg-card)",
+                border: "1px solid var(--line)",
+                color: "var(--text)",
               }}
             />
           </div>
 
           {/* Image upload */}
           <div className="space-y-1.5">
-            <Label style={{ color: "oklch(0.75 0.01 60)" }}>
+            <Label style={{ color: "var(--text-2)" }}>
               附上圖片
-              <span className="ml-1 text-xs" style={{ color: "oklch(0.45 0.02 60)" }}>
+              <span className="ml-1 text-xs" style={{ color: "var(--text-3)" }}>
                 （可選，最多 5 張，每張 ≤ 2MB）
               </span>
             </Label>
@@ -338,7 +338,7 @@ function SubmitDialog({
 
           {/* Nickname + Anonymous toggle */}
           <div className="space-y-1.5">
-            <Label style={{ color: "oklch(0.75 0.01 60)" }}>你嘅名字（可用花名）</Label>
+            <Label style={{ color: "var(--text-2)" }}>你嘅名字（可用花名）</Label>
             <div className="flex gap-2">
               <Input
                 value={nickname}
@@ -346,9 +346,9 @@ function SubmitDialog({
                 placeholder={isAnonymous ? "匿名投稿" : "例如：小明、Coco…"}
                 disabled={isAnonymous}
                 style={{
-                  background: "oklch(0.14 0.018 260)",
-                  border: "1px solid oklch(0.25 0.025 260)",
-                  color: "oklch(0.85 0.01 60)",
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--line)",
+                  color: "var(--text)",
                   opacity: isAnonymous ? 0.5 : 1,
                 }}
               />
@@ -357,9 +357,9 @@ function SubmitDialog({
                 onClick={() => setIsAnonymous((v) => !v)}
                 className="flex-shrink-0 px-3 py-2 rounded-lg text-xs font-bold transition-all"
                 style={{
-                  background: isAnonymous ? "oklch(0.55 0.20 250 / 0.2)" : "oklch(0.16 0.02 260)",
-                  border: `1px solid ${isAnonymous ? "oklch(0.55 0.20 250 / 0.5)" : "oklch(0.25 0.025 260)"}`,
-                  color: isAnonymous ? "oklch(0.75 0.15 250)" : "oklch(0.55 0.02 60)",
+                  background: isAnonymous ? "rgba(201,164,92,0.2)" : "var(--bg-raise)",
+                  border: `1px solid ${isAnonymous ? "rgba(201,164,92,0.5)" : "var(--line)"}`,
+                  color: isAnonymous ? "var(--gold)" : "var(--text-3)",
                   whiteSpace: "nowrap",
                 }}
               >
@@ -375,7 +375,7 @@ function SubmitDialog({
               variant="outline"
               onClick={onClose}
               className="flex-1"
-              style={{ background: "transparent", border: "1px solid oklch(0.25 0.025 260)", color: "oklch(0.60 0.02 60)" }}
+              style={{ background: "transparent", border: "1px solid var(--line)", color: "var(--text-2)" }}
               disabled={isSubmitting}
             >
               取消
@@ -385,7 +385,7 @@ function SubmitDialog({
               disabled={isSubmitting}
               className="flex-1 font-bold"
               style={{
-                background: "linear-gradient(135deg, oklch(0.60 0.22 25), oklch(0.75 0.15 75))",
+                background: "linear-gradient(135deg, var(--red), var(--gold))",
                 color: "white",
                 border: "none",
               }}
@@ -434,7 +434,7 @@ export default function ReaderSubmissions() {
     <section
       className="py-16 px-4"
       style={{
-        background: "linear-gradient(180deg, oklch(0.08 0.01 260) 0%, oklch(0.10 0.015 260) 100%)",
+        background: "linear-gradient(180deg, var(--bg) 0%, var(--bg) 100%)",
       }}
     >
       <div className="max-w-5xl mx-auto">
@@ -443,17 +443,17 @@ export default function ReaderSubmissions() {
           <div>
             <div
               className="text-xs font-bold tracking-widest mb-2"
-              style={{ color: "oklch(0.78 0.16 75)" }}
+              style={{ color: "var(--gold)" }}
             >
               READER STORIES
             </div>
             <h2
               className="text-2xl md:text-3xl font-black mb-1"
-              style={{ color: "oklch(0.92 0.01 60)" }}
+              style={{ color: "var(--text)" }}
             >
               讀者投稿
             </h2>
-            <p className="text-sm" style={{ color: "oklch(0.55 0.02 60)" }}>
+            <p className="text-sm" style={{ color: "var(--text-3)" }}>
               每一個故事都值得被聆聽，你唔孤單
             </p>
           </div>
@@ -461,9 +461,9 @@ export default function ReaderSubmissions() {
             onClick={() => setDialogOpen(true)}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all hover:opacity-90 hover:scale-105 self-start sm:self-auto"
             style={{
-              background: "linear-gradient(135deg, oklch(0.60 0.22 25), oklch(0.75 0.15 75))",
+              background: "linear-gradient(135deg, var(--red), var(--gold))",
               color: "white",
-              boxShadow: "0 4px 16px oklch(0.60 0.22 25 / 0.35)",
+              boxShadow: "0 4px 16px var(--red)",
             }}
           >
             <PenLine size={15} />
@@ -478,7 +478,7 @@ export default function ReaderSubmissions() {
               <div
                 key={i}
                 className="rounded-2xl p-5 animate-pulse"
-                style={{ background: "oklch(0.11 0.015 260)", height: "200px" }}
+                style={{ background: "var(--bg)", height: "200px" }}
               />
             ))}
           </div>
@@ -487,25 +487,25 @@ export default function ReaderSubmissions() {
           <div
             className="rounded-2xl p-10 text-center"
             style={{
-              background: "oklch(0.11 0.015 260)",
-              border: "2px dashed oklch(0.22 0.025 260)",
+              background: "var(--bg)",
+              border: "2px dashed var(--line)",
             }}
           >
             <div className="text-4xl mb-3">✉️</div>
             <h3
               className="text-lg font-bold mb-2"
-              style={{ color: "oklch(0.88 0.01 60)" }}
+              style={{ color: "var(--text)" }}
             >
               成為第一位投稿嘅讀者！
             </h3>
-            <p className="text-sm mb-5" style={{ color: "oklch(0.50 0.02 60)" }}>
+            <p className="text-sm mb-5" style={{ color: "var(--text-3)" }}>
               分享你嘅感情故事、玄學奇遇或心底話，精選投稿將展示喺呢度
             </p>
             <button
               onClick={() => setDialogOpen(true)}
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all hover:opacity-90"
               style={{
-                background: "linear-gradient(135deg, oklch(0.60 0.22 25), oklch(0.75 0.15 75))",
+                background: "linear-gradient(135deg, var(--red), var(--gold))",
                 color: "white",
               }}
             >
@@ -532,18 +532,18 @@ export default function ReaderSubmissions() {
             <div
               className="rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4"
               style={{
-                background: "oklch(0.11 0.015 260)",
-                border: "1px solid oklch(0.20 0.02 260)",
+                background: "var(--bg)",
+                border: "1px solid var(--line)",
               }}
             >
               <div>
                 <div
                   className="text-sm font-bold mb-0.5"
-                  style={{ color: "oklch(0.88 0.01 60)" }}
+                  style={{ color: "var(--text)" }}
                 >
                   你都有故事想分享？
                 </div>
-                <div className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>
+                <div className="text-xs" style={{ color: "var(--text-3)" }}>
                   每週精選投稿，有機會喺節目中被討論 · 支援上傳圖片 📷
                 </div>
               </div>
@@ -551,9 +551,9 @@ export default function ReaderSubmissions() {
                 onClick={() => setDialogOpen(true)}
                 className="flex-shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg font-bold text-sm transition-all hover:opacity-90"
                 style={{
-                  background: "oklch(0.78 0.16 75 / 0.15)",
-                  border: "1px solid oklch(0.78 0.16 75 / 0.4)",
-                  color: "oklch(0.78 0.16 75)",
+                  background: "var(--gold)",
+                  border: "1px solid var(--gold)",
+                  color: "var(--gold)",
                 }}
               >
                 投稿分享 <ChevronRight size={14} />

@@ -11,12 +11,12 @@ import {
 
 // ─── 分類定義 ────────────────────────────────────────────────────
 const PODCAST_CATEGORIES = [
-  { key: "all",       label: "全部節目",   icon: "🎙️", color: "oklch(0.62 0.24 25)" },
-  { key: "romance",   label: "兩性關係",   icon: "💕", color: "oklch(0.65 0.22 0)" },
-  { key: "interview", label: "人物訪談",   icon: "🎤", color: "oklch(0.78 0.16 75)" },
-  { key: "emotion",   label: "都市情感",   icon: "☕", color: "oklch(0.60 0.18 200)" },
-  { key: "story",     label: "人生故事",   icon: "📖", color: "oklch(0.55 0.20 290)" },
-  { key: "career",    label: "職場與生活", icon: "💼", color: "oklch(0.65 0.15 145)" },
+  { key: "all",       label: "全部節目",   icon: "🎙️", color: "var(--red)" },
+  { key: "romance",   label: "兩性關係",   icon: "💕", color: "var(--text-2)" },
+  { key: "interview", label: "人物訪談",   icon: "🎤", color: "var(--gold)" },
+  { key: "emotion",   label: "都市情感",   icon: "☕", color: "var(--gold)" },
+  { key: "story",     label: "人生故事",   icon: "📖", color: "var(--gold)" },
+  { key: "career",    label: "職場與生活", icon: "💼", color: "var(--gold)" },
 ];
 
 // 關鍵字分類映射（根據影片標題自動分類）
@@ -95,9 +95,9 @@ function VideoCard({ video }: { video: VideoItem }) {
     <div
       className="rounded-xl overflow-hidden transition-all duration-300 flex flex-col"
       style={{
-        background: "oklch(0.10 0.02 260)",
-        border: `1px solid ${hovered ? catInfo.color + "55" : "oklch(0.18 0.02 260)"}`,
-        boxShadow: hovered ? `0 8px 32px oklch(0 0 0 / 0.4)` : "none",
+        background: "var(--bg-card)",
+        border: `1px solid ${hovered ? catInfo.color + "55" : "var(--line)"}`,
+        boxShadow: hovered ? `0 8px 32px rgba(13,12,10,0.4)` : "none",
         transform: hovered ? "translateY(-3px)" : "none",
       }}
       onMouseEnter={() => setHovered(true)}
@@ -114,14 +114,14 @@ function VideoCard({ video }: { video: VideoItem }) {
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center"
-            style={{ background: "linear-gradient(135deg, oklch(0.15 0.04 270), oklch(0.12 0.02 260))" }}>
-            <Play size={32} style={{ color: "oklch(0.40 0.02 260)" }} />
+            style={{ background: "linear-gradient(135deg, var(--bg-raise), var(--bg-card))" }}>
+            <Play size={32} style={{ color: "var(--text-3)" }} />
           </div>
         )}
         {/* Play overlay */}
         <div
           className="absolute inset-0 flex items-center justify-center transition-opacity duration-200"
-          style={{ background: "oklch(0 0 0 / 0.45)", opacity: hovered ? 1 : 0 }}
+          style={{ background: "rgba(13,12,10,0.45)", opacity: hovered ? 1 : 0 }}
         >
           <div className="w-14 h-14 rounded-full flex items-center justify-center"
             style={{ background: catInfo.color }}>
@@ -131,7 +131,7 @@ function VideoCard({ video }: { video: VideoItem }) {
         {/* Duration */}
         {video.duration && (
           <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded text-xs font-mono font-bold"
-            style={{ background: "oklch(0 0 0 / 0.85)", color: "white" }}>
+            style={{ background: "rgba(13,12,10,0.85)", color: "white" }}>
             {formatDuration(video.duration)}
           </div>
         )}
@@ -149,13 +149,13 @@ function VideoCard({ video }: { video: VideoItem }) {
         <a href={video.url} target="_blank" rel="noopener noreferrer" className="block mb-3 flex-1">
           <h3
             className="text-sm font-semibold leading-snug line-clamp-2 transition-colors duration-200"
-            style={{ color: hovered ? catInfo.color : "oklch(0.88 0.01 60)" }}
+            style={{ color: hovered ? catInfo.color : "var(--text)" }}
           >
             {video.title}
           </h3>
         </a>
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-3 text-xs" style={{ color: "oklch(0.48 0.02 60)" }}>
+          <div className="flex items-center gap-3 text-xs" style={{ color: "var(--text-3)" }}>
             <span className="flex items-center gap-1">
               <Eye size={11} /> {formatViewCount(video.viewCount)}
             </span>
@@ -229,7 +229,7 @@ export default function Episodes() {
   void _unusedIcons;
 
   return (
-    <div className="min-h-screen pt-20 pb-24 lg:pb-8" style={{ background: "oklch(0.07 0.01 260)" }}>
+    <div className="min-h-screen pt-20 pb-24 lg:pb-8" style={{ background: "var(--bg)" }}>
       <JsonLd
         id="episodes-schema"
         data={[
@@ -244,34 +244,34 @@ export default function Episodes() {
       {/* ── Hero ── */}
       <section
         className="py-14 relative overflow-hidden"
-        style={{ background: "linear-gradient(180deg, oklch(0.10 0.02 260) 0%, oklch(0.07 0.01 260) 100%)" }}
+        style={{ background: "linear-gradient(180deg, var(--bg-card) 0%, var(--bg) 100%)" }}
       >
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full opacity-5"
-            style={{ background: "oklch(0.62 0.24 25)", filter: "blur(100px)" }} />
+            style={{ background: "var(--red)", filter: "blur(100px)" }} />
         </div>
         <div className="container relative">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold mb-4"
-                style={{ background: "oklch(0.62 0.24 25 / 0.15)", border: "1px solid oklch(0.62 0.24 25 / 0.3)", color: "oklch(0.75 0.20 25)" }}>
+                style={{ background: "var(--red)", border: "1px solid var(--red)", color: "var(--red)" }}>
                 🎙️ 路邊電台
               </div>
-              <h1 className="text-3xl md:text-4xl font-black mb-3" style={{ color: "oklch(0.92 0.01 60)" }}>
+              <h1 className="text-3xl md:text-4xl font-black mb-3" style={{ color: "var(--text)" }}>
                 最新節目
               </h1>
-              <p className="text-sm max-w-xl leading-relaxed" style={{ color: "oklch(0.60 0.02 60)" }}>
+              <p className="text-sm max-w-xl leading-relaxed" style={{ color: "var(--text-2)" }}>
                 香港最真實的人物訪談、兩性關係討論、都市情感故事。每週更新，直播不設限。
               </p>
               {podcastsChannel && (
                 <div className="flex items-center gap-4 mt-4">
-                  <span className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>
-                    訂閱人數：<strong style={{ color: "oklch(0.78 0.16 75)" }}>
+                  <span className="text-xs" style={{ color: "var(--text-3)" }}>
+                    訂閱人數：<strong style={{ color: "var(--gold)" }}>
                       {parseInt(podcastsChannel.subscriberCount || "0").toLocaleString()}
                     </strong>
                   </span>
-                  <span className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>
-                    影片數：<strong style={{ color: "oklch(0.78 0.16 75)" }}>
+                  <span className="text-xs" style={{ color: "var(--text-3)" }}>
+                    影片數：<strong style={{ color: "var(--gold)" }}>
                       {parseInt(podcastsChannel.videoCount || "0").toLocaleString()}
                     </strong>
                   </span>
@@ -284,14 +284,14 @@ export default function Episodes() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]"
-                style={{ background: "oklch(0.55 0.22 25)", color: "white", textDecoration: "none" }}
+                style={{ background: "var(--red)", color: "white", textDecoration: "none" }}
               >
                 <Youtube size={16} /> 訂閱頻道
               </a>
               <Link
                 href="/mystic/videos"
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all hover:opacity-90"
-                style={{ background: "oklch(0.13 0.03 270)", border: "1px solid oklch(0.22 0.04 270)", color: "oklch(0.72 0.08 290)", textDecoration: "none" }}
+                style={{ background: "var(--bg-card)", border: "1px solid var(--line)", color: "var(--text)", textDecoration: "none" }}
               >
                 玄學影片 <ChevronRight size={14} />
               </Link>
@@ -303,7 +303,7 @@ export default function Episodes() {
       {/* ── 分類篩選（sticky） ── */}
       <div
         className="sticky top-16 z-20 py-4"
-        style={{ background: "oklch(0.07 0.01 260 / 0.95)", backdropFilter: "blur(12px)", borderBottom: "1px solid oklch(0.15 0.02 260)" }}
+        style={{ background: "var(--bg)", backdropFilter: "blur(12px)", borderBottom: "1px solid var(--bg-raise)" }}
       >
         <div className="container">
           <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
@@ -316,9 +316,9 @@ export default function Episodes() {
                   onClick={() => setActiveCategory(cat.key)}
                   className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 flex-shrink-0"
                   style={{
-                    background: isActive ? cat.color : "oklch(0.12 0.02 260)",
-                    color: isActive ? "white" : "oklch(0.62 0.02 60)",
-                    border: `1px solid ${isActive ? cat.color : "oklch(0.20 0.02 260)"}`,
+                    background: isActive ? cat.color : "var(--bg-card)",
+                    color: isActive ? "white" : "var(--text-2)",
+                    border: `1px solid ${isActive ? cat.color : "var(--line)"}`,
                     boxShadow: isActive ? `0 0 16px ${cat.color}44` : "none",
                   }}
                 >
@@ -345,7 +345,7 @@ export default function Episodes() {
           {activeCategory !== "all" && (
             <div className="flex items-center gap-3 mb-6">
               <div className="w-1 h-6 rounded-full" style={{ background: activeCatInfo.color }} />
-              <h2 className="text-lg font-black" style={{ color: "oklch(0.88 0.01 60)" }}>
+              <h2 className="text-lg font-black" style={{ color: "var(--text)" }}>
                 {activeCatInfo.icon} {activeCatInfo.label}
               </h2>
               <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: activeCatInfo.color + "22", color: activeCatInfo.color }}>
@@ -358,11 +358,11 @@ export default function Episodes() {
           {isLoading && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="rounded-xl overflow-hidden animate-pulse" style={{ background: "oklch(0.12 0.02 260)" }}>
-                  <div className="aspect-video" style={{ background: "oklch(0.16 0.02 260)" }} />
+                <div key={i} className="rounded-xl overflow-hidden animate-pulse" style={{ background: "var(--bg-card)" }}>
+                  <div className="aspect-video" style={{ background: "var(--bg-raise)" }} />
                   <div className="p-4 space-y-2">
-                    <div className="h-4 rounded" style={{ background: "oklch(0.16 0.02 260)" }} />
-                    <div className="h-3 w-2/3 rounded" style={{ background: "oklch(0.16 0.02 260)" }} />
+                    <div className="h-4 rounded" style={{ background: "var(--bg-raise)" }} />
+                    <div className="h-3 w-2/3 rounded" style={{ background: "var(--bg-raise)" }} />
                   </div>
                 </div>
               ))}
@@ -382,11 +382,11 @@ export default function Episodes() {
           {!isLoading && filteredVideos.length === 0 && (
             <div className="text-center py-20">
               <div className="text-5xl mb-4">🎙️</div>
-              <p className="mb-4" style={{ color: "oklch(0.50 0.02 60)" }}>此分類暫時未有影片</p>
+              <p className="mb-4" style={{ color: "var(--text-3)" }}>此分類暫時未有影片</p>
               <button
                 onClick={() => setActiveCategory("all")}
                 className="px-4 py-2 rounded-lg text-sm font-bold"
-                style={{ background: "oklch(0.62 0.24 25 / 0.15)", color: "oklch(0.62 0.24 25)", border: "1px solid oklch(0.62 0.24 25 / 0.3)" }}
+                style={{ background: "var(--red)", color: "var(--red)", border: "1px solid var(--red)" }}
               >
                 查看全部節目
               </button>
@@ -397,18 +397,18 @@ export default function Episodes() {
 
       {/* ── 底部 CTA ── */}
       {!isLoading && (
-        <section className="py-12" style={{ background: "oklch(0.10 0.02 260)" }}>
+        <section className="py-12" style={{ background: "var(--bg-card)" }}>
           <div className="container space-y-4">
             {/* 訂閱 CTA */}
             <div
               className="rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6"
-              style={{ background: "linear-gradient(135deg, oklch(0.13 0.04 25), oklch(0.10 0.02 260))", border: "1px solid oklch(0.62 0.24 25 / 0.2)" }}
+              style={{ background: "linear-gradient(135deg, var(--bg-card), var(--bg-card))", border: "1px solid var(--red)" }}
             >
               <div>
-                <h3 className="text-lg font-black mb-1" style={{ color: "oklch(0.92 0.01 60)" }}>
+                <h3 className="text-lg font-black mb-1" style={{ color: "var(--text)" }}>
                   喜歡路邊電台的內容？
                 </h3>
-                <p className="text-sm" style={{ color: "oklch(0.60 0.02 60)" }}>
+                <p className="text-sm" style={{ color: "var(--text-2)" }}>
                   訂閱 YouTube 頻道，第一時間收到最新節目通知。
                 </p>
               </div>
@@ -418,7 +418,7 @@ export default function Episodes() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all hover:opacity-90 hover:scale-[1.02]"
-                  style={{ background: "oklch(0.55 0.22 25)", color: "white", textDecoration: "none" }}
+                  style={{ background: "var(--red)", color: "white", textDecoration: "none" }}
                 >
                   <Youtube size={16} /> 訂閱 @6bpodcasts
                 </a>
@@ -427,7 +427,7 @@ export default function Episodes() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all hover:opacity-90"
-                  style={{ background: "oklch(0.12 0.02 260)", border: "1px solid oklch(0.25 0.02 260)", color: "oklch(0.85 0.01 60)", textDecoration: "none" }}
+                  style={{ background: "var(--bg-card)", border: "1px solid var(--line)", color: "var(--text)", textDecoration: "none" }}
                 >
                   <ExternalLink size={14} /> IG @6bpodcasts
                 </a>
@@ -436,7 +436,7 @@ export default function Episodes() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all hover:opacity-90"
-                  style={{ background: "oklch(0.12 0.02 260)", border: "1px solid oklch(0.25 0.02 260)", color: "oklch(0.85 0.01 60)", textDecoration: "none" }}
+                  style={{ background: "var(--bg-card)", border: "1px solid var(--line)", color: "var(--text)", textDecoration: "none" }}
                 >
                   <ExternalLink size={14} /> Threads
                 </a>
@@ -446,20 +446,20 @@ export default function Episodes() {
             {/* 玄學堂導流 */}
             <div
               className="rounded-xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4"
-              style={{ background: "oklch(0.09 0.04 290)", border: "1px solid oklch(0.20 0.06 290)" }}
+              style={{ background: "var(--bg-card)", border: "1px solid var(--line)" }}
             >
               <div>
-                <p className="text-sm font-bold mb-1" style={{ color: "oklch(0.88 0.10 290)" }}>
+                <p className="text-sm font-bold mb-1" style={{ color: "var(--text)" }}>
                   想了解更多玄學內容？
                 </p>
-                <p className="text-xs" style={{ color: "oklch(0.55 0.04 270)" }}>
+                <p className="text-xs" style={{ color: "var(--text-2)" }}>
                   路邊玄學堂提供風水、八字、塔羅等玄學分析影片
                 </p>
               </div>
               <Link
                 href="/mystic/videos"
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all hover:opacity-90 flex-shrink-0"
-                style={{ background: "linear-gradient(135deg, oklch(0.55 0.22 290), oklch(0.45 0.20 290))", color: "white", textDecoration: "none" }}
+                style={{ background: "var(--bg-card)", color: "white", textDecoration: "none" }}
               >
                 進入玄學影片 <ArrowRight size={14} />
               </Link>

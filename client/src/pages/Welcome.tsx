@@ -16,17 +16,17 @@ const QUOTES = [
 ];
 
 const SERVICES = [
-  { icon: "🧭", title: "風水諮詢", desc: "家居 / 辦公室佈局分析", href: "/booking", color: "oklch(0.78 0.16 75)" },
-  { icon: "🔮", title: "八字命理", desc: "個人運程深度解析", href: "/booking", color: "oklch(0.62 0.24 25)" },
-  { icon: "🃏", title: "塔羅占卜", desc: "人生問題指引解讀", href: "/booking", color: "oklch(0.55 0.20 250)" },
-  { icon: "🎬", title: "品牌合作", desc: "YouTube 訪談 / 廣告置入", href: "/partnership", color: "oklch(0.65 0.20 145)" },
+  { icon: "🧭", title: "風水諮詢", desc: "家居 / 辦公室佈局分析", href: "/booking", color: "var(--gold)" },
+  { icon: "🔮", title: "八字命理", desc: "個人運程深度解析", href: "/booking", color: "var(--red)" },
+  { icon: "🃏", title: "塔羅占卜", desc: "人生問題指引解讀", href: "/booking", color: "var(--gold)" },
+  { icon: "🎬", title: "品牌合作", desc: "YouTube 訪談 / 廣告置入", href: "/partnership", color: "var(--gold)" },
 ];
 
 const SOCIAL_LINKS = [
-  { icon: Youtube, label: "YouTube", sub: "路邊電台", href: "https://www.youtube.com/@6bpodcasts", color: "oklch(0.60 0.22 25)", bg: "oklch(0.60 0.22 25 / 0.12)" },
-  { icon: Facebook, label: "Facebook", sub: "路邊電台", href: "https://www.facebook.com/6bpodcasts", color: "oklch(0.55 0.20 250)", bg: "oklch(0.55 0.20 250 / 0.12)" },
-  { icon: Instagram, label: "Instagram", sub: "@6bpodcasts", href: "https://www.instagram.com/6bpodcasts", color: "oklch(0.62 0.24 25)", bg: "oklch(0.62 0.24 25 / 0.12)" },
-  { icon: Mic, label: "Podcast", sub: "Apple / Spotify", href: "/podcasts", color: "oklch(0.65 0.15 290)", bg: "oklch(0.65 0.15 290 / 0.12)" },
+  { icon: Youtube, label: "YouTube", sub: "路邊電台", href: "https://www.youtube.com/@6bpodcasts", color: "var(--red)", bg: "var(--red)" },
+  { icon: Facebook, label: "Facebook", sub: "路邊電台", href: "https://www.facebook.com/6bpodcasts", color: "var(--gold)", bg: "rgba(201,164,92,0.12)" },
+  { icon: Instagram, label: "Instagram", sub: "@6bpodcasts", href: "https://www.instagram.com/6bpodcasts", color: "var(--red)", bg: "var(--red)" },
+  { icon: Mic, label: "Podcast", sub: "Apple / Spotify", href: "/podcasts", color: "var(--gold)", bg: "rgba(201,164,92,0.12)" },
 ];
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -51,18 +51,18 @@ function QuoteCarousel() {
     <div
       className="relative rounded-2xl p-6 md:p-8 text-center transition-opacity duration-400"
       style={{
-        background: "oklch(0.13 0.018 260)",
-        border: "1px solid oklch(0.22 0.025 260)",
+        background: "var(--bg-card)",
+        border: "1px solid var(--line)",
         opacity: fade ? 1 : 0,
       }}
     >
-      <div className="text-2xl mb-4" style={{ color: "oklch(0.78 0.16 75)" }}>"</div>
-      <p className="text-base md:text-lg font-medium leading-relaxed mb-4" style={{ color: "oklch(0.88 0.01 60)" }}>
+      <div className="text-2xl mb-4" style={{ color: "var(--gold)" }}>"</div>
+      <p className="text-base md:text-lg font-medium leading-relaxed mb-4" style={{ color: "var(--text)" }}>
         {q.text}
       </p>
       <div className="flex items-center justify-center gap-2">
-        <span className="text-sm font-bold" style={{ color: "oklch(0.78 0.16 75)" }}>{q.author}</span>
-        <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: "oklch(0.78 0.16 75 / 0.15)", color: "oklch(0.78 0.16 75)" }}>{q.role}</span>
+        <span className="text-sm font-bold" style={{ color: "var(--gold)" }}>{q.author}</span>
+        <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: "var(--gold)", color: "var(--gold)" }}>{q.role}</span>
       </div>
       {/* Dots */}
       <div className="flex justify-center gap-1.5 mt-4">
@@ -71,7 +71,7 @@ function QuoteCarousel() {
             key={i}
             onClick={() => { setFade(false); setTimeout(() => { setIdx(i); setFade(true); }, 400); }}
             className="w-1.5 h-1.5 rounded-full transition-all"
-            style={{ background: i === idx ? "oklch(0.78 0.16 75)" : "oklch(0.30 0.02 260)" }}
+            style={{ background: i === idx ? "var(--gold)" : "var(--text-3)" }}
           />
         ))}
       </div>
@@ -99,10 +99,10 @@ function VideoCard({ video, featured = false }: { video: VideoItem; featured?: b
       rel="noopener noreferrer"
       className="group block rounded-xl overflow-hidden transition-transform duration-200"
       style={{
-        background: "oklch(0.13 0.018 260)",
-        border: `1px solid ${hovered ? "oklch(0.78 0.16 75 / 0.5)" : "oklch(0.20 0.02 260)"}`,
+        background: "var(--bg-card)",
+        border: `1px solid ${hovered ? "var(--gold)" : "var(--line)"}`,
         transform: hovered ? "translateY(-3px)" : "none",
-        boxShadow: hovered ? "0 12px 32px oklch(0 0 0 / 0.4)" : "none",
+        boxShadow: hovered ? "0 12px 32px rgba(13,12,10,0.4)" : "none",
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -119,30 +119,30 @@ function VideoCard({ video, featured = false }: { video: VideoItem; featured?: b
         {/* Play overlay */}
         <div
           className="absolute inset-0 flex items-center justify-center transition-opacity duration-200"
-          style={{ background: "oklch(0 0 0 / 0.35)", opacity: hovered ? 1 : 0 }}
+          style={{ background: "rgba(13,12,10,0.35)", opacity: hovered ? 1 : 0 }}
         >
-          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "oklch(0.60 0.22 25)" }}>
+          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "var(--red)" }}>
             <Play size={20} fill="white" color="white" />
           </div>
         </div>
         {/* Duration badge */}
-        <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded text-xs font-bold" style={{ background: "oklch(0 0 0 / 0.75)", color: "white" }}>
+        <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded text-xs font-bold" style={{ background: "rgba(13,12,10,0.75)", color: "white" }}>
           {video.duration}
         </div>
         {featured && (
-          <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1" style={{ background: "oklch(0.60 0.22 25)", color: "white" }}>
+          <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1" style={{ background: "var(--red)", color: "white" }}>
             <Star size={10} fill="white" /> 最新
           </div>
         )}
       </div>
       {/* Info */}
       <div className="p-3">
-        <p className="text-sm font-semibold leading-snug line-clamp-2 mb-2" style={{ color: "oklch(0.88 0.01 60)" }}>
+        <p className="text-sm font-semibold leading-snug line-clamp-2 mb-2" style={{ color: "var(--text)" }}>
           {video.title}
         </p>
         <div className="flex items-center justify-between">
-          <span className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>{video.viewCount} 次觀看</span>
-          <ExternalLink size={12} style={{ color: "oklch(0.45 0.02 60)" }} />
+          <span className="text-xs" style={{ color: "var(--text-3)" }}>{video.viewCount} 次觀看</span>
+          <ExternalLink size={12} style={{ color: "var(--text-3)" }} />
         </div>
       </div>
     </a>
@@ -154,11 +154,11 @@ function VideoCard({ video, featured = false }: { video: VideoItem; featured?: b
 type SubmitCategory = "relationship" | "fengshui" | "confession" | "question" | "other";
 
 const SUBMIT_CATEGORIES: { value: SubmitCategory; label: string; emoji: string; color: string }[] = [
-  { value: "relationship", label: "感情故事", emoji: "💕", color: "oklch(0.62 0.24 25)" },
-  { value: "fengshui",     label: "玄學奇遇", emoji: "🔮", color: "oklch(0.65 0.20 290)" },
-  { value: "confession",   label: "心底話",   emoji: "💬", color: "oklch(0.60 0.18 200)" },
-  { value: "question",     label: "問題想問", emoji: "🙋", color: "oklch(0.65 0.20 145)" },
-  { value: "other",        label: "其他",     emoji: "✨", color: "oklch(0.78 0.16 75)" },
+  { value: "relationship", label: "感情故事", emoji: "💕", color: "var(--red)" },
+  { value: "fengshui",     label: "玄學奇遇", emoji: "🔮", color: "var(--gold)" },
+  { value: "confession",   label: "心底話",   emoji: "💬", color: "var(--gold)" },
+  { value: "question",     label: "問題想問", emoji: "🙋", color: "var(--gold)" },
+  { value: "other",        label: "其他",     emoji: "✨", color: "var(--gold)" },
 ];
 
 // ─── Main Component ───────────────────────────────────────────────────────────
@@ -308,29 +308,29 @@ export default function Welcome() {
       : null;
 
   return (
-    <div className="min-h-screen" style={{ background: "oklch(0.08 0.01 260)" }}>
+    <div className="min-h-screen" style={{ background: "var(--bg)" }}>
       <JsonLd data={welcomeSchemas} id="welcome" />
 
       {/* ── Sticky Top Bar ─────────────────────────────────────────────────── */}
       <div
         className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3"
         style={{
-          background: "oklch(0.08 0.01 260 / 0.92)",
+          background: "var(--bg)",
           backdropFilter: "blur(12px)",
-          borderBottom: "1px solid oklch(0.18 0.02 260)",
+          borderBottom: "1px solid var(--line)",
         }}
       >
         <Link href="/" className="flex items-center gap-2">
           <img src={LOGO_URL} alt="路邊電台" className="w-8 h-8 rounded-lg object-cover" />
           <div>
-            <div className="text-xs font-black leading-none" style={{ color: "oklch(0.92 0.01 60)" }}>路邊電台</div>
-            <div className="text-xs leading-none" style={{ color: "oklch(0.55 0.02 60)" }}>× 路邊玄學堂</div>
+            <div className="text-xs font-black leading-none" style={{ color: "var(--text)" }}>路邊電台</div>
+            <div className="text-xs leading-none" style={{ color: "var(--text-3)" }}>× 路邊玄學堂</div>
           </div>
         </Link>
         <Link
           href="/booking"
           className="px-3 py-1.5 rounded-lg text-xs font-bold transition-opacity hover:opacity-90"
-          style={{ background: "oklch(0.60 0.22 25)", color: "white" }}
+          style={{ background: "var(--red)", color: "white" }}
         >
           立即預約玄學服務
         </Link>
@@ -341,14 +341,14 @@ export default function Welcome() {
         ref={heroRef}
         className="relative pt-16 pb-16 overflow-hidden"
         style={{
-          background: "linear-gradient(160deg, oklch(0.10 0.018 260) 0%, oklch(0.07 0.01 260) 60%, oklch(0.09 0.015 25) 100%)",
+          background: "linear-gradient(160deg, var(--bg) 0%, var(--bg) 60%, var(--bg) 100%)",
         }}
       >
         {/* Background glows */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full opacity-10" style={{ background: "oklch(0.60 0.22 25)", filter: "blur(100px)" }} />
-          <div className="absolute bottom-0 right-1/4 w-80 h-80 rounded-full opacity-8" style={{ background: "oklch(0.55 0.20 250)", filter: "blur(80px)" }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full opacity-5" style={{ background: "oklch(0.78 0.16 75)", filter: "blur(60px)" }} />
+          <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full opacity-10" style={{ background: "var(--red)", filter: "blur(100px)" }} />
+          <div className="absolute bottom-0 right-1/4 w-80 h-80 rounded-full opacity-8" style={{ background: "var(--gold)", filter: "blur(80px)" }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full opacity-5" style={{ background: "var(--gold)", filter: "blur(60px)" }} />
         </div>
 
         <div className="container relative">
@@ -357,7 +357,7 @@ export default function Welcome() {
             <div className="flex justify-center mb-6">
               <div
                 className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold"
-                style={{ background: "oklch(0.55 0.20 250 / 0.15)", border: "1px solid oklch(0.55 0.20 250 / 0.4)", color: "oklch(0.75 0.15 250)" }}
+                style={{ background: "rgba(201,164,92,0.15)", border: "1px solid rgba(201,164,92,0.4)", color: "var(--gold)" }}
               >
                 <Sparkles size={12} />
                 你係從 {sourceLabel} 過嚟！歡迎認識我哋 👋
@@ -373,11 +373,11 @@ export default function Welcome() {
                   src={LOGO_URL}
                   alt="路邊電台"
                   className="w-20 h-20 rounded-2xl object-cover"
-                  style={{ boxShadow: "0 0 40px oklch(0.60 0.22 25 / 0.4)" }}
+                  style={{ boxShadow: "none" }}
                 />
                 <div
                   className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center"
-                  style={{ background: "oklch(0.60 0.22 25)" }}
+                  style={{ background: "var(--red)" }}
                 >
                   <Volume2 size={12} color="white" />
                 </div>
@@ -385,15 +385,15 @@ export default function Welcome() {
             </div>
 
             {/* Headline */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold mb-5" style={{ background: "oklch(0.78 0.16 75 / 0.12)", border: "1px solid oklch(0.78 0.16 75 / 0.3)", color: "oklch(0.78 0.16 75)" }}>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold mb-5" style={{ background: "var(--gold)", border: "1px solid var(--gold)", color: "var(--gold)" }}>
               🎙️ 香港最真實人物訪談 Podcast
             </div>
-            <h1 className="text-4xl md:text-6xl font-black mb-4 leading-tight" style={{ color: "oklch(0.92 0.01 60)" }}>
+            <h1 className="text-4xl md:text-6xl font-black mb-4 leading-tight" style={{ color: "var(--text)" }}>
               路邊電台
               <br />
-              <span style={{ color: "oklch(0.78 0.16 75)" }}>× 路邊玄學堂</span>
+              <span style={{ color: "var(--gold)" }}>× 路邊玄學堂</span>
             </h1>
-            <p className="text-base md:text-lg max-w-xl mx-auto leading-relaxed mb-8" style={{ color: "oklch(0.60 0.02 60)" }}>
+            <p className="text-base md:text-lg max-w-xl mx-auto leading-relaxed mb-8" style={{ color: "var(--text-2)" }}>
               探討兩性關係、都市感情、玄學命理<br />
               每一位嘉賓都係講真話，呈現最真實嘅內心世界
             </p>
@@ -406,8 +406,8 @@ export default function Welcome() {
                 { num: "5年+", label: "訪談經驗" },
               ].map((s) => (
                 <div key={s.label} className="text-center">
-                  <div className="text-2xl md:text-3xl font-black" style={{ color: "oklch(0.78 0.16 75)" }}>{s.num}</div>
-                  <div className="text-xs mt-0.5" style={{ color: "oklch(0.50 0.02 60)" }}>{s.label}</div>
+                  <div className="text-2xl md:text-3xl font-black" style={{ color: "var(--gold)" }}>{s.num}</div>
+                  <div className="text-xs mt-0.5" style={{ color: "var(--text-3)" }}>{s.label}</div>
                 </div>
               ))}
             </div>
@@ -417,7 +417,7 @@ export default function Welcome() {
               <a
                 href="#videos"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm transition-all hover:opacity-90 hover:scale-105"
-                style={{ background: "linear-gradient(135deg, oklch(0.60 0.22 25), oklch(0.75 0.15 75))", color: "white", boxShadow: "0 4px 20px oklch(0.60 0.22 25 / 0.4)" }}
+                style={{ background: "linear-gradient(135deg, var(--red), var(--gold))", color: "white", boxShadow: "0 4px 20px var(--red)" }}
               >
                 <Play size={16} fill="white" />
                 立即收看最新影片
@@ -425,7 +425,7 @@ export default function Welcome() {
               <Link
                 href="/booking"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm transition-all hover:opacity-90"
-                style={{ background: "oklch(0.15 0.02 260)", border: "1px solid oklch(0.30 0.03 260)", color: "oklch(0.88 0.01 60)" }}
+                style={{ background: "var(--bg-raise)", border: "1px solid var(--text-3)", color: "var(--text)" }}
               >
                 <Sparkles size={16} />
                 預約玄學服務
@@ -448,15 +448,15 @@ export default function Welcome() {
           {/* Section header */}
           <div className="flex items-center justify-between mb-6">
             <div>
-              <div className="text-xs font-bold tracking-widest mb-1" style={{ color: "oklch(0.60 0.22 25)" }}>LATEST VIDEOS</div>
-              <h2 className="text-xl md:text-2xl font-black" style={{ color: "oklch(0.92 0.01 60)" }}>最新影片</h2>
+              <div className="text-xs font-bold tracking-widest mb-1" style={{ color: "var(--red)" }}>LATEST VIDEOS</div>
+              <h2 className="text-xl md:text-2xl font-black" style={{ color: "var(--text)" }}>最新影片</h2>
             </div>
             <a
               href="https://www.youtube.com/@6bpodcasts"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-opacity hover:opacity-80"
-              style={{ background: "oklch(0.60 0.22 25 / 0.15)", border: "1px solid oklch(0.60 0.22 25 / 0.3)", color: "oklch(0.75 0.20 25)" }}
+              style={{ background: "var(--red)", border: "1px solid var(--red)", color: "var(--red)" }}
             >
               <Youtube size={14} />
               全部影片
@@ -468,20 +468,20 @@ export default function Welcome() {
           {videosLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="rounded-xl overflow-hidden animate-pulse" style={{ background: "oklch(0.13 0.018 260)" }}>
-                  <div className="aspect-video" style={{ background: "oklch(0.18 0.02 260)" }} />
+                <div key={i} className="rounded-xl overflow-hidden animate-pulse" style={{ background: "var(--bg-card)" }}>
+                  <div className="aspect-video" style={{ background: "var(--line)" }} />
                   <div className="p-3 space-y-2">
-                    <div className="h-4 rounded" style={{ background: "oklch(0.20 0.02 260)" }} />
-                    <div className="h-3 w-2/3 rounded" style={{ background: "oklch(0.18 0.02 260)" }} />
+                    <div className="h-4 rounded" style={{ background: "var(--line)" }} />
+                    <div className="h-3 w-2/3 rounded" style={{ background: "var(--line)" }} />
                   </div>
                 </div>
               ))}
             </div>
           ) : videos.length === 0 ? (
-            <div className="text-center py-12" style={{ color: "oklch(0.50 0.02 60)" }}>
+            <div className="text-center py-12" style={{ color: "var(--text-3)" }}>
               <Youtube size={40} className="mx-auto mb-3 opacity-30" />
               <p className="text-sm">暫時無法載入影片，請直接前往 YouTube 收看</p>
-              <a href="https://www.youtube.com/@6bpodcasts" target="_blank" rel="noopener noreferrer" className="inline-block mt-3 text-sm font-bold" style={{ color: "oklch(0.60 0.22 25)" }}>
+              <a href="https://www.youtube.com/@6bpodcasts" target="_blank" rel="noopener noreferrer" className="inline-block mt-3 text-sm font-bold" style={{ color: "var(--red)" }}>
                 前往 YouTube →
               </a>
             </div>
@@ -498,13 +498,13 @@ export default function Welcome() {
       {/* ── Services CTA ────────────────────────────────────────────────────── */}
       <section
         className="py-14 px-4"
-        style={{ background: "linear-gradient(180deg, oklch(0.08 0.01 260) 0%, oklch(0.10 0.015 260) 100%)" }}
+        style={{ background: "linear-gradient(180deg, var(--bg) 0%, var(--bg) 100%)" }}
       >
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
-            <div className="text-xs font-bold tracking-widest mb-2" style={{ color: "oklch(0.78 0.16 75)" }}>OUR SERVICES</div>
-            <h2 className="text-xl md:text-2xl font-black mb-2" style={{ color: "oklch(0.92 0.01 60)" }}>我哋可以幫到你</h2>
-            <p className="text-sm" style={{ color: "oklch(0.55 0.02 60)" }}>從玄學諮詢到品牌合作，一站式服務</p>
+            <div className="text-xs font-bold tracking-widest mb-2" style={{ color: "var(--gold)" }}>OUR SERVICES</div>
+            <h2 className="text-xl md:text-2xl font-black mb-2" style={{ color: "var(--text)" }}>我哋可以幫到你</h2>
+            <p className="text-sm" style={{ color: "var(--text-3)" }}>從玄學諮詢到品牌合作，一站式服務</p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
@@ -514,13 +514,13 @@ export default function Welcome() {
                 href={s.href}
                 className="group flex flex-col items-center text-center p-4 rounded-xl transition-all hover:scale-105"
                 style={{
-                  background: "oklch(0.13 0.018 260)",
-                  border: "1px solid oklch(0.20 0.02 260)",
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--line)",
                 }}
               >
                 <div className="text-3xl mb-2">{s.icon}</div>
-                <div className="text-sm font-bold mb-1" style={{ color: "oklch(0.88 0.01 60)" }}>{s.title}</div>
-                <div className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>{s.desc}</div>
+                <div className="text-sm font-bold mb-1" style={{ color: "var(--text)" }}>{s.title}</div>
+                <div className="text-xs" style={{ color: "var(--text-3)" }}>{s.desc}</div>
                 <div className="mt-2 text-xs font-bold flex items-center gap-0.5" style={{ color: s.color }}>
                   了解更多 <ChevronRight size={10} />
                 </div>
@@ -532,23 +532,23 @@ export default function Welcome() {
           <div
             className="rounded-2xl p-6 md:p-8 text-center relative overflow-hidden"
             style={{
-              background: "linear-gradient(135deg, oklch(0.13 0.025 25) 0%, oklch(0.12 0.020 260) 100%)",
-              border: "1px solid oklch(0.25 0.04 25 / 0.6)",
+              background: "var(--bg-card)",
+              border: "1px solid rgba(58,52,38,0.6)",
             }}
           >
-            <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at top, oklch(0.60 0.22 25 / 0.08) 0%, transparent 70%)" }} />
+            <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at top, var(--red) 0%, transparent 70%)" }} />
             <div className="relative">
               <div className="text-3xl mb-3">🔮</div>
-              <h3 className="text-lg md:text-xl font-black mb-2" style={{ color: "oklch(0.92 0.01 60)" }}>
+              <h3 className="text-lg md:text-xl font-black mb-2" style={{ color: "var(--text)" }}>
                 想知道你嘅運程？
               </h3>
-              <p className="text-sm mb-5 max-w-md mx-auto" style={{ color: "oklch(0.60 0.02 60)" }}>
+              <p className="text-sm mb-5 max-w-md mx-auto" style={{ color: "var(--text-2)" }}>
                 路邊玄學堂提供風水諮詢、八字命理、塔羅占卜，專業師傅為你解答人生疑問。
               </p>
               <Link
                 href="/booking"
                 className="inline-flex items-center gap-2 px-7 py-3 rounded-xl font-bold text-sm transition-all hover:opacity-90 hover:scale-105"
-                style={{ background: "linear-gradient(135deg, oklch(0.60 0.22 25), oklch(0.75 0.15 75))", color: "white", boxShadow: "0 4px 20px oklch(0.60 0.22 25 / 0.35)" }}
+                style={{ background: "linear-gradient(135deg, var(--red), var(--gold))", color: "white", boxShadow: "0 4px 20px var(--red)" }}
               >
                 <Sparkles size={15} />
                 立即預約玄學服務
@@ -564,18 +564,18 @@ export default function Welcome() {
         id="share"
         className="py-14 px-4"
         style={{
-          background: "linear-gradient(180deg, oklch(0.10 0.015 260) 0%, oklch(0.09 0.012 260) 100%)",
+          background: "var(--bg-card)",
           scrollMarginTop: "64px",
         }}
       >
         <div className="max-w-2xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="text-xs font-bold tracking-widest mb-2" style={{ color: "oklch(0.62 0.24 25)" }}>SHARE YOUR STORY</div>
-            <h2 className="text-xl md:text-2xl font-black mb-2" style={{ color: "oklch(0.92 0.01 60)" }}>
+            <div className="text-xs font-bold tracking-widest mb-2" style={{ color: "var(--red)" }}>SHARE YOUR STORY</div>
+            <h2 className="text-xl md:text-2xl font-black mb-2" style={{ color: "var(--text)" }}>
               分享你嘅故事
             </h2>
-            <p className="text-sm" style={{ color: "oklch(0.55 0.02 60)" }}>
+            <p className="text-sm" style={{ color: "var(--text-3)" }}>
               每一個故事都值得被聆聽，精選投稿將展示喺首頁，有機會喺節目中被討論
             </p>
           </div>
@@ -584,15 +584,15 @@ export default function Welcome() {
           <div
             className="rounded-2xl p-6 md:p-8 relative overflow-hidden"
             style={{
-              background: "oklch(0.11 0.015 260)",
-              border: "1px solid oklch(0.20 0.025 260)",
-              boxShadow: "0 8px 40px oklch(0 0 0 / 0.3)",
+              background: "var(--bg)",
+              border: "1px solid var(--line)",
+              boxShadow: "0 8px 40px rgba(13,12,10,0.3)",
             }}
           >
             {/* Ambient glow */}
             <div
               className="absolute inset-0 pointer-events-none"
-              style={{ background: "radial-gradient(ellipse at top left, oklch(0.62 0.24 25 / 0.06) 0%, transparent 60%)" }}
+              style={{ background: "radial-gradient(ellipse at top left, var(--red) 0%, transparent 60%)" }}
             />
 
             {submitDone ? (
@@ -601,12 +601,12 @@ export default function Welcome() {
                 <CheckCircle2
                   size={48}
                   className="mx-auto mb-4"
-                  style={{ color: "oklch(0.65 0.20 145)" }}
+                  style={{ color: "var(--gold)" }}
                 />
-                <h3 className="text-lg font-black mb-2" style={{ color: "oklch(0.92 0.01 60)" }}>
+                <h3 className="text-lg font-black mb-2" style={{ color: "var(--text)" }}>
                   投稿成功！🎉
                 </h3>
-                <p className="text-sm mb-6" style={{ color: "oklch(0.55 0.02 60)" }}>
+                <p className="text-sm mb-6" style={{ color: "var(--text-3)" }}>
                   感謝你嘅分享，我哋會盡快審核。<br />
                   精選投稿將展示喺路邊電台首頁。
                 </p>
@@ -614,9 +614,9 @@ export default function Welcome() {
                   onClick={() => setSubmitDone(false)}
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all hover:opacity-90"
                   style={{
-                    background: "oklch(0.78 0.16 75 / 0.15)",
-                    border: "1px solid oklch(0.78 0.16 75 / 0.4)",
-                    color: "oklch(0.78 0.16 75)",
+                    background: "var(--gold)",
+                    border: "1px solid var(--gold)",
+                    color: "var(--gold)",
                   }}
                 >
                   <PenLine size={14} />
@@ -628,7 +628,7 @@ export default function Welcome() {
               <form onSubmit={handleSubmit} className="relative space-y-5">
                 {/* Category pills */}
                 <div>
-                  <div className="text-xs font-bold mb-2" style={{ color: "oklch(0.65 0.02 60)" }}>選擇類別</div>
+                  <div className="text-xs font-bold mb-2" style={{ color: "var(--text-2)" }}>選擇類別</div>
                   <div className="flex flex-wrap gap-2">
                     {SUBMIT_CATEGORIES.map((cat) => (
                       <button
@@ -637,9 +637,9 @@ export default function Welcome() {
                         onClick={() => setSubmitCategory(cat.value)}
                         className="px-3 py-1.5 rounded-full text-xs font-bold transition-all"
                         style={{
-                          background: submitCategory === cat.value ? `${cat.color}20` : "oklch(0.16 0.02 260)",
-                          border: `1px solid ${submitCategory === cat.value ? `${cat.color}60` : "oklch(0.24 0.025 260)"}`,
-                          color: submitCategory === cat.value ? cat.color : "oklch(0.55 0.02 60)",
+                          background: submitCategory === cat.value ? `${cat.color}20` : "var(--bg-raise)",
+                          border: `1px solid ${submitCategory === cat.value ? `${cat.color}60` : "var(--line)"}`,
+                          color: submitCategory === cat.value ? cat.color : "var(--text-3)",
                           transform: submitCategory === cat.value ? "scale(1.05)" : "scale(1)",
                         }}
                       >
@@ -652,8 +652,8 @@ export default function Welcome() {
                 {/* Content textarea */}
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
-                    <div className="text-xs font-bold" style={{ color: "oklch(0.65 0.02 60)" }}>你嘅故事 / 問題</div>
-                    <div className="text-xs" style={{ color: "oklch(0.40 0.02 60)" }}>{submitContent.length}/1000</div>
+                    <div className="text-xs font-bold" style={{ color: "var(--text-2)" }}>你嘅故事 / 問題</div>
+                    <div className="text-xs" style={{ color: "var(--text-3)" }}>{submitContent.length}/1000</div>
                   </div>
                   <textarea
                     value={submitContent}
@@ -662,17 +662,17 @@ export default function Welcome() {
                     rows={4}
                     className="w-full rounded-xl px-4 py-3 text-sm resize-none outline-none transition-all"
                     style={{
-                      background: "oklch(0.14 0.018 260)",
-                      border: `1px solid ${submitContent.length > 0 ? "oklch(0.35 0.04 260)" : "oklch(0.22 0.025 260)"}`,
-                      color: "oklch(0.88 0.01 60)",
+                      background: "var(--bg-card)",
+                      border: `1px solid ${submitContent.length > 0 ? "var(--text-3)" : "var(--line)"}`,
+                      color: "var(--text)",
                     }}
                   />
                 </div>
 
                 {/* Image upload */}
                 <div>
-                  <div className="text-xs font-bold mb-1.5" style={{ color: "oklch(0.65 0.02 60)" }}>
-                    附上圖片 <span style={{ color: "oklch(0.40 0.02 60)", fontWeight: 400 }}>（可選，最多 5 張，每張 ≤ 2MB）</span>
+                  <div className="text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>
+                    附上圖片 <span style={{ color: "var(--text-3)", fontWeight: 400 }}>（可選，最多 5 張，每張 ≤ 2MB）</span>
                   </div>
                   <ImageUploader
                     images={submitImages}
@@ -685,7 +685,7 @@ export default function Welcome() {
                 {/* Nickname row */}
                 <div className="flex gap-2 items-center">
                   <div className="flex-1">
-                    <div className="text-xs font-bold mb-1.5" style={{ color: "oklch(0.65 0.02 60)" }}>你嘅名字（花名都得）</div>
+                    <div className="text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>你嘅名字（花名都得）</div>
                     <input
                       type="text"
                       value={submitNickname}
@@ -694,9 +694,9 @@ export default function Welcome() {
                       disabled={submitAnonymous}
                       className="w-full rounded-xl px-4 py-2.5 text-sm outline-none transition-all"
                       style={{
-                        background: "oklch(0.14 0.018 260)",
-                        border: "1px solid oklch(0.22 0.025 260)",
-                        color: "oklch(0.88 0.01 60)",
+                        background: "var(--bg-card)",
+                        border: "1px solid var(--line)",
+                        color: "var(--text)",
                         opacity: submitAnonymous ? 0.5 : 1,
                       }}
                     />
@@ -707,9 +707,9 @@ export default function Welcome() {
                       onClick={() => setSubmitAnonymous((v) => !v)}
                       className="px-3 py-2.5 rounded-xl text-xs font-bold transition-all"
                       style={{
-                        background: submitAnonymous ? "oklch(0.55 0.20 250 / 0.2)" : "oklch(0.16 0.02 260)",
-                        border: `1px solid ${submitAnonymous ? "oklch(0.55 0.20 250 / 0.5)" : "oklch(0.24 0.025 260)"}`,
-                        color: submitAnonymous ? "oklch(0.75 0.15 250)" : "oklch(0.55 0.02 60)",
+                        background: submitAnonymous ? "rgba(201,164,92,0.2)" : "var(--bg-raise)",
+                        border: `1px solid ${submitAnonymous ? "rgba(201,164,92,0.5)" : "var(--line)"}`,
+                        color: submitAnonymous ? "var(--gold)" : "var(--text-3)",
                         whiteSpace: "nowrap",
                       }}
                     >
@@ -724,9 +724,9 @@ export default function Welcome() {
                   disabled={submitMutation.isPending || submitContent.trim().length < 10}
                   className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-sm transition-all hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
-                    background: "linear-gradient(135deg, oklch(0.60 0.22 25), oklch(0.75 0.15 75))",
+                    background: "linear-gradient(135deg, var(--red), var(--gold))",
                     color: "white",
-                    boxShadow: submitContent.trim().length >= 10 ? "0 4px 20px oklch(0.60 0.22 25 / 0.35)" : "none",
+                    boxShadow: submitContent.trim().length >= 10 ? "0 4px 20px var(--red)" : "none",
                   }}
                 >
                   {submitMutation.isPending ? (
@@ -736,7 +736,7 @@ export default function Welcome() {
                   )}
                 </button>
 
-                <p className="text-center text-xs" style={{ color: "oklch(0.38 0.02 60)" }}>
+                <p className="text-center text-xs" style={{ color: "var(--text-3)" }}>
                   投稿內容將由我哋團隊審核，通過後展示喺首頁
                 </p>
               </form>
@@ -749,9 +749,9 @@ export default function Welcome() {
       <section className="py-14 px-4">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-8">
-            <div className="text-xs font-bold tracking-widest mb-2" style={{ color: "oklch(0.55 0.20 250)" }}>FOLLOW US</div>
-            <h2 className="text-xl md:text-2xl font-black mb-2" style={{ color: "oklch(0.92 0.01 60)" }}>追蹤我哋，唔好錯過</h2>
-            <p className="text-sm" style={{ color: "oklch(0.55 0.02 60)" }}>每週新影片上架，第一時間收到通知</p>
+            <div className="text-xs font-bold tracking-widest mb-2" style={{ color: "var(--gold)" }}>FOLLOW US</div>
+            <h2 className="text-xl md:text-2xl font-black mb-2" style={{ color: "var(--text)" }}>追蹤我哋，唔好錯過</h2>
+            <p className="text-sm" style={{ color: "var(--text-3)" }}>每週新影片上架，第一時間收到通知</p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -768,8 +768,8 @@ export default function Welcome() {
                   style={{ background: s.bg, border: `1px solid ${s.color}30` }}
                 >
                   <Icon size={28} style={{ color: s.color }} className="mb-2" />
-                  <div className="text-sm font-bold" style={{ color: "oklch(0.88 0.01 60)" }}>{s.label}</div>
-                  <div className="text-xs mt-0.5" style={{ color: "oklch(0.55 0.02 60)" }}>{s.sub}</div>
+                  <div className="text-sm font-bold" style={{ color: "var(--text)" }}>{s.label}</div>
+                  <div className="text-xs mt-0.5" style={{ color: "var(--text-3)" }}>{s.sub}</div>
                 </Wrapper>
               );
             })}
@@ -778,17 +778,17 @@ export default function Welcome() {
           {/* Push notification opt-in hint */}
           <div
             className="mt-6 rounded-xl p-4 flex items-center gap-3"
-            style={{ background: "oklch(0.13 0.018 260)", border: "1px solid oklch(0.20 0.02 260)" }}
+            style={{ background: "var(--bg-card)", border: "1px solid var(--line)" }}
           >
             <div className="text-2xl flex-shrink-0">🔔</div>
             <div className="flex-1 min-w-0">
-              <div className="text-sm font-bold" style={{ color: "oklch(0.88 0.01 60)" }}>開啟網站通知</div>
-              <div className="text-xs" style={{ color: "oklch(0.50 0.02 60)" }}>新影片上架即時通知，唔再錯過精彩內容</div>
+              <div className="text-sm font-bold" style={{ color: "var(--text)" }}>開啟網站通知</div>
+              <div className="text-xs" style={{ color: "var(--text-3)" }}>新影片上架即時通知，唔再錯過精彩內容</div>
             </div>
             <Link
               href="/"
               className="flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-opacity hover:opacity-80"
-              style={{ background: "oklch(0.55 0.20 250 / 0.2)", border: "1px solid oklch(0.55 0.20 250 / 0.4)", color: "oklch(0.75 0.15 250)" }}
+              style={{ background: "rgba(201,164,92,0.2)", border: "1px solid rgba(201,164,92,0.4)", color: "var(--gold)" }}
             >
               開啟
             </Link>
@@ -799,12 +799,12 @@ export default function Welcome() {
       {/* ── Footer ──────────────────────────────────────────────────────────── */}
       <footer
         className="py-8 px-4 text-center"
-        style={{ borderTop: "1px solid oklch(0.15 0.02 260)" }}
+        style={{ borderTop: "1px solid var(--bg-raise)" }}
       >
         <img src={LOGO_URL} alt="路邊電台" className="w-10 h-10 rounded-xl mx-auto mb-3 object-cover" />
-        <div className="text-sm font-bold mb-1" style={{ color: "oklch(0.70 0.01 60)" }}>路邊電台 × 路邊玄學堂</div>
-        <div className="text-xs mb-4" style={{ color: "oklch(0.40 0.01 60)" }}>香港最真實人物訪談 Podcast</div>
-        <div className="flex justify-center gap-4 text-xs" style={{ color: "oklch(0.45 0.02 60)" }}>
+        <div className="text-sm font-bold mb-1" style={{ color: "var(--text-2)" }}>路邊電台 × 路邊玄學堂</div>
+        <div className="text-xs mb-4" style={{ color: "var(--text-3)" }}>香港最真實人物訪談 Podcast</div>
+        <div className="flex justify-center gap-4 text-xs" style={{ color: "var(--text-3)" }}>
           <Link href="/" className="hover:opacity-80">首頁</Link>
           <Link href="/about" className="hover:opacity-80">關於我們</Link>
           <Link href="/services" className="hover:opacity-80">服務項目</Link>

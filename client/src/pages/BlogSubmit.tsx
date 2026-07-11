@@ -154,16 +154,16 @@ export default function BlogSubmit() {
     return (
       <div className="min-h-screen pt-24 flex items-center justify-center">
         <div className="text-center max-w-md mx-auto px-4">
-          <CheckCircle size={48} className="mx-auto mb-4" style={{ color: "oklch(0.65 0.20 145)" }} />
-          <h2 className="text-2xl font-black mb-3" style={{ color: "oklch(0.92 0.01 60)" }}>投稿成功！</h2>
-          <p className="text-sm mb-6" style={{ color: "oklch(0.55 0.02 60)" }}>
+          <CheckCircle size={48} className="mx-auto mb-4" style={{ color: "var(--gold)" }} />
+          <h2 className="text-2xl font-black mb-3" style={{ color: "var(--text)" }}>投稿成功！</h2>
+          <p className="text-sm mb-6" style={{ color: "var(--text-3)" }}>
             感謝你的分享！你的文章已即時發佈至嘉賓專欄。
           </p>
           <div className="flex gap-3 justify-center">
-            <Link href="/blog" className="px-5 py-2.5 rounded-lg text-sm font-bold" style={{ background: "oklch(0.60 0.22 25)", color: "white" }}>
+            <Link href="/blog" className="px-5 py-2.5 rounded-lg text-sm font-bold" style={{ background: "var(--red)", color: "white" }}>
               返回嘉賓專欄
             </Link>
-            <Link href="/" className="px-5 py-2.5 rounded-lg text-sm font-bold" style={{ background: "oklch(0.18 0.02 260)", border: "1px solid oklch(0.28 0.02 260)", color: "oklch(0.85 0.01 60)" }}>
+            <Link href="/" className="px-5 py-2.5 rounded-lg text-sm font-bold" style={{ background: "var(--line)", border: "1px solid var(--text-3)", color: "var(--text)" }}>
               返回首頁
             </Link>
           </div>
@@ -173,9 +173,9 @@ export default function BlogSubmit() {
   }
 
   const inputStyle = {
-    background: "oklch(0.15 0.015 260)",
-    border: "1px solid oklch(0.25 0.02 260)",
-    color: "oklch(0.92 0.01 60)",
+    background: "var(--bg-card)",
+    border: "1px solid var(--line)",
+    color: "var(--text)",
     borderRadius: "0.5rem",
     padding: "0.75rem 1rem",
     width: "100%",
@@ -183,20 +183,20 @@ export default function BlogSubmit() {
     outline: "none",
   };
 
-  const labelStyle = { color: "oklch(0.70 0.01 60)" };
+  const labelStyle = { color: "var(--text-2)" };
 
   return (
     <div className="min-h-screen pt-24 pb-16">
       <div className="container max-w-2xl mx-auto py-10">
-        <Link href="/blog" className="inline-flex items-center gap-2 text-sm mb-8 hover:opacity-80" style={{ color: "oklch(0.62 0.24 25)" }}>
+        <Link href="/blog" className="inline-flex items-center gap-2 text-sm mb-8 hover:opacity-80" style={{ color: "var(--red)" }}>
           <ArrowLeft size={16} />
           返回嘉賓專欄
         </Link>
 
         <div className="mb-8">
-          <div className="text-xs font-bold tracking-widest mb-2" style={{ color: "oklch(0.62 0.24 25)" }}>SUBMIT YOUR STORY</div>
-          <h1 className="text-3xl font-black mb-2" style={{ color: "oklch(0.92 0.01 60)" }}>投稿分享你的故事</h1>
-          <p className="text-sm" style={{ color: "oklch(0.55 0.02 60)" }}>
+          <div className="text-xs font-bold tracking-widest mb-2" style={{ color: "var(--red)" }}>SUBMIT YOUR STORY</div>
+          <h1 className="text-3xl font-black mb-2" style={{ color: "var(--text)" }}>投稿分享你的故事</h1>
+          <p className="text-sm" style={{ color: "var(--text-3)" }}>
             歡迎嘉賓及觀眾分享訪談心得、人生故事或玄學見解。所有投稿均需經過審核才會發佈。
           </p>
         </div>
@@ -235,7 +235,7 @@ export default function BlogSubmit() {
           <div>
             <label className="block text-xs font-bold mb-1.5" style={labelStyle}>文章內容 *</label>
             <textarea name="content" value={form.content} onChange={handleChange} required rows={12} placeholder="分享你的故事、心得或見解..." style={{ ...inputStyle, resize: "vertical" }} />
-            <p className="text-xs mt-1" style={{ color: "oklch(0.45 0.02 60)" }}>最少 50 字</p>
+            <p className="text-xs mt-1" style={{ color: "var(--text-3)" }}>最少 50 字</p>
           </div>
 
           {/* ── Image Upload ─────────────────────────────────────── */}
@@ -254,15 +254,15 @@ export default function BlogSubmit() {
                 onClick={() => fileInputRef.current?.click()}
                 className="cursor-pointer rounded-lg flex flex-col items-center justify-center gap-2 py-6 transition-all"
                 style={{
-                  border: `2px dashed ${isDragging ? "oklch(0.62 0.24 25)" : "oklch(0.28 0.02 260)"}`,
-                  background: isDragging ? "oklch(0.15 0.03 25 / 0.3)" : "oklch(0.13 0.015 260)",
+                  border: `2px dashed ${isDragging ? "var(--red)" : "var(--text-3)"}`,
+                  background: isDragging ? "var(--bg-raise)" : "var(--bg-card)",
                 }}
               >
-                <Upload size={22} style={{ color: "oklch(0.55 0.02 60)" }} />
-                <p className="text-xs" style={{ color: "oklch(0.55 0.02 60)" }}>
-                  拖放圖片到此處，或 <span style={{ color: "oklch(0.62 0.24 25)" }}>點擊選擇</span>
+                <Upload size={22} style={{ color: "var(--text-3)" }} />
+                <p className="text-xs" style={{ color: "var(--text-3)" }}>
+                  拖放圖片到此處，或 <span style={{ color: "var(--red)" }}>點擊選擇</span>
                 </p>
-                <p className="text-xs" style={{ color: "oklch(0.40 0.02 60)" }}>JPG、PNG、WebP、GIF</p>
+                <p className="text-xs" style={{ color: "var(--text-3)" }}>JPG、PNG、WebP、GIF</p>
               </div>
             )}
             <input
@@ -278,16 +278,16 @@ export default function BlogSubmit() {
             {images.length > 0 && (
               <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 mt-3">
                 {images.map((img) => (
-                  <div key={img.previewUrl} className="relative rounded-lg overflow-hidden aspect-square" style={{ background: "oklch(0.13 0.015 260)" }}>
+                  <div key={img.previewUrl} className="relative rounded-lg overflow-hidden aspect-square" style={{ background: "var(--bg-card)" }}>
                     <img src={img.previewUrl} alt="" className="w-full h-full object-cover" />
                     {img.uploading && (
-                      <div className="absolute inset-0 flex items-center justify-center" style={{ background: "oklch(0 0 0 / 0.6)" }}>
+                      <div className="absolute inset-0 flex items-center justify-center" style={{ background: "rgba(13,12,10,0.6)" }}>
                         <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                       </div>
                     )}
                     {img.error && (
-                      <div className="absolute inset-0 flex items-center justify-center" style={{ background: "oklch(0 0 0 / 0.7)" }}>
-                        <X size={18} style={{ color: "oklch(0.65 0.25 25)" }} />
+                      <div className="absolute inset-0 flex items-center justify-center" style={{ background: "rgba(13,12,10,0.7)" }}>
+                        <X size={18} style={{ color: "var(--red)" }} />
                       </div>
                     )}
                     {!img.uploading && (
@@ -295,7 +295,7 @@ export default function BlogSubmit() {
                         type="button"
                         onClick={() => removeImage(img.previewUrl)}
                         className="absolute top-1 right-1 rounded-full p-0.5"
-                        style={{ background: "oklch(0 0 0 / 0.7)" }}
+                        style={{ background: "rgba(13,12,10,0.7)" }}
                       >
                         <X size={12} style={{ color: "white" }} />
                       </button>
@@ -305,7 +305,7 @@ export default function BlogSubmit() {
               </div>
             )}
             {images.length > 0 && (
-              <p className="text-xs mt-1.5" style={{ color: "oklch(0.45 0.02 60)" }}>
+              <p className="text-xs mt-1.5" style={{ color: "var(--text-3)" }}>
                 已選 {images.length}/{MAX_IMAGES} 張
                 {images.some((i) => i.uploading) && " · 上傳中..."}
               </p>
@@ -320,7 +320,7 @@ export default function BlogSubmit() {
                 相關連結（選填，最多 3 條）
               </label>
               {links.length < 3 && (
-                <button type="button" onClick={addLink} className="flex items-center gap-1 text-xs font-bold hover:opacity-80 transition-opacity" style={{ color: "oklch(0.62 0.24 25)" }}>
+                <button type="button" onClick={addLink} className="flex items-center gap-1 text-xs font-bold hover:opacity-80 transition-opacity" style={{ color: "var(--red)" }}>
                   <Plus size={13} /> 加入連結
                 </button>
               )}
@@ -331,7 +331,7 @@ export default function BlogSubmit() {
                 type="button"
                 onClick={addLink}
                 className="w-full py-2.5 rounded-lg text-xs flex items-center justify-center gap-2 transition-all hover:opacity-80"
-                style={{ border: "1px dashed oklch(0.28 0.02 260)", color: "oklch(0.50 0.02 60)", background: "transparent" }}
+                style={{ border: "1px dashed var(--text-3)", color: "var(--text-3)", background: "transparent" }}
               >
                 <Plus size={14} /> 加入相關連結（YouTube 影片、社交媒體等）
               </button>
@@ -339,11 +339,11 @@ export default function BlogSubmit() {
 
             <div className="flex flex-col gap-3">
               {links.map((link, idx) => (
-                <div key={idx} className="rounded-lg p-3 flex flex-col gap-2" style={{ background: "oklch(0.13 0.015 260)", border: "1px solid oklch(0.22 0.02 260)" }}>
+                <div key={idx} className="rounded-lg p-3 flex flex-col gap-2" style={{ background: "var(--bg-card)", border: "1px solid var(--line)" }}>
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold" style={{ color: "oklch(0.62 0.24 25)" }}>連結 {idx + 1}</span>
+                    <span className="text-xs font-bold" style={{ color: "var(--red)" }}>連結 {idx + 1}</span>
                     <button type="button" onClick={() => removeLink(idx)} className="hover:opacity-70">
-                      <X size={14} style={{ color: "oklch(0.50 0.02 60)" }} />
+                      <X size={14} style={{ color: "var(--text-3)" }} />
                     </button>
                   </div>
                   <input
@@ -368,7 +368,7 @@ export default function BlogSubmit() {
             type="submit"
             disabled={submitMutation.isPending || images.some((i) => i.uploading)}
             className="w-full py-3 rounded-lg font-bold text-sm transition-all hover:opacity-90 disabled:opacity-50"
-            style={{ background: "linear-gradient(135deg, oklch(0.60 0.22 25), oklch(0.75 0.15 75))", color: "white" }}
+            style={{ background: "linear-gradient(135deg, var(--red), var(--gold))", color: "white" }}
           >
             {submitMutation.isPending
               ? "提交中..."
