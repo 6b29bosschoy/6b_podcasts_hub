@@ -222,16 +222,18 @@ export default function Portal() {
     return () => clearTimeout(timer);
   }, [selected, navigate]);
 
-  const formatSubs = (n?: number | null) => {
-    if (!n) return null;
-    if (n >= 10000) return `${(n / 10000).toFixed(1)}萬`;
-    if (n >= 1000) return `${(n / 1000).toFixed(1)}K`;
-    return `${n}`;
+  const formatSubs = (n?: number | string | null) => {
+    if (n === null || n === undefined || n === "") return null;
+    const num = typeof n === "string" ? parseInt(n.replace(/,/g, ""), 10) : n;
+    if (isNaN(num) || num <= 0) return null;
+    if (num >= 10000) return `${(num / 10000).toFixed(2).replace(/\.?0+$/, "")}萬`;
+    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
+    return `${num}`;
   };
-
-  const podcastSubs = (channels?.podcasts as { subscriberCount?: number } | null)?.subscriberCount;
-  const fengshuiSubs = (channels?.fengshui as { subscriberCount?: number } | null)?.subscriberCount;
-  const totalSubs = (podcastSubs ?? 0) + (fengshuiSubs ?? 0);
+  const podcastSubs = (channels?.podcasts as { subscriberCount?: number | string } | null)?.subscriberCount;
+  const fengshuiSubs = (channels?.fengshui as { subscriberCount?: number | string } | null)?.subscriberCount;
+  const parseSubs = (s?: number | string | null) => typeof s === "string" ? (parseInt(s.replace(/,/g, ""), 10) || 0) : (s ?? 0);
+  const totalSubs = parseSubs(podcastSubs) + parseSubs(fengshuiSubs);
 
   const leftW = selected === "podcasts" ? "100%" : selected === "mystic" ? "0%" : hovered === "podcasts" ? "60%" : hovered === "mystic" ? "40%" : "50%";
   const rightW = selected === "mystic" ? "100%" : selected === "podcasts" ? "0%" : hovered === "mystic" ? "60%" : hovered === "podcasts" ? "40%" : "50%";

@@ -66,9 +66,9 @@ const SERVICES = [
 ];
 
 const STATS = [
-  { value: "20.6K+", label: "YouTube 訂閱者" },
+  { value: "22,700+", label: "YouTube 訂閱者" },
   { value: "486+", label: "節目集數" },
-  { value: "35%", label: "年均觀眾增長" },
+  { value: "2,000+", label: "現有會員" },
   { value: "4.2K+", label: "Instagram 追蹤者" },
 ];
 

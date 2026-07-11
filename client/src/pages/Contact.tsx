@@ -15,11 +15,11 @@ const INQUIRY_TYPES = [
 
 export default function Contact() {
   useSEO({
-    title: "聯絡我們｜6B Podcast—商業合作查詢、嘉賓邀請與觀眾反饲",
-    description: "聯絡 6B Podcast 路邊電台：商業合作洽談、嘉賓邀請申請、觀眾反饲意見。我們會在 48 小時內回覆。亦可直接 WhatsApp 查詢玄學服務預約。",
-    keywords: "聯絡 6B Podcast,商業合作查詢,嘉賓邀請,觀眾反饲,香港 Podcast 聯絡,玄學服務預約",
-    ogTitle: "聯絡我們｜6B Podcast—商業合作查詢、嘉賓邀請與觀眾反饲",
-    ogDescription: "商業合作洽談、嘉賓邀請申請、觀眾反饲意見。我們會在 48 小時內回覆。",
+    title: "聯絡我們｜6B Podcast—商業合作查詢、嘉賓邀請與觀眾反饋",
+    description: "聯絡 6B Podcast 路邊電台：商業合作洽談、嘉賓邀請申請、觀眾反饋意見。我們會在 48 小時內回覆。亦可直接 WhatsApp 查詢玄學服務預約。",
+    keywords: "聯絡 6B Podcast,商業合作查詢,嘉賓邀請,觀眾反饋,香港 Podcast 聯絡,玄學服務預約",
+    ogTitle: "聯絡我們｜6B Podcast—商業合作查詢、嘉賓邀請與觀眾反饋",
+    ogDescription: "商業合作洽談、嘉賓邀請申請、觀眾反饋意見。我們會在 48 小時內回覆。",
     ogUrl: "https://www.6bpodcasts.com/contact",
     canonical: "https://www.6bpodcasts.com/contact",
   });
@@ -107,7 +107,7 @@ export default function Contact() {
       "@context": "https://schema.org",
       "@type": "ContactPage",
       name: "聯絡我們｜路邊電台",
-      description: "聯絡路邊電台：商業合作洽談、嘉賓邀請申請、觀眾反饨意見，我們會在 48 小時內回覆。",
+      description: "聯絡路邊電台：商業合作洽談、嘉賓邀請申請、觀眾反饋意見，我們會在 48 小時內回覆。",
       url: `${SITE_URL}/contact`,
     },
     buildBreadcrumbSchema([
@@ -135,9 +135,9 @@ export default function Contact() {
             <div className="glass-card rounded-xl p-5">
               <h3 className="font-black mb-4" style={{ color: "var(--text)" }}>直接聯絡</h3>
               <div className="flex flex-col gap-3">
-                <a href="mailto:ktcreativefirm@gmail.com" className="flex items-center gap-3 text-sm hover:opacity-80 transition-opacity" style={{ color: "var(--text-2)" }}>
+                <a href="mailto:hello@6bpodcasts.com" className="flex items-center gap-3 text-sm hover:opacity-80 transition-opacity" style={{ color: "var(--text-2)" }}>
                   <Mail size={16} style={{ color: "var(--red)" }} />
-                  ktcreativefirm@gmail.com
+                  hello@6bpodcasts.com
                 </a>
                 <a href="https://wa.me/85298729990" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm hover:opacity-80 transition-opacity" style={{ color: "var(--text-2)" }}>
                   <Phone size={16} style={{ color: "var(--gold)" }} />

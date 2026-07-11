@@ -551,3 +551,24 @@
 - [x] Contact.tsx — 套用新 token
 - [x] Partnership.tsx — 套用新 token
 - [x] Investors.tsx — 確認已使用新 token
+
+## 修復任務文件 v2.0（2026-07-11）
+
+### P0：立即修復
+- [ ] P0-1: 修正 Header 訂閱數格式化錯誤（22700 → 2.27萬，非 22700.2萬）
+- [ ] P0-2: 修復 Footer Spotify 死鏈（spoti.fi/30EQPOT → 正確 show URL）
+- [ ] P0-3: 修復 Apple Podcasts 連結（短鏈 → https://podcasts.apple.com/hk/podcast/id1595723029）
+- [ ] P0-4a: 修正 /contact title 錯字（反饲 → 反饋）
+- [ ] P0-4b: 刪除 /blog 第一篇文章摘要結尾多餘的「v」字元
+
+### P1：內容一致性
+- [ ] P1-1: 全站數字統一（/services、/welcome、/podcasts、/investors 頁面）
+- [ ] P1-2: 全站電郵統一（ktcreativefirm@gmail.com → hello@6bpodcasts.com）
+- [ ] P1-3: /about 頁刪除無出處「大數據研究」聲稱
+- [ ] P1-4: 補齊 /host-recruitment、/blog/submit、/home 頁面 title + meta description
+
+### P2：SEO 架構
+- [ ] P2-1: Per-page server-side canonical + meta tags（所有主要路由）
+- [ ] P2-2: / 與 /home 各有獨立 title/meta，logo 與導航「首頁」連結統一
+- [ ] P2-3: sitemap.xml 確保 Content-Type 為 application/xml、明文 XML、non-www URL
+- [ ] P2-4: 重寫 llms.txt 與 llms-full.txt（訂閱數、集數、連結、價格、電郵全部更新）

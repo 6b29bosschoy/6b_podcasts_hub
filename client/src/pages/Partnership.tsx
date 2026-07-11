@@ -35,10 +35,10 @@ const WHY_COLLAB = [
 export default function Partnership() {
   useSEO({
     title: "商業合作｜6B Podcast—品牌訪談、節目贊助、內容共創與玄學合作",
-    description: "與 6B Podcast 路邊電台合作：品牌訪談、節目贊助、內容共創、玄學節目贊助、師傅合作。觸達香港 16,000+ 粉絲，提升品牌曝光度與轉化率。",
+    description: "與 6B Podcast 路邊電台合作：品牌訪談、節目贊助、內容共創、玄學節目贊助、師傅合作。觸達香港 22,700+ 訂閱者，提升品牌曝光度與轉化率。",
     keywords: "商業合作,品牌訪談,節目贊助,內容共創,YouTube 廣告,香港 Podcast 合作,KOL 合作,玄學合作",
     ogTitle: "商業合作｜6B Podcast—品牌訪談、節目贊助、內容共創與玄學合作",
-    ogDescription: "品牌訪談、節目贊助、內容共創、玄學節目贊助、師傅合作。觸達香港 16,000+ 粉絲。",
+    ogDescription: "品牌訪談、節目贊助、內容共創、玄學節目贊助、師傅合作。觸達香港 22,700+ 訂閱者。",
     ogUrl: "https://www.6bpodcasts.com/partnership",
     ogImage: "https://www.6bpodcasts.com/manus-storage/og-partnership_63ed94db.jpg",
     canonical: "https://www.6bpodcasts.com/partnership",
@@ -84,7 +84,7 @@ export default function Partnership() {
       "@context": "https://schema.org",
       "@type": "ContactPage",
       name: "合作洽談｜路邊電台",
-      description: "與路邊電台合作：品牌置入、內容共創、整合行銷方案，觸達香港 16,000+ 粉絲，提升品牌曝光度與轉化率。",
+      description: "與路邊電台合作：品牌置入、內容共創、整合行銷方案，觸達香港 22,700+ 訂閱者，提升品牌曝光度與轉化率。",
       url: `${SITE_URL}/partnership`,
       mainEntity: {
         "@type": "Organization",
@@ -376,7 +376,7 @@ export default function Partnership() {
                   📱 WhatsApp
                 </a>
                 <a
-                  href="mailto:ktcreativefirm@gmail.com"
+                  href="mailto:hello@6bpodcasts.com"
                   className="px-4 py-2 rounded-lg text-xs font-bold transition-all hover:opacity-90"
                   style={{ background: "var(--line)", border: "1px solid var(--text-3)", color: "var(--text)" }}
                 >

@@ -71,8 +71,8 @@ export default function Footer() {
                 { label: "YouTube 路邊玄學堂", href: "https://www.youtube.com/@6bfengshui" },
                 { label: "Facebook", href: "https://www.facebook.com/6bpodcasts" },
                 { label: "Instagram", href: "https://www.instagram.com/6bpodcasts" },
-                { label: "Apple Podcast", href: "https://apple.co/3nhSxy8" },
-                { label: "Spotify", href: "https://spoti.fi/30EQPOT" },
+                { label: "Apple Podcast", href: "https://podcasts.apple.com/hk/podcast/id1595723029" },
+                { label: "Spotify", href: "https://open.spotify.com/show/6bpodcasts" },
               ].map((item) => (
                 <a
                   key={item.href}
@@ -89,7 +89,7 @@ export default function Footer() {
               ))}
             </div>
             <div className="mt-5 pt-4" style={{ borderTop: "1px solid var(--line-soft)" }}>
-              <p className="text-xs" style={{ color: "var(--text-3)" }}>ktcreativefirm@gmail.com</p>
+              <p className="text-xs" style={{ color: "var(--text-3)" }}>hello@6bpodcasts.com</p>
               <p className="text-xs mt-1" style={{ color: "var(--text-3)" }}>WhatsApp: +852 9872 9990</p>
             </div>
           </div>

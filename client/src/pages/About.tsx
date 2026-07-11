@@ -98,7 +98,7 @@ export default function About() {
             關於我們
           </h1>
           <p className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: "var(--text-2)" }}>
-            KT CREATIVE FIRM LTD（路天邊制作有限公司）致力於透過專業的媒體製作與創新的行銷策略，幫助品牌與個人在數位時代中建立獨特的聲音與影響力。根據大數據顯示，訪談節目在香港越來越受到重視，收聽與收看觀眾持續增長，成為品牌推廣的重要平台。
+            KT CREATIVE FIRM LTD（路天邊制作有限公司）致力於透過專業的媒體製作與創新的行銷策略，幫助品牌與個人在數位時代中建立獨特的聲音與影響力。訪談節目在香港越來越受到重視，收聴與收看觀眾持續增長，成為品牌推廣的重要平台。
           </p>
         </div>
       </section>
@@ -113,7 +113,7 @@ export default function About() {
             </div>
             <div className="glass-card rounded-2xl p-8 md:p-10 space-y-5" style={{ border: "1px solid var(--red)" }}>
               <p className="leading-relaxed" style={{ color: "var(--text-2)" }}>
-                根據 2024 年最新大數據研究顯示，訪談節目在香港的受歡迎程度持續上升，收聽與收看人數年均增長超過 <strong style={{ color: "var(--gold)" }}>35%</strong>。這背後的原因很簡單：在資訊爆炸的時代，觀眾渴望真實、有深度的內容，而訪談節目恰好提供了這種價值。
+                訪談節目在香港的受歡迎程度持續上升。在資訊爆炸的時代，觀眾渴望真實、有深度的內容，而訪談節目恰好提供了這種價値。
               </p>
               <p className="leading-relaxed" style={{ color: "var(--text-2)" }}>
                 KT CREATIVE FIRM 從「路邊 PODCASTS」這個旗艦頻道起步，透過一集又一集的深度訪談，我們學會了如何捕捉最真實的故事，並將其轉化為能夠感動人心的內容。
@@ -197,7 +197,7 @@ export default function About() {
                       📱 WhatsApp 聯絡
                     </a>
                     <a
-                      href="mailto:ktcreativefirm@gmail.com"
+                      href="mailto:hello@6bpodcasts.com"
                       className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all hover:opacity-90"
                       style={{ background: "var(--line)", border: "1px solid var(--text-3)", color: "var(--text)" }}
                     >
