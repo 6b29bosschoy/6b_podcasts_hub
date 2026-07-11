@@ -173,13 +173,12 @@ export default function Home() {
           <h1 className="mb-6" style={{
             fontFamily: "'Noto Serif TC', serif",
             fontWeight: 900,
-            fontSize: "clamp(2.25rem, 6vw, 4rem)",
-            lineHeight: 1.2,
+            fontSize: "clamp(2rem, 4.5vw, 3.25rem)",
+            lineHeight: 1.35,
             color: "var(--text)",
+            textWrap: "balance" as React.CSSProperties["textWrap"],
           }}>
-            <span style={{ color: "var(--gold)" }}>486 個人</span>喺呢度講咗真話。
-            <br />
-            到你。
+            <span style={{ color: "var(--gold)" }}>486 個人</span>喺呢度講咗真話。到你。
           </h1>
 
           {/* Subtitle */}
