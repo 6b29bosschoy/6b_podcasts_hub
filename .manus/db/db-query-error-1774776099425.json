@@ -1,8 +1,0 @@
-{
-  "query": "ALTER TABLE `reader_submissions` MODIFY COLUMN `status` enum('pending','approved','rejected','published') NOT NULL DEFAULT 'pending';\nALTER TABLE `reader_submissions` ADD `images` text DEFAULT ('[]') NOT NULL;\nALTER TABLE `reader_submissions` ADD `publishTarget` enum('home','blog') DEFAULT 'home';\nALTER TABLE `reader_submissions` ADD `adminNote` text;\nALTER TABLE `reader_submissions` ADD `publishedAt` timestamp;",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway05.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2yaUMnUi8YG1BR6.root --database XJagJnJEiagVDDmfVeExSL --execute ALTER TABLE `reader_submissions` MODIFY COLUMN `status` enum('pending','approved','rejected','published') NOT NULL DEFAULT 'pending';\nALTER TABLE `reader_submissions` ADD `images` text DEFAULT ('[]') NOT NULL;\nALTER TABLE `reader_submissions` ADD `publishTarget` enum('home','blog') DEFAULT 'home';\nALTER TABLE `reader_submissions` ADD `adminNote` text;\nALTER TABLE `reader_submissions` ADD `publishedAt` timestamp;",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1064 (42000) at line 2: You have an error in your SQL syntax; check the manual that corresponds to your TiDB version for the right syntax to use line 1 column 64 near \"'[]') NOT NULL\""
-  ]
-}

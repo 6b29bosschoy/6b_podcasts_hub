@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE `mystic_usage` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `userId` int NOT NULL,\n  `usageDate` varchar(10) NOT NULL,\n  `count` int NOT NULL DEFAULT 0,\n  `createdAt` timestamp NOT NULL DEFAULT (now()),\n  `updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,\n  CONSTRAINT `mystic_usage_id` PRIMARY KEY(`id`),\n  UNIQUE KEY `mystic_usage_user_date` (`userId`, `usageDate`)\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway05.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2yaUMnUi8YG1BR6.root --database XJagJnJEiagVDDmfVeExSL --execute CREATE TABLE `mystic_usage` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `userId` int NOT NULL,\n  `usageDate` varchar(10) NOT NULL,\n  `count` int NOT NULL DEFAULT 0,\n  `createdAt` timestamp NOT NULL DEFAULT (now()),\n  `updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,\n  CONSTRAINT `mystic_usage_id` PRIMARY KEY(`id`),\n  UNIQUE KEY `mystic_usage_user_date` (`userId`, `usageDate`)\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 1232
-}

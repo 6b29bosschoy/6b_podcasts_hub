@@ -1,9 +1,0 @@
-{
-  "query": "ALTER TABLE `reader_submissions` ADD COLUMN `publishTarget` enum('home','blog') DEFAULT 'home';\nALTER TABLE `reader_submissions` ADD COLUMN `adminNote` text;\nALTER TABLE `reader_submissions` ADD COLUMN `publishedAt` timestamp NULL",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway05.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2yaUMnUi8YG1BR6.root --database XJagJnJEiagVDDmfVeExSL --execute ALTER TABLE `reader_submissions` ADD COLUMN `publishTarget` enum('home','blog') DEFAULT 'home';\nALTER TABLE `reader_submissions` ADD COLUMN `adminNote` text;\nALTER TABLE `reader_submissions` ADD COLUMN `publishedAt` timestamp NULL",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 2410
-}

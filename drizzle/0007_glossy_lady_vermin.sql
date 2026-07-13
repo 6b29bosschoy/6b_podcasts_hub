@@ -1,1 +1,0 @@
-ALTER TABLE `blog_posts` ADD `viewCount` int DEFAULT 0 NOT NULL;
