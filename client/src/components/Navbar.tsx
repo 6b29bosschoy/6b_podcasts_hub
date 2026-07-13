@@ -18,14 +18,13 @@ const SOCIAL_LINKS = [
 ];
 
 const NAV_ITEMS = [
-  { label: "首頁", href: "/home" },
-  { label: "兩性故事", href: "/podcasts" },
-  { label: "玄學堂", href: "/mystic" },
-  { label: "節目精選", href: "/episodes" },
-  { label: "嘉賓專欄", href: "/blog" },
+  { label: "首頁", href: "/" },
+  { label: "路邊電台", href: "/podcasts" },
+  { label: "兩性故事", href: "/blog" },
+  { label: "路邊玄學堂", href: "/mystic" },
   { label: "預約諮詢", href: "/booking" },
   { label: "商業合作", href: "/partnership" },
-  { label: "關於 6B", href: "/about" },
+  { label: "聯絡我們", href: "/contact" },
 ];
 
 const SUBMIT_OPTIONS = [

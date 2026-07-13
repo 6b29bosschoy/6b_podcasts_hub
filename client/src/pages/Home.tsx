@@ -256,9 +256,9 @@ export default function Home() {
             <h2 className="section-heading">最新節目</h2>
           </div>
           <div className="flex gap-2">
-            {(["all", "podcasts", "fengshui"] as const).map((f) => (
+              {(["all", "podcasts", "fengshui"] as const).map((f) => (
               <button key={f} onClick={() => setVideoFilter(f)} className="text-xs px-3 py-1.5 transition-all duration-200"
-                style={{ borderRadius: "var(--radius)", border: `1px solid ${videoFilter === f ? "var(--gold)" : "var(--line)"}`, background: videoFilter === f ? "rgba(200,169,106,0.12)" : "transparent", color: videoFilter === f ? "var(--gold)" : "var(--text-3)", letterSpacing: "0.04em" }}>
+                style={{ borderRadius: "var(--radius)", borderWidth: 1, borderStyle: "solid", borderColor: videoFilter === f ? "var(--gold)" : "var(--line)", background: videoFilter === f ? "rgba(200,169,106,0.12)" : "transparent", color: videoFilter === f ? "var(--gold)" : "var(--text-3)", letterSpacing: "0.04em" }}>
                 {f === "all" ? "全部" : f === "podcasts" ? "路邊電台" : "玄學堂"}
               </button>
             ))}
@@ -372,7 +372,7 @@ export default function Home() {
               ].map(({ label, href, Icon }) => (
                 <a key={href} href={href} target="_blank" rel="noopener noreferrer"
                   className="flex items-center gap-2 text-xs px-3 py-2 transition-all duration-200"
-                  style={{ border: "1px solid var(--line)", borderRadius: "var(--radius)", color: "var(--text-3)" }}
+                  style={{ borderWidth: 1, borderStyle: "solid", borderColor: "var(--line)", borderRadius: "var(--radius)", color: "var(--text-3)" }}
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--gold)"; (e.currentTarget as HTMLElement).style.color = "var(--gold)"; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--line)"; (e.currentTarget as HTMLElement).style.color = "var(--text-3)"; }}>
                   <Icon className="w-3.5 h-3.5" /> {label}

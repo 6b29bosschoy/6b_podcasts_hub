@@ -109,8 +109,8 @@ function App() {
   const [location] = useLocation();
   const isWelcome = location === "/welcome" || location.startsWith("/welcome?");
   const isMystic = location.startsWith("/mystic");
-  const isPortal = location === "/" || location === "/portal";
-  const showMainNav = !isWelcome && !isPortal && !isMystic;
+  // Portal is now the unified brand homepage — show Navbar/Footer on root too
+  const showMainNav = !isWelcome && !isMystic;
 
   return (
     <ErrorBoundary>
