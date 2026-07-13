@@ -1,5 +1,5 @@
 /* ── Google Fonts ──────────────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@400;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@400;600;700;900&display=swap');
 
 /* ── Local font fallback (Noto Sans TC Variable) ───────────────────────────── */
 @font-face {
@@ -63,59 +63,64 @@
   --color-text-3: var(--text-3);
 }
 
-/* ── Single source of truth: always dark, warm black ───────────────────────── */
+/* ── Single source of truth: cinematic editorial dark ───────────────────────── */
 :root {
   /* ── Brand palette ── */
-  --bg:          #0d0c0a;   /* warm black base */
-  --bg-raise:    #14120f;   /* raised surface */
-  --bg-card:     #191612;   /* card background */
-  --line:        #2a251d;   /* primary border */
-  --line-soft:   #211d17;   /* subtle divider */
-  --text:        #ece5d8;   /* primary text */
-  --text-2:      #a99f8c;   /* secondary text */
-  --text-3:      #6f6757;   /* tertiary / placeholder */
-  --gold:        #c9a45c;   /* sole accent — all CTAs */
+  --bg:          #0d0909;   /* coffee black base */
+  --bg-deep:     #070505;   /* deepest background */
+  --bg-raise:    #160d0d;   /* raised surface */
+  --bg-card:     #1b1010;   /* card background */
+  --bg-warm:     #1a1110;   /* warm card variant */
+  --line:        #2c1a1a;   /* primary border */
+  --line-soft:   #201212;   /* subtle divider */
+  --text:        #f0e6df;   /* primary text — warm white */
+  --text-2:      #b8a49a;   /* secondary text — greige */
+  --text-3:      #7a6258;   /* tertiary / placeholder */
+  --gold:        #c8a96a;   /* champagne gold accent */
   --gold-dim:    #8a6e3a;   /* dimmed gold for borders */
-  --red:         #a63a2e;   /* 路邊電台 channel marker only */
-  --radius:      2px;       /* sharp corners throughout */
+  --gold-light:  #e8cfa0;   /* light gold highlight */
+  --red:         #8b2e2e;   /* deep burgundy — 路邊電台 */
+  --red-bright:  #b03030;   /* brighter red for hover */
+  --pink-grey:   #c4a8a8;   /* grey-pink accent */
+  --radius:      3px;       /* slightly soft corners */
 
   /* ── shadcn/ui variable mapping ── */
-  --background:             #0d0c0a;
-  --foreground:             #ece5d8;
-  --card:                   #191612;
-  --card-foreground:        #ece5d8;
-  --popover:                #14120f;
-  --popover-foreground:     #ece5d8;
-  --primary:                #c9a45c;
-  --primary-foreground:     #141210;
-  --secondary:              #211d17;
-  --secondary-foreground:   #a99f8c;
-  --muted:                  #191612;
-  --muted-foreground:       #6f6757;
-  --accent:                 #14120f;
-  --accent-foreground:      #ece5d8;
-  --destructive:            #a63a2e;
-  --destructive-foreground: #ece5d8;
-  --border:                 #2a251d;
-  --input:                  #211d17;
-  --ring:                   #c9a45c;
+  --background:             #0d0909;
+  --foreground:             #f0e6df;
+  --card:                   #1b1010;
+  --card-foreground:        #f0e6df;
+  --popover:                #160d0d;
+  --popover-foreground:     #f0e6df;
+  --primary:                #c8a96a;
+  --primary-foreground:     #0d0909;
+  --secondary:              #201212;
+  --secondary-foreground:   #b8a49a;
+  --muted:                  #1b1010;
+  --muted-foreground:       #7a6258;
+  --accent:                 #160d0d;
+  --accent-foreground:      #f0e6df;
+  --destructive:            #8b2e2e;
+  --destructive-foreground: #f0e6df;
+  --border:                 #2c1a1a;
+  --input:                  #201212;
+  --ring:                   #c8a96a;
 
   /* ── Sidebar ── */
-  --sidebar:                        #14120f;
-  --sidebar-foreground:             #ece5d8;
-  --sidebar-primary:                #c9a45c;
-  --sidebar-primary-foreground:     #141210;
-  --sidebar-accent:                 #191612;
-  --sidebar-accent-foreground:      #ece5d8;
-  --sidebar-border:                 #2a251d;
-  --sidebar-ring:                   #c9a45c;
+  --sidebar:                        #160d0d;
+  --sidebar-foreground:             #f0e6df;
+  --sidebar-primary:                #c8a96a;
+  --sidebar-primary-foreground:     #0d0909;
+  --sidebar-accent:                 #1b1010;
+  --sidebar-accent-foreground:      #f0e6df;
+  --sidebar-border:                 #2c1a1a;
+  --sidebar-ring:                   #c8a96a;
 
   /* ── Charts ── */
-  --chart-1: #c9a45c;
-  --chart-2: #a99f8c;
-  --chart-3: #6f6757;
-  --chart-4: #a63a2e;
-  --chart-5: #2a251d;
+  --chart-1: #c8a96a;
+  --chart-2: #b8a49a;
+  --chart-3: #7a6258;
+  --chart-4: #8b2e2e;
+  --chart-5: #2c1a1a;
 }
 
 /* ── Base layer ─────────────────────────────────────────────────────────────── */
@@ -124,20 +129,20 @@
     @apply border-border outline-ring/50;
   }
   html {
-    background-color: #0d0c0a;
-    color: #ece5d8;
+    background-color: #0d0909;
+    color: #f0e6df;
   }
   body {
     @apply bg-background text-foreground;
     font-family: 'Noto Sans TC', sans-serif;
     font-weight: 300;
-    line-height: 1.75;
+    line-height: 1.8;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Noto Serif TC', 'Noto Sans TC', serif;
-    font-weight: 700;
+    font-family: 'Noto Serif TC', 'Cormorant Garamond', serif;
+    font-weight: 600;
     line-height: 1.3;
     color: var(--text);
   }
@@ -176,8 +181,8 @@
   /* ── Kicker: decorative label above headings ── */
   .kicker {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 13px;
-    letter-spacing: 0.42em;
+    font-size: 12px;
+    letter-spacing: 0.38em;
     text-transform: uppercase;
     color: var(--gold);
     font-weight: 400;
@@ -190,16 +195,39 @@
     gap: 0.5rem;
     padding: 0.75rem 1.75rem;
     background: var(--gold);
-    color: #141210;
+    color: #0d0909;
     font-family: 'Noto Sans TC', sans-serif;
     font-weight: 500;
     font-size: 0.875rem;
     letter-spacing: 0.04em;
     border: none;
     border-radius: var(--radius);
-    transition: background 0.2s, transform 0.2s;
+    transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+    box-shadow: 0 2px 16px rgba(200,169,106,0.2);
   }
-  .btn-gold:hover { background: #d4b06a; transform: translateY(-1px); }
+  .btn-gold:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 28px rgba(200,169,106,0.35);
+  }
+
+  /* ── Burgundy CTA button ── */
+  .btn-red {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.75rem;
+    background: var(--red);
+    color: #f0e6df;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 500;
+    font-size: 0.875rem;
+    letter-spacing: 0.04em;
+    border: none;
+    border-radius: var(--radius);
+    transition: background 0.25s, transform 0.2s;
+  }
+  .btn-red:hover { background: var(--red-bright); transform: translateY(-2px); }
 
   /* ── Ghost link button ── */
   .btn-ghost {
@@ -214,9 +242,14 @@
     font-size: 0.875rem;
     border: 1px solid var(--line);
     border-radius: var(--radius);
-    transition: border-color 0.2s, color 0.2s, transform 0.2s;
+    transition: border-color 0.25s, color 0.25s, transform 0.2s, background 0.25s;
   }
-  .btn-ghost:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-1px); }
+  .btn-ghost:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(200,169,106,0.06);
+    transform: translateY(-1px);
+  }
 
   /* ── Card with hover gold-line sweep ── */
   .card-line {
@@ -225,7 +258,7 @@
     border: 1px solid var(--line);
     border-radius: var(--radius);
     overflow: hidden;
-    transition: background 0.2s;
+    transition: background 0.25s, border-color 0.25s;
   }
   .card-line::after {
     content: '';
@@ -237,9 +270,9 @@
     background: var(--gold);
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 0.3s ease;
+    transition: transform 0.35s ease;
   }
-  .card-line:hover { background: var(--bg-raise); }
+  .card-line:hover { background: var(--bg-raise); border-color: var(--line-soft); }
   .card-line:hover::after { transform: scaleX(1); }
 
   /* ── Divider line ── */
@@ -267,14 +300,14 @@
     font-weight: 500;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--red);
+    color: var(--red-bright);
   }
   .channel-tag-red::before {
     content: '';
     display: inline-block;
     width: 16px;
     height: 2px;
-    background: var(--red);
+    background: var(--red-bright);
     flex-shrink: 0;
   }
   .channel-tag-gold {
@@ -329,13 +362,46 @@
     border: 1px solid var(--line);
     border-radius: var(--radius);
   }
+
+  /* ── Editorial section heading ── */
+  .section-heading {
+    font-family: 'Noto Serif TC', serif;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.25;
+  }
+
+  /* ── Thin gold rule ── */
+  .gold-rule {
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+    margin: 0.75rem 0;
+  }
+
+  /* ── Service card ── */
+  .service-card {
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    transition: border-color 0.3s, background 0.3s, transform 0.25s;
+  }
+  .service-card:hover {
+    border-color: var(--gold-dim);
+    background: var(--bg-raise);
+    transform: translateY(-3px);
+  }
 }
 
 /* ── Scrollbar ──────────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: #0d0c0a; }
-::-webkit-scrollbar-thumb { background: #2a251d; border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: #c9a45c; }
+::-webkit-scrollbar-track { background: #0d0909; }
+::-webkit-scrollbar-thumb { background: #2c1a1a; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #c8a96a; }
 
 /* ── Bagua rotor animation (Hero decoration) ────────────────────────────────── */
 @keyframes bagua-rotate {
@@ -349,3 +415,13 @@
   from { transform: scaleX(0); }
   to   { transform: scaleX(1); }
 }
+
+/* ── Fade-in animation ──────────────────────────────────────────────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fade-up 0.7s ease forwards; }
+.fade-up-delay-1 { animation: fade-up 0.7s 0.15s ease both; }
+.fade-up-delay-2 { animation: fade-up 0.7s 0.3s ease both; }
+.fade-up-delay-3 { animation: fade-up 0.7s 0.45s ease both; }

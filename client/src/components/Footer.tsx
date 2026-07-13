@@ -2,7 +2,7 @@ import { Link } from "wouter";
 
 export default function Footer() {
   return (
-    <footer style={{ background: "var(--bg-deep)", borderTop: "1px solid var(--line)" }}>
+    <footer style={{ background: "#070505", borderTop: "1px solid var(--line)" }}>
       <div className="container py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {/* Brand */}
@@ -20,8 +20,8 @@ export default function Footer() {
               </div>
             </div>
             <p className="text-xs leading-relaxed" style={{ color: "var(--text-3)" }}>
-              探討兩性關係 × 都市感情 × 專家對談 × 玄學命理<br />
-              每週三、日準時上架新節目
+              香港兩性關係 × 真實故事 × 玄學命理<br />
+              聴見關係，看懂自己。
             </p>
           </div>
 

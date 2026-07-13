@@ -19,14 +19,13 @@ const SOCIAL_LINKS = [
 
 const NAV_ITEMS = [
   { label: "首頁", href: "/home" },
-  { label: "最新節目", href: "/episodes" },
-  { label: "路邊電台", href: "/podcasts" },
-  { label: "路邊玄學堂", href: "/mystic" },
-  { label: "玄學服務", href: "/mystic/services" },
+  { label: "兩性故事", href: "/podcasts" },
+  { label: "玄學堂", href: "/mystic" },
+  { label: "節目精選", href: "/episodes" },
   { label: "嘉賓專欄", href: "/blog" },
+  { label: "預約諮詢", href: "/booking" },
   { label: "商業合作", href: "/partnership" },
   { label: "關於 6B", href: "/about" },
-  { label: "聯絡我們", href: "/contact" },
 ];
 
 const SUBMIT_OPTIONS = [
@@ -70,7 +69,7 @@ export default function Navbar() {
       <header
         className="fixed top-0 left-0 right-0 z-50"
         style={{
-          background: "rgba(13,12,10,0.92)",
+          background: "rgba(13,9,9,0.92)",
           backdropFilter: "blur(16px)",
           borderBottom: "1px solid var(--line)",
         }}
@@ -285,7 +284,7 @@ export default function Navbar() {
       {/* Mobile Bottom Nav */}
       <nav
         className="lg:hidden fixed bottom-0 left-0 right-0 z-50"
-        style={{ background: "rgba(13,12,10,0.95)", borderTop: "1px solid var(--line)", backdropFilter: "blur(16px)" }}
+        style={{ background: "rgba(13,9,9,0.95)", borderTop: "1px solid var(--line)", backdropFilter: "blur(16px)" }}
       >
         <div className="flex">
           {MOBILE_BOTTOM_NAV.map((item) => {
