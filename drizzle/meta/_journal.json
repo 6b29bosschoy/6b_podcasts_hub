@@ -1,5 +1,104 @@
 {
   "version": "7",
-  "dialect": "sqlite",
-  "entries": []
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1774663847449,
+      "tag": "0000_thin_wild_pack",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1774663956928,
+      "tag": "0001_melted_raider",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1774672635117,
+      "tag": "0002_material_morph",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1774677341233,
+      "tag": "0003_abnormal_vanisher",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1774718797939,
+      "tag": "0004_glossy_stick",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1774776089225,
+      "tag": "0005_legal_darwin",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1774777476778,
+      "tag": "0006_gigantic_enchantress",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1775742081451,
+      "tag": "0007_glossy_lady_vermin",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1776265715324,
+      "tag": "0008_perfect_corsair",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1776294820080,
+      "tag": "0009_tired_phalanx",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1776561801884,
+      "tag": "0010_cheerful_lady_ursula",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1780192524501,
+      "tag": "0011_pretty_dreaming_celestial",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1780193739259,
+      "tag": "0012_loud_mephistopheles",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "5",
+      "when": 1781513023104,
+      "tag": "0013_swift_ironclad",
+      "breakpoints": true
+    }
+  ]
 }

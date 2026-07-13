@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE `host_applications` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`name` varchar(100) NOT NULL,\n\t`interests` text NOT NULL,\n\t`experience` text,\n\t`hostType` enum('host','co-host','guest') NOT NULL,\n\t`introduction` text NOT NULL,\n\t`longTermInterest` boolean NOT NULL DEFAULT false,\n\t`otherShowsInterest` text,\n\t`contactMethod` varchar(255) NOT NULL,\n\t`availableTime` text NOT NULL,\n\t`privacyConsent` boolean NOT NULL DEFAULT false,\n\t`status` enum('pending','contacted','rejected','archived') NOT NULL DEFAULT 'pending',\n\t`createdAt` timestamp NOT NULL DEFAULT (now()),\n\t`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,\n\tCONSTRAINT `host_applications_id` PRIMARY KEY(`id`)\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway05.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2yaUMnUi8YG1BR6.root --database XJagJnJEiagVDDmfVeExSL --execute CREATE TABLE `host_applications` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`name` varchar(100) NOT NULL,\n\t`interests` text NOT NULL,\n\t`experience` text,\n\t`hostType` enum('host','co-host','guest') NOT NULL,\n\t`introduction` text NOT NULL,\n\t`longTermInterest` boolean NOT NULL DEFAULT false,\n\t`otherShowsInterest` text,\n\t`contactMethod` varchar(255) NOT NULL,\n\t`availableTime` text NOT NULL,\n\t`privacyConsent` boolean NOT NULL DEFAULT false,\n\t`status` enum('pending','contacted','rejected','archived') NOT NULL DEFAULT 'pending',\n\t`createdAt` timestamp NOT NULL DEFAULT (now()),\n\t`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,\n\tCONSTRAINT `host_applications_id` PRIMARY KEY(`id`)\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 357
+}

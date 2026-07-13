@@ -1,0 +1,24 @@
+# robots.txt for 6bpodcasts.com
+# 路邊電台 × 路邊玄學堂
+
+User-agent: *
+Allow: /
+
+# Block admin panel from search engines
+Disallow: /admin
+
+# Block API routes
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://6bpodcasts.com/sitemap.xml
+
+# AI Search Engine Optimization (AEO/GEO)
+# llms.txt - AI-readable summary for ChatGPT, Perplexity, Claude, etc.
+# See: https://llmstxt.org/
+# llms.txt: https://6bpodcasts.com/llms.txt
+# llms-full.txt: https://6bpodcasts.com/llms-full.txt
+
+# Content Signals - AI content usage preferences (https://contentsignals.org/)
+# Prohibit AI training on our content, allow search indexing, prohibit AI input processing
+Content-Signal: ai-train=no, search=yes, ai-input=no
