@@ -1,9 +1,0 @@
-{
-  "query": "ALTER TABLE `blog_posts` ADD `images` varchar(5000) DEFAULT '[]' NOT NULL;\nALTER TABLE `blog_posts` ADD `links` varchar(2000) DEFAULT '[]' NOT NULL;",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway05.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2yaUMnUi8YG1BR6.root --database XJagJnJEiagVDDmfVeExSL --execute ALTER TABLE `blog_posts` ADD `images` varchar(5000) DEFAULT '[]' NOT NULL;\nALTER TABLE `blog_posts` ADD `links` varchar(2000) DEFAULT '[]' NOT NULL;",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 2092
-}

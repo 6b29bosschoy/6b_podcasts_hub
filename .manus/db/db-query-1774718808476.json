@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE `reader_submissions` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`nickname` varchar(50) NOT NULL,\n\t`category` enum('relationship','fengshui','confession','question','other') NOT NULL DEFAULT 'other',\n\t`content` text NOT NULL,\n\t`isAnonymous` boolean NOT NULL DEFAULT false,\n\t`status` enum('pending','approved','rejected') NOT NULL DEFAULT 'pending',\n\t`likes` int NOT NULL DEFAULT 0,\n\t`createdAt` timestamp NOT NULL DEFAULT (now()),\n\t`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,\n\tCONSTRAINT `reader_submissions_id` PRIMARY KEY(`id`)\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway05.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2yaUMnUi8YG1BR6.root --database XJagJnJEiagVDDmfVeExSL --execute CREATE TABLE `reader_submissions` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`nickname` varchar(50) NOT NULL,\n\t`category` enum('relationship','fengshui','confession','question','other') NOT NULL DEFAULT 'other',\n\t`content` text NOT NULL,\n\t`isAnonymous` boolean NOT NULL DEFAULT false,\n\t`status` enum('pending','approved','rejected') NOT NULL DEFAULT 'pending',\n\t`likes` int NOT NULL DEFAULT 0,\n\t`createdAt` timestamp NOT NULL DEFAULT (now()),\n\t`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,\n\tCONSTRAINT `reader_submissions_id` PRIMARY KEY(`id`)\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 1645
-}
