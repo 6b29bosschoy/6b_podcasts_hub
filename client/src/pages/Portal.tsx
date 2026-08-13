@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
+import { ShortHighlightsSection } from "@/components/ShortHighlightsSection";
 import { Play, ChevronRight, Youtube, Calendar, ArrowDown } from "lucide-react";
 
 const HERO_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663073423209/XJagJnJEiagVDDmfVeExSL/hero-new-main-3ptD2DHC6jMTxZHCYKJLcE.webp";
@@ -141,7 +142,7 @@ function VideoCard({ v }: { v: VideoItem }) {
 
 export default function Portal() {
   const videoQueryInput = useMemo(
-    () => ({ channel: "all" as const, limit: 6 }),
+    () => ({ channel: "all" as const, limit: 12 }),
     []
   );
   const { data: videosData, isLoading: videosLoading } =
@@ -460,6 +461,9 @@ export default function Portal() {
           </div>
         </div>
       </section>
+
+      {/* ── SHORT HIGHLIGHTS ── */}
+      <ShortHighlightsSection videos={allVideos} loading={videosLoading} />
 
       {/* ── LATEST VIDEOS ── */}
       <section className="container py-16">

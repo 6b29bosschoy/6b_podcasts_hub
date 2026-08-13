@@ -1,5 +1,13 @@
 import { readFile } from "node:fs/promises";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import {
+  getShortHighlights,
+  ShortHighlightCard,
+  ShortHighlightsSection,
+  type ShortHighlightVideo,
+} from "../client/src/components/ShortHighlightsSection";
 
 /**
  * Tests for the four new pages added to the navigation:
@@ -131,5 +139,39 @@ describe("New page routes - static content verification", () => {
     expect(navbarSource).toContain('className="container flex items-center justify-between h-14"');
     expect(navbarSource).toContain('className="flex items-center gap-2"');
     expect(navbarSource).toContain('className="lg:hidden p-2"');
+  });
+
+  it("mounts the short-video highlights rail on the homepage", async () => {
+    const portalSource = await readFile(new URL("../client/src/pages/Portal.tsx", import.meta.url), "utf8");
+
+    expect(portalSource).toContain("SHORT HIGHLIGHTS");
+    expect(portalSource).toContain("<ShortHighlightsSection videos={allVideos} loading={videosLoading} />");
+  });
+
+  it("filters only the ordered highlight whitelist and renders each card with its external video link", () => {
+    const videos: ShortHighlightVideo[] = [
+      { id: "not-featured", title: "普通影片", url: "https://example.com/other", duration: "0:30" },
+      { id: "UtAp2jnVePs", title: "第二條精選", url: "https://example.com/two", duration: "0:55" },
+      { id: "xZOWb5stFwA", title: "第一條精選", url: "https://example.com/one", duration: "0:55" },
+    ];
+    const highlights = getShortHighlights(videos);
+
+    expect(highlights.map((video) => video.id)).toEqual(["xZOWb5stFwA", "UtAp2jnVePs"]);
+    const markup = renderToStaticMarkup(createElement(ShortHighlightCard, { video: highlights[0]! }));
+    expect(markup).toContain('href="https://example.com/one"');
+    expect(markup).toContain('target="_blank"');
+    expect(markup).toContain('/manus-storage/xZOWb5stFwA_1e8d4bcf.webp');
+    expect(highlights[0]?.reviewNote).toContain("直式安全區");
+    expect(highlights.every((video) => video.cropAnchor === "50% 50%")).toBe(true);
+  });
+
+  it("renders short-highlight loading and empty states with the same single booking CTA", () => {
+    const loadingMarkup = renderToStaticMarkup(createElement(ShortHighlightsSection, { videos: [], loading: true }));
+    const emptyMarkup = renderToStaticMarkup(createElement(ShortHighlightsSection, { videos: [], loading: false }));
+
+    expect(loadingMarkup).toContain('aria-label="短影音精華載入中"');
+    expect(emptyMarkup).toContain("短影音精華整理中");
+    expect(loadingMarkup.match(/href="\/booking"/g)).toHaveLength(1);
+    expect(emptyMarkup.match(/href="\/booking"/g)).toHaveLength(1);
   });
 });
