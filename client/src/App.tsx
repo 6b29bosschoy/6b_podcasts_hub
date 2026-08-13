@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch, useLocation } from "wouter";
+import { Redirect, Route, Switch, useLocation } from "wouter";
 import { lazy, Suspense } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -10,7 +10,6 @@ import Footer from "./components/Footer";
 
 // ── Critical path: eagerly loaded (above the fold on first visit) ─────────────
 import Portal from "@/pages/Portal";
-import Home from "./pages/Home";
 
 // ── Lazy-loaded: split into separate chunks ────────────────────────────────────
 const About = lazy(() => import("./pages/About"));
@@ -69,7 +68,7 @@ function Router() {
       <Switch>
         <Route path="/welcome" component={Welcome} />
         <Route path="/" component={Portal} />
-        <Route path="/home" component={Home} />
+        <Route path="/home"><Redirect to="/" /></Route>
         <Route path="/about" component={About} />
         <Route path="/services" component={Services} />
         <Route path="/podcasts" component={PodcastsPage} />

@@ -72,7 +72,7 @@ export default function MysticNavbar() {
             </span>
           </Link>
           {/* Switch to Podcasts */}
-          <Link href="/home">
+          <Link href="/">
             <span
               className="hidden md:flex items-center gap-1 text-xs px-3 py-1.5 rounded-full border cursor-pointer transition-all hover:scale-105"
               style={{
@@ -132,7 +132,7 @@ export default function MysticNavbar() {
               </div>
             </Link>
           ))}
-          <Link href="/home">
+          <Link href="/">
             <div
               className="px-6 py-3 text-sm cursor-pointer"
               style={{ color: "var(--red)" }}

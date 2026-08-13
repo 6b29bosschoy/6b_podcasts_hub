@@ -52,11 +52,15 @@
 - [x] 設定 HTML 與靜態資源的適當 Cache-Control 回應標頭
 - [x] 為 SEO 輸出與 sitemap 補充自動化測試
 - [x] 用 curl 對本機 production bundle 逐項驗證原始 HTML、meta、robots、sitemap、JSON-LD 及快取回應；公開網址驗證待發布後進行
-- [ ] 儲存 SEO 技術修復為可發布版本
+- [x] 儲存 SEO 技術修復為可發布版本
 - [x] 盤點公開動態師傅頁並將可索引的 `/mystic/masters/:id` 納入 sitemap，或標示 noindex 技術原因
 - [x] 準備發布後以公開網域驗證 canonical、robots、sitemap、快取與 Google Rich Results Test 的驗收步驟；須待發布後實際執行
 - [x] 保存發布後 SEO 驗收手冊，列明公開網址、curl 指令、預期結果與 Rich Results Test 流程
 - [ ] 發布新版本後，以 `https://6bpodcasts.com` 實際驗證 canonical、robots、sitemap、快取及 JSON-LD 測試結果
+- [x] 將 `/home` 設為永久 301 導向 `/`，並從公開 sitemap 移除
+- [x] 將 `/monetization-plan` 從公開 sitemap 移除，並在原始 head 加入 `noindex, nofollow`
+- [x] 補充首頁轉址與方案頁 noindex 的自動化測試及 HTTP 驗證
+- [ ] 儲存索引路由策略修正版
 - [x] 盤點現有 canonical、OG／Twitter URL、路由、原始 HTML 輸出及快取標頭
 - [x] 將全站 canonical、OG URL 及 Twitter URL 統一為 `https://6bpodcasts.com` 冇 www 網址
 - [x] 實作可爬取的原始 HTML 輸出，令首頁與公開內頁各自直接提供單一 H1 及關鍵文字
@@ -66,4 +70,4 @@
 - [x] 設定 HTML 與靜態資源的適當 Cache-Control 回應標頭
 - [x] 為 SEO 輸出與 sitemap 補充自動化測試
 - [x] 用 curl 對本機 production bundle 逐項驗證原始 HTML、meta、robots、sitemap、JSON-LD 及快取回應；公開網址驗證待發布後進行
-- [ ] 儲存 SEO 技術修復為可發布版本
+- [x] 儲存 SEO 技術修復為可發布版本

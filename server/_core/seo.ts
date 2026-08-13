@@ -8,13 +8,11 @@ export const OG_IMAGE = `${CANONICAL_ORIGIN}/manus-storage/og-image-main_4e62cdd
 
 const STATIC_SITEMAP_PATHS = [
   "/",
-  "/home",
   "/about",
   "/services",
   "/podcasts",
   "/episodes",
   "/partnership",
-  "/monetization-plan",
   "/blog",
   "/blog/submit",
   "/booking",
@@ -48,6 +46,7 @@ type SeoPage = {
 export type SeoDocument = SeoPage & {
   path: string;
   canonicalUrl: string;
+  robots?: "index, follow" | "noindex, nofollow";
 };
 
 const FALLBACK_PAGE: SeoPage = {
@@ -245,6 +244,13 @@ function normalisePath(pathname: string): string {
   return clean.startsWith("/") ? clean : `/${clean}`;
 }
 
+export function getHomeRedirectTarget(originalUrl: string): string | null {
+  const queryIndex = originalUrl.indexOf("?");
+  const pathname = queryIndex === -1 ? originalUrl : originalUrl.slice(0, queryIndex);
+  if (normalisePath(pathname) !== "/home") return null;
+  return `/${queryIndex === -1 ? "" : originalUrl.slice(queryIndex)}`;
+}
+
 export async function resolveSeoDocument(pathname: string): Promise<SeoDocument> {
   const path = normalisePath(pathname);
   const blogMatch = path.match(/^\/blog\/([^/]+)$/);
@@ -289,6 +295,7 @@ export async function resolveSeoDocument(pathname: string): Promise<SeoDocument>
     ...page,
     path,
     canonicalUrl: `${CANONICAL_ORIGIN}${path === "/" ? "/" : path}`,
+    robots: path === "/monetization-plan" ? "noindex, nofollow" : "index, follow",
   };
 }
 
@@ -303,7 +310,7 @@ export function renderSeoHead(document: SeoDocument): string {
   return [
     `<title>${title}</title>`,
     `<meta name="description" content="${description}" />`,
-    `<meta name="robots" content="index, follow" />`,
+    `<meta name="robots" content="${document.robots ?? "index, follow"}" />`,
     `<meta name="author" content="路邊電台 6B Podcasts" />`,
     `<link rel="canonical" href="${canonicalUrl}" />`,
     `<link rel="alternate" hreflang="zh-HK" href="${canonicalUrl}" />`,

@@ -5,6 +5,7 @@ import {
   PUBLIC_SITEMAP_PATHS,
   SITE_DESCRIPTION,
   SITE_TITLE,
+  getHomeRedirectTarget,
   injectSeoDocument,
   renderCrawlerFallback,
   renderSeoHead,
@@ -13,7 +14,9 @@ import {
 
 describe("SEO server output", () => {
   it("uses the non-www canonical origin for every public sitemap route", async () => {
-    expect(PUBLIC_SITEMAP_PATHS).toEqual(expect.arrayContaining(["/blog/submit", "/welcome", "/monetization-plan", "/mystic/funnel", "/mystic/masters/master-1"]));
+    expect(PUBLIC_SITEMAP_PATHS).toEqual(expect.arrayContaining(["/blog/submit", "/welcome", "/mystic/funnel", "/mystic/masters/master-1"]));
+    expect(PUBLIC_SITEMAP_PATHS).not.toContain("/home");
+    expect(PUBLIC_SITEMAP_PATHS).not.toContain("/monetization-plan");
     for (const path of PUBLIC_SITEMAP_PATHS) {
       const document = await resolveSeoDocument(path);
       expect(document.canonicalUrl).toBe(`${CANONICAL_ORIGIN}${path === "/" ? "/" : path}`);
@@ -63,6 +66,22 @@ describe("SEO server output", () => {
     expect(document.canonicalUrl).toBe("https://6bpodcasts.com/mystic/masters/master-1");
     expect(document.h1).toBe("紫微師傅 陳天命");
     expect(renderCrawlerFallback(document)).toContain("紫微斗數研究逾 20 年");
+  });
+
+  it("keeps the monetization plan directly reachable but marks its raw head as noindex, nofollow", async () => {
+    const document = await resolveSeoDocument("/monetization-plan");
+    const head = renderSeoHead(document);
+
+    expect(document.canonicalUrl).toBe("https://6bpodcasts.com/monetization-plan");
+    expect(document.robots).toBe("noindex, nofollow");
+    expect(head).toContain('<meta name="robots" content="noindex, nofollow" />');
+  });
+
+  it("permanently normalises legacy /home requests to the canonical root while preserving query strings", () => {
+    expect(getHomeRedirectTarget("/home")).toBe("/");
+    expect(getHomeRedirectTarget("/home/")).toBe("/");
+    expect(getHomeRedirectTarget("/home?utm_source=facebook")).toBe("/?utm_source=facebook");
+    expect(getHomeRedirectTarget("/booking")).toBeNull();
   });
 
   it("keeps robots.txt public and points it to the non-www sitemap", async () => {

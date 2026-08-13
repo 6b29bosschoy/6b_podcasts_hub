@@ -10,7 +10,7 @@ import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { getApprovedBlogPosts, getBlogPostBySlug } from "../db";
 import mysticStreamRouter from "../mysticStream";
-import { PUBLIC_SITEMAP_PATHS } from "./seo";
+import { getHomeRedirectTarget, PUBLIC_SITEMAP_PATHS } from "./seo";
 
 // Estimate token count (rough approximation: 1 token ≈ 4 chars)
 function estimateTokens(text: string): number {
@@ -56,6 +56,13 @@ async function startServer() {
   registerStorageProxy(app);
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
+
+  // Canonical home route: keep legacy links working without exposing duplicate content.
+  app.use((req, res, next) => {
+    const target = getHomeRedirectTarget(req.originalUrl);
+    if (!target) return next();
+    return res.redirect(301, target);
+  });
 
   // ── RFC 8288 Link Headers (Agent Discovery) ──────────────────────────────────
   app.use((_req, res, next) => {
