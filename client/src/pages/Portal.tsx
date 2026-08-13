@@ -365,7 +365,7 @@ export default function Portal() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {EXPLORE_CARDS.map((card) => (
-              <Link key={card.tag} href={card.href}>
+              <article key={card.tag}>
                 <div
                   className="group h-full flex flex-col p-6 cursor-pointer transition-all duration-200"
                   style={{
@@ -425,13 +425,14 @@ export default function Portal() {
 
                   {/* Footer links */}
                   <div className="flex flex-col gap-2">
-                    <div
+                    <Link
+                      href={card.href}
                       className="flex items-center gap-1.5 text-xs font-medium transition-colors duration-200"
                       style={{ color: card.primary ? "var(--red-bright)" : "var(--gold)" }}
                     >
                       進入 {card.tag}{" "}
                       <ChevronRight className="w-3.5 h-3.5" />
-                    </div>
+                    </Link>
                     {card.ytHref && (
                       <a
                         href={card.ytHref}
@@ -454,7 +455,7 @@ export default function Portal() {
                     )}
                   </div>
                 </div>
-              </Link>
+              </article>
             ))}
           </div>
         </div>

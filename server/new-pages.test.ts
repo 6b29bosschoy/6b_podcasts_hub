@@ -113,4 +113,12 @@ describe("New page routes - static content verification", () => {
     expect(pageSource).toContain("預約一對一");
     expect(pageSource).toContain("合作查詢");
   });
+
+  it("keeps Portal explore cards free of nested anchor markup", async () => {
+    const portalSource = await readFile(new URL("../client/src/pages/Portal.tsx", import.meta.url), "utf8");
+
+    expect(portalSource).not.toContain("<Link key={card.tag} href={card.href}>");
+    expect(portalSource).toContain("<article key={card.tag}>");
+    expect(portalSource).toContain("<Link\n                      href={card.href}");
+  });
 });
