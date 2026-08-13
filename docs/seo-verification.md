@@ -54,3 +54,18 @@ curl -sSI https://6bpodcasts.com/manus-storage/og-image-main_4e62cddd.jpg | grep
 ```
 
 預期 HTML 可維持 `no-cache`；由應用程式提供的 CSS、JS、圖片及 `/manus-storage/` 轉址應回應 `public, max-age=31536000, immutable`。如外層 CDN 覆寫標頭，請以公開回應為準，並在 CDN／平台設定層調整。
+
+## 5. 已發布公開網域驗收紀錄（2026-08-13）
+
+| 項目 | 公開驗收結果 | 備註 |
+|---|---|---|
+| 首頁 canonical、`og:url`、`twitter:url` | 通過 | 三者均為 `https://6bpodcasts.com/`。 |
+| 首頁 raw HTML 與 JSON-LD | 通過 | 原始 HTML 有首頁 H1，以及 `Organization`、`PodcastSeries` JSON-LD。 |
+| `/home` | 通過 | 回應 `301`，`Location: /`。 |
+| `/monetization-plan` | 通過 | 可直接開啟，原始 head 有 `noindex, nofollow`。 |
+| legacy 師傅頁 | 通過 | `master-1` 原始 head 有 `noindex, nofollow`，且頁面為「師傅陣容準備中」。 |
+| sitemap | 通過 | 不含 www、`/home`、`/monetization-plan`、`master-1` 至 `master-4`。 |
+| 已發布 blog 原始正文 | 通過 | 已抽查 sitemap 內文章，raw HTML 有 H1 與 13 個正文／介紹段落。 |
+| HTML Cache-Control | 平台實測 | 公開回應為 `no-cache, no-store, must-revalidate`，符合可即時更新 HTML 的策略。 |
+| JS Cache-Control | 平台實測 | 公開回應為 `max-age=7776000`（90 天）。專案伺服器已要求一年，但外層平台 CDN 覆寫為 90 天；需平台層提供可調整 CDN 快取設定才可改為一年。 |
+| Google Rich Results Test | 需手動完成 | 已開啟 URL 測試入口，但此自動化環境無法讀取其動態結果。`Organization` 與 `PodcastSeries` 未必屬 Google 支援的 rich-result 呈現類型；請在工具中按「測試網址」，並以 Schema Markup Validator 作語法補充驗證。 |
