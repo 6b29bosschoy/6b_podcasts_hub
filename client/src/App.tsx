@@ -17,6 +17,7 @@ const About = lazy(() => import("./pages/About"));
 const Services = lazy(() => import("./pages/Services"));
 const PodcastsPage = lazy(() => import("./pages/PodcastsPage"));
 const Partnership = lazy(() => import("./pages/Partnership"));
+const MonetizationPlan = lazy(() => import("./pages/MonetizationPlan"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const BlogSubmit = lazy(() => import("./pages/BlogSubmit"));
@@ -73,6 +74,7 @@ function Router() {
         <Route path="/services" component={Services} />
         <Route path="/podcasts" component={PodcastsPage} />
         <Route path="/partnership" component={Partnership} />
+        <Route path="/monetization-plan" component={MonetizationPlan} />
         <Route path="/blog" component={Blog} />
         <Route path="/blog/submit" component={BlogSubmit} />
         <Route path="/blog/:slug">

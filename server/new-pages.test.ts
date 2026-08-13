@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises";
 import { describe, expect, it } from "vitest";
 
 /**
@@ -6,6 +7,7 @@ import { describe, expect, it } from "vitest";
  * - Services (服務項目) - /services
  * - Podcasts (收聽聲音 PODCASTS) - /podcasts
  * - Partnership (合作洽談) - /partnership
+ * - MonetizationPlan (點樣合作與預約) - /monetization-plan
  *
  * These are frontend-only pages (no new backend procedures).
  * We verify that the contact.submit procedure (reused by Partnership page)
@@ -89,5 +91,26 @@ describe("New page routes - static content verification", () => {
   it("Partnership page exports a default function", async () => {
     const mod = await import("../client/src/pages/Partnership.tsx");
     expect(typeof mod.default).toBe("function");
+  });
+
+  it("MonetizationPlan page exports a default function", async () => {
+    const mod = await import("../client/src/pages/MonetizationPlan.tsx");
+    expect(typeof mod.default).toBe("function");
+  });
+
+  it("registers the /monetization-plan route in the app router", async () => {
+    const appSource = await readFile(new URL("../client/src/App.tsx", import.meta.url), "utf8");
+    expect(appSource).toContain('path="/monetization-plan"');
+    expect(appSource).toContain("component={MonetizationPlan}");
+  });
+
+  it("explains referral privacy and includes the two primary conversion CTAs", async () => {
+    const pageSource = await readFile(new URL("../client/src/pages/MonetizationPlan.tsx", import.meta.url), "utf8");
+
+    expect(pageSource).toContain("師傅轉介，唔係硬推服務。");
+    expect(pageSource).toContain("品牌合作，賣嘅唔只係曝光。");
+    expect(pageSource).toContain("未經你同意，唔會把聯絡方式或問題內容交畀師傅。");
+    expect(pageSource).toContain("預約一對一");
+    expect(pageSource).toContain("合作查詢");
   });
 });

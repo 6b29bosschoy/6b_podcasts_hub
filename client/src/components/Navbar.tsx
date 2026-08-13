@@ -1,12 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, ChevronDown, Play, Sparkles, Handshake, Calendar } from "lucide-react";
+import { Menu, X, ChevronDown, Play, Sparkles, Handshake, Calendar, Route } from "lucide-react";
 
 // Mobile bottom quick nav (4 items)
 const MOBILE_BOTTOM_NAV = [
   { label: "最新影片", href: "/episodes", Icon: Play },
   { label: "玄學堂", href: "/mystic", Icon: Sparkles },
-  { label: "預約服務", href: "/booking", Icon: Calendar },
+  { label: "點樣合作", href: "/monetization-plan", Icon: Route },
   { label: "合作查詢", href: "/partnership", Icon: Handshake },
 ];
 
@@ -23,6 +23,7 @@ const NAV_ITEMS = [
   { label: "兩性故事", href: "/blog" },
   { label: "路邊玄學堂", href: "/mystic" },
   { label: "預約諮詢", href: "/booking" },
+  { label: "點樣合作", href: "/monetization-plan" },
   { label: "商業合作", href: "/partnership" },
   { label: "聯絡我們", href: "/contact" },
 ];
