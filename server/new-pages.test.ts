@@ -178,4 +178,26 @@ describe("New page routes - static content verification", () => {
     expect(loadingMarkup.match(/href="\/booking"/g)).toHaveLength(1);
     expect(emptyMarkup.match(/href="\/booking"/g)).toHaveLength(1);
   });
+
+  it("replaces fictional master details and the master directory with a neutral preparation state", async () => {
+    const [detail, directory, data] = await Promise.all([
+      readFile(new URL("../client/src/pages/mystic/MysticMasterDetail.tsx", import.meta.url), "utf8"),
+      readFile(new URL("../client/src/pages/mystic/MysticMasters.tsx", import.meta.url), "utf8"),
+      readFile(new URL("../client/src/data/mysticData.ts", import.meta.url), "utf8"),
+    ]);
+
+    expect(detail).toContain("師傅陣容準備中");
+    expect(detail).toContain("noindex, nofollow");
+    expect(directory).toContain("師傅陣容準備中");
+    expect(data).toContain("export const MYSTIC_MASTERS: MysticMaster[] = []");
+    expect(`${detail}${directory}`).not.toContain("陳天命");
+  });
+
+  it("requires a topic-style English slug in the blog submission form", async () => {
+    const form = await readFile(new URL("../client/src/pages/BlogSubmit.tsx", import.meta.url), "utf8");
+
+    expect(form).toContain('name="slug"');
+    expect(form).toContain("monthly-income-dating-standard");
+    expect(form).toContain("3–6 個小寫英文單詞");
+  });
 });

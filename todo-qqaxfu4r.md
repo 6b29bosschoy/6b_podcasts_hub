@@ -60,7 +60,16 @@
 - [x] 將 `/home` 設為永久 301 導向 `/`，並從公開 sitemap 移除
 - [x] 將 `/monetization-plan` 從公開 sitemap 移除，並在原始 head 加入 `noindex, nofollow`
 - [x] 補充首頁轉址與方案頁 noindex 的自動化測試及 HTTP 驗證
-- [ ] 儲存索引路由策略修正版
+- [x] 儲存索引路由策略修正版
+- [x] 盤點虛構師傅頁、師傅資料來源、blog 建立流程與伺服器端文章原始輸出
+- [x] 將四個虛構師傅網址從 sitemap 移除，並在原始 head 輸出 `noindex, nofollow`
+- [x] 將四個虛構師傅頁改為「師傅陣容準備中」佔位內容，移除虛構姓名、年資、評價與客戶數字
+- [x] 規範新 blog slug 必須為 3–6 個英文單詞的主題式短語，拒絕純時間戳 slug
+- [x] 令已發布 blog 文章的全文安全地輸出於伺服器端原始 HTML
+- [x] 補充師傅頁 noindex、sitemap 排除、slug 驗證與 blog 全文輸出的自動化測試
+- [x] 以 curl 驗證原始師傅頁、sitemap、blog 文章全文與 slug 規則
+- [x] 新增不寫入資料的 blog slug 檢查介面，並以 HTTP 驗證合規與時間戳 slug 結果
+- [ ] 儲存虛構內容下線與 blog SEO 修正版
 - [x] 盤點現有 canonical、OG／Twitter URL、路由、原始 HTML 輸出及快取標頭
 - [x] 將全站 canonical、OG URL 及 Twitter URL 統一為 `https://6bpodcasts.com` 冇 www 網址
 - [x] 實作可爬取的原始 HTML 輸出，令首頁與公開內頁各自直接提供單一 H1 及關鍵文字

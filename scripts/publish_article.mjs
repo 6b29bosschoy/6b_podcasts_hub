@@ -7,10 +7,12 @@
  */
 
 import mysql from 'mysql2/promise';
+import { assertTopicSlug } from './blog-slug.mjs';
 
 // ─── 文章資料（每次發布前修改此區塊）─────────────────────────────────────────
 const ARTICLE = {
   title: '文章標題（必填）',
+  slug: 'replace-with-topic-words', // 必須是 3–6 個英文單詞，例如 monthly-income-dating-standard
   excerpt: '文章摘要，約 50-100 字，顯示在列表頁（必填）',
   content: `文章正文內容（必填）
 
@@ -119,20 +121,6 @@ async function generateAndUploadImage(prompt) {
   }
 }
 
-/** 生成 URL-friendly slug */
-function generateSlug(title) {
-  const timestamp = Date.now();
-  const base = title
-    .toLowerCase()
-    .replace(/[\u4e00-\u9fff\u3400-\u4dbf]/g, '') // 移除中文字
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '')
-    .substring(0, 40);
-  return `hk-${base || 'article'}-${timestamp}`;
-}
-
 /** 主流程 */
 async function publishArticle() {
   console.log('\n🚀 路邊電台自動化文章發布流程 v2 啟動');
@@ -165,7 +153,8 @@ async function publishArticle() {
     }
 
     // 3. 插入文章
-    const slug = generateSlug(ARTICLE.title);
+    const slug = ARTICLE.slug.trim();
+    assertTopicSlug(slug);
     const now = new Date();
 
     await connection.execute(

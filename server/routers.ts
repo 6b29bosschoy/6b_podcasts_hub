@@ -60,16 +60,7 @@ import {
 } from "./db";
 import { storagePut } from "./storage";
 import { generateFaqForPost } from "./faqHelper";
-
-function generateSlug(title: string): string {
-  const timestamp = Date.now();
-  const base = title
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .slice(0, 60);
-  return `${base}-${timestamp}`;
-}
+import { isTopicSlug, TOPIC_SLUG_ERROR } from "./blogSlug";
 
 /** Resolve channel handle to ID, with 24h DB cache */
 async function getCachedChannelId(handle: string): Promise<string> {
@@ -95,6 +86,10 @@ export const appRouter = router({
 
   // ─── Blog ─────────────────────────────────────────────────────────────────
   blog: router({
+    validateSlug: publicProcedure
+      .input(z.object({ slug: z.string().trim().refine(isTopicSlug, TOPIC_SLUG_ERROR) }))
+      .query(() => ({ valid: true })),
+
     list: publicProcedure
       .input(z.object({ limit: z.number().min(1).max(50).default(12), offset: z.number().min(0).default(0) }).optional())
       .query(async ({ input }) => {
@@ -120,6 +115,7 @@ export const appRouter = router({
     submit: publicProcedure
       .input(z.object({
         title: z.string().min(1, "請輸入文章標題").max(255, "標題不得超過 255 個字元"),
+        slug: z.string().trim().refine(isTopicSlug, TOPIC_SLUG_ERROR),
         authorName: z.string().min(1, "請輸入你的名字").max(100),
         authorEmail: z.string().email("請輸入有效的電郵地址").optional().or(z.literal("")).transform(v => v || ""),
         authorBio: z.string().max(500).optional(),
@@ -130,8 +126,7 @@ export const appRouter = router({
         links: z.array(z.object({ title: z.string().max(100), url: z.string().url() })).max(3).optional(),
       }))
       .mutation(async ({ input }) => {
-        const slug = generateSlug(input.title);
-        const { imageUrls, links, ...rest } = input;
+        const { slug, imageUrls, links, ...rest } = input;
         await createBlogPost({
           ...rest,
           slug,
@@ -1117,4 +1112,3 @@ ${input.baziSummary}
 /// Helper import needed for subscription adminList
 import { getSubscriptions } from "./db";
 export type AppRouter = typeof appRouter;
-

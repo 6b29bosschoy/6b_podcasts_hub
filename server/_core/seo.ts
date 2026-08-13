@@ -1,5 +1,4 @@
 import { getBlogPostBySlug } from "../db";
-import { MYSTIC_MASTERS } from "../../client/src/data/mysticData";
 
 export const CANONICAL_ORIGIN = "https://6bpodcasts.com";
 export const SITE_TITLE = "6B Podcast｜香港兩性關係 Podcast・感情樹窿・玄學拆局";
@@ -31,16 +30,14 @@ const STATIC_SITEMAP_PATHS = [
   "/mystic/funnel",
 ] as const;
 
-export const PUBLIC_SITEMAP_PATHS: readonly string[] = [
-  ...STATIC_SITEMAP_PATHS,
-  ...MYSTIC_MASTERS.map((master) => `/mystic/masters/${master.id}`),
-];
+export const PUBLIC_SITEMAP_PATHS: readonly string[] = [...STATIC_SITEMAP_PATHS];
 
 type SeoPage = {
   title: string;
   description: string;
   h1: string;
   intro: string;
+  bodyParagraphs?: string[];
 };
 
 export type SeoDocument = SeoPage & {
@@ -230,6 +227,8 @@ const fallbackLinks = [
   { href: "/blog/submit", label: "感情樹窿投稿" },
 ];
 
+const LEGACY_MASTER_IDS = new Set(["master-1", "master-2", "master-3", "master-4"]);
+
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")
@@ -251,23 +250,28 @@ export function getHomeRedirectTarget(originalUrl: string): string | null {
   return `/${queryIndex === -1 ? "" : originalUrl.slice(queryIndex)}`;
 }
 
+export function getArticleParagraphs(content: string | null | undefined): string[] {
+  return (content ?? "")
+    .split(/\r?\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
+}
+
 export async function resolveSeoDocument(pathname: string): Promise<SeoDocument> {
   const path = normalisePath(pathname);
   const blogMatch = path.match(/^\/blog\/([^/]+)$/);
   const masterMatch = path.match(/^\/mystic\/masters\/([^/]+)$/);
 
-  if (masterMatch) {
-    const master = MYSTIC_MASTERS.find((candidate) => candidate.id === masterMatch[1]);
-    if (master) {
-      return {
-        path,
-        canonicalUrl: `${CANONICAL_ORIGIN}${path}`,
-        title: `${master.name}｜路邊玄學堂`,
-        description: master.bio,
-        h1: master.name,
-        intro: master.bio,
-      };
-    }
+  if (masterMatch && LEGACY_MASTER_IDS.has(masterMatch[1])) {
+    return {
+      path,
+      canonicalUrl: `${CANONICAL_ORIGIN}${path}`,
+      title: "師傅陣容準備中｜路邊玄學堂",
+      description: "路邊玄學堂正整理合作師傅資料，完成簽約及核對後會以真實資料重新上線。",
+      h1: "師傅陣容準備中",
+      intro: "路邊玄學堂正整理合作師傅資料。待完成簽約及資料核對後，會以真實資料重新上線。",
+      robots: "noindex, nofollow",
+    };
   }
 
   if (blogMatch && blogMatch[1] !== "submit") {
@@ -283,6 +287,7 @@ export async function resolveSeoDocument(pathname: string): Promise<SeoDocument>
           description,
           h1: title,
           intro: description,
+          bodyParagraphs: getArticleParagraphs(post.content),
         };
       }
     } catch (error) {
@@ -339,7 +344,8 @@ export function renderCrawlerFallback(document: SeoDocument): string {
   const links = fallbackLinks
     .map((link) => `<a href="${CANONICAL_ORIGIN}${link.href}">${escapeHtml(link.label)}</a>`)
     .join(" · ");
-  return `<main id="seo-content" data-seo-fallback><h1>${escapeHtml(document.h1)}</h1><p>${escapeHtml(document.intro)}</p><nav aria-label="主要欄目">${links}</nav></main>`;
+  const articleBody = document.bodyParagraphs?.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("") ?? "";
+  return `<main id="seo-content" data-seo-fallback><h1>${escapeHtml(document.h1)}</h1><p>${escapeHtml(document.intro)}</p>${articleBody}<nav aria-label="主要欄目">${links}</nav></main>`;
 }
 
 export function injectSeoDocument(template: string, document: SeoDocument): string {

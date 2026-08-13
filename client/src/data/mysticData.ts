@@ -45,64 +45,8 @@ export interface MysticArticle {
 
 // ─── Masters ────────────────────────────────────────────────────────────────
 
-export const MYSTIC_MASTERS: MysticMaster[] = [
-  {
-    id: "master-1",
-    name: "紫微師傅 陳天命",
-    title: "紫微斗數宗師",
-    specialty: ["紫微斗數", "奇門遁甲", "流年運程"],
-    tradition: "chinese",
-    bio: "從事紫微斗數研究逾 20 年，擅長以斗數命盤分析事業、財運及感情走向。曾為逾千名客戶進行深度命盤分析，準確率廣受好評。",
-    avatar: "🌟",
-    videoCount: 24,
-    articleCount: 18,
-    rating: 4.9,
-    reviewCount: 312,
-    tags: ["紫微斗數", "奇門遁甲", "流年", "事業運"],
-  },
-  {
-    id: "master-2",
-    name: "奇門師傅 李玄機",
-    title: "奇門遁甲研究者",
-    specialty: ["奇門遁甲", "八字命理", "風水流年"],
-    tradition: "chinese",
-    bio: "專研奇門遁甲及八字命理，擅長以時空能量分析個人運勢走向。尤其擅長財運及事業轉機分析，幫助客戶把握人生關鍵時機。",
-    avatar: "☯",
-    videoCount: 18,
-    articleCount: 12,
-    rating: 4.8,
-    reviewCount: 245,
-    tags: ["奇門遁甲", "八字", "財運", "時機分析"],
-  },
-  {
-    id: "master-3",
-    name: "星座師傅 Stella 星",
-    title: "西洋占星師",
-    specialty: ["星座占星", "月亮星座", "西洋占星流年"],
-    tradition: "western",
-    bio: "擁有英國占星學院認證，專注西洋占星及月亮星座分析。以現代心理占星角度解讀星盤，幫助客戶了解自身性格模式及感情關係。",
-    avatar: "⭐",
-    videoCount: 32,
-    articleCount: 28,
-    rating: 4.9,
-    reviewCount: 489,
-    tags: ["星座", "占星", "月亮星座", "感情運"],
-  },
-  {
-    id: "master-4",
-    name: "靈數師傅 數字王",
-    title: "生命靈數導師",
-    specialty: ["生命靈數", "塔羅牌", "人類圖"],
-    tradition: "western",
-    bio: "深研生命靈數及塔羅超過 15 年，以數字能量解讀人生課題。擅長以生命靈數分析個人天賦、感情模式及人生使命。",
-    avatar: "🔢",
-    videoCount: 21,
-    articleCount: 16,
-    rating: 4.7,
-    reviewCount: 198,
-    tags: ["生命靈數", "塔羅", "人類圖", "人生使命"],
-  },
-];
+// 師傅資料只會在完成簽約及核對資料後加入；請勿以示範人物作公開內容。
+export const MYSTIC_MASTERS: MysticMaster[] = [];
 
 // ─── Videos ─────────────────────────────────────────────────────────────────
 

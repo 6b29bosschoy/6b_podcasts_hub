@@ -1,10 +1,11 @@
 import mysql from 'mysql2/promise';
+import { assertTopicSlug } from './blog-slug.mjs';
 
 const connection = await mysql.createConnection(process.env.DATABASE_URL);
 
 const article = {
   title: '月入 3 萬唔配拍拖？香港人係咪真係用薪金定義愛情價值？',
-  slug: 'hk-30k-salary-dating-standard-' + Date.now(),
+  slug: 'monthly-income-dating-standard',
   authorName: '路邊電台編輯部',
   authorEmail: 'editor@6bpodcasts.com',
   authorBio: '路邊電台官方編輯部，追蹤香港最新兩性關係熱話，為你拆解城市愛情故事。',
@@ -50,6 +51,8 @@ const article = {
   viewCount: 0,
   publishedAt: new Date(),
 };
+
+assertTopicSlug(article.slug);
 
 try {
   // First ensure viewCount column exists

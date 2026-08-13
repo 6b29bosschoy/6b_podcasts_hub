@@ -5,6 +5,7 @@ import {
   PUBLIC_SITEMAP_PATHS,
   SITE_DESCRIPTION,
   SITE_TITLE,
+  getArticleParagraphs,
   getHomeRedirectTarget,
   injectSeoDocument,
   renderCrawlerFallback,
@@ -14,9 +15,10 @@ import {
 
 describe("SEO server output", () => {
   it("uses the non-www canonical origin for every public sitemap route", async () => {
-    expect(PUBLIC_SITEMAP_PATHS).toEqual(expect.arrayContaining(["/blog/submit", "/welcome", "/mystic/funnel", "/mystic/masters/master-1"]));
+    expect(PUBLIC_SITEMAP_PATHS).toEqual(expect.arrayContaining(["/blog/submit", "/welcome", "/mystic/funnel"]));
     expect(PUBLIC_SITEMAP_PATHS).not.toContain("/home");
     expect(PUBLIC_SITEMAP_PATHS).not.toContain("/monetization-plan");
+    expect(PUBLIC_SITEMAP_PATHS).not.toContain("/mystic/masters/master-1");
     for (const path of PUBLIC_SITEMAP_PATHS) {
       const document = await resolveSeoDocument(path);
       expect(document.canonicalUrl).toBe(`${CANONICAL_ORIGIN}${path === "/" ? "/" : path}`);
@@ -60,12 +62,32 @@ describe("SEO server output", () => {
     expect(html).toContain('href="https://6bpodcasts.com/booking"');
   });
 
-  it("creates sitemap-ready raw SEO for every public dynamic mystic master page", async () => {
+  it("keeps legacy mystic master URLs directly reachable as noindex placeholders without fictional personal claims", async () => {
     const document = await resolveSeoDocument("/mystic/masters/master-1");
+    const head = renderSeoHead(document);
 
     expect(document.canonicalUrl).toBe("https://6bpodcasts.com/mystic/masters/master-1");
-    expect(document.h1).toBe("紫微師傅 陳天命");
-    expect(renderCrawlerFallback(document)).toContain("紫微斗數研究逾 20 年");
+    expect(document.h1).toBe("師傅陣容準備中");
+    expect(document.robots).toBe("noindex, nofollow");
+    expect(head).toContain('<meta name="robots" content="noindex, nofollow" />');
+    expect(renderCrawlerFallback(document)).not.toContain("陳天命");
+  });
+
+  it("turns blog body text into escaped crawler-visible paragraphs without JavaScript", () => {
+    const document = {
+      path: "/blog/monthly-income-dating-standard",
+      canonicalUrl: "https://6bpodcasts.com/blog/monthly-income-dating-standard",
+      title: "文章標題",
+      description: "文章摘要",
+      h1: "文章標題",
+      intro: "文章摘要",
+      bodyParagraphs: getArticleParagraphs("第一段正文\n\n第二段 <script>不可以執行</script>"),
+    };
+    const fallback = renderCrawlerFallback(document);
+
+    expect(fallback).toContain("第一段正文");
+    expect(fallback).toContain("第二段 &lt;script&gt;不可以執行&lt;/script&gt;");
+    expect(fallback).not.toContain("<script>不可以執行</script>");
   });
 
   it("keeps the monetization plan directly reachable but marks its raw head as noindex, nofollow", async () => {

@@ -7,6 +7,7 @@ import mysql from "mysql2/promise";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import { assertTopicSlug } from "./blog-slug.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: join(__dirname, "../.env") });
@@ -21,7 +22,8 @@ const connection = await mysql.createConnection(DATABASE_URL);
 const db = drizzle(connection);
 
 const now = new Date();
-const slug = `hk-district-love-snobbery-${Date.now()}`;
+const slug = "district-love-dating-status";
+assertTopicSlug(slug);
 
 const article = {
   title: "住港島先夠格做我女友？香港人用地區篩選愛情，係自信定係自卑？",

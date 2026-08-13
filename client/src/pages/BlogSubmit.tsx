@@ -34,6 +34,7 @@ export default function BlogSubmit() {
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
     title: "",
+    slug: "",
     authorName: "",
     authorBio: "",
     excerpt: "",
@@ -143,11 +144,16 @@ export default function BlogSubmit() {
     if (uploadingCount > 0) { toast.error("請等待圖片上傳完成"); return; }
     const errorCount = images.filter((i) => i.error).length;
     if (errorCount > 0) { toast.error("部分圖片上傳失敗，請移除後重試"); return; }
+    const slug = form.slug.trim();
+    if (!/^[a-z]+(?:-[a-z]+){2,5}$/.test(slug)) {
+      toast.error("網址 slug 要用 3–6 個小寫英文單詞，以連字號連接，例如 monthly-income-dating-standard");
+      return;
+    }
 
     const imageUrls = images.filter((i) => i.s3Url).map((i) => i.s3Url!);
     const validLinks = links.filter((l) => l.title.trim() && l.url.trim());
 
-    submitMutation.mutate({ ...form, imageUrls, links: validLinks });
+    submitMutation.mutate({ ...form, slug, imageUrls, links: validLinks });
   };
 
   if (submitted) {
@@ -216,6 +222,12 @@ export default function BlogSubmit() {
           <div>
             <label className="block text-xs font-bold mb-1.5" style={labelStyle}>文章標題 *</label>
             <input name="title" value={form.title} onChange={handleChange} required placeholder="吸引讀者的標題" style={inputStyle} />
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold mb-1.5" style={labelStyle}>網址主題 slug *</label>
+            <input name="slug" value={form.slug} onChange={handleChange} required pattern="[a-z]+(-[a-z]+){2,5}" placeholder="monthly-income-dating-standard" style={{ ...inputStyle, fontFamily: "monospace" }} />
+            <p className="text-xs mt-1" style={{ color: "var(--text-3)" }}>用 3–6 個小寫英文單詞，以連字號連接；唔好加日期或純時間戳。</p>
           </div>
 
           <div>
