@@ -83,9 +83,9 @@ export default function Navbar() {
               className="h-8 w-8 object-cover"
               style={{ borderRadius: "var(--radius)" }}
             />
-            <div className="hidden sm:block">
-              <div className="text-sm font-bold leading-tight" style={{ fontFamily: "'Noto Serif TC', serif", color: "var(--text)" }}>路邊系列</div>
-              <div className="text-xs" style={{ color: "var(--text-3)", fontFamily: "'Cormorant Garamond', serif", letterSpacing: "0.08em" }}>6B Media</div>
+            <div className="block">
+              <div className="text-[10px] font-bold leading-tight sm:text-sm" style={{ fontFamily: "'Noto Serif TC', serif", color: "var(--text)" }}>路邊系列</div>
+              <div className="text-[9px] sm:text-xs" style={{ color: "var(--text-3)", fontFamily: "'Cormorant Garamond', serif", letterSpacing: "0.08em" }}>6B PODCASTS</div>
             </div>
           </Link>
 

@@ -121,4 +121,15 @@ describe("New page routes - static content verification", () => {
     expect(portalSource).toContain("<article key={card.tag}>");
     expect(portalSource).toContain("<Link\n                      href={card.href}");
   });
+
+  it("keeps the 6B PODCASTS brand label visible in the mobile navigation", async () => {
+    const navbarSource = await readFile(new URL("../client/src/components/Navbar.tsx", import.meta.url), "utf8");
+
+    expect(navbarSource).toContain(">6B PODCASTS</div>");
+    expect(navbarSource).toContain('<div className="block">');
+    expect(navbarSource).not.toContain('<div className="hidden sm:block">');
+    expect(navbarSource).toContain('className="container flex items-center justify-between h-14"');
+    expect(navbarSource).toContain('className="flex items-center gap-2"');
+    expect(navbarSource).toContain('className="lg:hidden p-2"');
+  });
 });
