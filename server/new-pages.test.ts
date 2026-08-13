@@ -163,6 +163,10 @@ describe("New page routes - static content verification", () => {
     expect(markup).toContain('/manus-storage/xZOWb5stFwA_1e8d4bcf.webp');
     expect(highlights[0]?.reviewNote).toContain("直式安全區");
     expect(highlights.every((video) => video.cropAnchor === "50% 50%")).toBe(true);
+    expect(markup).toContain("觀看精華");
+    expect(markup).toContain("group-hover:scale-110");
+    expect(markup).toContain("group-focus-visible:scale-110");
+    expect(markup).toContain("active:scale-[0.98]");
   });
 
   it("renders short-highlight loading and empty states with the same single booking CTA", () => {

@@ -62,7 +62,7 @@ export function ShortHighlightCard({ video }: { video: HighlightItem }) {
       href={video.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative block aspect-[9/16] overflow-hidden border border-line focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]"
+      className="group relative block aspect-[9/16] overflow-hidden border border-line transition-transform duration-200 motion-reduce:transition-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]"
       style={{ background: "var(--bg-raise)" }}
       aria-label={`在 YouTube 觀看：${video.title}`}
     >
@@ -74,14 +74,19 @@ export function ShortHighlightCard({ video }: { video: HighlightItem }) {
         loading="lazy"
       />
       <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(13,9,9,0.05) 20%, rgba(13,9,9,0.94) 100%)" }} />
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/55 px-4 py-3 text-xs font-medium shadow-[0_10px_28px_rgba(0,0,0,0.28)] backdrop-blur-sm transition-all duration-200 motion-reduce:transition-none group-hover:-translate-y-1 group-hover:scale-110 group-focus-visible:-translate-y-1 group-focus-visible:scale-110 group-active:scale-95" style={{ color: "#f0e6df" }}>
+          <span className="flex size-7 items-center justify-center rounded-full" style={{ background: "var(--gold)", color: "#0d0909" }}>
+            <Play className="ml-0.5 size-3.5" fill="currentColor" strokeWidth={1.8} />
+          </span>
+          觀看精華
+        </div>
+      </div>
       <div className="absolute left-4 top-4 flex items-center gap-2 text-[10px] tracking-[0.16em]" style={{ color: "var(--gold)" }}>
         <span className="size-1.5 rounded-full" style={{ background: "var(--red-bright)" }} />
         短影音精華
       </div>
       <div className="absolute inset-x-4 bottom-4">
-        <div className="mb-3 flex size-10 items-center justify-center rounded-full border border-white/20 bg-black/30 backdrop-blur-sm transition-transform duration-200 group-hover:scale-110">
-          <Play className="ml-0.5 size-4" fill="currentColor" strokeWidth={1.5} style={{ color: "var(--gold)" }} />
-        </div>
         <h3 className="line-clamp-3 text-base font-semibold leading-snug" style={{ color: "#f0e6df", fontFamily: "'Noto Serif TC', serif" }}>
           {video.title}
         </h3>
