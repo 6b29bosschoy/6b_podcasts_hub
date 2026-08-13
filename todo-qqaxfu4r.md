@@ -58,6 +58,9 @@
 - [x] 保存發布後 SEO 驗收手冊，列明公開網址、curl 指令、預期結果與 Rich Results Test 流程
 - [x] 發布新版本後，以 `https://6bpodcasts.com` 實際驗證 canonical、robots、sitemap、JSON-LD 與索引策略；公開 CDN 的快取標頭仍由平台層覆寫，Google Rich Results Test 須在 Google 工具介面重新抓取
 - [x] 保存公開網域 SEO 驗收紀錄，分開列出已通過索引項目、平台快取實測與 Rich Results Test 手動驗收限制
+- [x] 核對 Google 驗證檔內容並以原檔名部署至網站根目錄
+- [x] 驗證本機 Google 驗證網址可直接回應正確檔案內容；公開網址待新版本發布後驗證
+- [ ] 儲存 Google 驗證檔部署版本
 - [x] 將 `/home` 設為永久 301 導向 `/`，並從公開 sitemap 移除
 - [x] 將 `/monetization-plan` 從公開 sitemap 移除，並在原始 head 加入 `noindex, nofollow`
 - [x] 補充首頁轉址與方案頁 noindex 的自動化測試及 HTTP 驗證
