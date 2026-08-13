@@ -10,6 +10,7 @@ import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { getApprovedBlogPosts, getBlogPostBySlug } from "../db";
 import mysticStreamRouter from "../mysticStream";
+import { PUBLIC_SITEMAP_PATHS } from "./seo";
 
 // Estimate token count (rough approximation: 1 token ≈ 4 chars)
 function estimateTokens(text: string): number {
@@ -412,7 +413,7 @@ A: 有，Instagram 帳號係 @6bpodcasts（https://www.instagram.com/6bpodcasts�
   app.get("/sitemap.xml", async (_req, res) => {
     const baseUrl = "https://6bpodcasts.com";
     const now = new Date().toISOString().split("T")[0];
-    const staticPages = [
+    const sitemapPageSettings = [
       { loc: "/",                      changefreq: "daily",   priority: "1.0" },
       { loc: "/home",                  changefreq: "daily",   priority: "0.9" },
       { loc: "/about",                 changefreq: "monthly", priority: "0.8" },
@@ -422,9 +423,12 @@ A: 有，Instagram 帳號係 @6bpodcasts（https://www.instagram.com/6bpodcasts�
       { loc: "/podcasts",              changefreq: "weekly",  priority: "0.8" },
       { loc: "/episodes",              changefreq: "daily",   priority: "0.8" },
       { loc: "/partnership",           changefreq: "monthly", priority: "0.7" },
+      { loc: "/monetization-plan",     changefreq: "monthly", priority: "0.8" },
+      { loc: "/blog/submit",           changefreq: "monthly", priority: "0.6" },
       { loc: "/contact",               changefreq: "monthly", priority: "0.6" },
       { loc: "/host-recruitment",      changefreq: "monthly", priority: "0.7" },
       { loc: "/investors",             changefreq: "monthly", priority: "0.7" },
+      { loc: "/welcome",               changefreq: "monthly", priority: "0.5" },
       { loc: "/mystic",                changefreq: "weekly",  priority: "0.9" },
       { loc: "/mystic/analysis",       changefreq: "weekly",  priority: "0.8" },
       { loc: "/mystic/masters",        changefreq: "weekly",  priority: "0.8" },
@@ -433,7 +437,12 @@ A: 有，Instagram 帳號係 @6bpodcasts（https://www.instagram.com/6bpodcasts�
       { loc: "/mystic/pricing",        changefreq: "monthly", priority: "0.8" },
       { loc: "/mystic/bazi",           changefreq: "monthly", priority: "0.7" },
       { loc: "/mystic/services",       changefreq: "monthly", priority: "0.8" },
+      { loc: "/mystic/funnel",         changefreq: "monthly", priority: "0.7" },
     ];
+    const pageSettingsByPath = new Map(sitemapPageSettings.map((page) => [page.loc, page]));
+    const staticPages = PUBLIC_SITEMAP_PATHS.map((loc) =>
+      pageSettingsByPath.get(loc) ?? { loc, changefreq: "monthly", priority: "0.6" }
+    );
 
     // Dynamically include published blog posts
     let blogUrls: string[] = [];

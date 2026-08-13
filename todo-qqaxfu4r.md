@@ -39,7 +39,31 @@
 - [x] 強化短影音封面的播放圖示，令可點擊觀看的訊號更清楚
 - [x] 加入桌面懸停及流動版觸控回饋，並兼顧鍵盤焦點狀態
 - [x] 補充短影音互動提示測試與跨裝置驗證
-- [ ] 儲存短影音播放提示更新
+- [x] 儲存短影音播放提示更新
 - [x] 新增可執行的短影音播放提示互動測試，驗證播放標示、焦點與可點擊連結
 - [x] 記錄桌面與 375px 下播放圖示、提示文案及點擊行為的視覺檢查結果
 - [x] 將 TSX 互動測試檔納入 Vitest 搜尋範圍，確保短影音互動測試確實執行
+- [x] 盤點現有 canonical、OG／Twitter URL、路由、原始 HTML 輸出及快取標頭
+- [x] 將全站 canonical、OG URL 及 Twitter URL 統一為 `https://6bpodcasts.com` 冇 www 網址
+- [x] 實作可爬取的原始 HTML 輸出，令首頁與公開內頁各自直接提供單一 H1 及關鍵文字
+- [x] 生成公開 `robots.txt` 與全站公開頁面 `sitemap.xml`，並確保 URL 全部使用冇 www 網址
+- [x] 在首頁 head 加入指定 Organization 與 PodcastSeries JSON-LD
+- [x] 更新首頁 title、description、OG title 與 Twitter title 為指定文案
+- [x] 設定 HTML 與靜態資源的適當 Cache-Control 回應標頭
+- [x] 為 SEO 輸出與 sitemap 補充自動化測試
+- [x] 用 curl 對本機 production bundle 逐項驗證原始 HTML、meta、robots、sitemap、JSON-LD 及快取回應；公開網址驗證待發布後進行
+- [ ] 儲存 SEO 技術修復為可發布版本
+- [x] 盤點公開動態師傅頁並將可索引的 `/mystic/masters/:id` 納入 sitemap，或標示 noindex 技術原因
+- [x] 準備發布後以公開網域驗證 canonical、robots、sitemap、快取與 Google Rich Results Test 的驗收步驟；須待發布後實際執行
+- [x] 保存發布後 SEO 驗收手冊，列明公開網址、curl 指令、預期結果與 Rich Results Test 流程
+- [ ] 發布新版本後，以 `https://6bpodcasts.com` 實際驗證 canonical、robots、sitemap、快取及 JSON-LD 測試結果
+- [x] 盤點現有 canonical、OG／Twitter URL、路由、原始 HTML 輸出及快取標頭
+- [x] 將全站 canonical、OG URL 及 Twitter URL 統一為 `https://6bpodcasts.com` 冇 www 網址
+- [x] 實作可爬取的原始 HTML 輸出，令首頁與公開內頁各自直接提供單一 H1 及關鍵文字
+- [x] 生成公開 `robots.txt` 與全站公開頁面 `sitemap.xml`，並確保 URL 全部使用冇 www 網址
+- [x] 在首頁 head 加入指定 Organization 與 PodcastSeries JSON-LD
+- [x] 更新首頁 title、description、OG title 與 Twitter title 為指定文案
+- [x] 設定 HTML 與靜態資源的適當 Cache-Control 回應標頭
+- [x] 為 SEO 輸出與 sitemap 補充自動化測試
+- [x] 用 curl 對本機 production bundle 逐項驗證原始 HTML、meta、robots、sitemap、JSON-LD 及快取回應；公開網址驗證待發布後進行
+- [ ] 儲存 SEO 技術修復為可發布版本

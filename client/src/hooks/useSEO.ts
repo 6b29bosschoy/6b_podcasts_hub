@@ -1,9 +1,13 @@
 import { useEffect } from "react";
 
 const SITE_NAME = "6B Podcast";
-const SITE_URL = "https://www.6bpodcasts.com";
-const DEFAULT_OG_IMAGE = "https://www.6bpodcasts.com/og-image.jpg";
-const DEFAULT_TITLE = "6B Podcast｜香港真實人物訪談、兩性關係、中西玄學內容平台";
+const SITE_URL = "https://6bpodcasts.com";
+const DEFAULT_OG_IMAGE = "https://6bpodcasts.com/manus-storage/og-image-main_4e62cddd.jpg";
+const DEFAULT_TITLE = "6B Podcast｜香港兩性關係 Podcast・感情樹窿・玄學拆局";
+
+function normaliseSiteUrl(url: string): string {
+  return url.replace(/^https?:\/\/www\.6bpodcasts\.com(?=\/|$)/, SITE_URL);
+}
 
 interface SEOOptions {
   title: string;
@@ -59,6 +63,8 @@ export function useSEO(options: SEOOptions) {
       el.setAttribute("href", href);
     };
 
+    const currentUrl = `${SITE_URL}${window.location.pathname}${window.location.search}`;
+
     // Standard meta tags
     setMeta("description", description);
     if (keywords) setMeta("keywords", keywords);
@@ -68,20 +74,23 @@ export function useSEO(options: SEOOptions) {
     setMeta("og:site_name", SITE_NAME, true);
     setMeta("og:title", ogTitle || title, true);
     setMeta("og:description", ogDescription || description, true);
-    setMeta("og:image", ogImage, true);
+    const resolvedImage = normaliseSiteUrl(ogImage);
+    setMeta("og:image", resolvedImage, true);
     setMeta("og:image:width", "1200", true);
     setMeta("og:image:height", "630", true);
     setMeta("og:locale", "zh_HK", true);
-    if (ogUrl) setMeta("og:url", ogUrl, true);
+    const resolvedUrl = normaliseSiteUrl(ogUrl || canonical || currentUrl);
+    setMeta("og:url", resolvedUrl, true);
 
     // Twitter Card
     setMeta("twitter:card", "summary_large_image");
     setMeta("twitter:title", twitterTitle || ogTitle || title);
     setMeta("twitter:description", twitterDescription || ogDescription || description);
-    setMeta("twitter:image", ogImage);
+    setMeta("twitter:image", resolvedImage);
+    setMeta("twitter:url", resolvedUrl);
 
     // Canonical
-    if (canonical) setLink("canonical", canonical);
+    setLink("canonical", normaliseSiteUrl(canonical || resolvedUrl));
 
     // Cleanup: restore default title on unmount
     return () => {

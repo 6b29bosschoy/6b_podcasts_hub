@@ -5,6 +5,7 @@ import { nanoid } from "nanoid";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import viteConfig from "../../vite.config";
+import { injectSeoDocument, resolveSeoDocument } from "./seo";
 
 export async function setupVite(app: Express, server: Server) {
   const serverOptions = {
@@ -32,14 +33,19 @@ export async function setupVite(app: Express, server: Server) {
         "index.html"
       );
 
-      // always reload the index.html file from disk incase it changes
+      // Always reload the template and inject crawler-readable route metadata/body.
       let template = await fs.promises.readFile(clientTemplate, "utf-8");
+      const seoDocument = await resolveSeoDocument(req.originalUrl);
+      template = injectSeoDocument(template, seoDocument);
       template = template.replace(
         `src="/src/main.tsx"`,
         `src="/src/main.tsx?v=${nanoid()}"`
       );
       const page = await vite.transformIndexHtml(url, template);
-      res.status(200).set({ "Content-Type": "text/html" }).end(page);
+      res
+        .status(200)
+        .set({ "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" })
+        .end(page);
     } catch (e) {
       vite.ssrFixStacktrace(e as Error);
       next(e);
@@ -58,10 +64,27 @@ export function serveStatic(app: Express) {
     );
   }
 
-  app.use(express.static(distPath));
+  app.use(express.static(distPath, {
+    index: false,
+    redirect: false,
+    setHeaders(res, filePath) {
+      if (/\.(?:js|mjs|css|png|jpe?g|webp|avif|svg|ico|woff2?|ttf)$/i.test(filePath)) {
+        res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+      }
+    },
+  }));
 
-  // fall through to index.html if the file doesn't exist
-  app.use("*", (_req, res) => {
-    res.sendFile(path.resolve(distPath, "index.html"));
+  // HTML stays short-lived because the head and crawler fallback are route-specific.
+  app.use("*", async (req, res, next) => {
+    try {
+      const template = await fs.promises.readFile(path.resolve(distPath, "index.html"), "utf-8");
+      const seoDocument = await resolveSeoDocument(req.originalUrl);
+      res
+        .status(200)
+        .set({ "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" })
+        .end(injectSeoDocument(template, seoDocument));
+    } catch (error) {
+      next(error);
+    }
   });
 }
