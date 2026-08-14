@@ -68,15 +68,42 @@ export function initAnalytics() {
 
 export type AnalyticsEvent =
   | "video_play"
+  | "outbound_youtube"
   | "treehole_submit"
   | "booking_submit"
   | "whatsapp_click"
   | "partnership_submit"
-  | "payment_click";
+  | "pricing_view"
+  | "checkout_start"
+  | "purchase";
+
+const SAFE_EVENT_KEYS = new Set([
+  "source",
+  "service",
+  "video_id",
+  "content_type",
+  "destination",
+  "plan",
+  "currency",
+  "value",
+  "page_type",
+  "payment_provider",
+  "payment_environment",
+]);
+
+function sanitiseEventParams(params: Record<string, string | number | boolean | undefined>) {
+  return Object.fromEntries(
+    Object.entries(params).filter(([key, value]) => {
+      if (!SAFE_EVENT_KEYS.has(key) || value === undefined) return false;
+      return typeof value !== "string" || value.length <= 100;
+    }),
+  );
+}
 
 export function trackEvent(event: AnalyticsEvent, params: Record<string, string | number | boolean | undefined> = {}) {
   if (typeof window === "undefined") return;
-  window.gtag?.("event", event, params);
-  window.fbq?.("trackCustom", event, params);
+  const safeParams = sanitiseEventParams(params);
+  window.gtag?.("event", event, safeParams);
+  window.fbq?.("trackCustom", event, safeParams);
   window.clarity?.("event", event);
 }

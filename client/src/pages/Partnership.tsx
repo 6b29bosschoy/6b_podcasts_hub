@@ -1,34 +1,48 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { trackEvent } from "@/lib/analytics";
 import { toast } from "sonner";
 import { JsonLd, buildBreadcrumbSchema, SITE_URL } from "@/components/JsonLd";
 import { useSEO } from "@/hooks/useSEO";
+import { useLocation } from "wouter";
 
 const COLLAB_TYPES = [
   {
     icon: "🤝",
-    title: "品牌置入",
-    desc: "在「路邊 PODCASTS」節目中自然融入您的品牌，透過真誠的對話與故事，讓觀眾深刻記住您的產品或服務。",
+    title: "品牌訪談／節目贊助",
+    desc: "按節目主題、嘉賓同品牌目標安排合作位置，令訊息自然融入對話，而唔係硬性置入。",
     color: "var(--red)",
   },
   {
     icon: "🎬",
-    title: "內容共創",
-    desc: "與我們的製作團隊合作，共同策劃與製作符合您品牌調性的專屬內容，打造獨一無二的品牌故事。",
+    title: "長短片內容製作",
+    desc: "由訪談構思、錄影到長片、精華片及字幕版本，將一個故事變成可持續使用嘅內容資產。",
     color: "var(--gold)",
   },
   {
-    icon: "📣",
-    title: "整合行銷",
-    desc: "結合內容製作、社群推廣與流量優化，提供全方位的行銷解決方案，最大化您的投資回報率。",
+    icon: "🎙️",
+    title: "Podcast 場地製作",
+    desc: "適合人物訪談與 Podcast 錄影嘅場地及基本製作配套，減少自行處理燈光、收音同器材嘅時間。",
+    color: "var(--gold)",
+  },
+  {
+    icon: "💬",
+    title: "社交平台內容合作",
+    desc: "為 Facebook、IG、Threads 或 YouTube 規劃有討論空間嘅內容角度，配合品牌實際目標同發布節奏。",
     color: "var(--gold)",
   },
 ];
 
+const STARTER_PLAN = {
+  name: "內容合作入門方案",
+  price: "價格由 HK$___ 起",
+  delivery: ["一次合作方向會議", "一項主內容交付（按選擇安排）", "發布格式及內容使用建議"],
+  timeline: "一般由確認內容起計 2–4 星期；實際時間按嘉賓、場地及修改輪次確認。",
+};
+
 const WHY_COLLAB = [
   { icon: "👥", title: "精準受眾觸達", desc: "透過數據分析與策略規劃，精準觸達您的目標客群。" },
-  { icon: "🏆", title: "專業製作團隊", desc: "多年經驗的製作團隊，確保每個作品都達到最高品質標準。" },
+  { icon: "🏆", title: "高質素製作流程", desc: "由構思、錄影到剪輯有清晰交付範圍，方便你掌握合作進度。" },
   { icon: "🔄", title: "靈活合作模式", desc: "根據您的預算與需求，提供多種彈性的合作方案。" },
   { icon: "📊", title: "成效追蹤報告", desc: "提供詳細的數據報告，讓您清楚了解每次合作的成效。" },
 ];
@@ -36,13 +50,13 @@ const WHY_COLLAB = [
 export default function Partnership() {
   useSEO({
     title: "商業合作｜6B Podcast—品牌訪談、節目贊助、內容共創與玄學合作",
-    description: "與 6B Podcast 路邊電台合作：品牌訪談、節目贊助、內容共創、玄學節目贊助、師傅合作。觸達香港 16,000+ 粉絲，提升品牌曝光度與轉化率。",
-    keywords: "商業合作,品牌訪談,節目贊助,內容共創,YouTube 廣告,香港 Podcast 合作,KOL 合作,玄學合作",
-    ogTitle: "商業合作｜6B Podcast—品牌訪談、節目贊助、內容共創與玄學合作",
-    ogDescription: "品牌訪談、節目贊助、內容共創、玄學節目贊助、師傅合作。觸達香港 16,000+ 粉絲。",
-    ogUrl: "https://www.6bpodcasts.com/partnership",
-    ogImage: "https://www.6bpodcasts.com/manus-storage/og-partnership_63ed94db.jpg",
-    canonical: "https://www.6bpodcasts.com/partnership",
+    description: "與 6B PODCASTS 合作：品牌訪談及節目贊助、長短片內容製作、Podcast 場地製作及社交平台內容合作。",
+    keywords: "商業合作,品牌訪談,節目贊助,長短片內容製作,Podcast場地製作,社交平台內容合作,香港 Podcast 合作,KOL 合作",
+    ogTitle: "商業合作｜6B PODCASTS—品牌訪談、內容製作及社交合作",
+    ogDescription: "品牌訪談、節目贊助、長短片內容製作、Podcast 場地製作及社交平台內容合作。",
+    ogUrl: "https://6bpodcasts.com/partnership",
+    ogImage: "https://6bpodcasts.com/manus-storage/og-partnership_63ed94db.jpg",
+    canonical: "https://6bpodcasts.com/partnership",
   });
   const [form, setForm] = useState({
     name: "",
@@ -51,14 +65,15 @@ export default function Partnership() {
     phone: "",
     collabType: "",
     message: "",
+    privacyConsent: false,
   });
-  const [submitted, setSubmitted] = useState(false);
+  const [, setLocation] = useLocation();
 
   const contactMutation = trpc.contact.submit.useMutation({
     onSuccess: () => {
-      setSubmitted(true);
       trackEvent("partnership_submit", { source: "partnership_form" });
       toast.success("合作意向已提交！我們將在 1-2 個工作天內與您聯絡。");
+      setLocation("/partnership/success");
     },
     onError: (err) => {
       toast.error("提交失敗，請稍後再試：" + err.message);
@@ -73,8 +88,10 @@ export default function Partnership() {
     }
     contactMutation.mutate({
       name: form.name,
+      company: form.company || undefined,
       email: form.email,
       phone: form.phone || undefined,
+      privacyConsent: true,
       inquiryType: "collaboration",
       message: `【合作洽談】\n公司：${form.company || "未填寫"}\n電話：${form.phone || "未填寫"}\n合作類型：${form.collabType || "未選擇"}\n\n${form.message}`,
       subject: "合作洽談查詢",
@@ -86,7 +103,7 @@ export default function Partnership() {
       "@context": "https://schema.org",
       "@type": "ContactPage",
       name: "合作洽談｜路邊電台",
-      description: "與路邊電台合作：品牌置入、內容共創、整合行銷方案，觸達香港 16,000+ 粉絲，提升品牌曝光度與轉化率。",
+      description: "與路邊電台合作：品牌訪談及節目贊助、長短片內容製作、Podcast 場地製作及社交平台內容合作。",
       url: `${SITE_URL}/partnership`,
       mainEntity: {
         "@type": "Organization",
@@ -141,7 +158,7 @@ export default function Partnership() {
             合作洽談
           </h1>
           <p className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: "var(--text-2)" }}>
-            無論您是希望透過品牌置入擴大影響力，還是想與我們共創優質內容，我們都期待與您攜手合作，創造雙贏的成果。
+            無論你想做品牌訪談、節目贊助，定係將一次拍攝變成長短片內容，我哋會先了解你嘅目標，再度身訂造合作範圍。
           </p>
         </div>
       </section>
@@ -153,7 +170,7 @@ export default function Partnership() {
             <div className="text-xs font-bold tracking-widest mb-3" style={{ color: "var(--gold)" }}>COLLABORATION TYPES</div>
             <h2 className="text-3xl font-black" style={{ color: "var(--text)" }}>合作方案</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {COLLAB_TYPES.map((c) => (
               <div
                 key={c.title}
@@ -174,54 +191,28 @@ export default function Partnership() {
         </div>
       </section>
 
-      {/* 玄學內容合作 */}
+      {/* Starter plan */}
       <section className="py-16" style={{ background: "linear-gradient(135deg, var(--bg-card), var(--bg))" }}>
         <div className="container">
-          <div className="text-center mb-10">
-            <div className="text-xs font-bold tracking-widest mb-3" style={{ color: "var(--gold)" }}>MYSTIC PARTNERSHIP</div>
-            <h2 className="text-2xl font-black" style={{ color: "var(--text)" }}>玄學內容合作</h2>
-            <p className="text-sm mt-2" style={{ color: "var(--text-2)" }}>透過路邊玄學堂觸達香港玄學愛好者及對命理有興趣的觀眾</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {[
-              {
-                icon: "✨",
-                title: "玄學節目贊助",
-                desc: "贊助路邊玄學堂的風水、八字、塔羅等節目，自然融入玄學內容，觸達香港玄學愛好者及對命理有興趣的觀眾。",
-                color: "var(--gold)",
-              },
-              {
-                icon: "🔮",
-                title: "邀請師傅合作",
-                desc: "如果您是玄學師傅，歡迎加入路邊玄學堂，共同創作玄學內容，擴大個人品牌曝光度。",
-                color: "var(--gold)",
-              },
-              {
-                icon: "🏢",
-                title: "品牌內容合作",
-                desc: "品牌命名、Logo 顏色、開業擇日、公司風水，與路邊玄學堂合作創作具有商業價値的玄學內容。",
-                color: "var(--gold)",
-              },
-            ].map((item) => (
-              <div
-                key={item.title}
-                className="rounded-xl p-6 transition-all hover:scale-[1.02]"
-                style={{ background: "var(--bg-card)", border: `1px solid ${item.color}33` }}
-              >
-                <div className="text-3xl mb-4">{item.icon}</div>
-                <h3 className="text-base font-black mb-2" style={{ color: "var(--text)" }}>{item.title}</h3>
-                <p className="text-sm leading-relaxed mb-4" style={{ color: "var(--text-2)" }}>{item.desc}</p>
-                <a
-                  href="https://wa.me/85298729990"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all hover:opacity-90"
-                  style={{ background: `${item.color}22`, color: item.color, border: `1px solid ${item.color}44`, textDecoration: "none" }}
-                >
-                  立即查詢 →
-                </a>
+          <div className="mx-auto max-w-4xl rounded-2xl p-7 md:p-9" style={{ background: "var(--bg)", border: "1px solid var(--gold)" }}>
+            <div className="grid gap-7 md:grid-cols-[1.1fr_1fr] md:items-start">
+              <div>
+                <div className="text-xs font-bold tracking-widest" style={{ color: "var(--gold)" }}>STARTER PLAN</div>
+                <h2 className="mt-3 text-2xl font-black" style={{ color: "var(--text)" }}>{STARTER_PLAN.name}</h2>
+                <p className="mt-3 text-sm leading-7" style={{ color: "var(--text-2)" }}>適合想先測試合作方向嘅品牌。實際方案會按節目、拍攝、剪輯、發布及使用範圍確認。</p>
+                <p className="mt-5 text-lg font-black" style={{ color: "var(--gold)" }}>{STARTER_PLAN.price}</p>
               </div>
-            ))}
+              <div className="space-y-5">
+                <div>
+                  <h3 className="text-sm font-bold" style={{ color: "var(--text)" }}>交付項目</h3>
+                  <ul className="mt-2 space-y-2 text-sm" style={{ color: "var(--text-3)" }}>{STARTER_PLAN.delivery.map((item) => <li key={item}>— {item}</li>)}</ul>
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold" style={{ color: "var(--text)" }}>製作時間</h3>
+                  <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-3)" }}>{STARTER_PLAN.timeline}</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -253,27 +244,21 @@ export default function Partnership() {
             <div className="text-center mb-10">
               <div className="text-xs font-bold tracking-widest mb-3" style={{ color: "var(--red)" }}>CONTACT US</div>
               <h2 className="text-3xl font-black mb-2" style={{ color: "var(--text)" }}>填寫合作意向表單</h2>
-              <p className="text-sm" style={{ color: "var(--text-3)" }}>請填寫以下資訊，我們將在 1-2 個工作天內與您聯絡</p>
+              <p className="text-sm" style={{ color: "var(--text-3)" }}>請填寫以下資料，我哋會喺一至兩個工作天內聯絡你</p>
             </div>
 
-            {submitted ? (
-              <div className="glass-card rounded-2xl p-12 text-center" style={{ border: "1px solid rgba(201,164,92,0.3)" }}>
-                <div className="text-5xl mb-4">✅</div>
-                <h3 className="text-2xl font-black mb-3" style={{ color: "var(--text)" }}>合作意向已提交！</h3>
-                <p className="text-sm" style={{ color: "var(--text-2)" }}>
-                  感謝您的合作意向，我們的團隊將在 1-2 個工作天內與您聯絡。
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="glass-card rounded-2xl p-8 space-y-5" style={{ border: "1px solid var(--red)" }}>
+              <form method="post" data-clarity-mask="true" onSubmit={handleSubmit} className="glass-card rounded-2xl p-8 space-y-5" style={{ border: "1px solid var(--red)" }}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-xs font-bold mb-2" style={{ color: "var(--gold)" }}>
+                    <label htmlFor="partnership-name" className="block text-xs font-bold mb-2" style={{ color: "var(--gold)" }}>
                       姓名 <span style={{ color: "var(--red)" }}>*</span>
                     </label>
                     <input
                       type="text"
-                      placeholder="請輸入您的姓名"
+                      id="partnership-name"
+                      name="name"
+                      autoComplete="name"
+                      placeholder="請輸入你嘅姓名"
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
                       className="w-full px-4 py-3 rounded-lg text-sm outline-none focus:ring-1 transition-all"
@@ -282,10 +267,13 @@ export default function Partnership() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold mb-2" style={{ color: "var(--gold)" }}>公司名稱</label>
+                    <label htmlFor="partnership-company" className="block text-xs font-bold mb-2" style={{ color: "var(--gold)" }}>公司名稱</label>
                     <input
                       type="text"
-                      placeholder="請輸入您的公司名稱（選填）"
+                      id="partnership-company"
+                      name="company"
+                      autoComplete="organization"
+                      placeholder="請輸入你嘅公司名稱（選填）"
                       value={form.company}
                       onChange={(e) => setForm({ ...form, company: e.target.value })}
                       className="w-full px-4 py-3 rounded-lg text-sm outline-none transition-all"
@@ -295,11 +283,14 @@ export default function Partnership() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-xs font-bold mb-2" style={{ color: "var(--gold)" }}>
+                    <label htmlFor="partnership-email" className="block text-xs font-bold mb-2" style={{ color: "var(--gold)" }}>
                       電子郵件 <span style={{ color: "var(--red)" }}>*</span>
                     </label>
                     <input
                       type="email"
+                      id="partnership-email"
+                      name="email"
+                      autoComplete="email"
                       placeholder="your@email.com"
                       value={form.email}
                       onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -309,10 +300,13 @@ export default function Partnership() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold mb-2" style={{ color: "var(--gold)" }}>聯絡電話</label>
+                    <label htmlFor="partnership-phone" className="block text-xs font-bold mb-2" style={{ color: "var(--gold)" }}>聯絡電話</label>
                     <input
                       type="tel"
-                      placeholder="請輸入您的聯絡電話（選填）"
+                      id="partnership-phone"
+                      name="phone"
+                      autoComplete="tel"
+                      placeholder="請輸入你嘅聯絡電話（選填）"
                       value={form.phone}
                       onChange={(e) => setForm({ ...form, phone: e.target.value })}
                       className="w-full px-4 py-3 rounded-lg text-sm outline-none transition-all"
@@ -321,26 +315,33 @@ export default function Partnership() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold mb-2" style={{ color: "var(--gold)" }}>合作類型</label>
+                  <label htmlFor="partnership-collab-type" className="block text-xs font-bold mb-2" style={{ color: "var(--gold)" }}>合作類型</label>
                   <select
+                    id="partnership-collab-type"
+                    name="collabType"
+                    autoComplete="off"
                     value={form.collabType}
                     onChange={(e) => setForm({ ...form, collabType: e.target.value })}
                     className="w-full px-4 py-3 rounded-lg text-sm outline-none transition-all"
                     style={{ background: "var(--bg-card)", border: "1px solid var(--line)", color: form.collabType ? "var(--text)" : "var(--text-3)" }}
                   >
                     <option value="">請選擇合作類型（選填）</option>
-                    <option value="品牌置入">品牌置入</option>
-                    <option value="內容共創">內容共創</option>
-                    <option value="整合行銷">整合行銷</option>
+                    <option value="品牌訪談／節目贊助">品牌訪談／節目贊助</option>
+                    <option value="長短片內容製作">長短片內容製作</option>
+                    <option value="Podcast 場地製作">Podcast 場地製作</option>
+                    <option value="社交平台內容合作">社交平台內容合作</option>
                     <option value="其他">其他</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold mb-2" style={{ color: "var(--gold)" }}>
+                  <label htmlFor="partnership-message" className="block text-xs font-bold mb-2" style={{ color: "var(--gold)" }}>
                     合作需求 <span style={{ color: "var(--red)" }}>*</span>
                   </label>
                   <textarea
-                    placeholder="請詳細描述您的合作需求與期望（至少 10 個字元）"
+                    id="partnership-message"
+                    name="message"
+                    autoComplete="off"
+                    placeholder="請詳細描述你嘅合作需求與期望（至少 10 個字元）"
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
                     rows={5}
@@ -349,6 +350,10 @@ export default function Partnership() {
                     required
                     minLength={10}
                   />
+                </div>
+                <div className="flex items-start gap-2">
+                  <input id="partnership-consent" name="privacyConsent" type="checkbox" autoComplete="off" checked={form.privacyConsent} onChange={(event) => setForm((current) => ({ ...current, privacyConsent: event.target.checked }))} required className="mt-1" />
+                  <label htmlFor="partnership-consent" className="text-xs leading-5" style={{ color: "var(--text-3)" }}>我已閱讀並同意 <a href="/privacy" className="underline" style={{ color: "var(--gold)" }}>私隱政策</a>，明白資料只用作處理今次合作查詢。</label>
                 </div>
                 <button
                   type="submit"
@@ -359,7 +364,6 @@ export default function Partnership() {
                   {contactMutation.isPending ? "提交中..." : "提交合作意向 →"}
                 </button>
               </form>
-            )}
 
             {/* Direct contact */}
             <div className="mt-8 glass-card rounded-xl p-6 flex flex-col sm:flex-row gap-4 items-center justify-between" style={{ border: "1px solid var(--line)" }}>

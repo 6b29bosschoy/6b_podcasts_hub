@@ -1,8 +1,8 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-import { CheckCircle, Mail, Phone, Youtube, Instagram, Facebook } from "lucide-react";
-import { Link } from "wouter";
+import { Mail, Phone, Youtube, Instagram, Facebook } from "lucide-react";
+import { useLocation } from "wouter";
 import { JsonLd, buildBreadcrumbSchema, SITE_URL } from "@/components/JsonLd";
 import { useSEO } from "@/hooks/useSEO";
 
@@ -23,7 +23,7 @@ export default function Contact() {
     ogUrl: "https://www.6bpodcasts.com/contact",
     canonical: "https://www.6bpodcasts.com/contact",
   });
-  const [submitted, setSubmitted] = useState(false);
+  const [, setLocation] = useLocation();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -31,10 +31,11 @@ export default function Contact() {
     inquiryType: "collaboration" as "collaboration" | "guest" | "feedback" | "other",
     subject: "",
     message: "",
+    privacyConsent: false,
   });
 
   const contactMutation = trpc.contact.submit.useMutation({
-    onSuccess: () => { setSubmitted(true); },
+    onSuccess: () => { setLocation("/contact/success"); },
     onError: (err) => { toast.error(err.message || "提交失敗，請稍後再試。"); },
   });
 
@@ -44,25 +45,9 @@ export default function Contact() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    contactMutation.mutate({ ...form, phone: form.phone || undefined });
+    if (!form.privacyConsent) { toast.error("請先同意私隱政策"); return; }
+    contactMutation.mutate({ ...form, privacyConsent: true, phone: form.phone || undefined });
   };
-
-  if (submitted) {
-    return (
-      <div className="min-h-screen pt-24 flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto px-4">
-          <CheckCircle size={48} className="mx-auto mb-4" style={{ color: "var(--gold)" }} />
-          <h2 className="text-2xl font-black mb-3" style={{ color: "var(--text)" }}>訊息已發送！</h2>
-          <p className="text-sm mb-6" style={{ color: "var(--text-3)" }}>
-            感謝你的查詢！我們會在 2 個工作天內回覆你。
-          </p>
-          <Link href="/" className="px-5 py-2.5 rounded-lg text-sm font-bold" style={{ background: "var(--red)", color: "white" }}>
-            返回首頁
-          </Link>
-        </div>
-      </div>
-    );
-  }
 
   const inputStyle = {
     background: "var(--bg-card)",
@@ -176,54 +161,46 @@ export default function Contact() {
 
           {/* Contact Form */}
           <div className="lg:col-span-2">
-            <form onSubmit={handleSubmit} className="glass-card rounded-2xl p-6 md:p-8 flex flex-col gap-5">
+            <form method="post" data-clarity-mask="true" onSubmit={handleSubmit} className="glass-card rounded-2xl p-6 md:p-8 flex flex-col gap-5">
               <h2 className="text-lg font-black" style={{ color: "var(--text)" }}>發送訊息</h2>
 
               {/* Inquiry Type */}
               <div>
-                <label className="block text-xs font-bold mb-2" style={{ color: "var(--text-2)" }}>查詢類型 *</label>
-                <div className="grid grid-cols-2 gap-2">
-                  {INQUIRY_TYPES.map((t) => (
-                    <button
-                      key={t.value}
-                      type="button"
-                      onClick={() => setForm((p) => ({ ...p, inquiryType: t.value as typeof form.inquiryType }))}
-                      className="px-3 py-2.5 rounded-lg text-xs font-bold text-left transition-all"
-                      style={form.inquiryType === t.value
-                        ? { background: "var(--red)", border: "1px solid var(--red)", color: "var(--red)" }
-                        : { background: "var(--bg-card)", border: "1px solid var(--line)", color: "var(--text-2)" }
-                      }
-                    >
-                      {t.label}
-                    </button>
-                  ))}
-                </div>
+                <label htmlFor="contact-inquiry-type" className="block text-xs font-bold mb-2" style={{ color: "var(--text-2)" }}>查詢類型 *</label>
+                <select id="contact-inquiry-type" name="inquiryType" autoComplete="off" value={form.inquiryType} onChange={handleChange} required style={inputStyle}>
+                  {INQUIRY_TYPES.map((type) => <option key={type.value} value={type.value}>{type.label}</option>)}
+                </select>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>姓名 *</label>
-                  <input name="name" value={form.name} onChange={handleChange} required placeholder="你的名字" style={inputStyle} />
+                  <label htmlFor="contact-name" className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>姓名 *</label>
+                  <input id="contact-name" name="name" autoComplete="name" value={form.name} onChange={handleChange} required placeholder="你的名字" style={inputStyle} />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>電郵地址 *</label>
-                  <input name="email" type="email" value={form.email} onChange={handleChange} required placeholder="your@email.com" style={inputStyle} />
+                  <label htmlFor="contact-email" className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>電郵地址 *</label>
+                  <input id="contact-email" name="email" type="email" autoComplete="email" value={form.email} onChange={handleChange} required placeholder="your@email.com" style={inputStyle} />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>聯絡電話（選填）</label>
-                <input name="phone" value={form.phone} onChange={handleChange} placeholder="+852 XXXX XXXX" style={inputStyle} />
+                <label htmlFor="contact-phone" className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>聯絡電話（選填）</label>
+                <input id="contact-phone" name="phone" type="tel" autoComplete="tel" value={form.phone} onChange={handleChange} placeholder="+852 XXXX XXXX" style={inputStyle} />
               </div>
 
               <div>
-                <label className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>主題 *</label>
-                <input name="subject" value={form.subject} onChange={handleChange} required placeholder="簡短描述你的查詢" style={inputStyle} />
+                <label htmlFor="contact-subject" className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>主題 *</label>
+                <input id="contact-subject" name="subject" autoComplete="off" value={form.subject} onChange={handleChange} required placeholder="簡短描述你的查詢" style={inputStyle} />
               </div>
 
               <div>
-                <label className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>訊息內容 *</label>
-                <textarea name="message" value={form.message} onChange={handleChange} required rows={6} placeholder="詳細描述你的查詢或合作想法..." style={{ ...inputStyle, resize: "vertical" }} />
+                <label htmlFor="contact-message" className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>訊息內容 *</label>
+                <textarea id="contact-message" name="message" autoComplete="off" value={form.message} onChange={handleChange} required rows={6} placeholder="詳細描述你的查詢或合作想法..." style={{ ...inputStyle, resize: "vertical" }} />
+              </div>
+
+              <div className="flex items-start gap-2">
+                <input id="contact-consent" name="privacyConsent" type="checkbox" autoComplete="off" checked={form.privacyConsent} onChange={(event) => setForm((current) => ({ ...current, privacyConsent: event.target.checked }))} required className="mt-1" />
+                <label htmlFor="contact-consent" className="text-xs leading-5" style={{ color: "var(--text-3)" }}>我已閱讀並同意 <a href="/privacy" className="underline" style={{ color: "var(--gold)" }}>私隱政策</a>，明白資料只用作處理今次查詢。</label>
               </div>
 
               <button

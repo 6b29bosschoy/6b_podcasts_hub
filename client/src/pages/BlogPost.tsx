@@ -6,6 +6,8 @@ import Lightbox from "@/components/Lightbox";
 import ShareButtons from "@/components/ShareButtons";
 import { JsonLd, buildArticleSchema, buildFAQSchema } from "@/components/JsonLd";
 import Comments from "@/components/Comments";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const CATEGORY_LABELS: Record<string, string> = {
   relationship: "兩性關係",
@@ -220,17 +222,22 @@ export default function BlogPost({ slug }: { slug: string }) {
 
           {/* ── Article content ──────────────────────────────────── */}
           <div className="prose prose-invert max-w-none" style={{ color: "var(--text-2)", lineHeight: "1.9" }}>
-            {post.content.split("\n").map((para, i) => {
-              const trimmed = para.trim();
-              if (!trimmed) return <br key={i} />;
-              if (trimmed.startsWith("## ")) {
-                return <h2 key={i} className="text-xl font-black mt-8 mb-4" style={{ color: "var(--text)" }}>{trimmed.replace(/^## /, "")}</h2>;
-              }
-              if (trimmed.startsWith("### ")) {
-                return <h3 key={i} className="text-lg font-bold mt-6 mb-3" style={{ color: "var(--text)" }}>{trimmed.replace(/^### /, "")}</h3>;
-              }
-              return <p key={i} className="mb-4" style={{ color: "var(--text-2)" }}>{trimmed}</p>;
-            })}
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                h2: ({ children }) => <h2 className="mt-9 mb-4 text-xl font-black" style={{ color: "var(--text)" }}>{children}</h2>,
+                h3: ({ children }) => <h3 className="mt-7 mb-3 text-lg font-bold" style={{ color: "var(--text)" }}>{children}</h3>,
+                p: ({ children }) => <p className="mb-4" style={{ color: "var(--text-2)" }}>{children}</p>,
+                strong: ({ children }) => <strong className="font-bold" style={{ color: "var(--text)" }}>{children}</strong>,
+                ul: ({ children }) => <ul className="mb-5 list-disc space-y-2 pl-6" style={{ color: "var(--text-2)" }}>{children}</ul>,
+                ol: ({ children }) => <ol className="mb-5 list-decimal space-y-2 pl-6" style={{ color: "var(--text-2)" }}>{children}</ol>,
+                li: ({ children }) => <li className="pl-1">{children}</li>,
+                blockquote: ({ children }) => <blockquote className="my-6 border-l-2 pl-4 italic" style={{ borderColor: "var(--gold)", color: "var(--text-3)" }}>{children}</blockquote>,
+                a: ({ href, children }) => <a href={href} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4" style={{ color: "var(--gold)" }}>{children}</a>,
+              }}
+            >
+              {post.content}
+            </ReactMarkdown>
           </div>
 
           {/* ── Related Links ─────────────────────────────────────── */}

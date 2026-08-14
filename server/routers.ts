@@ -80,6 +80,19 @@ async function getCachedChannelId(handle: string): Promise<string> {
   return id;
 }
 
+function topicKeywords(text: string): string[] {
+  const normalised = text.toLowerCase().replace(/[^\u4e00-\u9fffa-z0-9]/g, "");
+  const english = text.toLowerCase().match(/[a-z0-9]{3,}/g) ?? [];
+  const chinese = normalised.match(/[\u4e00-\u9fff]/g) ?? [];
+  const bigrams = chinese.reduce<string[]>((terms, char, index) => index < chinese.length - 1 ? [...terms, `${char}${chinese[index + 1]}`] : terms, []);
+  return Array.from(new Set([...english, ...bigrams])).filter((term) => term.length > 1);
+}
+
+function topicScore(reference: string[], candidate: string): number {
+  const candidateTerms = new Set(topicKeywords(candidate));
+  return reference.filter((term) => candidateTerms.has(term)).length;
+}
+
 export const appRouter = router({
   system: systemRouter,
 
@@ -103,6 +116,20 @@ export const appRouter = router({
       .query(async ({ input }) => {
         const { limit = 12, offset = 0 } = input ?? {};
         return getApprovedBlogPosts(limit, offset);
+      }),
+
+    relatedToEpisode: publicProcedure
+      .input(z.object({ reference: z.string().min(2).max(6000), limit: z.number().min(1).max(6).default(3) }))
+      .query(async ({ input }) => {
+        const referenceTerms = topicKeywords(input.reference);
+        if (referenceTerms.length === 0) return [];
+        const posts = await getApprovedBlogPosts(500, 0);
+        return posts
+          .map((post) => ({ post, score: topicScore(referenceTerms, `${post.title} ${post.excerpt ?? ""} ${post.category}`) }))
+          .filter(({ score }) => score > 0)
+          .sort((a, b) => b.score - a.score || new Date(b.post.publishedAt ?? 0).getTime() - new Date(a.post.publishedAt ?? 0).getTime())
+          .slice(0, input.limit)
+          .map(({ post }) => post);
       }),
 
     getBySlug: publicProcedure
@@ -325,8 +352,10 @@ export const appRouter = router({
     create: publicProcedure
       .input(z.object({
         name: z.string().min(1).max(100),
-        email: z.string().email(),
-        phone: z.string().max(30).optional(),
+        email: z.string().email().optional(),
+        phone: z.string().trim().min(5).max(30),
+        preferredContactMethod: z.enum(["whatsapp", "phone"]),
+        privacyConsent: z.literal(true),
         serviceType: z.enum(["fengshui", "bazi", "tarot", "spiritual", "course"]),
         preferredDate: z.string().max(20).optional(),
         preferredTime: z.string().max(20).optional(),
@@ -336,7 +365,7 @@ export const appRouter = router({
         await createBooking({ ...input, status: "pending" });
         await notifyOwner({
           title: "新服務預約",
-          content: `${input.name} (${input.email}) 預約了「${input.serviceType}」服務，日期：${input.preferredDate ?? "待定"}。`,
+          content: `收到「${input.serviceType}」服務預約查詢（偏好 ${input.preferredContactMethod === "whatsapp" ? "WhatsApp" : "電話"} 聯絡），請到後台查看。`,
         }).catch(() => {});
         return { success: true };
       }),
@@ -360,8 +389,10 @@ export const appRouter = router({
     submit: publicProcedure
       .input(z.object({
         name: z.string().min(1).max(100),
+        company: z.string().trim().max(255).optional(),
         email: z.string().email(),
         phone: z.string().max(30).optional(),
+        privacyConsent: z.literal(true),
         inquiryType: z.enum(["collaboration", "guest", "feedback", "other"]).default("other"),
         subject: z.string().min(1).max(255),
         message: z.string().min(10).max(2000),
@@ -370,7 +401,7 @@ export const appRouter = router({
         await createContact({ ...input });
         await notifyOwner({
           title: "新聯絡查詢",
-          content: `${input.name} (${input.email}) 提交了「${input.inquiryType}」查詢：${input.subject}`,
+          content: `收到「${input.inquiryType}」查詢，請到後台查看。`,
         }).catch(() => {});
         return { success: true };
       }),
@@ -623,6 +654,7 @@ export const appRouter = router({
         utmMedium: z.string().trim().max(255).optional(),
         utmCampaign: z.string().trim().max(255).optional(),
         honeypot: z.string().max(255).optional(),
+        privacyConsent: z.literal(true),
       }).superRefine((input, ctx) => {
         if (requiresTreeholeContact(input.publicPermission, input.deepInterpretation) && !input.contactMethod?.trim()) {
           ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["contactMethod"], message: "請留下聯絡方式" });
@@ -650,6 +682,7 @@ export const appRouter = router({
           utmMedium: input.utmMedium || null,
           utmCampaign: input.utmCampaign || null,
           honeypot: null,
+          privacyConsent: true,
           images: "[]",
         });
         const contactSummary = input.contactMethod?.trim() ? `｜聯絡方式：${input.contactMethod.trim()}` : "";

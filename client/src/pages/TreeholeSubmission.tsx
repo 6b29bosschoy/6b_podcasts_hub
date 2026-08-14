@@ -1,5 +1,6 @@
 import React, { useState, useEffect, type FormEvent } from "react";
 import { Link } from "wouter";
+import { useLocation } from "wouter";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { CheckCircle2, ChevronLeft, Heart, LockKeyhole, PenLine, Send, Youtube, MessageCircle, LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
@@ -37,9 +38,11 @@ export default function TreeholeSubmission() {
   const [deepInterpretation, setDeepInterpretation] = useState("");
   const [contactMethod, setContactMethod] = useState("");
   const [submitted, setSubmitted] = useState(() => new URLSearchParams(window.location.search).get("submitted") === "1");
+  const [, setLocation] = useLocation();
   const [formError, setFormError] = useState("");
   const [utmParams, setUtmParams] = useState({ utmSource: "", utmMedium: "", utmCampaign: "" });
   const [honeypot, setHoneypot] = useState("");
+  const [privacyConsent, setPrivacyConsent] = useState(false);
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -65,10 +68,9 @@ export default function TreeholeSubmission() {
   const submitMutation = trpc.submission.submitTreehole.useMutation({
     onSuccess: () => {
       setSubmitted(true);
-      const params = new URLSearchParams(window.location.search);
-      params.set("submitted", "1");
-      window.history.replaceState(null, "", `${window.location.pathname}?${params.toString()}`);
       trackEvent("treehole_submit", { source: "treehole_form" });
+      toast.success(SUCCESS_TOAST.title, { description: SUCCESS_TOAST.description });
+      setLocation("/treehole/success");
       setNickname("");
       setGender("");
       setAgeGroup("");
@@ -112,6 +114,7 @@ export default function TreeholeSubmission() {
     if (!publicPermission) return setFormError("請選擇可唔可以喺節目入面匿名讀出。");
     if (!deepInterpretation) return setFormError("請選擇你想唔想有人同你深入解讀問題。");
     if (contactRequired && !contactMethod.trim()) return setFormError("因應你嘅選擇，請留下可聯絡你嘅方式。");
+    if (!privacyConsent) return setFormError("請先同意私隱政策先可以投入樹窿。");
 
     setFormError("");
     submitMutation.mutate({
@@ -129,6 +132,7 @@ export default function TreeholeSubmission() {
       utmMedium: utmParams.utmMedium || undefined,
       utmCampaign: utmParams.utmCampaign || undefined,
       honeypot: honeypot || undefined,
+      privacyConsent: true,
     });
   }
 
@@ -209,7 +213,7 @@ export default function TreeholeSubmission() {
                   </button>
                 </motion.section>
               ) : (
-                <motion.form key="form" initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={reduceMotion ? undefined : { opacity: 0 }} transition={{ duration: 0.2 }} onSubmit={handleSubmit} className="relative space-y-7" noValidate>
+                <motion.form key="form" method="post" data-clarity-mask="true" initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={reduceMotion ? undefined : { opacity: 0 }} transition={{ duration: 0.2 }} onSubmit={handleSubmit} className="relative space-y-7" noValidate>
                   {/* Honeypot: hidden from real users, bots will fill it */}
                   <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", top: "-9999px", height: 0, overflow: "hidden" }}>
                     <label htmlFor="treehole-website">網站（請勿填寫）</label>
@@ -217,14 +221,14 @@ export default function TreeholeSubmission() {
                   </div>
 
                   <FieldLabel htmlFor="treehole-nickname" required>你想我哋點稱呼你？</FieldLabel>
-                  <input id="treehole-nickname" value={nickname} onChange={(event) => setNickname(event.target.value)} required maxLength={50} placeholder="花名就得，例：觀塘K小姐" className="treehole-input" />
+                  <input id="treehole-nickname" name="nickname" autoComplete="off" value={nickname} onChange={(event) => setNickname(event.target.value)} required maxLength={50} placeholder="花名就得，例：觀塘K小姐" className="treehole-input" />
 
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <SelectField id="treehole-gender" label="性別（選填）" value={gender} onChange={setGender} options={GENDERS} placeholder="唔想講都得" />
-                    <SelectField id="treehole-age" label="年齡層（選填）" value={ageGroup} onChange={setAgeGroup} options={AGE_GROUPS} placeholder="揀返大概範圍" />
+                    <SelectField id="treehole-gender" name="gender" label="性別（選填）" value={gender} onChange={setGender} options={GENDERS} placeholder="唔想講都得" />
+                    <SelectField id="treehole-age" name="ageGroup" label="年齡層（選填）" value={ageGroup} onChange={setAgeGroup} options={AGE_GROUPS} placeholder="揀返大概範圍" />
                   </div>
 
-                  <SelectField id="treehole-status" label="感情狀態" value={relationshipStatus} onChange={setRelationshipStatus} options={RELATIONSHIP_STATUSES} placeholder="請選擇" required />
+                  <SelectField id="treehole-status" name="relationshipStatus" label="感情狀態" value={relationshipStatus} onChange={setRelationshipStatus} options={RELATIONSHIP_STATUSES} placeholder="請選擇" required />
 
                   <fieldset>
                     <legend className="mb-3 text-sm font-bold" style={{ color: "var(--text)" }}>你想投稿嘅問題屬於邊類？ <span style={{ color: "var(--red-bright)" }}>*</span></legend>
@@ -242,11 +246,11 @@ export default function TreeholeSubmission() {
                       <FieldLabel htmlFor="treehole-story" required>你嘅感情問題</FieldLabel>
                       <span className="text-xs" role="status" aria-live="polite" style={{ color: charactersRemaining < 100 ? "var(--gold)" : "var(--text-3)" }}>尚餘 {charactersRemaining} 字</span>
                     </div>
-                    <textarea id="treehole-story" value={story} onChange={(event) => setStory(normaliseTreeholeStory(event.target.value))} minLength={TREEHOLE_MIN_CHARACTERS} maxLength={TREEHOLE_MAX_CHARACTERS} rows={10} required placeholder="越詳細，解得越準。發生咗咩事、你而家最掙扎嘅係咩，慢慢講。" className="treehole-input min-h-56 resize-y leading-7" aria-describedby="treehole-story-help treehole-error" />
+                    <textarea id="treehole-story" name="content" autoComplete="off" value={story} onChange={(event) => setStory(normaliseTreeholeStory(event.target.value))} minLength={TREEHOLE_MIN_CHARACTERS} maxLength={TREEHOLE_MAX_CHARACTERS} rows={10} required placeholder="越詳細，解得越準。發生咗咩事、你而家最掙扎嘅係咩，慢慢講。" className="treehole-input min-h-56 resize-y leading-7" aria-describedby="treehole-story-help treehole-error" />
                     <p id="treehole-story-help" className="mt-2 text-xs leading-5" style={{ color: "var(--text-3)" }}>越詳細，解得越準。發生咗咩事、你而家最掙扎嘅係咩，慢慢講。最少 {TREEHOLE_MIN_CHARACTERS} 字。</p>
                   </div>
 
-                  <SelectField id="treehole-duration" label="呢個問題困擾咗你幾耐？（選填）" value={problemDuration} onChange={setProblemDuration} options={PROBLEM_DURATIONS} placeholder="如果想講，可以揀" />
+                  <SelectField id="treehole-duration" name="problemDuration" label="呢個問題困擾咗你幾耐？（選填）" value={problemDuration} onChange={setProblemDuration} options={PROBLEM_DURATIONS} placeholder="如果想講，可以揀" />
 
                   <RadioGroup label="接唔接受你嘅問題（匿名）喺節目入面讀出？" options={TREEHOLE_PUBLIC_PERMISSIONS} value={publicPermission} onChange={setPublicPermission} />
                   <RadioGroup label="如果有機會，你想唔想有人同你深入解讀問題？" options={TREEHOLE_DEEP_INTERPRETATIONS} value={deepInterpretation} onChange={setDeepInterpretation} />
@@ -255,13 +259,18 @@ export default function TreeholeSubmission() {
                     {contactRequired && (
                       <motion.div initial={reduceMotion ? false : { opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={reduceMotion ? undefined : { opacity: 0, height: 0 }} className="overflow-hidden">
                         <FieldLabel htmlFor="treehole-contact" required>你嘅聯絡方式</FieldLabel>
-                        <input id="treehole-contact" value={contactMethod} onChange={(event) => setContactMethod(event.target.value)} required={contactRequired} maxLength={255} placeholder="IG / WhatsApp / Telegram 都得" className="treehole-input" />
+                        <input id="treehole-contact" name="contactMethod" autoComplete="off" value={contactMethod} onChange={(event) => setContactMethod(event.target.value)} required={contactRequired} maxLength={255} placeholder="IG / WhatsApp / Telegram 都得" className="treehole-input" />
                         <p className="mt-2 text-xs" style={{ color: "var(--text-3)" }}>只會按你選擇嘅用途聯絡你。</p>
                       </motion.div>
                     )}
                   </AnimatePresence>
 
                   {formError && <p id="treehole-error" className="text-sm" role="alert" style={{ color: "var(--red-bright)" }}>{formError}</p>}
+
+                  <div className="flex items-start gap-3 rounded-xl p-3" style={{ background: "var(--bg-card)", border: "1px solid var(--line)" }}>
+                    <input id="treehole-consent" name="privacyConsent" type="checkbox" autoComplete="off" checked={privacyConsent} onChange={(event) => setPrivacyConsent(event.target.checked)} required className="mt-1 accent-[var(--gold)]" />
+                    <label htmlFor="treehole-consent" className="text-xs leading-6" style={{ color: "var(--text-3)" }}>我已閱讀並同意 <Link href="/privacy" className="underline" style={{ color: "var(--gold)" }}>私隱政策</Link>，明白投稿會以匿名方式處理。</label>
+                  </div>
 
                   <button type="submit" disabled={!isReady} aria-busy={isSubmitting} className="flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-sm font-bold transition-all active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45" style={{ background: "linear-gradient(135deg, var(--red), var(--gold))", color: "white" }}>
                     {isSubmitting ? (
@@ -287,10 +296,26 @@ function FieldLabel({ htmlFor, required, children }: { htmlFor: string; required
   return <label htmlFor={htmlFor} className="mb-2 block text-sm font-bold" style={{ color: "var(--text)" }}>{children} {required && <span style={{ color: "var(--red-bright)" }}>*</span>}</label>;
 }
 
-function SelectField({ id, label, value, onChange, options, placeholder, required }: { id: string; label: string; value: string; onChange: (value: string) => void; options: readonly string[]; placeholder: string; required?: boolean }) {
-  return <div><FieldLabel htmlFor={id} required={required}>{label}</FieldLabel><select id={id} value={value} onChange={(event) => onChange(event.target.value)} required={required} className="treehole-input"><option value="">{placeholder}</option>{options.map((option) => <option key={option} value={option}>{option}</option>)}</select></div>;
+function SelectField({ id, name, label, value, onChange, options, placeholder, required }: { id: string; name: string; label: string; value: string; onChange: (value: string) => void; options: readonly string[]; placeholder: string; required?: boolean }) {
+  return <div><FieldLabel htmlFor={id} required={required}>{label}</FieldLabel><select id={id} name={name} autoComplete="off" value={value} onChange={(event) => onChange(event.target.value)} required={required} className="treehole-input"><option value="">{placeholder}</option>{options.map((option) => <option key={option} value={option}>{option}</option>)}</select></div>;
 }
 
 function RadioGroup({ label, options, value, onChange }: { label: string; options: readonly string[]; value: string; onChange: (value: string) => void }) {
-  return <fieldset><legend className="mb-3 text-sm font-bold" style={{ color: "var(--text)" }}>{label} <span style={{ color: "var(--red-bright)" }}>*</span></legend><div className="space-y-2">{options.map((option) => <label key={option} className="flex cursor-pointer items-start gap-3 rounded-xl px-3 py-2.5 transition-colors" style={{ background: value === option ? "rgba(201,164,92,0.10)" : "var(--bg-card)", border: `1px solid ${value === option ? "var(--gold)" : "var(--line)"}` }}><input type="radio" name={label} value={option} checked={value === option} onChange={() => onChange(option)} className="mt-1 accent-[var(--gold)]" /><span className="text-sm leading-6" style={{ color: "var(--text-2)" }}>{option}</span></label>)}</div></fieldset>;
+  const groupName = label.startsWith("接唔接受") ? "publicPermission" : "deepInterpretation";
+  return (
+    <fieldset>
+      <legend className="mb-3 text-sm font-bold" style={{ color: "var(--text)" }}>{label} <span style={{ color: "var(--red-bright)" }}>*</span></legend>
+      <div className="space-y-2">
+        {options.map((option, index) => {
+          const id = `treehole-${groupName}-${index}`;
+          return (
+            <div key={option} className="rounded-xl px-3 py-2.5 transition-colors" style={{ background: value === option ? "rgba(201,164,92,0.10)" : "var(--bg-card)", border: `1px solid ${value === option ? "var(--gold)" : "var(--line)"}` }}>
+              <input id={id} type="radio" name={groupName} autoComplete="off" value={option} checked={value === option} onChange={() => onChange(option)} className="mr-3 mt-1 accent-[var(--gold)]" />
+              <label htmlFor={id} className="cursor-pointer text-sm leading-6" style={{ color: "var(--text-2)" }}>{option}</label>
+            </div>
+          );
+        })}
+      </div>
+    </fieldset>
+  );
 }

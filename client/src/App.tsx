@@ -10,6 +10,10 @@ import Footer from "./components/Footer";
 
 // ── Critical path: eagerly loaded (above the fold on first visit) ─────────────
 import Portal from "@/pages/Portal";
+import Blog from "@/pages/Blog";
+import BlogPost from "@/pages/BlogPost";
+import Episodes from "@/pages/Episodes";
+import EpisodeDetail from "@/pages/EpisodeDetail";
 
 // ── Lazy-loaded: split into separate chunks ────────────────────────────────────
 const About = lazy(() => import("./pages/About"));
@@ -17,18 +21,15 @@ const Services = lazy(() => import("./pages/Services"));
 const PodcastsPage = lazy(() => import("./pages/PodcastsPage"));
 const Partnership = lazy(() => import("./pages/Partnership"));
 const MonetizationPlan = lazy(() => import("./pages/MonetizationPlan"));
-const Blog = lazy(() => import("./pages/Blog"));
-const BlogPost = lazy(() => import("./pages/BlogPost"));
 const BlogSubmit = lazy(() => import("./pages/BlogSubmit"));
 const TreeholeSubmission = lazy(() => import("./pages/TreeholeSubmission"));
 const Booking = lazy(() => import("./pages/Booking"));
 const Contact = lazy(() => import("./pages/Contact"));
 const HostRecruitment = lazy(() => import("@/pages/HostRecruitment"));
-const Episodes = lazy(() => import("@/pages/Episodes"));
-const EpisodeDetail = lazy(() => import("@/pages/EpisodeDetail"));
 const Investors = lazy(() => import("@/pages/Investors"));
 const Welcome = lazy(() => import("@/pages/Welcome"));
-const Privacy = lazy(() => import("@/pages/Privacy"));
+const Privacy = lazy(() => import("./pages/Privacy"));
+const FormSuccess = lazy(() => import("./pages/FormSuccess"));
 
 // ── Admin (largest chunk, never needed by regular users) ──────────────────────
 const Admin = lazy(() => import("@/pages/Admin"));
@@ -42,6 +43,8 @@ const MysticMasterDetail = lazy(() => import("@/pages/mystic/MysticMasterDetail"
 const MysticVideos = lazy(() => import("@/pages/mystic/MysticVideos"));
 const MysticArticles = lazy(() => import("@/pages/mystic/MysticArticles"));
 const MysticPricing = lazy(() => import("@/pages/mystic/MysticPricing"));
+const MysticPaymentSuccess = lazy(() => import("@/pages/mystic/MysticPaymentSuccess"));
+const MysticPaymentCancelled = lazy(() => import("@/pages/mystic/MysticPaymentCancelled"));
 const MysticBazi = lazy(() => import("@/pages/mystic/MysticBazi"));
 const MysticServices = lazy(() => import("@/pages/mystic/MysticServices"));
 const MysticFunnel = lazy(() => import("@/pages/mystic/MysticFunnel"));
@@ -75,15 +78,19 @@ function Router() {
         <Route path="/about" component={About} />
         <Route path="/services" component={Services} />
         <Route path="/podcasts" component={PodcastsPage} />
+        <Route path="/partnership/success"><FormSuccess kind="partnership" /></Route>
         <Route path="/partnership" component={Partnership} />
         <Route path="/monetization-plan" component={MonetizationPlan} />
         <Route path="/blog" component={Blog} />
         <Route path="/blog/submit" component={BlogSubmit} />
+        <Route path="/treehole/success"><FormSuccess kind="treehole" /></Route>
         <Route path="/treehole" component={TreeholeSubmission} />
         <Route path="/blog/:slug">
           {(params) => <BlogPost slug={params.slug} />}
         </Route>
+        <Route path="/booking/success"><FormSuccess kind="booking" /></Route>
         <Route path="/booking" component={Booking} />
+        <Route path="/contact/success"><FormSuccess kind="contact" /></Route>
         <Route path="/contact" component={Contact} />
         <Route path="/host-recruitment" component={HostRecruitment} />
         <Route path="/episodes" component={Episodes} />
@@ -102,6 +109,8 @@ function Router() {
         <Route path="/mystic/videos" component={MysticVideos} />
         <Route path="/mystic/articles" component={MysticArticles} />
         <Route path="/mystic/pricing" component={MysticPricing} />
+        <Route path="/mystic/payment/success" component={MysticPaymentSuccess} />
+        <Route path="/mystic/payment/cancelled" component={MysticPaymentCancelled} />
         <Route path="/mystic/bazi" component={MysticBazi} />
         <Route path="/mystic/services" component={MysticServices} />
         <Route path="/mystic/funnel" component={MysticFunnel} />

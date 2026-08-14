@@ -136,3 +136,40 @@
 - [x] 儲存 SEO 技術修復為可發布版本
 - [x] 將頁尾所有「6B Media」統一為「6B PODCASTS」，補充防回歸測試並驗證桌面及流動版顯示
 - [x] 儲存頁尾品牌名稱統一版本
+- [x] 盤點 booking、treehole、partnership、contact 的 HTTP 提交方式、欄位識別、私隱同意、追蹤資料與成功狀態
+- [x] 將四個公開表格統一為 POST 提交，補足唯一 id／name／autocomplete、htmlFor、私隱政策連結及必選同意欄
+- [x] 阻止表格個人資料與留言內容流入網址、UTM、GA4、Meta Pixel 及 Clarity，並為 treehole 加入 Clarity 遮罩
+- [x] 依規格調整預約欄位：WhatsApp／電話必填、電郵選填、偏好聯絡方式及防重複提交成功頁
+- [x] 修正 partnership 空白 name／id，補充合作入門方案、交付、製作時間、價格起點及香港用語
+- [x] 更新 /services 指標為 23K、535，移除無正式來源的 35% 年均增長，聚焦指定服務範圍
+- [x] 修正 Markdown 顯示、節目內頁關聯內容與 VideoObject 所需欄位
+- [x] 盤點並實作首頁、blog、文章及 episode 的 SSR／預先輸出或安全快取方案，避免首屏空內容
+- [x] 統一會員頁錯字、免費權益、每日一次基本分析、Premium／VIP 沙盒 checkout 與 VIP 條款
+- [x] 建立 GA4、Meta Pixel、Clarity 事件清單，驗證指定轉換事件及私隱安全的傳送內容
+- [x] 補充第二輪 P0／P1 自動化測試、桌面／流動版逐頁驗證與修改紀錄
+- [x] 儲存第二輪網站修正版本並交付逐頁結果與測試證據
+- [x] 將 Contact 頁「查詢類型」改為具唯一 id／name 的表單欄位，並讓 label 以 htmlFor 正確連接
+- [x] 補充公開表格結構回歸測試，逐頁驗證 booking／treehole／partnership／contact 的 input、select、textarea 皆具 id、name、autocomplete，且可見 label 有正確 htmlFor
+- [ ] 以可登入 Microsoft Clarity 專案的帳戶確認 Strict Masking 已開啟（程式層樹窿遮罩已完成）
+- [x] 為 booking／contact／partnership 補上 Clarity 遮罩策略，並將公開表格個資／留言錄影保護納入回歸測試
+- [x] 為 Treehole 所有 select 與 radio 欄位補上逐欄結構斷言，確認 id、name、autocomplete 及 label htmlFor 完整覆蓋
+- [x] 明確枚舉 Treehole 的 publicPermission 及 deepInterpretation 每個 radio option，測試 group name、id、htmlFor 及 autocomplete
+- [x] 擴充公開表格結構測試，逐頁枚舉四個表格每個 input、select、textarea（包括條件欄位）而非只驗共用元件片段
+- [x] 實際渲染 booking／contact／partnership／treehole，逐一斷言每個可見 form control 的 id、name、autocomplete 與對應 label htmlFor
+- [x] 為 Treehole 新增完整 rendered 結構測試，逐項驗證 website、nickname、story、consent 及條件顯示 contact 欄位的 id、name、autocomplete、label htmlFor
+- [x] 為 EpisodeDetail 建立真正相關內容邏輯，按頻道及標題／描述關鍵字篩選影片，並按主題選出相關文章
+- [x] 為節目頁建立可核對的嘉賓資料來源與顯示策略，資料不足時清楚標示而不猜測
+- [x] 逐頁驗證首頁、blog、文章及 episode 首訪不再只見 header／footer；如未達成，補上真正 SSR 或預先輸出方案
+- [x] 定義 Premium 與 VIP 的 Stripe 訂閱產品、權益、取消安排及成功／取消頁文案，避免與免費版權益矛盾
+- [ ] 待 Settings → Payment 提供 Stripe 金鑰後，建立受保護的 Checkout Session、付款成功／取消頁及不含個資的付款事件
+- [ ] 待 webhook signing secret 可用後，建立 `/api/stripe/webhook` 驗證、測試事件回應及必要 Stripe 識別碼處理
+- [x] 統一免費版為每日一次基本分析，移除限時免費矛盾與錯字，並列明 VIP 真人諮詢次數、有效期、預約、改期及取消安排
+- [ ] 於 Stripe 帳戶連接後建立 Premium／VIP 訂閱產品對應、受保護 Checkout Session、成功／取消頁及不可包含個資的付款事件
+- [ ] 於 webhook signing secret 可用後驗證 `/api/stripe/webhook`、測試事件及付款完成後的會員權益處理
+- [x] 於已確認的「路邊PODCASTS 沙盒」建立 Premium HK$98／月與 VIP HK$298／月測試訂閱產品及 Price
+- [x] 以 Stripe 測試付款驗證 Premium／VIP Checkout，不向真實客戶收費
+- [x] 使用 Stripe 測試卡完成一次 Premium 沙盒訂閱，核對結帳、成功返回及 Stripe 訂閱狀態
+- [x] 將 Stripe 沙盒成功返回加入非個資的 Checkout Session 識別，僅在成功返回時記錄測試 purchase 事件
+- [x] 取得一次含 `{CHECKOUT_SESSION_ID}` 的新 Stripe 沙盒成功返回後，驗證 purchase 事件實際送達各分析平台
+- [x] 使用已確認的第二次 Premium Stripe 沙盒測試訂閱，驗證成功返回帶有 session_id、purchase 事件防重複邏輯及付款取消頁
+- [x] 為 Stripe 付款流程加入獨立取消頁與清楚文案；若 Payment Link 無法設定取消返回，記錄技術限制及轉為 Checkout Session 的條件

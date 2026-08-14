@@ -33,7 +33,10 @@ vi.mock("../client/src/lib/trpc", () => ({
 
 vi.mock("../client/src/hooks/useSEO", () => ({ useSEO: () => undefined }));
 vi.mock("sonner", () => ({ toast: { success: toastSuccess } }));
-vi.mock("wouter", () => ({ Link: ({ children, ...props }: React.ComponentPropsWithoutRef<"a">) => <a {...props}>{children}</a> }));
+vi.mock("wouter", () => ({
+  Link: ({ children, ...props }: React.ComponentPropsWithoutRef<"a">) => <a {...props}>{children}</a>,
+  useLocation: () => ["/treehole", vi.fn()],
+}));
 vi.mock("framer-motion", () => {
   const componentCache = new Map<string, React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>>>();
   const motion = new Proxy({}, {
@@ -56,6 +59,7 @@ vi.mock("framer-motion", () => {
 });
 
 import TreeholeSubmission from "../client/src/pages/TreeholeSubmission";
+import { TREEHOLE_DEEP_INTERPRETATIONS, TREEHOLE_PUBLIC_PERMISSIONS } from "../shared/treehole";
 
 afterEach(() => {
   mutate.mockReset();
@@ -77,7 +81,61 @@ describe("感情樹窿表單互動", () => {
     await user.click(screen.getByLabelText("可以，匿名處理就得"));
     await user.click(screen.getByLabelText(needsContact ? "想，可以聯絡我" : "暫時唔需要"));
     if (needsContact) await user.type(await screen.findByLabelText(/你嘅聯絡方式/), "IG: @kwuntongk");
+    await user.click(screen.getByLabelText(/我已閱讀並同意/));
   }
+
+  it("renders every select and radio option with explicit field identifiers and accessible labels", () => {
+    render(<TreeholeSubmission />);
+
+    [
+      ["性別", "treehole-gender", "gender"],
+      ["年齡層", "treehole-age", "ageGroup"],
+      ["感情狀態", "treehole-status", "relationshipStatus"],
+      ["呢個問題困擾咗你幾耐", "treehole-duration", "problemDuration"],
+    ].forEach(([label, id, name]) => {
+      const control = screen.getByLabelText(new RegExp(label)) as HTMLSelectElement;
+      expect(control.id).toBe(id);
+      expect(control.name).toBe(name);
+      expect(control.getAttribute("autocomplete")).toBe("off");
+    });
+
+    [
+      ["publicPermission", TREEHOLE_PUBLIC_PERMISSIONS],
+      ["deepInterpretation", TREEHOLE_DEEP_INTERPRETATIONS],
+    ].forEach(([groupName, options]) => {
+      (options as readonly string[]).forEach((option, index) => {
+        const radio = screen.getByLabelText(option) as HTMLInputElement;
+        expect(radio.type).toBe("radio");
+        expect(radio.name).toBe(groupName);
+        expect(radio.id).toBe(`treehole-${groupName}-${index}`);
+        expect(radio.getAttribute("autocomplete")).toBe("off");
+        const label = document.querySelector(`label[for="${radio.id}"]`);
+        expect(label?.getAttribute("for")).toBe(radio.id);
+        expect(label?.textContent).toContain(option);
+      });
+    });
+  });
+
+  it("renders every basic, privacy and conditional input with a direct label association", () => {
+    render(<TreeholeSubmission />);
+    const expectControl = (id: string, name: string) => {
+      const control = document.getElementById(id) as HTMLInputElement | HTMLTextAreaElement | null;
+      expect(control, `${id} should render`).not.toBeNull();
+      expect(control?.getAttribute("name")).toBe(name);
+      expect(control?.getAttribute("autocomplete")).toBe("off");
+      const label = document.querySelector(`label[for="${id}"]`);
+      expect(label, `${id} should have an associated label`).not.toBeNull();
+      expect(label?.getAttribute("for")).toBe(id);
+    };
+
+    expectControl("treehole-website", "website");
+    expectControl("treehole-nickname", "nickname");
+    expectControl("treehole-story", "content");
+    expectControl("treehole-consent", "privacyConsent");
+
+    fireEvent.click(screen.getByLabelText("想，可以聯絡我"));
+    expectControl("treehole-contact", "contactMethod");
+  });
 
   it("enforces revised required fields, reveals contact conditionally, submits anonymously, then shows success feedback", async () => {
     const user = userEvent.setup();

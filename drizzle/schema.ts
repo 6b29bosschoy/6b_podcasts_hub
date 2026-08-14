@@ -68,8 +68,10 @@ export type InsertSubscription = typeof subscriptions.$inferInsert;
 export const bookings = mysqlTable("bookings", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 100 }).notNull(),
-  email: varchar("email", { length: 320 }).notNull(),
+  email: varchar("email", { length: 320 }),
   phone: varchar("phone", { length: 30 }),
+  preferredContactMethod: mysqlEnum("preferredContactMethod", ["whatsapp", "phone"]).default("whatsapp").notNull(),
+  privacyConsent: boolean("privacyConsent").default(false).notNull(),
   serviceType: mysqlEnum("serviceType", ["fengshui", "bazi", "tarot", "spiritual", "course"]).notNull(),
   preferredDate: varchar("preferredDate", { length: 20 }),
   preferredTime: varchar("preferredTime", { length: 20 }),
@@ -86,8 +88,10 @@ export type InsertBooking = typeof bookings.$inferInsert;
 export const contacts = mysqlTable("contacts", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 100 }).notNull(),
+  company: varchar("company", { length: 255 }),
   email: varchar("email", { length: 320 }).notNull(),
   phone: varchar("phone", { length: 30 }),
+  privacyConsent: boolean("privacyConsent").default(false).notNull(),
   inquiryType: mysqlEnum("inquiryType", ["collaboration", "guest", "feedback", "other"]).default("other").notNull(),
   subject: varchar("subject", { length: 255 }).notNull(),
   message: text("message").notNull(),
@@ -128,6 +132,7 @@ export const readerSubmissions = mysqlTable("reader_submissions", {
   publicPermission: varchar("publicPermission", { length: 64 }).default("not_specified").notNull(),
   deepInterpretation: varchar("deepInterpretation", { length: 32 }).default("not_specified").notNull(),
   contactMethod: varchar("contactMethod", { length: 255 }),
+  privacyConsent: boolean("privacyConsent").default(false).notNull(),
   // UTM tracking for content promotion attribution
   utmSource: varchar("utmSource", { length: 255 }),
   utmMedium: varchar("utmMedium", { length: 255 }),

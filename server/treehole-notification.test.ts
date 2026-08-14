@@ -39,6 +39,7 @@ describe("感情樹窿管理通知", () => {
       publicPermission: "可以，但請先聯絡我確認",
       deepInterpretation: "想，可以聯絡我",
       contactMethod: "IG: @kwuntongk",
+      privacyConsent: true,
     });
 
     expect(createReaderSubmission).toHaveBeenCalledWith(expect.objectContaining({

@@ -49,6 +49,7 @@ describe("Partnership page - contact.submit (collaboration inquiryType)", () => 
         subject: "合作洽談查詢",
         message: "我們希望進行品牌置入合作，請聯絡我們討論詳情。",
         phone: "98765432",
+        privacyConsent: true,
       });
     } catch (err: unknown) {
       // Only DB connection errors are acceptable in test environment

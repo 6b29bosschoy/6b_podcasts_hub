@@ -98,6 +98,8 @@ describe("Welcome Landing Page - backend procedures used by landing page", () =>
         preferredDate: "2026-04-01",
         preferredTime: "14:00",
         message: "希望預約風水諮詢服務",
+        preferredContactMethod: "whatsapp",
+        privacyConsent: true,
       });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);

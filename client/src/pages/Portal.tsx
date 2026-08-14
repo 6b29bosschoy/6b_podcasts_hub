@@ -246,7 +246,7 @@ export default function Portal() {
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/treehole" className="btn-gold" onClick={() => trackEvent("treehole_submit", { source: "homepage_hero" })}>
+            <Link href="/treehole" className="btn-gold">
               <ArrowDown className="w-4 h-4" /> 匿名講低你嘅感情困局
             </Link>
             <a

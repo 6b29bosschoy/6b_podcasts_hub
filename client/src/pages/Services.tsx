@@ -5,86 +5,74 @@ import { JsonLd, buildBreadcrumbSchema, SITE_URL } from "@/components/JsonLd";
 const SERVICES = [
   {
     icon: "🎬",
-    title: "YouTube 訪問製作",
-    desc: "專業的訪談節目策劃、拍攝與後期製作，打造高質量的內容體驗。我們深知如何透過鏡頭捕捉最真實的故事，讓每一集節目都成為觀眾心中的經典。",
+    title: "品牌訪談／節目贊助",
+    desc: "以真誠對話將品牌放入人物、兩性與都市情感節目，讓合作訊息有合適嘅內容位置，而唔係硬性置入。",
     features: [
       "節目主題策劃與腳本撰寫",
-      "專業攝影與燈光設備",
-      "高質量後期剪輯與特效",
-      "字幕製作與多語言支援",
+      "嘉賓及品牌訊息整合",
+      "長片及精華片發布規劃",
+      "合作後成效摘要",
     ],
     color: "var(--red)",
   },
   {
     icon: "📣",
-    title: "宣傳與推廣",
-    desc: "量身定制的宣傳策略，透過多元渠道擴大您的品牌影響力。我們運用數據分析與創意思維，確保每一次推廣都能精準觸達目標受眾。",
+    title: "長短片內容製作",
+    desc: "由訪談構思、錄影到剪輯，將一個清晰故事拆成長片、精華片同社交平台素材，方便品牌持續使用。",
     features: [
-      "社群媒體內容策劃與發布",
-      "跨平台整合行銷方案",
-      "KOL / 網紅合作媒合",
-      "品牌形象建立與維護",
-    ],
-    color: "var(--gold)",
-  },
-  {
-    icon: "📈",
-    title: "市場行銷",
-    desc: "數據驅動的行銷方案，精準觸達目標受眾，提升品牌價值。我們結合市場洞察與創意執行，為您打造具有競爭力的行銷策略。",
-    features: [
-      "市場調研與受眾分析",
-      "品牌定位與差異化策略",
-      "數位廣告投放與優化",
-      "成效追蹤與數據報告",
-    ],
-    color: "var(--gold)",
-  },
-  {
-    icon: "▶️",
-    title: "影片流量優化",
-    desc: "運用 SEO 與演算法優化技術，大幅提升影片觀看次數與互動率。我們深入研究平台演算法，確保您的內容能獲得最大曝光。",
-    features: [
-      "YouTube SEO 優化（標題、描述、標籤）",
-      "縮圖設計與 A/B 測試",
-      "觀眾留存率分析與改善",
-      "演算法友好的內容策略",
+      "Podcast／訪談長片製作",
+      "9:16 精華片剪輯",
+      "字幕及封面版本",
+      "發布格式整理",
     ],
     color: "var(--gold)",
   },
   {
     icon: "🎙️",
-    title: "場地租用",
-    desc: "提供專業的播客錄影場地，配備完善的攝影設備與舒適的環境。無論是節目錄制、訪談拍攝還是內容創作，我們的場地都能滿足您的需求。",
+    title: "Podcast 場地製作",
+    desc: "提供適合人物訪談及 Podcast 錄影嘅場地與基本製作配套，減少品牌自行處理器材、燈光同收音嘅時間。",
     features: [
-      "專業攝影棚與燈光設備",
-      "舒適的訪談區域與休息空間",
-      "高速網路與音響設備",
-      "彈性租用時段（按小時 / 半天 / 全天）",
+      "訪談場景及燈光配置",
+      "基本收音及錄影支援",
+      "按時段安排拍攝",
+      "可加配剪輯服務",
+    ],
+    color: "var(--gold)",
+  },
+  {
+    icon: "💬",
+    title: "社交平台內容合作",
+    desc: "按品牌目標設計 Facebook、IG、Threads 或 YouTube 內容合作，重點放喺能引起觀眾互動同分享嘅內容角度。",
+    features: [
+      "社交平台內容主題規劃",
+      "KOL／嘉賓合作配合",
+      "短片、圖文及 caption 建議",
+      "月度內容節奏整理",
     ],
     color: "var(--gold)",
   },
 ];
 
 const STATS = [
-  { value: "20.6K+", label: "YouTube 訂閱者" },
-  { value: "486+", label: "節目集數" },
-  { value: "35%", label: "年均觀眾增長" },
+  { value: "23K+", label: "YouTube 訂閱者" },
+  { value: "535+", label: "節目集數" },
+  { value: "4", label: "核心合作服務" },
   { value: "4.2K+", label: "Instagram 追蹤者" },
 ];
 
 export default function Services() {
   useEffect(() => {
-    document.title = "服務項目｜YouTube訪談製作、宣傳推廣、場地租用";
+    document.title = "服務項目｜品牌訪談、內容製作、Podcast 場地及社交合作";
     const setMeta = (name: string, content: string, prop = false) => {
       const attr = prop ? "property" : "name";
       let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
       if (!el) { el = document.createElement("meta"); el.setAttribute(attr, name); document.head.appendChild(el); }
       el.setAttribute("content", content);
     };
-    setMeta("description", "路邊電台提供 YouTube 訪談製作、品牌宣傳推廣、場地租用及流量優化服務，為你的品牌建立最強大的內容行销策略。");
-    setMeta("keywords", "YouTube訪談製作,場地租用,品牌宣傳,內容行销,香港Podcast制作,流量優化,路邊電台服務");
+    setMeta("description", "6B PODCASTS 提供品牌訪談及節目贊助、長短片內容製作、Podcast 場地製作與社交平台內容合作，按品牌需要度身訂造合作安排。");
+    setMeta("keywords", "品牌訪談,節目贊助,長短片內容製作,Podcast場地製作,社交平台內容合作,香港Podcast錄影,6B PODCASTS");
     setMeta("og:title", "服務項目｜路邊電台 × 路邊玄學堂", true);
-    setMeta("og:description", "YouTube 訪談製作、宣傳推廣、場地租用及流量優化服務一站式提供。", true);
+    setMeta("og:description", "品牌訪談、節目贊助、長短片內容製作、Podcast 場地製作及社交平台內容合作。", true);
     return () => { document.title = "路邊電台 × 路邊玄學堂｜香港最真實人物訪談"; };
   }, []);
   const servicesSchemas = [
@@ -92,7 +80,7 @@ export default function Services() {
       "@context": "https://schema.org",
       "@type": "ItemList",
       name: "路邊電台服務項目",
-      description: "路邊電台提供 YouTube 訪談製作、宣傳推廣、場地租用及流量優化服務",
+      description: "路邊電台提供品牌訪談及節目贊助、長短片內容製作、Podcast 場地製作與社交平台內容合作",
       url: `${SITE_URL}/services`,
       numberOfItems: SERVICES.length,
       itemListElement: SERVICES.map((s, i) => ({
@@ -124,7 +112,7 @@ export default function Services() {
           name: "路邊電台提供哪些服務？",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "路邊電台提供 YouTube 訪談製作、宣傳推廣、市場行銷、影片流量優化及場地租用五大服務，全面支援品牌內容行銷需求。",
+            text: "路邊電台提供品牌訪談及節目贊助、長短片內容製作、Podcast 場地製作及社交平台內容合作，按品牌目標度身訂造。",
           },
         },
         {
@@ -140,7 +128,7 @@ export default function Services() {
           name: "場地租用有哪些設備？",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "場地配備專業攝影棚、燈光設備、高速網路、音響設備及訪談區域，支持按小時、半天或全天彈性租用。",
+            text: "場地適合 Podcast 錄影及人物訪談，可按拍攝時段和製作需要安排基本燈光、收音及剪輯配套。",
           },
         },
       ],
@@ -167,7 +155,7 @@ export default function Services() {
             服務項目
           </h1>
           <p className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: "var(--text-2)" }}>
-            我們提供全方位的媒體製作與行銷服務，從內容創作到流量優化，助您在數位時代建立強大的品牌影響力。
+            專注品牌訪談、內容製作、Podcast 場地同社交平台合作。由故事角度出發，再按品牌目標度身訂造交付安排。
           </p>
         </div>
       </section>
@@ -241,9 +229,9 @@ export default function Services() {
         <div className="container">
           <div className="glass-card rounded-2xl p-10 md:p-14 text-center" style={{ border: "1px solid var(--red)" }}>
             <div className="text-xs font-bold tracking-widest mb-4" style={{ color: "var(--red)" }}>GET STARTED</div>
-            <h2 className="text-3xl font-black mb-4" style={{ color: "var(--text)" }}>準備好提升您的品牌影響力了嗎？</h2>
+            <h2 className="text-3xl font-black mb-4" style={{ color: "var(--text)" }}>想傾下你嘅品牌內容方向？</h2>
             <p className="text-sm mb-8 max-w-lg mx-auto" style={{ color: "var(--text-3)" }}>
-              無論您需要單一服務或全方位的解決方案，我們都能為您量身打造最適合的策略。
+              無論係單次訪談、節目贊助，定係長短片內容合作，都可以先講低目標同預算範圍。
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link

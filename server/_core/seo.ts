@@ -1,4 +1,4 @@
-import { getBlogPostBySlug } from "../db";
+import { getBlogPostBySlug, getYoutubeCache } from "../db";
 
 export const CANONICAL_ORIGIN = "https://6bpodcasts.com";
 export const SITE_TITLE = "6B Podcast｜香港兩性關係 Podcast・感情樹窿・玄學拆局";
@@ -39,6 +39,7 @@ type SeoPage = {
   h1: string;
   intro: string;
   bodyParagraphs?: string[];
+  structuredData?: unknown[];
 };
 
 export type SeoDocument = SeoPage & {
@@ -256,6 +257,13 @@ function normalisePath(pathname: string): string {
   return clean.startsWith("/") ? clean : `/${clean}`;
 }
 
+function humanDurationToIso(duration: string): string {
+  const values = duration.split(":").map(Number);
+  if (!values.every(Number.isFinite)) return "PT0S";
+  const [hours, minutes, seconds] = values.length === 3 ? values : [0, values[0] ?? 0, values[1] ?? 0];
+  return `PT${hours ? `${hours}H` : ""}${minutes ? `${minutes}M` : ""}${seconds ?? 0}S`;
+}
+
 export function getHomeRedirectTarget(originalUrl: string): string | null {
   const queryIndex = originalUrl.indexOf("?");
   const pathname = queryIndex === -1 ? originalUrl : originalUrl.slice(0, queryIndex);
@@ -277,6 +285,37 @@ export async function resolveSeoDocument(pathname: string): Promise<SeoDocument>
   const episodeMatch = path.match(/^\/episodes\/([^/]+)$/);
 
   if (episodeMatch) {
+    const videoId = episodeMatch[1];
+    try {
+      const cache = await getYoutubeCache(`video:${videoId}`) ?? await getYoutubeCache(`video:${videoId}:stale`);
+      const cached = cache ? JSON.parse(cache.data) as { video?: { id: string; title: string; description: string; thumbnail: string; publishedAt: string; duration: string } } : null;
+      const video = cached?.video;
+      if (video) {
+        const summary = getArticleParagraphs(video.description).slice(0, 3).join(" ") || "收聽路邊電台最新節目。";
+        return {
+          path,
+          canonicalUrl: `${CANONICAL_ORIGIN}${path}`,
+          title: `${video.title}｜路邊電台節目`,
+          description: summary.slice(0, 160),
+          h1: video.title,
+          intro: summary,
+          bodyParagraphs: [summary],
+          structuredData: [{
+            "@context": "https://schema.org",
+            "@type": "VideoObject",
+            name: video.title,
+            description: summary,
+            thumbnailUrl: video.thumbnail,
+            uploadDate: video.publishedAt,
+            duration: humanDurationToIso(video.duration),
+            embedUrl: `https://www.youtube.com/embed/${video.id}`,
+            url: `${CANONICAL_ORIGIN}${path}`,
+          }],
+        };
+      }
+    } catch (error) {
+      console.warn("[SEO] Could not load cached episode metadata", error);
+    }
     return {
       path,
       canonicalUrl: `${CANONICAL_ORIGIN}${path}`,
@@ -333,9 +372,10 @@ export function renderSeoHead(document: SeoDocument): string {
   const title = escapeHtml(document.title);
   const description = escapeHtml(document.description);
   const canonicalUrl = escapeHtml(document.canonicalUrl);
-  const jsonLd = document.path === "/"
-    ? homeJsonLd.map((schema) => `<script type="application/ld+json">${JSON.stringify(schema).replace(/</g, "\\u003c")}</script>`).join("\n")
-    : "";
+  const jsonLdSchemas = [...(document.path === "/" ? homeJsonLd : []), ...(document.structuredData ?? [])];
+  const jsonLd = jsonLdSchemas
+    .map((schema) => `<script type="application/ld+json">${JSON.stringify(schema).replace(/</g, "\\u003c")}</script>`)
+    .join("\n");
 
   return [
     `<title>${title}</title>`,

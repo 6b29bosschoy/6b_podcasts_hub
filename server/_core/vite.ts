@@ -5,7 +5,8 @@ import { nanoid } from "nanoid";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import viteConfig from "../../vite.config";
-import { injectSeoDocument, resolveSeoDocument } from "./seo";
+import { injectSeoDocument } from "./seo";
+import { getPrerenderedSeoDocument } from "./prerenderCache";
 
 export async function setupVite(app: Express, server: Server) {
   const serverOptions = {
@@ -33,9 +34,9 @@ export async function setupVite(app: Express, server: Server) {
         "index.html"
       );
 
-      // Always reload the template and inject crawler-readable route metadata/body.
+      // Always reload the template and inject route-level pre-rendered public metadata/body.
       let template = await fs.promises.readFile(clientTemplate, "utf-8");
-      const seoDocument = await resolveSeoDocument(req.originalUrl);
+      const seoDocument = await getPrerenderedSeoDocument(req.originalUrl);
       template = injectSeoDocument(template, seoDocument);
       template = template.replace(
         `src="/src/main.tsx"`,
@@ -78,7 +79,7 @@ export function serveStatic(app: Express) {
   app.use("*", async (req, res, next) => {
     try {
       const template = await fs.promises.readFile(path.resolve(distPath, "index.html"), "utf-8");
-      const seoDocument = await resolveSeoDocument(req.originalUrl);
+      const seoDocument = await getPrerenderedSeoDocument(req.originalUrl);
       res
         .status(200)
         .set({ "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" })

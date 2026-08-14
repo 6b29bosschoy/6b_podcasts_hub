@@ -35,10 +35,11 @@ export default function Footer() {
             </div>
             <div className="flex flex-col gap-2">
               {[
-                { label: "首頁", href: "/home" },
+                { label: "首頁", href: "/" },
                 { label: "嘉賓專欄", href: "/blog" },
                 { label: "玄學服務預約", href: "/booking" },
                 { label: "聯絡我們", href: "/contact" },
+                { label: "私隱政策", href: "/privacy" },
                 { label: "嘉賓投稿", href: "/blog/submit" },
                 { label: "主持招募", href: "/host-recruitment" },
                 { label: "投資者關係", href: "/investors" },

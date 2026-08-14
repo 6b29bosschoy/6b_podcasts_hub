@@ -504,7 +504,7 @@ export default function MysticAnalysis() {
         <div className="max-w-md mx-auto text-center">
           <div className="text-6xl mb-6">🔮</div>
           <h1 className="text-2xl font-black mb-3" style={{ color: "var(--text)" }}>玄學分析工具</h1>
-          <p className="text-sm mb-2" style={{ color: "var(--text-2)" }}>登入後即可使用，每日免費 <span className="font-bold" style={{ color: "var(--gold)" }}>10 次</span> 玄學分析</p>
+          <p className="text-sm mb-2" style={{ color: "var(--text-2)" }}>登入後即可使用，每日一次 <span className="font-bold" style={{ color: "var(--gold)" }}>基本玄學分析</span></p>
           <p className="text-xs mb-8" style={{ color: "var(--text-2)" }}>支援中西玄學 12 個派別 · 阿卡西紀錄 · 即時串流回應</p>
           <div className="rounded-2xl p-6 border mb-6" style={{ background: "var(--bg-card)", borderColor: "rgba(201,164,92,0.3)" }}>
             <div className="grid grid-cols-3 gap-4 mb-4">
@@ -523,7 +523,7 @@ export default function MysticAnalysis() {
           >
             🔐 登入 / 註冊開始使用
           </button>
-          <p className="text-xs mt-3" style={{ color: "var(--text-3)" }}>測試期間全功能免費体驗，無需信用卡</p>
+          <p className="text-xs mt-3" style={{ color: "var(--text-3)" }}>免費版每日提供一次基本分析；完整流年報告屬 Premium 方案內容。</p>
         </div>
       </div>
     );

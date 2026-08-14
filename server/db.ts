@@ -396,7 +396,7 @@ export async function updateHostApplicationStatus(id: number, status: "pending" 
 
 // ── Mystic Usage Helpers ────────────────────────────────────────────────────
 
-const DAILY_FREE_LIMIT = 10;
+const DAILY_FREE_LIMIT = 1;
 
 /** Get today's usage count for a user. Returns 0 if no record. */
 export async function getMysticUsageToday(userId: number): Promise<number> {

@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-import { CheckCircle } from "lucide-react";
-import { Link } from "wouter";
+import { useLocation } from "wouter";
 import { JsonLd, buildBreadcrumbSchema, SITE_URL } from "@/components/JsonLd";
 import { trackEvent } from "@/lib/analytics";
 
@@ -45,59 +44,42 @@ export default function Booking() {
     setMeta("og:description", "線上預約風水諮詢、八字命理、塔羅占卜及身心靈課程，專業玄學師傅為你解決人生問題。", true);
     return () => { document.title = "路邊電台 × 路邊玄學堂｜香港最真實人物訪談"; };
   }, []);
-  const [submitted, setSubmitted] = useState(false);
+  const [, setLocation] = useLocation();
   const [selectedService, setSelectedService] = useState("");
   const [form, setForm] = useState({
     name: "",
     email: "",
     phone: "",
+    preferredContactMethod: "whatsapp" as "whatsapp" | "phone",
     preferredDate: "",
     preferredTime: "",
     message: "",
-    consent: false,
+    privacyConsent: false,
   });
 
   const bookingMutation = trpc.booking.create.useMutation({
-    onSuccess: () => { setSubmitted(true); trackEvent("booking_submit", { service: selectedService }); },
+    onSuccess: () => { trackEvent("booking_submit", { service: selectedService }); setLocation("/booking/success"); },
     onError: (err) => { toast.error(err.message || "預約失敗，請稍後再試。"); },
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedService) { toast.error("請選擇服務類型"); return; }
-    if (!form.consent) { toast.error("請先同意個人資料收集聲明"); return; }
+    if (!form.privacyConsent) { toast.error("請先同意個人資料收集聲明"); return; }
     bookingMutation.mutate({
       ...form,
+      privacyConsent: true,
       serviceType: selectedService as "fengshui" | "bazi" | "tarot" | "spiritual" | "course",
-      phone: form.phone || undefined,
+      email: form.email || undefined,
       preferredDate: form.preferredDate || undefined,
       preferredTime: form.preferredTime || undefined,
       message: form.message || undefined,
     });
   };
-
-  if (submitted) {
-    return (
-      <div className="min-h-screen pt-24 flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto px-4">
-          <CheckCircle size={48} className="mx-auto mb-4" style={{ color: "var(--gold)" }} />
-          <h2 className="text-2xl font-black mb-3" style={{ color: "var(--text)" }}>預約成功！</h2>
-          <p className="text-sm mb-6" style={{ color: "var(--text-3)" }}>
-            我們已收到你的預約申請，團隊會在 24 小時內透過電郵聯絡你確認詳情。
-          </p>
-          <div className="flex gap-3 justify-center">
-            <Link href="/" className="px-5 py-2.5 rounded-lg text-sm font-bold" style={{ background: "var(--red)", color: "white" }}>
-              返回首頁
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   const inputStyle = {
     background: "var(--bg-card)",
@@ -272,7 +254,7 @@ export default function Booking() {
           </div>
 
           {/* Booking Form */}
-          <form onSubmit={handleSubmit} className="glass-card rounded-2xl p-6 md:p-8 flex flex-col gap-5">
+          <form method="post" data-clarity-mask="true" onSubmit={handleSubmit} className="glass-card rounded-2xl p-6 md:p-8 flex flex-col gap-5">
             <h2 className="text-lg font-black" style={{ color: "var(--text)" }}>填寫預約資料</h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -281,24 +263,32 @@ export default function Booking() {
                 <input id="booking-name" name="name" autoComplete="name" value={form.name} onChange={handleChange} required placeholder="你的名字" style={inputStyle} />
               </div>
               <div>
-                <label htmlFor="booking-email" className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>電郵地址 *</label>
-                <input id="booking-email" name="email" type="email" autoComplete="email" value={form.email} onChange={handleChange} required placeholder="your@email.com" style={inputStyle} />
+                <label htmlFor="booking-email" className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>電郵地址（選填）</label>
+                <input id="booking-email" name="email" type="email" autoComplete="email" value={form.email} onChange={handleChange} placeholder="your@email.com" style={inputStyle} />
               </div>
             </div>
 
             <div>
-              <label htmlFor="booking-phone" className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>聯絡電話（選填）</label>
-              <input id="booking-phone" name="phone" type="tel" autoComplete="tel" value={form.phone} onChange={handleChange} placeholder="+852 XXXX XXXX" style={inputStyle} />
+              <label htmlFor="booking-phone" className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>WhatsApp／聯絡電話 *</label>
+              <input id="booking-phone" name="phone" type="tel" autoComplete="tel" value={form.phone} onChange={handleChange} required placeholder="+852 XXXX XXXX" style={inputStyle} />
+            </div>
+
+            <div>
+              <label htmlFor="booking-contact-method" className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>偏好聯絡方法 *</label>
+              <select id="booking-contact-method" name="preferredContactMethod" autoComplete="off" value={form.preferredContactMethod} onChange={handleChange} style={inputStyle} required>
+                <option value="whatsapp">WhatsApp</option>
+                <option value="phone">電話</option>
+              </select>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="booking-date" className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>希望日期（選填）</label>
-                <input id="booking-date" name="preferredDate" type="date" value={form.preferredDate} onChange={handleChange} style={inputStyle} />
+                <input id="booking-date" name="preferredDate" type="date" autoComplete="off" value={form.preferredDate} onChange={handleChange} style={inputStyle} />
               </div>
               <div>
                 <label htmlFor="booking-time" className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>希望時間（選填）</label>
-                <select id="booking-time" name="preferredTime" value={form.preferredTime} onChange={(e) => setForm((p) => ({ ...p, preferredTime: e.target.value }))} style={{ ...inputStyle }}>
+                <select id="booking-time" name="preferredTime" autoComplete="off" value={form.preferredTime} onChange={(e) => setForm((p) => ({ ...p, preferredTime: e.target.value }))} style={{ ...inputStyle }}>
                   <option value="">請選擇時間</option>
                   {TIME_SLOTS.map((t) => <option key={t} value={t}>{t}</option>)}
                 </select>
@@ -307,21 +297,22 @@ export default function Booking() {
 
             <div>
               <label htmlFor="booking-message" className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>備註（選填）</label>
-              <textarea id="booking-message" name="message" value={form.message} onChange={handleChange} rows={4} placeholder="請描述你的問題或特別需求..." style={{ ...inputStyle, resize: "vertical" }} />
+              <textarea id="booking-message" name="message" autoComplete="off" value={form.message} onChange={handleChange} rows={4} placeholder="請描述你的問題或特別需求..." style={{ ...inputStyle, resize: "vertical" }} />
             </div>
 
             <div className="flex items-start gap-2">
               <input
                 id="booking-consent"
-                name="consent"
+                name="privacyConsent"
                 type="checkbox"
-                checked={form.consent}
-                onChange={(e) => setForm((p) => ({ ...p, consent: e.target.checked }))}
+                autoComplete="off"
+                checked={form.privacyConsent}
+                onChange={(e) => setForm((p) => ({ ...p, privacyConsent: e.target.checked }))}
                 className="mt-1"
                 required
               />
               <label htmlFor="booking-consent" className="text-xs" style={{ color: "var(--text-3)" }}>
-                我已閱讀並同意<a href="/privacy" className="underline" style={{ color: "var(--gold)" }}>私隱政策</a>及個人資料收集聲明，明白資料只會用於預約聯絡及服務安排。
+                我已閱讀並同意 <a href="/privacy" className="underline" style={{ color: "var(--gold)" }}>私隱政策</a> 及個人資料收集聲明，明白資料只會用於預約聯絡及服務安排。
               </label>
             </div>
 
@@ -335,7 +326,7 @@ export default function Booking() {
             </button>
 
             <p className="text-xs text-center" style={{ color: "var(--text-3)" }}>
-              提交後我們會在 24 小時內透過電郵確認預約詳情
+              提交後我哋會按你揀嘅 WhatsApp 或電話方法確認預約詳情
             </p>
           </form>
 

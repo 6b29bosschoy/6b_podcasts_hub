@@ -1,6 +1,12 @@
 import { useEffect } from "react";
 import { Link } from "wouter";
 import { JsonLd, buildServiceSchema, buildBreadcrumbSchema, SITE_URL } from "@/components/JsonLd";
+import { trackEvent } from "@/lib/analytics";
+
+const STRIPE_TEST_CHECKOUT_URLS = {
+  premium: "https://buy.stripe.com/test_aFa8wIfea4Z8dZBbUYbII00",
+  vip: "https://buy.stripe.com/test_bJe5kwd6277g8Fh0cgbII01",
+} as const;
 
 const PLANS = [
   {
@@ -12,17 +18,18 @@ const PLANS = [
     borderColor: "rgba(236,229,216,0.3)",
     bgColor: "var(--bg-card)",
     features: [
-      { label: "玄學分析（登入後每日 10 次）", included: true },
+      { label: "基本玄學分析（登入後每日一次）", included: true },
       { label: "免費影片觀看", included: true },
       { label: "免費文章閱讀", included: true },
       { label: "玄學家列表瀏覽", included: true },
-      { label: "完整流年報告", included: false },
+      { label: "完整 12 個月流年報告", included: false },
       { label: "VIP 影片及文章", included: false },
       { label: "無限次分析", included: false },
       { label: "玄學家直播優先入場", included: false },
     ],
     cta: "免費使用",
     ctaLink: "/mystic/analysis",
+    checkoutUrl: null,
     highlight: false,
   },
   {
@@ -43,8 +50,9 @@ const PLANS = [
       { label: "玄學家 1 對 1 諮詢折扣", included: false },
       { label: "年度命盤深度分析", included: false },
     ],
-    cta: "立即升級",
+    cta: "以 Stripe 測試付款",
     ctaLink: "/mystic/analysis",
+    checkoutUrl: STRIPE_TEST_CHECKOUT_URLS.premium,
     highlight: true,
     badge: "最受歡迎",
   },
@@ -58,16 +66,19 @@ const PLANS = [
     bgColor: "var(--bg-card)",
     features: [
       { label: "Premium 所有功能", included: true },
-      { label: "玄學家 1 對 1 諮詢折扣 30%", included: true },
-      { label: "年度命盤深度分析（1 次）", included: true },
+      { label: "真人諮詢：每月 1 次（30 分鐘）", included: true },
+      { label: "真人諮詢當月有效，不可累積", included: true },
+      { label: "最少 48 小時前預約；每月可改期 1 次", included: true },
+      { label: "24 小時前取消可保留名額；其後取消視為已使用", included: true },
       { label: "專屬 VIP 社群", included: true },
       { label: "每月玄學家私人直播", included: true },
       { label: "個人化流年開運計劃", included: true },
       { label: "優先預約玄學家", included: true },
       { label: "生日月份免費諮詢（30 分鐘）", included: true },
     ],
-    cta: "成為 VIP",
+    cta: "以 Stripe 測試付款",
     ctaLink: "/mystic/analysis",
+    checkoutUrl: STRIPE_TEST_CHECKOUT_URLS.vip,
     highlight: false,
   },
 ];
@@ -75,6 +86,7 @@ const PLANS = [
 export default function MysticPricing() {
   useEffect(() => {
     document.title = "會員方案｜路邊玄學堂";
+    trackEvent("pricing_view", { source: "mystic_pricing", payment_environment: "test" });
   }, []);
 
   return (
@@ -84,12 +96,12 @@ export default function MysticPricing() {
         data={[
           buildServiceSchema({
             name: "路邊玄學堂 玄學分析服務",
-            description: "香港專業玄學分析服務，涵蓋風水命理、八字小山、紫微斗數、塔羅占卜、星座分析、生命靈數等多種派別。登入後每日免費使用 10 次完整分析。",
+            description: "香港玄學分析服務，涵蓋風水命理、八字命理、紫微斗數、塔羅占卜、星座分析及生命靈數。免費版登入後每日可使用一次基本分析。",
             url: `${SITE_URL}/mystic/pricing`,
           }),
           buildServiceSchema({
-            name: "路邊玄學堂 個人玄學諾詢服務",
-            description: "由專業玄學師傅一對一深度諾詢，涵蓋風水居家、婚姻合婚、事業財運等各類問題。可通過 WhatsApp 預約。",
+            name: "路邊玄學堂 個人玄學諮詢服務",
+            description: "由玄學師傅一對一深入諮詢，涵蓋居家風水、婚姻合婚、事業及財運等問題。可透過 WhatsApp 預約。",
             url: `${SITE_URL}/booking`,
           }),
           buildBreadcrumbSchema([
@@ -100,16 +112,21 @@ export default function MysticPricing() {
         ]}
       />
       <div className="max-w-5xl mx-auto">
-        {/* Limited Time Free Banner */}
+        {/* Free plan clarity banner */}
         <div className="mb-8 rounded-2xl p-4 border flex items-center gap-4" style={{ background: "rgba(26,23,18,0.3)", borderColor: "rgba(201,164,92,0.5)" }}>
           <span className="text-2xl flex-shrink-0">🎉</span>
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-xs font-black px-2 py-0.5 rounded-full" style={{ background: "var(--gold)", color: "var(--bg-card)" }}>限時免費體驗中</span>
-              <span className="text-sm font-bold" style={{ color: "var(--gold)" }}>完整流年分析報告現已免費開放</span>
+              <span className="text-xs font-black px-2 py-0.5 rounded-full" style={{ background: "var(--gold)", color: "var(--bg-card)" }}>免費版說明</span>
+              <span className="text-sm font-bold" style={{ color: "var(--gold)" }}>每日一次基本玄學分析</span>
             </div>
-            <p className="text-xs" style={{ color: "var(--text-2)" }}>測試期間全功能免費開放，登入後每日可免費使用 10 次完整玄學分析。此功能稍後將成為 Premium 會員專屬，趣快體驗！</p>
+            <p className="text-xs" style={{ color: "var(--text-2)" }}>免費版只包括每日一次基本分析；完整 12 個月流年報告、無限次分析及會員內容按 Premium／VIP 方案提供。</p>
           </div>
+        </div>
+
+        <div className="mb-8 rounded-xl border px-4 py-3 text-xs leading-6" style={{ background: "rgba(201,164,92,0.08)", borderColor: "rgba(201,164,92,0.28)", color: "var(--text-2)" }}>
+          <strong style={{ color: "var(--gold)" }}>Stripe 測試模式：</strong> 以下 Premium／VIP 掣會前往 Stripe 沙盒結帳，僅供測試付款流程，唔會向真實客戶收費。正式收款會待 live mode、Webhook 及會員權益同步完成後才開放。
+          <Link href="/mystic/payment/cancelled" className="ml-1 underline" style={{ color: "var(--gold)" }}>如你中途取消結帳，可以返回呢度。</Link>
         </div>
 
         <div className="text-center mb-12">
@@ -162,21 +179,13 @@ export default function MysticPricing() {
                 ))}
               </div>
 
-              <Link href={plan.ctaLink}>
-                <span
-                  className="block w-full py-3 rounded-xl font-bold text-center text-sm cursor-pointer transition-all hover:scale-[1.02]"
-                  style={plan.highlight ? {
-                    background: `linear-gradient(135deg, ${plan.color}, var(--gold))`,
-                    color: "var(--text)",
-                  } : {
-                    border: `1px solid ${plan.borderColor}`,
-                    color: plan.color,
-                    background: "transparent",
-                  }}
-                >
+              {plan.id === "free" ? <Link href={plan.ctaLink}>
+                <span className="block w-full py-3 rounded-xl font-bold text-center text-sm cursor-pointer transition-all hover:scale-[1.02]" style={{ border: `1px solid ${plan.borderColor}`, color: plan.color, background: "transparent" }}>
                   {plan.cta}
                 </span>
-              </Link>
+              </Link> : <a href={plan.checkoutUrl ?? undefined} target="_blank" rel="noopener noreferrer" data-stripe-checkout-plan={plan.id} className="block w-full py-3 rounded-xl font-bold text-center text-sm transition-all hover:scale-[1.02]" style={{ background: plan.highlight ? `linear-gradient(135deg, ${plan.color}, var(--gold))` : "transparent", color: plan.highlight ? "var(--text)" : plan.color, border: plan.highlight ? "none" : `1px solid ${plan.borderColor}` }} onClick={() => trackEvent("checkout_start", { plan: plan.id, payment_provider: "stripe", payment_environment: "test" })}>
+                {plan.cta}
+              </a>}
             </div>
           ))}
         </div>
@@ -187,8 +196,8 @@ export default function MysticPricing() {
           <div className="space-y-4 max-w-2xl mx-auto">
             {[
               { q: "可以隨時取消訂閱嗎？", a: "可以，你可以隨時取消訂閱，取消後仍可使用至當月結束。" },
-              { q: "分析報告係由 AI 還是真實玄學家生成？", a: "基本分析由 AI 根據玄學理論生成，Premium 及 VIP 會員可預約真實玄學家進行深度諮詢。" },
-              { q: "支援哪些付款方式？", a: "支援信用卡、PayMe、FPS 等主要付款方式。" },
+              { q: "分析報告係由 AI 還是真實玄學家生成？", a: "基本分析由 AI 根據玄學理論生成；VIP 真人諮詢按每月一次、每次 30 分鐘安排，需依預約及取消條款使用。" },
+              { q: "支援哪些付款方式？", a: "付款方式會在 Stripe 安全結帳頁按可用地區及付款設定顯示；付款開通前不會向你收費。" },
               { q: "免責聲明", a: "本平台內容只供娛樂、文化及參考用途，並不構成任何投資、醫療、法律或人生重大決策建議。所有分析結果應以理性判斷作最後決定。" },
             ].map((item) => (
               <div key={item.q} className="p-5 rounded-xl border" style={{ background: "var(--bg-card)", borderColor: "rgba(201,164,92,0.2)" }}>
