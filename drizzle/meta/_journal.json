@@ -8,6 +8,13 @@
       "when": 1783913377996,
       "tag": "0000_pink_doctor_spectrum",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1786667545680,
+      "tag": "0001_sour_scorpion",
+      "breakpoints": true
     }
   ]
 }

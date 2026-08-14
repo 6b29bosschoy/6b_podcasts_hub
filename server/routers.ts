@@ -61,7 +61,14 @@ import {
 import { storagePut } from "./storage";
 import { generateFaqForPost } from "./faqHelper";
 import { isTopicSlug, TOPIC_SLUG_ERROR } from "./blogSlug";
-import { TREEHOLE_MAX_CHARACTERS, TREEHOLE_MIN_CHARACTERS } from "../shared/treehole";
+import {
+  TREEHOLE_DEEP_INTERPRETATIONS,
+  TREEHOLE_MAX_CHARACTERS,
+  TREEHOLE_MIN_CHARACTERS,
+  TREEHOLE_PUBLIC_PERMISSIONS,
+  TREEHOLE_TOPIC_TAGS,
+  requiresTreeholeContact,
+} from "../shared/treehole";
 
 /** Resolve channel handle to ID, with 24h DB cache */
 async function getCachedChannelId(handle: string): Promise<string> {
@@ -539,7 +546,7 @@ export const appRouter = router({
       .input(z.object({
         nickname: z.string().min(1).max(50),
         category: z.enum(["relationship", "fengshui", "confession", "question", "other"]),
-        content: z.string().min(TREEHOLE_MIN_CHARACTERS).max(TREEHOLE_MAX_CHARACTERS),
+        content: z.string().min(10).max(TREEHOLE_MAX_CHARACTERS),
         isAnonymous: z.boolean().default(false),
         imageUrls: z.array(z.string().url()).max(5).default([]),
       }))
@@ -551,10 +558,47 @@ export const appRouter = router({
           isAnonymous: input.isAnonymous,
           images: JSON.stringify(input.imageUrls),
         });
-        const imgNote = input.imageUrls.length > 0 ? `（附帶 ${input.imageUrls.length} 張圖片）` : "";
+        return { success: true };
+      }),
+
+    /** Submit the structured anonymous relationship treehole form (public) */
+    submitTreehole: publicProcedure
+      .input(z.object({
+        nickname: z.string().trim().min(1).max(50),
+        content: z.string().trim().min(TREEHOLE_MIN_CHARACTERS).max(TREEHOLE_MAX_CHARACTERS),
+        gender: z.enum(["男", "女", "唔想講"]).optional(),
+        ageGroup: z.enum(["18-24", "25-30", "31-40", "41-50", "50+"]).optional(),
+        relationshipStatus: z.enum(["單身", "曖昧中", "拍拖中", "已婚", "分手中", "複雜"]),
+        topicTags: z.array(z.enum(TREEHOLE_TOPIC_TAGS)).min(1).max(TREEHOLE_TOPIC_TAGS.length),
+        problemDuration: z.enum(["一個月內", "半年內", "一年以上", "好多年"]).optional(),
+        publicPermission: z.enum(TREEHOLE_PUBLIC_PERMISSIONS),
+        deepInterpretation: z.enum(TREEHOLE_DEEP_INTERPRETATIONS),
+        contactMethod: z.string().trim().min(1).max(255).optional(),
+      }).superRefine((input, ctx) => {
+        if (requiresTreeholeContact(input.publicPermission, input.deepInterpretation) && !input.contactMethod?.trim()) {
+          ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["contactMethod"], message: "請留下聯絡方式" });
+        }
+      }))
+      .mutation(async ({ input }) => {
+        await createReaderSubmission({
+          nickname: input.nickname,
+          category: "relationship",
+          content: input.content,
+          isAnonymous: true,
+          gender: input.gender ?? null,
+          ageGroup: input.ageGroup ?? null,
+          relationshipStatus: input.relationshipStatus,
+          topicTags: JSON.stringify(input.topicTags),
+          problemDuration: input.problemDuration ?? null,
+          publicPermission: input.publicPermission,
+          deepInterpretation: input.deepInterpretation,
+          contactMethod: input.contactMethod?.trim() || null,
+          images: "[]",
+        });
+        const contactSummary = input.contactMethod?.trim() ? `｜聯絡方式：${input.contactMethod.trim()}` : "";
         await notifyOwner({
           title: "📨 新讀者投稿",
-          content: `「${input.isAnonymous ? "匿名" : input.nickname}」提交了一則「${input.category}」類別的投稿${imgNote}，請到後台審核。`,
+          content: `「${input.nickname}」提交了一則「${input.relationshipStatus}」感情投稿（${input.topicTags.join("、")}）｜節目使用：${input.publicPermission}｜深入解讀：${input.deepInterpretation}${contactSummary}，請到後台審核。`,
         });
         return { success: true };
       }),

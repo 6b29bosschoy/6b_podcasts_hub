@@ -10,7 +10,7 @@ let mutationResult: "success" | "error" = "success";
 vi.mock("../client/src/lib/trpc", () => ({
   trpc: {
     submission: {
-      submit: {
+      submitTreehole: {
         useMutation: (options: { onSuccess: () => void }) => ({
           mutate: (input: unknown) => {
             mutate(input);
@@ -56,38 +56,47 @@ afterEach(() => {
 });
 
 describe("感情樹窿表單互動", () => {
-  it("caps story text, requires privacy acknowledgement, submits anonymously, then shows success feedback", async () => {
+  const story = "我同佢拍咗兩年拖，最近佢成日同舊同學單獨食飯，又話我諗得太多。我想知仲應唔應該繼續，亦放唔低呢段關係。";
+
+  async function fillRequiredTreehole(user: ReturnType<typeof userEvent.setup>, needsContact = false) {
+    await user.type(screen.getByLabelText(/你想我哋點稱呼你/), "觀塘K小姐");
+    await user.selectOptions(screen.getByLabelText(/感情狀態/), "拍拖中");
+    await user.click(screen.getByRole("button", { name: "放唔低" }));
+    await user.type(screen.getByLabelText(/你嘅感情問題/), story);
+    await user.click(screen.getByLabelText("可以，匿名處理就得"));
+    await user.click(screen.getByLabelText(needsContact ? "想，可以聯絡我" : "暫時唔需要"));
+    if (needsContact) await user.type(await screen.findByLabelText(/你嘅聯絡方式/), "IG: @kwuntongk");
+  }
+
+  it("enforces revised required fields, reveals contact conditionally, submits anonymously, then shows success feedback", async () => {
     const user = userEvent.setup();
     render(<TreeholeSubmission />);
 
-    const textarea = screen.getByLabelText("想講嘅故事") as HTMLTextAreaElement;
-    const submit = screen.getByRole("button", { name: "匿名送出故事" }) as HTMLButtonElement;
+    const textarea = screen.getByLabelText(/你嘅感情問題/) as HTMLTextAreaElement;
+    const submit = screen.getByRole("button", { name: "投入樹窿 🌳" }) as HTMLButtonElement;
 
     expect(submit.disabled).toBe(true);
     expect(textarea.maxLength).toBe(1000);
 
-    await user.click(textarea);
-    await user.type(textarea, "我想匿名講一個感情故事。");
-    const checkbox = screen.getByRole("checkbox") as HTMLInputElement;
-    checkbox.focus();
-    expect(document.activeElement).toBe(checkbox);
-    await user.click(checkbox);
-    expect(checkbox.checked).toBe(true);
-    await waitFor(() => expect((screen.getByRole("button", { name: "匿名送出故事" }) as HTMLButtonElement).disabled).toBe(false));
-    const readySubmit = screen.getByRole("button", { name: "匿名送出故事" });
+    await fillRequiredTreehole(user, true);
+    expect(screen.getByLabelText(/你嘅聯絡方式/)).toBeTruthy();
+    await waitFor(() => expect((screen.getByRole("button", { name: "投入樹窿 🌳" }) as HTMLButtonElement).disabled).toBe(false));
+    const readySubmit = screen.getByRole("button", { name: "投入樹窿 🌳" });
     readySubmit.focus();
     expect(document.activeElement).toBe(readySubmit);
 
     await user.keyboard("{Enter}");
 
     expect(mutate).toHaveBeenCalledWith(expect.objectContaining({
-      nickname: "匿名",
-      isAnonymous: true,
-      imageUrls: [],
-      content: "我想匿名講一個感情故事。",
+      nickname: "觀塘K小姐",
+      relationshipStatus: "拍拖中",
+      topicTags: ["放唔低"],
+      deepInterpretation: "想，可以聯絡我",
+      contactMethod: "IG: @kwuntongk",
+      content: story,
     }));
     expect(screen.getByTestId("treehole-success")).toBeTruthy();
-    expect(screen.getByText("你嘅故事已經收好。")).toBeTruthy();
+    expect(screen.getByText("你嘅心事已經投入樹窿。")).toBeTruthy();
   });
 
   it("exposes a screen-reader-visible error prompt when keyboard submission cannot reach the server", async () => {
@@ -95,15 +104,12 @@ describe("感情樹窿表單互動", () => {
     const user = userEvent.setup();
     render(<TreeholeSubmission />);
 
-    const textarea = screen.getByLabelText("想講嘅故事");
-    await user.click(textarea);
-    await user.type(textarea, "我想匿名講一個感情故事。");
-    await user.click(screen.getByRole("checkbox"));
-    const readySubmit = screen.getByRole("button", { name: "匿名送出故事" });
+    await fillRequiredTreehole(user);
+    const readySubmit = screen.getByRole("button", { name: "投入樹窿 🌳" });
     await waitFor(() => expect((readySubmit as HTMLButtonElement).disabled).toBe(false));
     readySubmit.focus();
     await user.keyboard("{Enter}");
 
-    await waitFor(() => expect(screen.getByRole("alert").textContent).toContain("而家未能送出投稿"));
+    await waitFor(() => expect(screen.getByRole("alert").textContent).toContain("而家未能投入樹窿"));
   });
 });
