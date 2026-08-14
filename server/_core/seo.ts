@@ -17,6 +17,7 @@ const STATIC_SITEMAP_PATHS = [
   "/treehole",
   "/booking",
   "/contact",
+  "/privacy",
   "/host-recruitment",
   "/welcome",
   "/mystic",
@@ -131,6 +132,12 @@ const PAGE_SEO: Record<string, SeoPage> = {
     description: "聯絡 6B Podcasts 洽談合作、嘉賓邀請或觀眾查詢。",
     h1: "聯絡 6B Podcasts",
     intro: "可透過聯絡頁面查詢商業合作、嘉賓邀請、節目建議或一般觀眾問題。",
+  },
+  "/privacy": {
+    title: "私隱政策及個人資料收集聲明｜6B Podcasts",
+    description: "了解 6B Podcasts 如何收集、使用及保護你的個人資料，包括匿名投稿、預約查詢及聯絡資料。",
+    h1: "私隱政策及個人資料收集聲明",
+    intro: "了解 6B Podcasts 如何收集、使用及保護你的個人資料，包括匿名投稿、預約查詢及聯絡資料。",
   },
   "/host-recruitment": {
     title: "主持招募｜6B Podcasts",
@@ -267,6 +274,18 @@ export async function resolveSeoDocument(pathname: string): Promise<SeoDocument>
   const path = normalisePath(pathname);
   const blogMatch = path.match(/^\/blog\/([^/]+)$/);
   const masterMatch = path.match(/^\/mystic\/masters\/([^/]+)$/);
+  const episodeMatch = path.match(/^\/episodes\/([^/]+)$/);
+
+  if (episodeMatch) {
+    return {
+      path,
+      canonicalUrl: `${CANONICAL_ORIGIN}${path}`,
+      title: "節目詳情｜路邊電台",
+      description: "收聽路邊電台最新節目，包括兩性關係、人物訪談與都市情感內容。",
+      h1: "路邊電台節目詳情",
+      intro: "收聽路邊電台最新節目，包括兩性關係、人物訪談與都市情感內容。",
+    };
+  }
 
   if (masterMatch && LEGACY_MASTER_IDS.has(masterMatch[1])) {
     return {

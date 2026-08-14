@@ -387,6 +387,51 @@ export const appRouter = router({
   //   - Video lists: DB cache 1h (costs ~100 units per fetch)
   //   - On quota error: return stale cache or empty list (no error thrown to client)
   youtube: router({
+    getVideoById: publicProcedure
+      .input(z.object({ id: z.string().min(1).max(32) }))
+      .query(async ({ input }) => {
+        const cacheKey = `video:${input.id}`;
+        const cached = await getYoutubeCache(cacheKey);
+        if (cached) return JSON.parse(cached.data) as { video: unknown };
+
+        try {
+          const apiKey = process.env.YOUTUBE_API_KEY;
+          if (!apiKey) throw new Error("YOUTUBE_API_KEY is not set");
+          const url = new URL("https://www.googleapis.com/youtube/v3/videos");
+          url.searchParams.set("part", "snippet,statistics,contentDetails");
+          url.searchParams.set("id", input.id);
+          url.searchParams.set("key", apiKey);
+          const res = await fetch(url.toString());
+          if (!res.ok) throw new Error(`YouTube API error: ${res.status}`);
+          const data = await res.json() as { items?: Array<{ id: string; snippet: { title: string; description: string; publishedAt: string; channelTitle: string; channelId: string; thumbnails: { maxres?: { url: string }; high?: { url: string }; medium?: { url: string }; default?: { url: string } } }; statistics: { viewCount?: string; likeCount?: string }; contentDetails: { duration: string } }> };
+          const item = data.items?.[0];
+          if (!item) throw new TRPCError({ code: "NOT_FOUND", message: "影片不存在" });
+          const video = {
+            id: item.id,
+            title: item.snippet.title,
+            description: item.snippet.description,
+            thumbnail: item.snippet.thumbnails?.maxres?.url ?? item.snippet.thumbnails?.high?.url ?? item.snippet.thumbnails?.medium?.url ?? item.snippet.thumbnails?.default?.url ?? "",
+            publishedAt: item.snippet.publishedAt,
+            viewCount: formatViewCount(item.statistics.viewCount ?? "0"),
+            likeCount: item.statistics.likeCount ?? "0",
+            duration: parseDuration(item.contentDetails.duration),
+            channelTitle: item.snippet.channelTitle,
+            channelId: item.snippet.channelId,
+            url: `https://www.youtube.com/watch?v=${item.id}`,
+          };
+          const result = { video };
+          await Promise.all([
+            setYoutubeCache(cacheKey, result, 3600),
+            setYoutubeCache(cacheKey + ":stale", result, 604800),
+          ]);
+          return result;
+        } catch (err) {
+          const stale = await getYoutubeCache(cacheKey + ":stale");
+          if (stale) return JSON.parse(stale.data) as { video: unknown };
+          throw err;
+        }
+      }),
+
     getVideos: publicProcedure
       .input(
         z.object({

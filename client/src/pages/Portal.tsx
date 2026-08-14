@@ -2,7 +2,8 @@ import { useMemo } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { ShortHighlightsSection } from "@/components/ShortHighlightsSection";
-import { Play, ChevronRight, Youtube, Calendar, ArrowDown } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
+import { Play, ChevronRight, Youtube, MessageCircle, ArrowDown } from "lucide-react";
 
 const HERO_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663073423209/XJagJnJEiagVDDmfVeExSL/hero-new-main-3ptD2DHC6jMTxZHCYKJLcE.webp";
 const HERO_BG_MOBILE = "https://d2xsxph8kpxj0f.cloudfront.net/310519663073423209/XJagJnJEiagVDDmfVeExSL/hero-new-mobile-WybngLNmW22rmhrdvNB7xw.webp";
@@ -69,7 +70,7 @@ function VideoCard({ v }: { v: VideoItem }) {
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLElement).style.borderColor = "var(--line)";
       }}
-      onClick={() => window.open(v.url, "_blank", "noopener,noreferrer")}
+      onClick={() => { window.location.href = `/episodes/${v.id}`; }}
     >
       <div
         className="aspect-video relative overflow-hidden"
@@ -245,19 +246,18 @@ export default function Portal() {
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              className="btn-gold"
-              onClick={() => {
-                document
-                  .getElementById("explore")
-                  ?.scrollIntoView({ behavior: "smooth" });
-              }}
-            >
-              <ArrowDown className="w-4 h-4" /> 開始探索
-            </button>
-            <Link href="/booking" className="btn-ghost">
-              <Calendar className="w-4 h-4" /> 預約玄學諮詢
+            <Link href="/treehole" className="btn-gold" onClick={() => trackEvent("treehole_submit", { source: "homepage_hero" })}>
+              <ArrowDown className="w-4 h-4" /> 匿名講低你嘅感情困局
             </Link>
+            <a
+              href="https://wa.me/85298729990?text=你好，我想先問清楚服務安排"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-ghost"
+              onClick={() => trackEvent("whatsapp_click", { source: "homepage_hero" })}
+            >
+              <MessageCircle className="w-4 h-4" /> WhatsApp先問清楚
+            </a>
           </div>
 
           {/* Subscriber stats */}

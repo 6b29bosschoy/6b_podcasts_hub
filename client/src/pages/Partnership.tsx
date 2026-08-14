@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
+import { trackEvent } from "@/lib/analytics";
 import { toast } from "sonner";
 import { JsonLd, buildBreadcrumbSchema, SITE_URL } from "@/components/JsonLd";
 import { useSEO } from "@/hooks/useSEO";
@@ -56,6 +57,7 @@ export default function Partnership() {
   const contactMutation = trpc.contact.submit.useMutation({
     onSuccess: () => {
       setSubmitted(true);
+      trackEvent("partnership_submit", { source: "partnership_form" });
       toast.success("合作意向已提交！我們將在 1-2 個工作天內與您聯絡。");
     },
     onError: (err) => {

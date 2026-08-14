@@ -104,7 +104,7 @@ function VideoCard({ video }: { video: VideoItem }) {
       onMouseLeave={() => setHovered(false)}
     >
       {/* Thumbnail */}
-      <a href={video.url} target="_blank" rel="noopener noreferrer" className="block relative aspect-video overflow-hidden flex-shrink-0">
+      <Link href={`/episodes/${video.id}`} className="block relative aspect-video overflow-hidden flex-shrink-0">
         {video.thumbnail ? (
           <img
             src={video.thumbnail}
@@ -142,18 +142,18 @@ function VideoCard({ video }: { video: VideoItem }) {
         >
           {catInfo.icon} {catInfo.label}
         </div>
-      </a>
+      </Link>
 
       {/* Info */}
       <div className="p-4 flex flex-col flex-1">
-        <a href={video.url} target="_blank" rel="noopener noreferrer" className="block mb-3 flex-1">
+        <Link href={`/episodes/${video.id}`} className="block mb-3 flex-1">
           <h3
             className="text-sm font-semibold leading-snug line-clamp-2 transition-colors duration-200"
             style={{ color: hovered ? catInfo.color : "var(--text)" }}
           >
             {video.title}
           </h3>
-        </a>
+        </Link>
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-3 text-xs" style={{ color: "var(--text-3)" }}>
             <span className="flex items-center gap-1">

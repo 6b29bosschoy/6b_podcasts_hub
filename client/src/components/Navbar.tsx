@@ -1,13 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, ChevronDown, Play, Sparkles, Handshake, Calendar, Route } from "lucide-react";
+import { Menu, X, ChevronDown, Play, Sparkles, Handshake, MessageCircle, PenLine } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 // Mobile bottom quick nav (4 items)
 const MOBILE_BOTTOM_NAV = [
-  { label: "最新影片", href: "/episodes", Icon: Play },
+  { label: "最新節目", href: "/episodes", Icon: Play },
+  { label: "匿名投稿", href: "/treehole", Icon: PenLine },
   { label: "玄學堂", href: "/mystic", Icon: Sparkles },
-  { label: "點樣合作", href: "/monetization-plan", Icon: Route },
-  { label: "合作查詢", href: "/partnership", Icon: Handshake },
+  { label: "服務合作", href: "/services", Icon: Handshake },
 ];
 
 const SOCIAL_LINKS = [
@@ -18,14 +19,11 @@ const SOCIAL_LINKS = [
 ];
 
 const NAV_ITEMS = [
-  { label: "首頁", href: "/" },
-  { label: "路邊電台", href: "/podcasts" },
-  { label: "兩性故事", href: "/blog" },
+  { label: "最新節目", href: "/episodes" },
+  { label: "感情故事", href: "/blog" },
   { label: "路邊玄學堂", href: "/mystic" },
-  { label: "預約諮詢", href: "/booking" },
-  { label: "點樣合作", href: "/monetization-plan" },
-  { label: "商業合作", href: "/partnership" },
-  { label: "聯絡我們", href: "/contact" },
+  { label: "匿名投稿", href: "/treehole" },
+  { label: "服務與合作", href: "/services" },
 ];
 
 const SUBMIT_OPTIONS = [
@@ -188,6 +186,17 @@ export default function Navbar() {
 
             {/* Social Icons (large screens only) */}
             <div className="hidden lg:flex items-center gap-1">
+              <a
+                href="https://wa.me/85298729990?text=你好，我想查詢服務或合作"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="WhatsApp 查詢"
+                onClick={() => trackEvent("whatsapp_click", { source: "navbar" })}
+                className="w-7 h-7 text-xs font-medium flex items-center justify-center transition-all duration-200"
+                style={{ background: "var(--bg-raise)", color: "var(--text-3)", border: "1px solid var(--line)", borderRadius: "var(--radius)" }}
+              >
+                <MessageCircle size={14} />
+              </a>
               {SOCIAL_LINKS.map((s) => (
                 <a
                   key={s.href}

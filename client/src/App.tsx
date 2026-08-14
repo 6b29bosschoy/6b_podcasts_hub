@@ -25,8 +25,10 @@ const Booking = lazy(() => import("./pages/Booking"));
 const Contact = lazy(() => import("./pages/Contact"));
 const HostRecruitment = lazy(() => import("@/pages/HostRecruitment"));
 const Episodes = lazy(() => import("@/pages/Episodes"));
+const EpisodeDetail = lazy(() => import("@/pages/EpisodeDetail"));
 const Investors = lazy(() => import("@/pages/Investors"));
 const Welcome = lazy(() => import("@/pages/Welcome"));
+const Privacy = lazy(() => import("@/pages/Privacy"));
 
 // ── Admin (largest chunk, never needed by regular users) ──────────────────────
 const Admin = lazy(() => import("@/pages/Admin"));
@@ -85,7 +87,11 @@ function Router() {
         <Route path="/contact" component={Contact} />
         <Route path="/host-recruitment" component={HostRecruitment} />
         <Route path="/episodes" component={Episodes} />
+        <Route path="/episodes/:id">
+          {(params) => <EpisodeDetail id={params.id} />}
+        </Route>
         <Route path="/investors" component={Investors} />
+        <Route path="/privacy" component={Privacy} />
         {/* Mystic routes */}
         <Route path="/mystic" component={MysticHome} />
         <Route path="/mystic/analysis" component={MysticAnalysis} />

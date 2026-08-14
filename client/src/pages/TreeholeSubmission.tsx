@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { CheckCircle2, ChevronLeft, Heart, LockKeyhole, PenLine, Send } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { trackEvent } from "@/lib/analytics";
 import { useSEO } from "@/hooks/useSEO";
 import {
   TREEHOLE_DEEP_INTERPRETATIONS,
@@ -44,6 +45,7 @@ export default function TreeholeSubmission() {
   const submitMutation = trpc.submission.submitTreehole.useMutation({
     onSuccess: () => {
       setSubmitted(true);
+      trackEvent("treehole_submit", { source: "treehole_form" });
       setNickname("");
       setGender("");
       setAgeGroup("");

@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { CheckCircle } from "lucide-react";
 import { Link } from "wouter";
 import { JsonLd, buildBreadcrumbSchema, SITE_URL } from "@/components/JsonLd";
+import { trackEvent } from "@/lib/analytics";
 
 const SERVICES = [
   { value: "fengshui", label: "風水諮詢", icon: "🧭", desc: "家居、辦公室風水佈局分析，改善運勢與財運" },
@@ -11,6 +12,20 @@ const SERVICES = [
   { value: "tarot", label: "塔羅占卜", icon: "🃏", desc: "塔羅牌解讀，為你的人生問題提供指引" },
   { value: "spiritual", label: "身心靈療癒", icon: "🌿", desc: "能量療癒、冥想指導，平衡身心靈狀態" },
   { value: "course", label: "課程報名", icon: "📚", desc: "報名玄學、風水、命理相關課程" },
+];
+
+const MASTER_INFO = {
+  name: "路邊玄學堂合作師傅",
+  bio: "我哋會按你嘅問題類型，轉介合適嘅玄學師傅作一對一跟進。所有師傅均經過初步篩選，並以清晰收費及服務範圍為先。",
+  experience: "服務範圍包括感情、事業、家庭及人生方向整理。",
+};
+
+const PRICE_RANGE = "HK$380 - HK$580 / 節";
+
+const FAQS = [
+  { q: "預約後幾耐會有回覆？", a: "一般會喺 24 小時內透過電郵或 WhatsApp 回覆，確認時間及服務內容。" },
+  { q: "可以揀師傅嗎？", a: "可以喺備註寫低偏好，我哋會盡量按問題類型及師傅檔期安排。" },
+  { q: "收費係點計？", a: `一般一對一服務收費為 ${PRICE_RANGE}，具體會按服務類型及師傅安排確認。` },
 ];
 
 const TIME_SLOTS = ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00", "17:00", "19:00", "20:00"];
@@ -39,10 +54,11 @@ export default function Booking() {
     preferredDate: "",
     preferredTime: "",
     message: "",
+    consent: false,
   });
 
   const bookingMutation = trpc.booking.create.useMutation({
-    onSuccess: () => { setSubmitted(true); },
+    onSuccess: () => { setSubmitted(true); trackEvent("booking_submit", { service: selectedService }); },
     onError: (err) => { toast.error(err.message || "預約失敗，請稍後再試。"); },
   });
 
@@ -53,6 +69,7 @@ export default function Booking() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedService) { toast.error("請選擇服務類型"); return; }
+    if (!form.consent) { toast.error("請先同意個人資料收集聲明"); return; }
     bookingMutation.mutate({
       ...form,
       serviceType: selectedService as "fengshui" | "bazi" | "tarot" | "spiritual" | "course",
@@ -203,6 +220,35 @@ export default function Booking() {
 
       <div className="container py-12">
         <div className="max-w-3xl mx-auto">
+          {/* 師傅介紹 */}
+          <div className="mb-8 rounded-xl p-6" style={{ background: "var(--bg-card)", border: "1px solid var(--line)" }}>
+            <h2 className="text-lg font-black mb-3" style={{ color: "var(--text)" }}>師傅介紹</h2>
+            <p className="text-sm mb-2" style={{ color: "var(--text-2)" }}>{MASTER_INFO.bio}</p>
+            <p className="text-xs" style={{ color: "var(--text-3)" }}>{MASTER_INFO.experience}</p>
+          </div>
+
+          {/* 服務時間及收費 */}
+          <div className="mb-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="rounded-xl p-5" style={{ background: "var(--bg-card)", border: "1px solid var(--line)" }}>
+              <h3 className="text-sm font-black mb-2" style={{ color: "var(--text)" }}>服務時間</h3>
+              <p className="text-xs" style={{ color: "var(--text-3)" }}>星期一至日 09:00 - 20:00（需預約）</p>
+            </div>
+            <div className="rounded-xl p-5" style={{ background: "var(--bg-card)", border: "1px solid var(--line)" }}>
+              <h3 className="text-sm font-black mb-2" style={{ color: "var(--text)" }}>收費範圍</h3>
+              <p className="text-xs" style={{ color: "var(--text-3)" }}>{PRICE_RANGE}（按服務類型及師傅安排確認）</p>
+            </div>
+          </div>
+
+          {/* 預約流程 */}
+          <div className="mb-8 rounded-xl p-6" style={{ background: "var(--bg-card)", border: "1px solid var(--line)" }}>
+            <h2 className="text-lg font-black mb-4" style={{ color: "var(--text)" }}>預約流程</h2>
+            <ol className="text-sm flex flex-col gap-2" style={{ color: "var(--text-2)" }}>
+              <li>1. 提交預約查詢，寫低你嘅問題類型及偏好時間</li>
+              <li>2. 我哋會喺 24 小時內回覆，確認師傅及收費</li>
+              <li>3. 確認後安排一對一服務（面對面或線上）</li>
+            </ol>
+          </div>
+
           {/* Service Selection */}
           <div className="mb-8">
             <h2 className="text-lg font-black mb-4" style={{ color: "var(--text)" }}>選擇服務</h2>
@@ -231,28 +277,28 @@ export default function Booking() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>姓名 *</label>
-                <input name="name" value={form.name} onChange={handleChange} required placeholder="你的名字" style={inputStyle} />
+                <label htmlFor="booking-name" className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>姓名 *</label>
+                <input id="booking-name" name="name" autoComplete="name" value={form.name} onChange={handleChange} required placeholder="你的名字" style={inputStyle} />
               </div>
               <div>
-                <label className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>電郵地址 *</label>
-                <input name="email" type="email" value={form.email} onChange={handleChange} required placeholder="your@email.com" style={inputStyle} />
+                <label htmlFor="booking-email" className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>電郵地址 *</label>
+                <input id="booking-email" name="email" type="email" autoComplete="email" value={form.email} onChange={handleChange} required placeholder="your@email.com" style={inputStyle} />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>聯絡電話（選填）</label>
-              <input name="phone" value={form.phone} onChange={handleChange} placeholder="+852 XXXX XXXX" style={inputStyle} />
+              <label htmlFor="booking-phone" className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>聯絡電話（選填）</label>
+              <input id="booking-phone" name="phone" type="tel" autoComplete="tel" value={form.phone} onChange={handleChange} placeholder="+852 XXXX XXXX" style={inputStyle} />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>希望日期（選填）</label>
-                <input name="preferredDate" type="date" value={form.preferredDate} onChange={handleChange} style={inputStyle} />
+                <label htmlFor="booking-date" className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>希望日期（選填）</label>
+                <input id="booking-date" name="preferredDate" type="date" value={form.preferredDate} onChange={handleChange} style={inputStyle} />
               </div>
               <div>
-                <label className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>希望時間（選填）</label>
-                <select name="preferredTime" value={form.preferredTime} onChange={(e) => setForm((p) => ({ ...p, preferredTime: e.target.value }))} style={{ ...inputStyle }}>
+                <label htmlFor="booking-time" className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>希望時間（選填）</label>
+                <select id="booking-time" name="preferredTime" value={form.preferredTime} onChange={(e) => setForm((p) => ({ ...p, preferredTime: e.target.value }))} style={{ ...inputStyle }}>
                   <option value="">請選擇時間</option>
                   {TIME_SLOTS.map((t) => <option key={t} value={t}>{t}</option>)}
                 </select>
@@ -260,8 +306,23 @@ export default function Booking() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>備註（選填）</label>
-              <textarea name="message" value={form.message} onChange={handleChange} rows={4} placeholder="請描述你的問題或特別需求..." style={{ ...inputStyle, resize: "vertical" }} />
+              <label htmlFor="booking-message" className="block text-xs font-bold mb-1.5" style={{ color: "var(--text-2)" }}>備註（選填）</label>
+              <textarea id="booking-message" name="message" value={form.message} onChange={handleChange} rows={4} placeholder="請描述你的問題或特別需求..." style={{ ...inputStyle, resize: "vertical" }} />
+            </div>
+
+            <div className="flex items-start gap-2">
+              <input
+                id="booking-consent"
+                name="consent"
+                type="checkbox"
+                checked={form.consent}
+                onChange={(e) => setForm((p) => ({ ...p, consent: e.target.checked }))}
+                className="mt-1"
+                required
+              />
+              <label htmlFor="booking-consent" className="text-xs" style={{ color: "var(--text-3)" }}>
+                我已閱讀並同意<a href="/privacy" className="underline" style={{ color: "var(--gold)" }}>私隱政策</a>及個人資料收集聲明，明白資料只會用於預約聯絡及服務安排。
+              </label>
             </div>
 
             <button
@@ -270,13 +331,34 @@ export default function Booking() {
               className="w-full py-3 rounded-lg font-bold text-sm transition-all hover:opacity-90 disabled:opacity-50"
               style={{ background: "linear-gradient(135deg, var(--gold), var(--red))", color: "white" }}
             >
-              {bookingMutation.isPending ? "提交中..." : "確認預約"}
+              {bookingMutation.isPending ? "提交中..." : "提交預約查詢"}
             </button>
 
             <p className="text-xs text-center" style={{ color: "var(--text-3)" }}>
               提交後我們會在 24 小時內透過電郵確認預約詳情
             </p>
           </form>
+
+          {/* FAQ */}
+          <div className="mt-10 rounded-xl overflow-hidden" style={{ border: "1px solid var(--line)" }}>
+            <div className="px-5 py-4" style={{ background: "var(--bg-card)" }}>
+              <h2 className="text-sm font-black tracking-widest uppercase" style={{ color: "var(--gold)" }}>常見問題 FAQ</h2>
+            </div>
+            <div className="divide-y" style={{ borderColor: "var(--line)" }}>
+              {FAQS.map((faq, idx) => (
+                <div key={idx} className="px-5 py-4" style={{ background: "var(--bg)" }}>
+                  <h3 className="text-sm font-bold mb-2" style={{ color: "var(--text)" }}>{faq.q}</h3>
+                  <p className="text-xs" style={{ color: "var(--text-3)" }}>{faq.a}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 評價區（真實評價先會顯示） */}
+          <div className="mt-10 rounded-xl p-6" style={{ background: "var(--bg-card)", border: "1px solid var(--line)" }}>
+            <h2 className="text-lg font-black mb-3" style={{ color: "var(--text)" }}>服務評價</h2>
+            <p className="text-sm" style={{ color: "var(--text-3)" }}>暫時未有公開評價。完成服務後，歡迎分享你嘅真實體驗，幫助其他觀眾了解服務。</p>
+          </div>
         </div>
       </div>
     </div>

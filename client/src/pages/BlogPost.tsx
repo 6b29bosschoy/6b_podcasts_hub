@@ -210,7 +210,7 @@ export default function BlogPost({ slug }: { slug: string }) {
                         opacity: idx === carouselIndex ? 1 : 0.55,
                       }}
                     >
-                      <img src={img} alt="" className="w-full h-full object-cover" />
+                      <img src={img} alt={`${post.title} 圖片 ${idx + 1}`} className="w-full h-full object-cover" />
                     </button>
                   ))}
                 </div>
@@ -220,11 +220,17 @@ export default function BlogPost({ slug }: { slug: string }) {
 
           {/* ── Article content ──────────────────────────────────── */}
           <div className="prose prose-invert max-w-none" style={{ color: "var(--text-2)", lineHeight: "1.9" }}>
-            {post.content.split("\n").map((para, i) =>
-              para.trim() ? (
-                <p key={i} className="mb-4" style={{ color: "var(--text-2)" }}>{para}</p>
-              ) : <br key={i} />
-            )}
+            {post.content.split("\n").map((para, i) => {
+              const trimmed = para.trim();
+              if (!trimmed) return <br key={i} />;
+              if (trimmed.startsWith("## ")) {
+                return <h2 key={i} className="text-xl font-black mt-8 mb-4" style={{ color: "var(--text)" }}>{trimmed.replace(/^## /, "")}</h2>;
+              }
+              if (trimmed.startsWith("### ")) {
+                return <h3 key={i} className="text-lg font-bold mt-6 mb-3" style={{ color: "var(--text)" }}>{trimmed.replace(/^### /, "")}</h3>;
+              }
+              return <p key={i} className="mb-4" style={{ color: "var(--text-2)" }}>{trimmed}</p>;
+            })}
           </div>
 
           {/* ── Related Links ─────────────────────────────────────── */}
