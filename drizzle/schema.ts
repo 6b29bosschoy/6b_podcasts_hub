@@ -250,3 +250,33 @@ export const mysticUsage = mysqlTable("mystic_usage", {
 
 export type MysticUsage = typeof mysticUsage.$inferSelect;
 export type InsertMysticUsage = typeof mysticUsage.$inferInsert;
+
+// Stripe membership state. Stores only opaque Stripe identifiers and entitlement status;
+// customer email, name, payment method, and card data never enter this database.
+export const mysticMemberships = mysqlTable("mystic_memberships", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId"),
+  plan: varchar("plan", { length: 32 }).default("unknown").notNull(),
+  status: varchar("status", { length: 32 }).notNull(),
+  stripeSubscriptionId: varchar("stripeSubscriptionId", { length: 255 }).notNull().unique(),
+  stripeCustomerId: varchar("stripeCustomerId", { length: 255 }),
+  currentPeriodEnd: timestamp("currentPeriodEnd"),
+  cancelAtPeriodEnd: boolean("cancelAtPeriodEnd").default(false).notNull(),
+  lastStripeEventId: varchar("lastStripeEventId", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type MysticMembership = typeof mysticMemberships.$inferSelect;
+export type InsertMysticMembership = typeof mysticMemberships.$inferInsert;
+
+// Idempotency ledger for signed Stripe events. It contains event metadata only.
+export const stripeWebhookEvents = mysqlTable("stripe_webhook_events", {
+  id: int("id").autoincrement().primaryKey(),
+  stripeEventId: varchar("stripeEventId", { length: 255 }).notNull().unique(),
+  eventType: varchar("eventType", { length: 120 }).notNull(),
+  stripeSubscriptionId: varchar("stripeSubscriptionId", { length: 255 }),
+  receivedAt: timestamp("receivedAt").defaultNow().notNull(),
+});
+
+export type StripeWebhookEvent = typeof stripeWebhookEvents.$inferSelect;

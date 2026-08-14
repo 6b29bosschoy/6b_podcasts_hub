@@ -11,6 +11,7 @@ import { serveStatic, setupVite } from "./vite";
 import { getApprovedBlogPosts, getBlogPostBySlug } from "../db";
 import mysticStreamRouter from "../mysticStream";
 import { getHomeRedirectTarget, PUBLIC_SITEMAP_PATHS } from "./seo";
+import { handleStripeWebhook } from "../stripeWebhook";
 
 // Estimate token count (rough approximation: 1 token ≈ 4 chars)
 function estimateTokens(text: string): number {
@@ -49,6 +50,9 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 async function startServer() {
   const app = express();
   const server = createServer(app);
+  // Stripe signatures are calculated from the untouched request body, so this
+  // route must be registered before global JSON parsing.
+  app.post("/api/stripe/webhook", express.raw({ type: "application/json" }), handleStripeWebhook);
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));

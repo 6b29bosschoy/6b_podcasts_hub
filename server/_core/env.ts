@@ -10,4 +10,7 @@ export const ENV = {
   vapidPublicKey: process.env.VAPID_PUBLIC_KEY ?? "",
   vapidPrivateKey: process.env.VAPID_PRIVATE_KEY ?? "",
   deepseekApiKey: process.env.DEEPSEEK_API_KEY ?? "",
+  stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET ?? "",
+  stripePremiumPriceId: process.env.STRIPE_PREMIUM_PRICE_ID ?? "",
+  stripeVipPriceId: process.env.STRIPE_VIP_PRICE_ID ?? "",
 };

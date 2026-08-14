@@ -15,6 +15,7 @@ import {
   InsertSubscription,
   InsertUser,
   MysticUsage,
+  MysticMembership,
   ReaderSubmission,
   Subscription,
   YoutubeCache,
@@ -24,8 +25,10 @@ import {
   contacts,
   hostApplications,
   mysticUsage,
+  mysticMemberships,
   readerSubmissions,
   subscriptions,
+  stripeWebhookEvents,
   users,
   youtubeCache,
 } from "../drizzle/schema";
@@ -433,3 +436,73 @@ export async function incrementMysticUsage(userId: number): Promise<number> {
 
 export { DAILY_FREE_LIMIT };
 export type { MysticUsage };
+
+// ─── Stripe Membership Helpers ───────────────────────────────────────────────
+
+type StripeMembershipUpdate = {
+  stripeSubscriptionId: string;
+  stripeCustomerId?: string | null;
+  plan?: string;
+  status: string;
+  currentPeriodEnd?: Date | null;
+  cancelAtPeriodEnd?: boolean;
+  eventId: string;
+};
+
+/** Records an event id before processing it, preventing Stripe retries from duplicating work. */
+export async function recordStripeWebhookEvent(input: {
+  eventId: string;
+  eventType: string;
+  stripeSubscriptionId?: string | null;
+}): Promise<boolean> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const existing = await db.select({ id: stripeWebhookEvents.id })
+    .from(stripeWebhookEvents)
+    .where(eq(stripeWebhookEvents.stripeEventId, input.eventId))
+    .limit(1);
+  if (existing.length > 0) return false;
+  await db.insert(stripeWebhookEvents).values({
+    stripeEventId: input.eventId,
+    eventType: input.eventType,
+    stripeSubscriptionId: input.stripeSubscriptionId ?? null,
+  });
+  return true;
+}
+
+/** Upserts opaque Stripe subscription state. No buyer name, email, or payment data is stored. */
+export async function upsertStripeMembership(input: StripeMembershipUpdate): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(mysticMemberships).values({
+    stripeSubscriptionId: input.stripeSubscriptionId,
+    stripeCustomerId: input.stripeCustomerId ?? null,
+    plan: input.plan ?? "unknown",
+    status: input.status,
+    currentPeriodEnd: input.currentPeriodEnd ?? null,
+    cancelAtPeriodEnd: input.cancelAtPeriodEnd ?? false,
+    lastStripeEventId: input.eventId,
+  }).onDuplicateKeyUpdate({
+    set: {
+      stripeCustomerId: input.stripeCustomerId ?? null,
+      plan: input.plan ?? "unknown",
+      status: input.status,
+      currentPeriodEnd: input.currentPeriodEnd ?? null,
+      cancelAtPeriodEnd: input.cancelAtPeriodEnd ?? false,
+      lastStripeEventId: input.eventId,
+    },
+  });
+}
+
+/** Returns true only for a linked website account with an active paid subscription. */
+export async function hasActiveMysticMembership(userId: number): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+  const rows = await db.select({ status: mysticMemberships.status })
+    .from(mysticMemberships)
+    .where(eq(mysticMemberships.userId, userId))
+    .limit(1);
+  return rows[0]?.status === "active" || rows[0]?.status === "trialing";
+}
+
+export type { MysticMembership };

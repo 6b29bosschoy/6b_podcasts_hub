@@ -5,7 +5,7 @@
  */
 import { Router, Request, Response } from "express";
 import { ENV } from "./_core/env";
-import { canUseMysticToday, incrementMysticUsage } from "./db";
+import { canUseMysticToday, hasActiveMysticMembership, incrementMysticUsage } from "./db";
 import { sdk } from "./_core/sdk";
 
 // 農曆轉公曆（使用 lunar-typescript）
@@ -209,7 +209,7 @@ function buildAkashicPrompts(body: {
 
 // ── Auth + Quota middleware helper ─────────────────────────────────────────────────────
 
-async function checkAuthAndQuota(req: Request, res: Response): Promise<{ userId: number } | null> {
+async function checkAuthAndQuota(req: Request, res: Response): Promise<{ userId: number; hasPaidMembership: boolean } | null> {
   let user;
   try {
     user = await sdk.authenticateRequest(req);
@@ -221,12 +221,14 @@ async function checkAuthAndQuota(req: Request, res: Response): Promise<{ userId:
     res.status(401).json({ error: "LOGIN_REQUIRED", message: "請先登入以使用玄學分析功能" });
     return null;
   }
+  const hasPaidMembership = await hasActiveMysticMembership(user.id);
+  if (hasPaidMembership) return { userId: user.id, hasPaidMembership: true };
   const { allowed, remaining } = await canUseMysticToday(user.id);
   if (!allowed) {
     res.status(429).json({ error: "QUOTA_EXCEEDED", message: `今日免費額度已用盡，明日再來！`, remaining: 0 });
     return null;
   }
-  return { userId: user.id };
+  return { userId: user.id, hasPaidMembership: false };
 }
 
 // ── Routes ───────────────────────────────────────────────────────────────────────────
@@ -248,8 +250,8 @@ router.post("/stream-report", async (req: Request, res: Response) => {
       res.status(400).json({ error: "Missing required fields" });
       return;
     }
-    // Increment usage before streaming
-    await incrementMysticUsage(auth.userId);
+    // Free accounts use the daily quota; an active paid membership does not.
+    if (!auth.hasPaidMembership) await incrementMysticUsage(auth.userId);
     const { systemPrompt, userPrompt } = buildReportPrompts(body);
     await streamLLM(systemPrompt, userPrompt, res);
   } catch (err) {
@@ -269,8 +271,8 @@ router.post("/stream-akashic", async (req: Request, res: Response) => {
       res.status(400).json({ error: "Missing required fields" });
       return;
     }
-    // Increment usage before streaming
-    await incrementMysticUsage(auth.userId);
+    // Free accounts use the daily quota; an active paid membership does not.
+    if (!auth.hasPaidMembership) await incrementMysticUsage(auth.userId);
     const { systemPrompt, userPrompt } = buildAkashicPrompts(body);
     await streamLLM(systemPrompt, userPrompt, res);
   } catch (err) {

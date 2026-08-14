@@ -173,3 +173,6 @@
 - [x] 取得一次含 `{CHECKOUT_SESSION_ID}` 的新 Stripe 沙盒成功返回後，驗證 purchase 事件實際送達各分析平台
 - [x] 使用已確認的第二次 Premium Stripe 沙盒測試訂閱，驗證成功返回帶有 session_id、purchase 事件防重複邏輯及付款取消頁
 - [x] 為 Stripe 付款流程加入獨立取消頁與清楚文案；若 Payment Link 無法設定取消返回，記錄技術限制及轉為 Checkout Session 的條件
+- [x] 建立 `/api/stripe/webhook` 端點，驗證 Stripe 簽名並處理已選擇的 Checkout、訂閱建立／更新／取消及付款失敗事件
+- [x] 建立最少化訂閱狀態儲存與會員權益同步機制，不寫入不必要 Stripe 個人資料
+- [ ] 完成 live Webhook 後安全設定 signing secret、觸發測試事件並核對端點回應
