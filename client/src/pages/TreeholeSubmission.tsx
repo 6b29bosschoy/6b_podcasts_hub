@@ -1,7 +1,8 @@
 import React, { useState, useEffect, type FormEvent } from "react";
 import { Link } from "wouter";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { CheckCircle2, ChevronLeft, Heart, LockKeyhole, PenLine, Send, Youtube, MessageCircle } from "lucide-react";
+import { CheckCircle2, ChevronLeft, Heart, LockKeyhole, PenLine, Send, Youtube, MessageCircle, LoaderCircle } from "lucide-react";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { trackEvent } from "@/lib/analytics";
 import { useSEO } from "@/hooks/useSEO";
@@ -19,6 +20,10 @@ const RELATIONSHIP_STATUSES = ["單身", "曖昧中", "拍拖中", "已婚", "�
 const GENDERS = ["男", "女", "唔想講"] as const;
 const AGE_GROUPS = ["18-24", "25-30", "31-40", "41-50", "50+"] as const;
 const PROBLEM_DURATIONS = ["一個月內", "半年內", "一年以上", "好多年"] as const;
+const SUCCESS_TOAST = {
+  title: "心事已投入樹窿",
+  description: "多謝你信任我哋，會按你選擇嘅方式處理。",
+} as const;
 
 export default function TreeholeSubmission() {
   const [nickname, setNickname] = useState("");
@@ -31,7 +36,7 @@ export default function TreeholeSubmission() {
   const [publicPermission, setPublicPermission] = useState("");
   const [deepInterpretation, setDeepInterpretation] = useState("");
   const [contactMethod, setContactMethod] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState(() => new URLSearchParams(window.location.search).get("submitted") === "1");
   const [formError, setFormError] = useState("");
   const [utmParams, setUtmParams] = useState({ utmSource: "", utmMedium: "", utmCampaign: "" });
   const [honeypot, setHoneypot] = useState("");
@@ -46,6 +51,10 @@ export default function TreeholeSubmission() {
     });
   }, []);
 
+  useEffect(() => {
+    if (submitted) toast.success(SUCCESS_TOAST.title, { description: SUCCESS_TOAST.description });
+  }, [submitted]);
+
   useSEO({
     title: "路邊感情樹窿｜匿名投稿",
     description: "匿名分享你嘅感情問題，路邊Podcasts 會以不識別身份方式解讀與整理觀眾故事。",
@@ -56,6 +65,9 @@ export default function TreeholeSubmission() {
   const submitMutation = trpc.submission.submitTreehole.useMutation({
     onSuccess: () => {
       setSubmitted(true);
+      const params = new URLSearchParams(window.location.search);
+      params.set("submitted", "1");
+      window.history.replaceState(null, "", `${window.location.pathname}?${params.toString()}`);
       trackEvent("treehole_submit", { source: "treehole_form" });
       setNickname("");
       setGender("");
@@ -74,6 +86,7 @@ export default function TreeholeSubmission() {
 
   const charactersRemaining = TREEHOLE_MAX_CHARACTERS - story.length;
   const contactRequired = requiresTreeholeContact(publicPermission, deepInterpretation);
+  const isSubmitting = submitMutation.isPending;
   const isStoryValid = story.trim().length >= TREEHOLE_MIN_CHARACTERS && story.length <= TREEHOLE_MAX_CHARACTERS;
   const isReady = Boolean(
     nickname.trim()
@@ -83,7 +96,7 @@ export default function TreeholeSubmission() {
     && publicPermission
     && deepInterpretation
     && (!contactRequired || contactMethod.trim())
-    && !submitMutation.isPending,
+    && !isSubmitting,
   );
 
   function toggleTopic(tag: string) {
@@ -191,7 +204,7 @@ export default function TreeholeSubmission() {
                       <MessageCircle size={16} /> Follow Threads
                     </a>
                   </div>
-                  <button type="button" onClick={() => setSubmitted(false)} className="mt-5 inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold transition-transform active:scale-[0.98]" style={{ background: "var(--gold)", color: "var(--bg)" }}>
+                  <button type="button" onClick={() => { setSubmitted(false); const params = new URLSearchParams(window.location.search); params.delete("submitted"); window.history.replaceState(null, "", `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ""}`); }} className="mt-5 inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold transition-transform active:scale-[0.98]" style={{ background: "var(--gold)", color: "var(--bg)" }}>
                     <PenLine size={15} /> 再投一個故事
                   </button>
                 </motion.section>
@@ -250,8 +263,15 @@ export default function TreeholeSubmission() {
 
                   {formError && <p id="treehole-error" className="text-sm" role="alert" style={{ color: "var(--red-bright)" }}>{formError}</p>}
 
-                  <button type="submit" disabled={!isReady} className="flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-sm font-bold transition-all active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45" style={{ background: "linear-gradient(135deg, var(--red), var(--gold))", color: "white" }}>
-                    {submitMutation.isPending ? "投入緊樹窿…" : <><Send size={16} /> 投入樹窿 🌳</>}
+                  <button type="submit" disabled={!isReady} aria-busy={isSubmitting} className="flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-sm font-bold transition-all active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45" style={{ background: "linear-gradient(135deg, var(--red), var(--gold))", color: "white" }}>
+                    {isSubmitting ? (
+                      <>
+                        <motion.span aria-hidden="true" animate={reduceMotion ? undefined : { rotate: 360 }} transition={reduceMotion ? undefined : { duration: 0.8, repeat: Infinity, ease: "linear" }} className="inline-flex">
+                          <LoaderCircle size={17} />
+                        </motion.span>
+                        投入緊樹窿…
+                      </>
+                    ) : <><Send size={16} /> 投入樹窿 🌳</>}
                   </button>
                 </motion.form>
               )}

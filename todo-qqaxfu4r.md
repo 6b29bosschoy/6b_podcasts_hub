@@ -86,7 +86,17 @@
 - [x] 實作每筆投稿的擁有者 email 通知或確認現有通知服務的可用替代流程
 - [x] 補充投稿、honeypot、UTM、感謝頁、管理權限及 CSV 匯出的自動化測試
 - [x] 驗證桌面／流動版投稿成功流程、管理查看及 CSV 匯出
-- [ ] 儲存完整感情樹窿投稿與管理功能版本
+- [x] 儲存完整感情樹窿投稿與管理功能版本
+- [x] 檢視感情樹窿提交按鈕及既有 toast 元件，設計 loading 與成功回饋
+- [x] 加入提交期間的順滑 spinner、按鈕停用狀態及成功 toast 訊息
+- [x] 補充 loading／toast 互動測試，並驗證桌面及流動版顯示
+- [x] 儲存感情樹窿提交回饋優化版本
+- [x] 新增可執行的 Treehole 互動測試：提交時 spinner、busy／disabled 狀態及成功 toast
+- [x] 補做 Treehole spinner 與成功 toast 的桌面及 375px 流動版視覺驗證
+- [x] 在桌面版實際提交 Treehole，驗證 spinner、busy 按鈕及成功 toast 的位置與對比
+- [x] 在 375px 流動版實際提交 Treehole，驗證 spinner 與成功 toast 不被裁切或遮擋
+- [x] 在桌面瀏覽器以真實 Treehole 提交流程驗證 spinner、busy 按鈕及 success toast
+- [x] 在 375px 流動版以真實 Treehole 提交流程驗證 spinner 與 success toast 的安全區顯示
 - [x] 盤點既有 Gmail 郵件發送設定並將新投稿通知切換回該流程
 - [x] 以安全的無內容或測試模式驗證 Gmail 投稿通知可成功送達，不重複要求 Resend 憑證
 - [x] 協助使用者於 Google 帳戶安全性頁登入並建立 Gmail App Password

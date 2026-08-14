@@ -4,27 +4,35 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
+const { toastSuccess } = vi.hoisted(() => ({ toastSuccess: vi.fn() }));
 const mutate = vi.fn();
-let mutationResult: "success" | "error" = "success";
+let mutationResult: "success" | "error" | "pending" = "success";
+let latestMutationOptions: { onSuccess: () => void; onError?: () => void } | null = null;
 
 vi.mock("../client/src/lib/trpc", () => ({
   trpc: {
     submission: {
       submitTreehole: {
-        useMutation: (options: { onSuccess: () => void }) => ({
+        useMutation: (options: { onSuccess: () => void; onError?: () => void }) => {
+          const [isPending, setIsPending] = React.useState(false);
+          latestMutationOptions = options;
+          return {
           mutate: (input: unknown) => {
             mutate(input);
+            setIsPending(true);
             if (mutationResult === "success") options.onSuccess();
-            else (options as { onError?: () => void }).onError?.();
+            else if (mutationResult === "error") options.onError?.();
           },
-          isPending: false,
-        }),
+          isPending,
+        };
+        },
       },
     },
   },
 }));
 
 vi.mock("../client/src/hooks/useSEO", () => ({ useSEO: () => undefined }));
+vi.mock("sonner", () => ({ toast: { success: toastSuccess } }));
 vi.mock("wouter", () => ({ Link: ({ children, ...props }: React.ComponentPropsWithoutRef<"a">) => <a {...props}>{children}</a> }));
 vi.mock("framer-motion", () => {
   const componentCache = new Map<string, React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>>>();
@@ -51,7 +59,10 @@ import TreeholeSubmission from "../client/src/pages/TreeholeSubmission";
 
 afterEach(() => {
   mutate.mockReset();
+  toastSuccess.mockReset();
   mutationResult = "success";
+  latestMutationOptions = null;
+  window.history.replaceState(null, "", "/treehole");
   cleanup();
 });
 
@@ -111,5 +122,26 @@ describe("感情樹窿表單互動", () => {
     await user.keyboard("{Enter}");
 
     await waitFor(() => expect(screen.getByRole("alert").textContent).toContain("而家未能投入樹窿"));
+  });
+
+  it("shows a spinner and busy disabled state while submitting, then triggers a success toast", async () => {
+    mutationResult = "pending";
+    const user = userEvent.setup();
+    render(<TreeholeSubmission />);
+
+    await fillRequiredTreehole(user);
+    const submit = screen.getByRole("button", { name: "投入樹窿 🌳" });
+    await waitFor(() => expect((submit as HTMLButtonElement).disabled).toBe(false));
+    await user.click(submit);
+
+    await waitFor(() => {
+      const pendingButton = screen.getByRole("button", { name: /投入緊樹窿/ });
+      expect(pendingButton.getAttribute("aria-busy")).toBe("true");
+      expect((pendingButton as HTMLButtonElement).disabled).toBe(true);
+    });
+
+    latestMutationOptions?.onSuccess();
+    await waitFor(() => expect(screen.getByTestId("treehole-success")).toBeTruthy());
+    await waitFor(() => expect(toastSuccess).toHaveBeenCalledWith("心事已投入樹窿", expect.objectContaining({ description: expect.any(String) })));
   });
 });

@@ -43,6 +43,14 @@ describe("treehole UTM and honeypot", () => {
     expect(source).toContain("threads.net/@6bpodcasts");
   });
 
+  it("shows a spinner while submitting and a toast on success", () => {
+    const source = readSource("client/src/pages/TreeholeSubmission.tsx");
+    expect(source).toContain("LoaderCircle");
+    expect(source).toContain("aria-busy={isSubmitting}");
+    expect(source).toContain('title: "心事已投入樹窿"');
+    expect(source).toContain("toast.success(SUCCESS_TOAST.title");
+  });
+
   it("admin page includes CSV export and UTM display", () => {
     const source = readSource("client/src/pages/Admin.tsx");
     expect(source).toContain("匯出 CSV");
