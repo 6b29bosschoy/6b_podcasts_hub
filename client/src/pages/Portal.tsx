@@ -465,6 +465,20 @@ export default function Portal() {
       {/* ── SHORT HIGHLIGHTS ── */}
       <ShortHighlightsSection videos={allVideos} loading={videosLoading} />
 
+      {/* ── TREEHOLE CTA ── */}
+      <section id="submissions" className="container py-4 md:py-8" style={{ scrollMarginTop: "5rem" }}>
+        <div className="grid gap-5 rounded-2xl p-6 md:grid-cols-[1fr_auto] md:items-center md:p-8" style={{ background: "var(--bg-raise)", border: "1px solid var(--line)" }}>
+          <div>
+            <p className="text-sm font-bold" style={{ color: "var(--gold)" }}>感情樹窿</p>
+            <h2 className="mt-2 text-2xl font-bold" style={{ color: "var(--text)", fontFamily: "'Noto Serif TC', serif" }}>有啲心事，未必需要署名。</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6" style={{ color: "var(--text-3)" }}>匿名寫低你嘅關係困局、心底話或想問嘅問題。故事會先經審核，再決定會唔會用不識別方式討論。</p>
+          </div>
+          <Link href="/treehole" className="inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold transition-transform active:scale-[0.98]" style={{ background: "var(--gold)", color: "var(--bg)" }}>
+            匿名投稿 <ChevronRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </section>
+
       {/* ── LATEST VIDEOS ── */}
       <section className="container py-16">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">

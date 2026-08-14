@@ -20,6 +20,7 @@ const MonetizationPlan = lazy(() => import("./pages/MonetizationPlan"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const BlogSubmit = lazy(() => import("./pages/BlogSubmit"));
+const TreeholeSubmission = lazy(() => import("./pages/TreeholeSubmission"));
 const Booking = lazy(() => import("./pages/Booking"));
 const Contact = lazy(() => import("./pages/Contact"));
 const HostRecruitment = lazy(() => import("@/pages/HostRecruitment"));
@@ -76,6 +77,7 @@ function Router() {
         <Route path="/monetization-plan" component={MonetizationPlan} />
         <Route path="/blog" component={Blog} />
         <Route path="/blog/submit" component={BlogSubmit} />
+        <Route path="/treehole" component={TreeholeSubmission} />
         <Route path="/blog/:slug">
           {(params) => <BlogPost slug={params.slug} />}
         </Route>

@@ -15,9 +15,10 @@ import {
 
 describe("SEO server output", () => {
   it("uses the non-www canonical origin for every public sitemap route", async () => {
-    expect(PUBLIC_SITEMAP_PATHS).toEqual(expect.arrayContaining(["/blog/submit", "/welcome", "/mystic/funnel"]));
+    expect(PUBLIC_SITEMAP_PATHS).toEqual(expect.arrayContaining(["/blog/submit", "/treehole", "/welcome", "/mystic/funnel"]));
     expect(PUBLIC_SITEMAP_PATHS).not.toContain("/home");
     expect(PUBLIC_SITEMAP_PATHS).not.toContain("/monetization-plan");
+    expect(PUBLIC_SITEMAP_PATHS).not.toContain("/investors");
     expect(PUBLIC_SITEMAP_PATHS).not.toContain("/mystic/masters/master-1");
     for (const path of PUBLIC_SITEMAP_PATHS) {
       const document = await resolveSeoDocument(path);
@@ -95,6 +96,15 @@ describe("SEO server output", () => {
     const head = renderSeoHead(document);
 
     expect(document.canonicalUrl).toBe("https://6bpodcasts.com/monetization-plan");
+    expect(document.robots).toBe("noindex, nofollow");
+    expect(head).toContain('<meta name="robots" content="noindex, nofollow" />');
+  });
+
+  it("keeps the investors page directly reachable but marks its raw head as noindex, nofollow", async () => {
+    const document = await resolveSeoDocument("/investors");
+    const head = renderSeoHead(document);
+
+    expect(document.canonicalUrl).toBe("https://6bpodcasts.com/investors");
     expect(document.robots).toBe("noindex, nofollow");
     expect(head).toContain('<meta name="robots" content="noindex, nofollow" />');
   });

@@ -61,6 +61,7 @@ import {
 import { storagePut } from "./storage";
 import { generateFaqForPost } from "./faqHelper";
 import { isTopicSlug, TOPIC_SLUG_ERROR } from "./blogSlug";
+import { TREEHOLE_MAX_CHARACTERS, TREEHOLE_MIN_CHARACTERS } from "../shared/treehole";
 
 /** Resolve channel handle to ID, with 24h DB cache */
 async function getCachedChannelId(handle: string): Promise<string> {
@@ -538,7 +539,7 @@ export const appRouter = router({
       .input(z.object({
         nickname: z.string().min(1).max(50),
         category: z.enum(["relationship", "fengshui", "confession", "question", "other"]),
-        content: z.string().min(10).max(1000),
+        content: z.string().min(TREEHOLE_MIN_CHARACTERS).max(TREEHOLE_MAX_CHARACTERS),
         isAnonymous: z.boolean().default(false),
         imageUrls: z.array(z.string().url()).max(5).default([]),
       }))

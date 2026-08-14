@@ -14,10 +14,10 @@ const STATIC_SITEMAP_PATHS = [
   "/partnership",
   "/blog",
   "/blog/submit",
+  "/treehole",
   "/booking",
   "/contact",
   "/host-recruitment",
-  "/investors",
   "/welcome",
   "/mystic",
   "/mystic/analysis",
@@ -113,6 +113,12 @@ const PAGE_SEO: Record<string, SeoPage> = {
     description: "向路邊電台匿名投稿感情故事與都市情感心事。",
     h1: "路邊電台感情樹窿匿名投稿",
     intro: "有些感情問題未必方便同身邊人講；你可以匿名投稿，讓故事成為更多人整理關係的入口。",
+  },
+  "/treehole": {
+    title: "感情樹窿匿名投稿｜路邊電台",
+    description: "匿名講出你嘅感情故事、心底話或關係困局。路邊電台會先審核內容，再以不識別身份方式分享。",
+    h1: "感情樹窿匿名投稿",
+    intro: "有些感情問題未必方便同身邊人講；你可以匿名寫低故事、心底話或想問嘅問題，讓故事成為更多人整理關係的入口。",
   },
   "/booking": {
     title: "預約一對一｜路邊玄學堂",
@@ -224,7 +230,7 @@ const homeJsonLd = [
 const fallbackLinks = [
   { href: "/podcasts", label: "路邊電台" },
   { href: "/mystic", label: "路邊玄學堂" },
-  { href: "/blog/submit", label: "感情樹窿投稿" },
+  { href: "/treehole", label: "感情樹窿投稿" },
 ];
 
 const LEGACY_MASTER_IDS = new Set(["master-1", "master-2", "master-3", "master-4"]);
@@ -300,7 +306,7 @@ export async function resolveSeoDocument(pathname: string): Promise<SeoDocument>
     ...page,
     path,
     canonicalUrl: `${CANONICAL_ORIGIN}${path === "/" ? "/" : path}`,
-    robots: path === "/monetization-plan" ? "noindex, nofollow" : "index, follow",
+    robots: path === "/monetization-plan" || path === "/investors" ? "noindex, nofollow" : "index, follow",
   };
 }
 

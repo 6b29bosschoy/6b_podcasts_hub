@@ -29,7 +29,7 @@ const NAV_ITEMS = [
 ];
 
 const SUBMIT_OPTIONS = [
-  { icon: "✍", label: "觀眾投稿", desc: "分享你的故事、心底話", href: "/#submissions", isAnchor: true },
+  { icon: "✍", label: "感情樹窿", desc: "匿名講出你嘅故事", href: "/treehole", isAnchor: false },
   { icon: "✍", label: "嘉賓投稿", desc: "投稿嘉賓專欄文章", href: "/blog/submit", isAnchor: false },
   { icon: "✍", label: "主持招募", desc: "加入我們的節目主持團隊", href: "/host-recruitment", isAnchor: false },
 ];
