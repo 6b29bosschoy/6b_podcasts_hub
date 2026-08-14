@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { toast } from "sonner";
@@ -368,6 +368,48 @@ export default function Admin() {
 
       {tab === "submissions" && (
         <div className="flex flex-col gap-4">
+            {/* CSV Export */}
+            {submissions?.items && submissions.items.length > 0 && (
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const headers = ["ID", "花名", "分類", "內容", "性別", "年齡層", "感情狀態", "問題類別", "困擾時間", "公開意願", "深入解讀", "聯絡方式", "UTM Source", "UTM Medium", "UTM Campaign", "狀態", "建立時間"];
+                    const rows = submissions.items.map((s) => [
+                      s.id,
+                      s.nickname,
+                      s.category,
+                      `"${s.content.replace(/"/g, '""')}"`,
+                      s.gender ?? "",
+                      s.ageGroup ?? "",
+                      s.relationshipStatus,
+                      s.topicTags,
+                      s.problemDuration ?? "",
+                      s.publicPermission,
+                      s.deepInterpretation,
+                      s.contactMethod ?? "",
+                      s.utmSource ?? "",
+                      s.utmMedium ?? "",
+                      s.utmCampaign ?? "",
+                      s.status,
+                      new Date(s.createdAt).toLocaleString("zh-HK"),
+                    ]);
+                    const csv = [headers, ...rows].map((r) => r.join(",")).join("\n");
+                    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `treehole-submissions-${new Date().toISOString().slice(0, 10)}.csv`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                  }}
+                  className="text-xs px-3 py-1.5 rounded-lg font-bold transition-all hover:opacity-90"
+                  style={{ background: "var(--gold)", color: "var(--bg)" }}
+                >
+                  匯出 CSV
+                </button>
+              </div>
+            )}
             {/* Legend */}
             <div className="flex gap-3 text-xs flex-wrap" style={{ color: "var(--text-3)" }}>
               <span>🟡 待審核</span>
@@ -412,6 +454,11 @@ export default function Admin() {
                         {new Date(s.createdAt).toLocaleString("zh-HK")}
                       </span>
                       <span className="text-xs" style={{ color: "var(--red)" }}>♥ {s.likes}</span>
+                      {s.utmSource && (
+                        <span className="text-xs px-2 py-0.5 rounded" style={{ background: "var(--bg-raise)", color: "var(--gold)" }}>
+                          UTM: {s.utmSource}
+                        </span>
+                      )}
                     </div>
                   </div>
 

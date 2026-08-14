@@ -15,6 +15,13 @@
       "when": 1786667545680,
       "tag": "0001_sour_scorpion",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1786676409109,
+      "tag": "0002_noisy_tarot",
+      "breakpoints": true
     }
   ]
 }

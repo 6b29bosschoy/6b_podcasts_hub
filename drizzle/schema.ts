@@ -128,6 +128,12 @@ export const readerSubmissions = mysqlTable("reader_submissions", {
   publicPermission: varchar("publicPermission", { length: 64 }).default("not_specified").notNull(),
   deepInterpretation: varchar("deepInterpretation", { length: 32 }).default("not_specified").notNull(),
   contactMethod: varchar("contactMethod", { length: 255 }),
+  // UTM tracking for content promotion attribution
+  utmSource: varchar("utmSource", { length: 255 }),
+  utmMedium: varchar("utmMedium", { length: 255 }),
+  utmCampaign: varchar("utmCampaign", { length: 255 }),
+  // Honeypot anti-spam: should always be empty for real submissions
+  honeypot: varchar("honeypot", { length: 255 }),
   // JSON array of S3 image URLs (max 5), stored as varchar to support TiDB default value
   images: varchar("images", { length: 5000 }).default("[]").notNull(),
   status: mysqlEnum("status", ["pending", "approved", "rejected", "published"]).default("pending").notNull(),

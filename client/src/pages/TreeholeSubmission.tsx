@@ -1,7 +1,7 @@
-import React, { useState, type FormEvent } from "react";
+import React, { useState, useEffect, type FormEvent } from "react";
 import { Link } from "wouter";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { CheckCircle2, ChevronLeft, Heart, LockKeyhole, PenLine, Send } from "lucide-react";
+import { CheckCircle2, ChevronLeft, Heart, LockKeyhole, PenLine, Send, Youtube, MessageCircle } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { trackEvent } from "@/lib/analytics";
 import { useSEO } from "@/hooks/useSEO";
@@ -33,7 +33,18 @@ export default function TreeholeSubmission() {
   const [contactMethod, setContactMethod] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [formError, setFormError] = useState("");
+  const [utmParams, setUtmParams] = useState({ utmSource: "", utmMedium: "", utmCampaign: "" });
+  const [honeypot, setHoneypot] = useState("");
   const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setUtmParams({
+      utmSource: params.get("utm_source") ?? "",
+      utmMedium: params.get("utm_medium") ?? "",
+      utmCampaign: params.get("utm_campaign") ?? "",
+    });
+  }, []);
 
   useSEO({
     title: "路邊感情樹窿｜匿名投稿",
@@ -101,6 +112,10 @@ export default function TreeholeSubmission() {
       publicPermission: publicPermission as (typeof TREEHOLE_PUBLIC_PERMISSIONS)[number],
       deepInterpretation: deepInterpretation as (typeof TREEHOLE_DEEP_INTERPRETATIONS)[number],
       contactMethod: contactRequired ? contactMethod.trim() : undefined,
+      utmSource: utmParams.utmSource || undefined,
+      utmMedium: utmParams.utmMedium || undefined,
+      utmCampaign: utmParams.utmCampaign || undefined,
+      honeypot: honeypot || undefined,
     });
   }
 
@@ -156,12 +171,38 @@ export default function TreeholeSubmission() {
                   <p className="mx-auto mt-3 max-w-sm text-sm leading-7" style={{ color: "var(--text-3)" }}>
                     多謝你信任我哋。投稿會以匿名方式整理；如果你揀咗可聯絡，我哋會按你嘅意願跟進。
                   </p>
-                  <button type="button" onClick={() => setSubmitted(false)} className="mt-7 inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold transition-transform active:scale-[0.98]" style={{ background: "var(--gold)", color: "var(--bg)" }}>
+                  <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <a
+                      href="https://www.youtube.com/@6bpodcasts"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold transition-transform active:scale-[0.98]"
+                      style={{ background: "var(--red)", color: "white" }}
+                    >
+                      <Youtube size={16} /> 訂閱 YouTube
+                    </a>
+                    <a
+                      href="https://www.threads.net/@6bpodcasts"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold transition-transform active:scale-[0.98]"
+                      style={{ background: "var(--bg-card)", color: "var(--text)", border: "1px solid var(--line)" }}
+                    >
+                      <MessageCircle size={16} /> Follow Threads
+                    </a>
+                  </div>
+                  <button type="button" onClick={() => setSubmitted(false)} className="mt-5 inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold transition-transform active:scale-[0.98]" style={{ background: "var(--gold)", color: "var(--bg)" }}>
                     <PenLine size={15} /> 再投一個故事
                   </button>
                 </motion.section>
               ) : (
                 <motion.form key="form" initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={reduceMotion ? undefined : { opacity: 0 }} transition={{ duration: 0.2 }} onSubmit={handleSubmit} className="relative space-y-7" noValidate>
+                  {/* Honeypot: hidden from real users, bots will fill it */}
+                  <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", top: "-9999px", height: 0, overflow: "hidden" }}>
+                    <label htmlFor="treehole-website">網站（請勿填寫）</label>
+                    <input id="treehole-website" name="website" type="text" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+                  </div>
+
                   <FieldLabel htmlFor="treehole-nickname" required>你想我哋點稱呼你？</FieldLabel>
                   <input id="treehole-nickname" value={nickname} onChange={(event) => setNickname(event.target.value)} required maxLength={50} placeholder="花名就得，例：觀塘K小姐" className="treehole-input" />
 

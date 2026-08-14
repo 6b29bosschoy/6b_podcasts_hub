@@ -619,12 +619,20 @@ export const appRouter = router({
         publicPermission: z.enum(TREEHOLE_PUBLIC_PERMISSIONS),
         deepInterpretation: z.enum(TREEHOLE_DEEP_INTERPRETATIONS),
         contactMethod: z.string().trim().min(1).max(255).optional(),
+        utmSource: z.string().trim().max(255).optional(),
+        utmMedium: z.string().trim().max(255).optional(),
+        utmCampaign: z.string().trim().max(255).optional(),
+        honeypot: z.string().max(255).optional(),
       }).superRefine((input, ctx) => {
         if (requiresTreeholeContact(input.publicPermission, input.deepInterpretation) && !input.contactMethod?.trim()) {
           ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["contactMethod"], message: "請留下聯絡方式" });
         }
       }))
       .mutation(async ({ input }) => {
+        // Honeypot: silently accept but discard spam submissions
+        if (input.honeypot) {
+          return { success: true };
+        }
         await createReaderSubmission({
           nickname: input.nickname,
           category: "relationship",
@@ -638,6 +646,10 @@ export const appRouter = router({
           publicPermission: input.publicPermission,
           deepInterpretation: input.deepInterpretation,
           contactMethod: input.contactMethod?.trim() || null,
+          utmSource: input.utmSource || null,
+          utmMedium: input.utmMedium || null,
+          utmCampaign: input.utmCampaign || null,
+          honeypot: null,
           images: "[]",
         });
         const contactSummary = input.contactMethod?.trim() ? `｜聯絡方式：${input.contactMethod.trim()}` : "";
