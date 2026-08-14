@@ -16,7 +16,7 @@ export default function Footer() {
               />
               <div>
                 <div className="text-base font-bold" style={{ fontFamily: "'Noto Serif TC', serif", color: "var(--text)" }}>路邊系列</div>
-                <div className="text-xs" style={{ color: "var(--text-3)", fontFamily: "'Cormorant Garamond', serif", letterSpacing: "0.08em" }}>6B Media</div>
+                <div className="text-xs" style={{ color: "var(--text-3)", fontFamily: "'Cormorant Garamond', serif", letterSpacing: "0.08em" }}>6B PODCASTS</div>
               </div>
             </div>
             <p className="text-xs leading-relaxed" style={{ color: "var(--text-3)" }}>

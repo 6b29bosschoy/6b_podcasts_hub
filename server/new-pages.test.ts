@@ -141,6 +141,13 @@ describe("New page routes - static content verification", () => {
     expect(navbarSource).toContain('className="lg:hidden p-2"');
   });
 
+  it("uses 6B PODCASTS consistently in the shared footer", async () => {
+    const footerSource = await readFile(new URL("../client/src/components/Footer.tsx", import.meta.url), "utf8");
+
+    expect(footerSource).toContain(">6B PODCASTS</div>");
+    expect(footerSource).not.toMatch(/6B\s+Media/);
+  });
+
   it("mounts the short-video highlights rail on the homepage", async () => {
     const portalSource = await readFile(new URL("../client/src/pages/Portal.tsx", import.meta.url), "utf8");
 

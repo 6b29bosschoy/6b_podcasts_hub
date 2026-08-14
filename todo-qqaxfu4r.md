@@ -134,3 +134,5 @@
 - [x] 為 SEO 輸出與 sitemap 補充自動化測試
 - [x] 用 curl 對本機 production bundle 逐項驗證原始 HTML、meta、robots、sitemap、JSON-LD 及快取回應；公開網址驗證待發布後進行
 - [x] 儲存 SEO 技術修復為可發布版本
+- [x] 將頁尾所有「6B Media」統一為「6B PODCASTS」，補充防回歸測試並驗證桌面及流動版顯示
+- [x] 儲存頁尾品牌名稱統一版本
