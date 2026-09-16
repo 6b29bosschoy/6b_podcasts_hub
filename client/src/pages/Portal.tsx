@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { ShortHighlightsSection } from "@/components/ShortHighlightsSection";
 import { trackEvent } from "@/lib/analytics";
-import { Play, ChevronRight, Youtube, MessageCircle, ArrowDown } from "lucide-react";
+import { Play, ChevronRight, Youtube, Calendar } from "lucide-react";
 
 const HERO_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663073423209/XJagJnJEiagVDDmfVeExSL/hero-new-main-3ptD2DHC6jMTxZHCYKJLcE.webp";
 const HERO_BG_MOBILE = "https://d2xsxph8kpxj0f.cloudfront.net/310519663073423209/XJagJnJEiagVDDmfVeExSL/hero-new-mobile-WybngLNmW22rmhrdvNB7xw.webp";
@@ -20,7 +20,7 @@ const EXPLORE_CARDS = [
   },
   {
     emoji: "💬",
-    tag: "兩性故事",
+    tag: "感情故事",
     title: "看懂感情",
     desc: "讀者故事、關係分析、自我成長。從別人的故事，找到自己的答案。",
     href: "/blog",
@@ -174,7 +174,7 @@ export default function Portal() {
 
   return (
     <div
-      className="min-h-screen"
+      className="min-h-screen flex flex-col"
       style={{ background: "var(--bg)", color: "var(--text)" }}
     >
       {/* ── HERO ── */}
@@ -237,27 +237,25 @@ export default function Portal() {
           {/* Sub */}
           <p
             className="max-w-xl mx-auto mb-10 text-sm sm:text-base leading-relaxed"
-            style={{ color: "rgba(240,230,223,0.78)", fontWeight: 300 }}
+            style={{ color: "rgba(240,230,223,0.92)", fontWeight: 400 }}
           >
-            兩性故事、真實人物訪談與玄學人生指引，
+            感情故事、真實人物訪談與玄學人生指引，
             <br className="hidden sm:block" />
             陪你在每一次選擇之前，更了解自己。
           </p>
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/treehole" className="btn-gold">
-              <ArrowDown className="w-4 h-4" /> 匿名講低你嘅感情困局
-            </Link>
-            <a
-              href="https://wa.me/85298729990?text=你好，我想先問清楚服務安排"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-ghost"
-              onClick={() => trackEvent("whatsapp_click", { source: "homepage_hero" })}
+            <button
+              type="button"
+              className="btn-gold"
+              onClick={() => document.getElementById("latest-episodes")?.scrollIntoView({ behavior: "smooth" })}
             >
-              <MessageCircle className="w-4 h-4" /> WhatsApp先問清楚
-            </a>
+              <Play className="w-4 h-4" fill="currentColor" /> 睇最新一集
+            </button>
+            <Link href="/booking" className="btn-ghost">
+              <Calendar className="w-4 h-4" /> 了解玄學諮詢
+            </Link>
           </div>
 
           {/* Subscriber stats */}
@@ -277,7 +275,7 @@ export default function Portal() {
                   <div
                     className="text-xs mt-0.5"
                     style={{
-                      color: "rgba(240,230,223,0.5)",
+                      color: "rgba(240,230,223,0.76)",
                       letterSpacing: "0.06em",
                     }}
                   >
@@ -308,7 +306,7 @@ export default function Portal() {
                   <div
                     className="text-xs mt-0.5"
                     style={{
-                      color: "rgba(240,230,223,0.5)",
+                      color: "rgba(240,230,223,0.76)",
                       letterSpacing: "0.06em",
                     }}
                   >
@@ -335,6 +333,7 @@ export default function Portal() {
       {/* ── EXPLORE CARDS ── */}
       <section
         id="explore"
+        className="order-1"
         style={{
           background: "var(--bg-raise)",
           borderTop: "1px solid var(--line)",
@@ -462,25 +461,8 @@ export default function Portal() {
         </div>
       </section>
 
-      {/* ── SHORT HIGHLIGHTS ── */}
-      <ShortHighlightsSection videos={allVideos} loading={videosLoading} />
-
-      {/* ── TREEHOLE CTA ── */}
-      <section id="submissions" className="container py-4 md:py-8" style={{ scrollMarginTop: "5rem" }}>
-        <div className="grid gap-5 rounded-2xl p-6 md:grid-cols-[1fr_auto] md:items-center md:p-8" style={{ background: "var(--bg-raise)", border: "1px solid var(--line)" }}>
-          <div>
-            <p className="text-sm font-bold" style={{ color: "var(--gold)" }}>感情樹窿</p>
-            <h2 className="mt-2 text-2xl font-bold" style={{ color: "var(--text)", fontFamily: "'Noto Serif TC', serif" }}>有啲心事，未必需要署名。</h2>
-            <p className="mt-2 max-w-2xl text-sm leading-6" style={{ color: "var(--text-3)" }}>匿名寫低你嘅關係困局、心底話或想問嘅問題。故事會先經審核，再決定會唔會用不識別方式討論。</p>
-          </div>
-          <Link href="/treehole" className="inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold transition-transform active:scale-[0.98]" style={{ background: "var(--gold)", color: "var(--bg)" }}>
-            匿名投稿 <ChevronRight className="h-4 w-4" />
-          </Link>
-        </div>
-      </section>
-
       {/* ── LATEST VIDEOS ── */}
-      <section className="container py-16">
+      <section id="latest-episodes" className="container order-2 py-16" style={{ scrollMarginTop: "5rem" }}>
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
           <div>
             <p
@@ -491,7 +473,7 @@ export default function Portal() {
                 letterSpacing: "0.2em",
               }}
             >
-              Latest Episodes
+              New This Week
             </p>
             <h2
               className="text-2xl font-bold"
@@ -500,7 +482,7 @@ export default function Portal() {
                 color: "var(--text)",
               }}
             >
-              最新節目
+              精選節目
             </h2>
           </div>
           <div className="flex items-center gap-4">
@@ -509,21 +491,16 @@ export default function Portal() {
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 text-xs transition-colors duration-200"
-              style={{ color: "var(--text-3)" }}
+              style={{ color: "var(--text-2)" }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLElement).style.color = "var(--gold)";
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "var(--text-3)";
+                (e.currentTarget as HTMLElement).style.color = "var(--text-2)";
               }}
             >
               <Youtube className="w-3.5 h-3.5" /> 路邊電台
-              {podcastsSubs && (
-                <span style={{ color: "var(--text-3)" }}>
-                  {" "}
-                  {podcastsSubs} 訂閱
-                </span>
-              )}
+              {podcastsSubs && <span style={{ color: "var(--text-3)" }}> {podcastsSubs} 訂閱</span>}
             </a>
             <span style={{ color: "var(--line)", fontSize: "10px" }}>|</span>
             <a
@@ -531,21 +508,16 @@ export default function Portal() {
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 text-xs transition-colors duration-200"
-              style={{ color: "var(--text-3)" }}
+              style={{ color: "var(--text-2)" }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLElement).style.color = "var(--gold)";
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "var(--text-3)";
+                (e.currentTarget as HTMLElement).style.color = "var(--text-2)";
               }}
             >
               <Youtube className="w-3.5 h-3.5" /> 玄學堂
-              {fengshuiSubs && (
-                <span style={{ color: "var(--text-3)" }}>
-                  {" "}
-                  {fengshuiSubs} 訂閱
-                </span>
-              )}
+              {fengshuiSubs && <span style={{ color: "var(--text-3)" }}> {fengshuiSubs} 訂閱</span>}
             </a>
           </div>
         </div>
@@ -553,60 +525,47 @@ export default function Portal() {
         {videosLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                style={{
-                  background: "var(--bg-raise)",
-                  borderRadius: "var(--radius)",
-                  overflow: "hidden",
-                }}
-              >
-                <div
-                  className="aspect-video"
-                  style={{ background: "var(--bg)" }}
-                />
+              <div key={i} style={{ background: "var(--bg-raise)", borderRadius: "var(--radius)", overflow: "hidden" }}>
+                <div className="aspect-video" style={{ background: "var(--bg)" }} />
                 <div className="p-4 space-y-2">
-                  <div
-                    className="h-4 rounded"
-                    style={{ background: "var(--bg)", width: "80%" }}
-                  />
-                  <div
-                    className="h-3 rounded"
-                    style={{ background: "var(--bg)", width: "50%" }}
-                  />
+                  <div className="h-4 rounded" style={{ background: "var(--bg)", width: "80%" }} />
+                  <div className="h-3 rounded" style={{ background: "var(--bg)", width: "50%" }} />
                 </div>
               </div>
             ))}
           </div>
         ) : allVideos.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {allVideos.slice(0, 6).map((v) => (
-              <VideoCard key={v.id} v={v} />
-            ))}
+            {allVideos.slice(0, 6).map((v) => <VideoCard key={v.id} v={v} />)}
           </div>
         ) : (
-          <div
-            className="text-center py-16"
-            style={{ color: "var(--text-3)" }}
-          >
-            <Youtube className="w-10 h-10 mx-auto mb-3 opacity-40" />
-            <p className="text-sm">暫無影片</p>
+          <div className="text-center py-12" style={{ color: "var(--text-2)" }}>
+            <p className="text-sm">暫時未有可顯示嘅節目，請直接到 YouTube 頻道收聽。</p>
           </div>
         )}
 
         <div className="mt-10 text-center">
-          <Link
-            href="/episodes"
-            className="inline-flex items-center gap-2 text-sm transition-colors duration-200"
-            style={{ color: "var(--text-3)" }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "var(--gold)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "var(--text-3)";
-            }}
-          >
+          <Link href="/episodes" className="inline-flex items-center gap-2 text-sm transition-colors duration-200" style={{ color: "var(--text-2)" }} onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = "var(--gold)"; }} onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = "var(--text-2)"; }}>
             查看所有節目 <ChevronRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </section>
+
+      {/* ── SHORT HIGHLIGHTS ── */}
+      <div className="order-3">
+        <ShortHighlightsSection videos={allVideos} loading={videosLoading} />
+      </div>
+
+      {/* ── TREEHOLE CTA ── */}
+      <section id="submissions" className="container order-4 py-4 md:py-8" style={{ scrollMarginTop: "5rem" }}>
+        <div className="grid gap-5 rounded-2xl p-6 md:grid-cols-[1fr_auto] md:items-center md:p-8" style={{ background: "var(--bg-raise)", border: "1px solid var(--line)" }}>
+          <div>
+            <p className="text-sm font-bold" style={{ color: "var(--gold)" }}>感情樹窿</p>
+            <h2 className="mt-2 text-2xl font-bold" style={{ color: "var(--text)", fontFamily: "'Noto Serif TC', serif" }}>有啲心事，未必需要署名。</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6" style={{ color: "var(--text-3)" }}>匿名寫低你嘅關係困局、心底話或想問嘅問題。故事會先經審核，再決定會唔會用不識別方式討論。</p>
+          </div>
+          <Link href="/treehole" className="inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold transition-transform active:scale-[0.98]" style={{ background: "var(--gold)", color: "var(--bg)" }}>
+            匿名投稿 <ChevronRight className="h-4 w-4" />
           </Link>
         </div>
       </section>

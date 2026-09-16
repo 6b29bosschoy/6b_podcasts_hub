@@ -163,11 +163,11 @@ export default function BlogSubmit() {
           <CheckCircle size={48} className="mx-auto mb-4" style={{ color: "var(--gold)" }} />
           <h2 className="text-2xl font-black mb-3" style={{ color: "var(--text)" }}>投稿成功！</h2>
           <p className="text-sm mb-6" style={{ color: "var(--text-3)" }}>
-            感謝你的分享！你的文章已即時發佈至嘉賓專欄。
+            感謝你的分享！你的文章已即時發佈至感情故事。
           </p>
           <div className="flex gap-3 justify-center">
             <Link href="/blog" className="px-5 py-2.5 rounded-lg text-sm font-bold" style={{ background: "var(--red)", color: "white" }}>
-              返回嘉賓專欄
+              返回感情故事
             </Link>
             <Link href="/" className="px-5 py-2.5 rounded-lg text-sm font-bold" style={{ background: "var(--line)", border: "1px solid var(--text-3)", color: "var(--text)" }}>
               返回首頁
@@ -196,7 +196,7 @@ export default function BlogSubmit() {
       <div className="container max-w-2xl mx-auto py-10">
         <Link href="/blog" className="inline-flex items-center gap-2 text-sm mb-8 hover:opacity-80" style={{ color: "var(--red)" }}>
           <ArrowLeft size={16} />
-          返回嘉賓專欄
+          返回感情故事
         </Link>
 
         <div className="mb-8">

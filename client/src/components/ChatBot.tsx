@@ -44,7 +44,7 @@ export default function ChatBot() {
       {/* Floating Button */}
       <button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110"
+        className="mobile-floating-action fixed z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110"
         style={{ background: "linear-gradient(135deg, var(--red), var(--gold))", boxShadow: "none" }}
       >
         {open ? <X size={22} color="white" /> : <MessageCircle size={22} color="white" />}
@@ -53,8 +53,8 @@ export default function ChatBot() {
       {/* Chat Window */}
       {open && (
         <div
-          className="fixed bottom-24 right-6 z-50 w-80 sm:w-96 rounded-2xl overflow-hidden shadow-2xl flex flex-col"
-          style={{ height: "480px", background: "var(--bg-card)", border: "1px solid var(--line)", boxShadow: "none" }}
+          className="mobile-floating-panel fixed z-50 w-[calc(100%-2rem)] sm:w-96 rounded-2xl overflow-hidden shadow-2xl flex flex-col"
+          style={{ height: "min(480px, calc(100dvh - 10rem))", background: "var(--bg-card)", border: "1px solid var(--line)", boxShadow: "none" }}
         >
           {/* Header */}
           <div className="px-4 py-3 flex items-center gap-3" style={{ background: "linear-gradient(135deg, var(--red), var(--gold))" }}>

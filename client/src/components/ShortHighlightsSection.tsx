@@ -101,6 +101,9 @@ export function ShortHighlightCard({ video }: { video: HighlightItem }) {
 export function ShortHighlightsSection({ videos, loading }: { videos: ShortHighlightVideo[]; loading: boolean }) {
   const shortHighlights = getShortHighlights(videos);
 
+  // The section is an optional editorial selection, not a placeholder area.
+  if (!loading && shortHighlights.length === 0) return null;
+
   return (
     <section id="short-highlights" className="border-y border-line" style={{ background: "var(--bg-deep)" }}>
       <div className="container py-16 md:py-20">
@@ -131,18 +134,14 @@ export function ShortHighlightsSection({ videos, loading }: { videos: ShortHighl
             <CarouselPrevious className="left-0 hidden border-line bg-[var(--bg-card)] text-[var(--gold)] hover:bg-[var(--bg-raise)] md:flex" />
             <CarouselNext className="right-0 hidden border-line bg-[var(--bg-card)] text-[var(--gold)] hover:bg-[var(--bg-raise)] md:flex" />
           </Carousel>
-        ) : (
-          <div className="border border-dashed border-line px-6 py-10 text-center" style={{ background: "var(--bg-raise)" }}>
-            <p className="text-sm" style={{ color: "var(--text-2)" }}>短影音精華整理中，稍後會喺呢度更新。</p>
-          </div>
-        )}
+        ) : null}
 
         <div className="mt-9 flex flex-col items-start justify-between gap-5 border-t border-line pt-7 md:flex-row md:items-center">
           <p className="max-w-xl text-sm leading-7" style={{ color: "var(--text-3)" }}>
-            你唔需要即刻有答案。想按自己嘅情況拆局，可以先了解一對一安排。
+            你唔需要即刻有答案。想按自己嘅情況拆局，可以先了解玄學諮詢安排。
           </p>
           <a href="/booking" className="btn-gold shrink-0">
-            預約一對一 <Calendar className="size-4" />
+            了解玄學諮詢 <Calendar className="size-4" />
           </a>
         </div>
       </div>

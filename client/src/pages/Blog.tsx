@@ -4,10 +4,10 @@ import { JsonLd, buildBreadcrumbSchema, SITE_URL } from "@/components/JsonLd";
 import { useSEO } from "@/hooks/useSEO";
 
 const CATEGORY_LABELS: Record<string, string> = {
-  relationship: "兩性關係",
+  relationship: "感情故事",
   fengshui: "玄學風水",
   lifestyle: "生活態度",
-  interview: "嘉賓訪談",
+  interview: "人物訪談",
   other: "其他",
 };
 
@@ -40,11 +40,11 @@ function getFirstImage(imagesJson: string | null | undefined): string | null {
 
 export default function Blog() {
   useSEO({
-    title: "嘉賓專欄｜路邊電台嘉賓心得、幕後故事與深度觀點",
-    description: "路邊電台嘉賓專欄：嘉賓分享訪談後的心得、幕後故事與深度觀點，涉及兩性關係、玄學風水、生活態度等主題。由路邊電台嘉賓親自撰寫。",
-    keywords: "嘉賓專欄,路邊電台專欄,心得分享,玄學博客,兩性關係,香港 Podcast 專欄,訪談幕後故事",
-    ogTitle: "嘉賓專欄｜路邊電台嘉賓心得、幕後故事與深度觀點",
-    ogDescription: "嘉賓分享訪談後的心得、幕後故事與深度觀點，涉及兩性關係、玄學風水、生活態度等主題。",
+    title: "感情故事｜路邊電台人物訪談、關係觀點與真實分享",
+    description: "路邊電台感情故事：嘉賓與讀者分享關係觀點、人物訪談、幕後故事及生活體會，涵蓋感情、玄學與成長主題。",
+    keywords: "感情故事,路邊電台,人物訪談,關係觀點,香港 Podcast,玄學故事,生活體會",
+    ogTitle: "感情故事｜路邊電台人物訪談、關係觀點與真實分享",
+    ogDescription: "嘉賓與讀者分享關係觀點、人物訪談、幕後故事及生活體會。",
     ogUrl: "https://www.6bpodcasts.com/blog",
     canonical: "https://www.6bpodcasts.com/blog",
   });
@@ -55,8 +55,8 @@ export default function Blog() {
     {
       "@context": "https://schema.org",
       "@type": "Blog",
-      name: "嘉賓專欄｜路邊電台",
-      description: "路邊電台嘉賓專欄：嘉賓分享訪談後的心得、幕後故事與深度觀點，涵蓋兩性關係、玄學風水、生活態度等主題。",
+      name: "感情故事｜路邊電台",
+      description: "路邊電台感情故事：嘉賓與讀者分享關係觀點、人物訪談、幕後故事及生活體會。",
       url: `${SITE_URL}/blog`,
       publisher: {
         "@type": "Organization",
@@ -67,7 +67,7 @@ export default function Blog() {
     },
     buildBreadcrumbSchema([
       { name: "首頁", url: SITE_URL },
-      { name: "嘉賓專欄", url: `${SITE_URL}/blog` },
+      { name: "感情故事", url: `${SITE_URL}/blog` },
     ]),
   ];
 
@@ -77,10 +77,10 @@ export default function Blog() {
 
       {/* Page header */}
       <div className="py-12 text-center" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--line)" }}>
-        <div className="text-xs font-bold tracking-widest mb-2" style={{ color: "var(--red)" }}>GUEST COLUMN</div>
-        <h1 className="text-3xl md:text-4xl font-black mb-3" style={{ color: "var(--text)" }}>嘉賓專欄</h1>
-        <p className="text-sm max-w-lg mx-auto" style={{ color: "var(--text-3)" }}>
-          嘉賓訪談後的深度心得、幕後故事，以及各界人士的真實分享
+        <div className="text-xs font-bold tracking-widest mb-2" style={{ color: "var(--red)" }}>REAL STORIES</div>
+        <h1 className="text-3xl md:text-4xl font-black mb-3" style={{ color: "var(--text)" }}>感情故事</h1>
+        <p className="text-sm max-w-lg mx-auto" style={{ color: "var(--text-2)" }}>
+          關係觀點、人物訪談與真實分享，從別人的經歷整理自己的下一步
         </p>
         <div className="mt-6">
           <Link
@@ -143,7 +143,7 @@ export default function Blog() {
                         <img
                           src={coverImage}
                           alt={post.title}
-                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          className="w-full h-full object-cover object-[50%_35%] transition-transform duration-300 group-hover:scale-105"
                           loading="lazy"
                         />
                       ) : (
@@ -207,7 +207,7 @@ export default function Blog() {
                       {post.excerpt && (
                         <p
                           className="text-sm leading-relaxed mb-4 line-clamp-2 flex-1"
-                          style={{ color: "var(--text-3)" }}
+                          style={{ color: "var(--text-2)" }}
                         >
                           {post.excerpt}
                         </p>

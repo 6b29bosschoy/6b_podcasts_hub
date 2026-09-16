@@ -177,14 +177,14 @@ describe("New page routes - static content verification", () => {
     expect(markup).toContain("active:scale-[0.98]");
   });
 
-  it("renders short-highlight loading and empty states with the same single booking CTA", () => {
+  it("renders short-highlight loading state and hides the optional section when empty", () => {
     const loadingMarkup = renderToStaticMarkup(createElement(ShortHighlightsSection, { videos: [], loading: true }));
     const emptyMarkup = renderToStaticMarkup(createElement(ShortHighlightsSection, { videos: [], loading: false }));
 
     expect(loadingMarkup).toContain('aria-label="短影音精華載入中"');
-    expect(emptyMarkup).toContain("短影音精華整理中");
+    expect(emptyMarkup).toBe("");
     expect(loadingMarkup.match(/href="\/booking"/g)).toHaveLength(1);
-    expect(emptyMarkup.match(/href="\/booking"/g)).toHaveLength(1);
+    expect(emptyMarkup).not.toContain('href="/booking"');
   });
 
   it("replaces fictional master details and the master directory with a neutral preparation state", async () => {

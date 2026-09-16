@@ -10,10 +10,10 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 const CATEGORY_LABELS: Record<string, string> = {
-  relationship: "兩性關係",
+  relationship: "感情故事",
   fengshui: "玄學風水",
   lifestyle: "生活態度",
-  interview: "嘉賓訪談",
+  interview: "人物訪談",
   other: "其他",
 };
 
@@ -72,7 +72,7 @@ export default function BlogPost({ slug }: { slug: string }) {
         <div className="text-center">
           <div className="text-4xl mb-4">😕</div>
           <h2 className="text-xl font-bold mb-2" style={{ color: "var(--text-2)" }}>文章不存在</h2>
-          <Link href="/blog" className="text-sm" style={{ color: "var(--red)" }}>← 返回嘉賓專欄</Link>
+          <Link href="/blog" className="text-sm" style={{ color: "var(--red)" }}>← 返回感情故事</Link>
         </div>
       </div>
     );
@@ -112,7 +112,7 @@ export default function BlogPost({ slug }: { slug: string }) {
       <div className="container max-w-3xl mx-auto py-10">
         <Link href="/blog" className="inline-flex items-center gap-2 text-sm mb-8 hover:opacity-80 transition-opacity" style={{ color: "var(--red)" }}>
           <ArrowLeft size={16} />
-          返回嘉賓專欄
+          返回感情故事
         </Link>
 
         <article>

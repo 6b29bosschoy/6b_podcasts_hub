@@ -74,8 +74,8 @@
   --line:        #2c1a1a;   /* primary border */
   --line-soft:   #201212;   /* subtle divider */
   --text:        #f0e6df;   /* primary text — warm white */
-  --text-2:      #b8a49a;   /* secondary text — greige */
-  --text-3:      #7a6258;   /* tertiary / placeholder */
+  --text-2:      #d2c2ba;   /* secondary text — improved dark-theme contrast */
+  --text-3:      #ac9488;   /* tertiary / placeholder — readable on coffee black */
   --gold:        #c8a96a;   /* champagne gold accent */
   --gold-dim:    #8a6e3a;   /* dimmed gold for borders */
   --gold-light:  #e8cfa0;   /* light gold highlight */
@@ -249,6 +249,32 @@
     color: var(--gold);
     background: rgba(200,169,106,0.06);
     transform: translateY(-1px);
+  }
+
+  /* Fixed mobile navigation is 68px high; floating controls must clear it. */
+  .mobile-floating-action {
+    bottom: calc(4.75rem + env(safe-area-inset-bottom));
+    right: 1rem;
+  }
+  .mobile-floating-panel {
+    bottom: calc(9.25rem + env(safe-area-inset-bottom));
+    right: 1rem;
+  }
+  .mobile-push-bell {
+    bottom: calc(4.75rem + env(safe-area-inset-bottom));
+  }
+  .mobile-push-banner {
+    bottom: calc(4.75rem + env(safe-area-inset-bottom));
+  }
+  @media (max-width: 1023px) {
+    #root { padding-bottom: calc(4.25rem + env(safe-area-inset-bottom)); }
+  }
+  @media (min-width: 1024px) {
+    .mobile-floating-action { bottom: 1.5rem; right: 1.5rem; }
+    .mobile-floating-panel { bottom: 6rem; right: 1.5rem; }
+    .mobile-push-bell { bottom: 6rem; }
+    .mobile-push-banner { bottom: 1rem; }
+    #root { padding-bottom: 0; }
   }
 
   /* ── Card with hover gold-line sweep ── */

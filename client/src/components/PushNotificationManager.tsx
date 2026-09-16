@@ -120,7 +120,7 @@ export function PushBellButton() {
       onClick={isSubscribed ? unsubscribe : subscribe}
       disabled={isLoading}
       title={isSubscribed ? "取消推送通知" : "訂閱推送通知"}
-      className="fixed bottom-24 left-4 z-40 w-11 h-11 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 active:scale-95"
+      className="mobile-push-bell fixed left-4 z-40 w-11 h-11 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 active:scale-95"
       style={{
         background: isSubscribed
           ? "var(--red)"
@@ -173,7 +173,7 @@ export function PushPromptBanner() {
 
   return (
     <div
-      className="fixed bottom-4 left-4 right-4 md:left-auto md:right-6 md:max-w-sm z-50 rounded-xl p-4 shadow-2xl"
+      className="mobile-push-banner fixed left-4 right-4 md:left-auto md:right-6 md:max-w-sm z-50 rounded-xl p-4 shadow-2xl"
       style={{
         background: "var(--bg-card)",
         border: "1px solid var(--red)",

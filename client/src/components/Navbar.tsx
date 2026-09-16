@@ -28,7 +28,7 @@ const NAV_ITEMS = [
 
 const SUBMIT_OPTIONS = [
   { icon: "✍", label: "感情樹窿", desc: "匿名講出你嘅故事", href: "/treehole", isAnchor: false },
-  { icon: "✍", label: "嘉賓投稿", desc: "投稿嘉賓專欄文章", href: "/blog/submit", isAnchor: false },
+  { icon: "✍", label: "故事投稿", desc: "投稿感情故事文章", href: "/blog/submit", isAnchor: false },
   { icon: "✍", label: "主持招募", desc: "加入我們的節目主持團隊", href: "/host-recruitment", isAnchor: false },
 ];
 
@@ -293,7 +293,7 @@ export default function Navbar() {
       {/* Mobile Bottom Nav */}
       <nav
         className="lg:hidden fixed bottom-0 left-0 right-0 z-50"
-        style={{ background: "rgba(13,9,9,0.95)", borderTop: "1px solid var(--line)", backdropFilter: "blur(16px)" }}
+        style={{ background: "rgba(13,9,9,0.95)", borderTop: "1px solid var(--line)", backdropFilter: "blur(16px)", paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         <div className="flex">
           {MOBILE_BOTTOM_NAV.map((item) => {

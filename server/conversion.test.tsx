@@ -9,12 +9,12 @@ function readClientFile(path: string) {
 }
 
 describe("conversion optimisation", () => {
-  it("homepage hero CTAs link to treehole and WhatsApp", () => {
+  it("homepage hero provides latest-episode and mystic-consultation routes", () => {
     const source = readClientFile("pages/Portal.tsx");
-    expect(source).toContain("匿名講低你嘅感情困局");
-    expect(source).toContain("WhatsApp先問清楚");
-    expect(source).toContain("/treehole");
-    expect(source).toContain("wa.me/85298729990");
+    expect(source).toContain("睇最新一集");
+    expect(source).toContain("latest-episodes");
+    expect(source).toContain("了解玄學諮詢");
+    expect(source).toContain('href="/booking"');
   });
 
   it("navigation contains consolidated items", () => {
