@@ -472,6 +472,10 @@ export default function MysticAnalysis() {
                   換解讀類型
                 </button>
               </div>
+              <div className="rounded-2xl p-5 border text-center" style={{ background: "var(--bg-card)", borderColor: "rgba(201,164,92,0.2)" }}>
+                <p className="text-sm leading-6" style={{ color: "var(--text-2)" }}>如果你想按自己嘅處境再傾清楚，可以先了解現有玄學諮詢安排。</p>
+                <Link href="/booking" className="btn-gold mt-4">了解玄學諮詢</Link>
+              </div>
             </div>
           )}
 
@@ -958,6 +962,13 @@ export default function MysticAnalysis() {
               >
                 📊 換分析範疇
               </button>
+            </div>
+            <div className="rounded-2xl p-5 border text-center" style={{ background: "var(--bg-card)", borderColor: "rgba(201,164,92,0.2)" }}>
+              <p className="text-sm leading-6" style={{ color: "var(--text-2)" }}>想針對感情、人生方向或居住環境再了解？可先查看玄學諮詢範圍及預約流程。</p>
+              <div className="mt-4 flex flex-col justify-center gap-3 sm:flex-row">
+                <Link href="/booking" className="btn-gold">了解玄學諮詢</Link>
+                <Link href="/mystic/funnel" className="btn-ghost">查看服務流程</Link>
+              </div>
             </div>
             <button
               className="w-full py-2.5 rounded-xl text-sm"

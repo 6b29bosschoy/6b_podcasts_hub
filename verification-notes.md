@@ -12,3 +12,9 @@
 ## 自動驗證
 
 `pnpm exec tsc --noEmit`、`pnpm test -- --run` 及 `pnpm run build` 已成功執行。
+
+## 2026-09-16 品牌公司署名清理
+
+已以不分大小寫方式掃描 `client/`、`server/`、`shared/`、`README.md` 與 `drizzle/` 的公開程式及內容。未發現「路天邊」、「KT Creative」、「ktcreativefirm」或相關舊公司署名。前台聯絡電郵已統一為 `hello@6bpodcasts.com`，頁腳公司署名已改為「路邊 PODCASTS」。
+
+最終驗證已通過 TypeScript、189 項 Vitest 測試及 production build。

@@ -803,7 +803,7 @@ export const appRouter = router({
 - 涵蓋風水、八字命理、數字玄學、塔羅牌、身心靈療癒
 
 服務預約：可在網站預約風水諮詢、八字命理、塔羅占卜、身心靈療癒、課程報名
-商業合作：ktcreativefirm@gmail.com / WhatsApp: +852 9872 9990
+商業合作：hello@6bpodcasts.com / WhatsApp: +852 9872 9990
 
 請用輕鬆、親切嘅廣東話回答，適當加入玄學知識，並鼓勵用戶訂閱頻道或預約服務。
 回答要簡潔，不要超過 200 字。`;

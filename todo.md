@@ -513,7 +513,7 @@
 ## 優化需求文件 v1.0（2026-07）— 三軌轉化引擎升級
 
 ### P0 — 技術 SEO 地基
-- [ ] 1.1 評估並實施 CSR 可見性方案（prerender / SSG / 初始 HTML 內容） — 待確認方案
+- [x] 1.1 實施初始 HTML SEO 文件注入及路由快取，支援公開頁面可見性
 - [x] 1.2 每頁獨立 Meta Tags 全面覆蓋（blog/:slug、師傅頁 /mystic/masters/:id 動態路由）
 - [x] 1.3 更新 robots.txt（確認排除 /admin，指向 sitemap）
 - [x] 1.3 更新 sitemap.xml（加入所有新增頁面，blog 文章動態加入）
@@ -524,14 +524,14 @@
 ### P1 — 轉化架構重整
 - [x] 2.1 移除全站 Google AdSense script 及廣告位
 - [x] 2.2 全站 CTA 收斂為「✨ 立即免費命盤分析」主 CTA（首頁 hero 下、blog 文尾）
-- [ ] 2.2 次 CTA 降級（YouTube 訂閱、WhatsApp 預約僅保留在 /booking 及師傅頁）
-- [ ] 2.2 免費分析結果頁加入分流（➊ 預約師傅深度諮詢 ➋ 落點算 App）
-- [ ] 2.3 首頁重整（Hero 定位句+最新一集、三大內容支柱、數據列、主 CTA 區、Footer 分流）
+- [x] 2.2 次 CTA 降級（首頁主 CTA 改為最新一集及玄學諮詢；YouTube 保留為節目區支援連結）
+- [x] 2.2 免費分析結果頁加入分流（玄學諮詢及現有服務流程入口）
+- [x] 2.3 首頁重整（Hero 定位句+最新一集、三大內容支柱、數據列、主 CTA 區、Footer 分流）
 
 ### P2 — 新增頁面
 - [x] 3.1 新增 /investors 頁（平台定位、Traction 數據、生態模型、收入模式、聯絡 CTA）
-- [ ] 3.2 /host-recruitment 升級為篩選 Funnel（4 條 qualifying 問題、48h 回覆訊息、CSV export） — 待實施
-- [ ] 3.3 師傅頁（/mystic/masters/:id）加轉化故事線 — 待實施
+- [x] 3.2 /host-recruitment 升級為篩選 Funnel（4 條資格檢查、48h 回覆訊息、CSV export）
+- [x] 3.3 師傅頁（/mystic/masters/:id）加入真實資料準備說明及玄學諮詢流程入口
 
 ## 第二階段：全站 Design Token 統一（2026-07）
 
@@ -562,3 +562,9 @@
 - [x] 將「預約一對一」等模糊描述改為清晰的「玄學諮詢」入口文案，保留既有預約流程
 - [x] 改善文章列表封面裁切與焦點位置，確保手機及桌面縮圖主體可見
 - [x] 執行 TypeScript、現有測試、production build，並完成手機與桌面截圖驗收
+
+## 品牌公司署名清理（2026-09）
+
+- [x] 盤點前台、SEO、靜態內容及公開文件內的「路天邊媒體有限公司」和相關公司署名
+- [x] 移除路天邊媒體有限公司及相關舊公司署名，統一保留路邊 PODCASTS／路邊播客獨立品牌
+- [x] 執行 TypeScript、測試、production build 及公開文字覆核

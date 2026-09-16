@@ -56,11 +56,10 @@ export default function MysticMasterDetail({ id }: Props) {
         <p className="text-sm leading-7 max-w-xl mx-auto" style={{ color: "var(--text-2)" }}>
           路邊玄學堂正整理合作師傅資料。待完成簽約及資料核對後，會以真實資料重新上線。
         </p>
-        <Link href="/mystic">
-          <span className="inline-block mt-8 px-5 py-2.5 rounded-xl text-sm font-bold cursor-pointer" style={{ background: "var(--bg-card)", color: "var(--text)" }}>
-            返回路邊玄學堂
-          </span>
-        </Link>
+        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <Link href="/booking" className="btn-gold">了解玄學諮詢</Link>
+          <Link href="/mystic" className="btn-ghost">返回路邊玄學堂</Link>
+        </div>
       </div>
     </main>
   );

@@ -90,7 +90,7 @@ export default function Footer() {
               ))}
             </div>
             <div className="mt-5 pt-4" style={{ borderTop: "1px solid var(--line-soft)" }}>
-              <p className="text-xs" style={{ color: "var(--text-3)" }}>ktcreativefirm@gmail.com</p>
+              <p className="text-xs" style={{ color: "var(--text-3)" }}>hello@6bpodcasts.com</p>
               <p className="text-xs mt-1" style={{ color: "var(--text-3)" }}>WhatsApp: +852 9872 9990</p>
             </div>
           </div>
@@ -104,7 +104,7 @@ export default function Footer() {
             © 2026 路邊電台 × 路邊玄學堂. All rights reserved.
           </p>
           <p className="text-xs" style={{ color: "var(--text-3)", fontFamily: "'Cormorant Garamond', serif" }}>
-            Powered by KT Creative Firm
+            路邊 PODCASTS
           </p>
         </div>
       </div>

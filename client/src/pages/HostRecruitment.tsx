@@ -12,6 +12,12 @@ import { X } from "lucide-react";
 
 const DAYS = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"];
 const TIME_SLOTS = ["14:00-18:00", "19:00-23:00"];
+const QUALIFYING_CHECKS = [
+  "你想傾嘅主題及觀點",
+  "出鏡、主持或直播經驗",
+  "你點樣介紹自己同你的風格",
+  "可配合拍攝的時間及聯絡方法",
+];
 
 export function HostRecruitment() {
   const [, setLocation] = useLocation();
@@ -144,7 +150,7 @@ export function HostRecruitment() {
         privacyConsent: formData.privacyConsent,
       });
 
-      alert("申請已提交！感謝你的興趣，我們會盡快聯絡你。");
+      alert("申請已收到！如資料切合現時節目需要，我們會在 48 小時內以你提供的方式回覆。");
 
       // Reset form
       setFormData({
@@ -194,6 +200,20 @@ export function HostRecruitment() {
             </p>
           </div>
         </div>
+
+        <section className="mb-8 rounded-xl border p-5" style={{ background: "rgba(22,13,13,0.82)", borderColor: "var(--line)" }}>
+          <p className="text-xs font-bold tracking-[0.18em]" style={{ color: "var(--gold)" }}>申請前先睇清楚</p>
+          <h2 className="mt-2 text-xl font-bold" style={{ color: "var(--text)" }}>我哋會先按以下四點了解是否適合現時節目。</h2>
+          <ol className="mt-4 grid gap-3 sm:grid-cols-2">
+            {QUALIFYING_CHECKS.map((item, index) => (
+              <li key={item} className="flex items-start gap-3 text-sm leading-6" style={{ color: "var(--text-2)" }}>
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold" style={{ background: "var(--gold)", color: "var(--bg)" }}>{index + 1}</span>
+                {item}
+              </li>
+            ))}
+          </ol>
+          <p className="mt-4 text-sm leading-6" style={{ color: "var(--text-2)" }}>提交後，如資料切合現時節目需要，會在 48 小時內以你填寫的聯絡方法回覆。</p>
+        </section>
 
         {/* Application Form */}
         <Card className="bg-slate-800/50 border-purple-500/30 backdrop-blur-sm mb-8">
@@ -489,7 +509,7 @@ export function HostRecruitment() {
             <div>
               <h4 className="font-semibold text-gray-200 mb-2">Q: 申請後幾時會收到回覆？</h4>
               <p className="text-gray-400">
-                A: 我們會盡快審核申請，通常會喺一個星期內聯絡你。
+                A: 如資料切合現時節目需要，我們會在 48 小時內以你填寫的聯絡方法回覆。
               </p>
             </div>
             <div>

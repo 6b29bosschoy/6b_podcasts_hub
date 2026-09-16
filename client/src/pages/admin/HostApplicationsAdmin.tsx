@@ -41,6 +41,32 @@ export function HostApplicationsAdmin() {
     await updateStatusMutation.mutateAsync({ id, status: newStatus });
   };
 
+  const handleExportCsv = () => {
+    const headers = ["申請日期", "名稱", "申請角色", "興趣主題", "出鏡經驗", "自我介紹", "聯絡方法", "拍攝時間", "長期參與", "商業合作", "狀態"];
+    const rows = applications.map((app) => [
+      new Date(app.createdAt).toLocaleString("zh-HK"),
+      app.name,
+      HOST_TYPE_CONFIG[app.hostType] ?? app.hostType,
+      app.interests,
+      app.experience ?? "",
+      app.introduction,
+      app.contactMethod,
+      app.availableTime,
+      app.longTermInterest ? "是" : "否",
+      app.acceptCommercial ? "是" : "否",
+      STATUS_CONFIG[app.status as HostApplicationStatus]?.label ?? app.status,
+    ]);
+    const escape = (value: unknown) => `"${String(value ?? "").replaceAll('"', '""')}"`;
+    const csv = [headers, ...rows].map((row) => row.map(escape).join(",")).join("\n");
+    const blob = new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" });
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = href;
+    link.download = `6b-host-applications-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(href);
+  };
+
   const parseTimeSlots = (slotsJson: string | null) => {
     if (!slotsJson) return [];
     try {
@@ -93,19 +119,23 @@ export function HostApplicationsAdmin() {
           </p>
         </div>
 
-        {/* Filter */}
-        <Select value={filterStatus} onValueChange={(v) => setFilterStatus(v as HostApplicationStatus | "all")}>
-          <SelectTrigger className="w-40 bg-slate-700/50 border-purple-400/30 text-white">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent className="bg-slate-800 border-purple-400/30">
-            <SelectItem value="all">全部狀態</SelectItem>
-            <SelectItem value="pending">待處理</SelectItem>
-            <SelectItem value="contacted">已聯絡</SelectItem>
-            <SelectItem value="rejected">已拒絕</SelectItem>
-            <SelectItem value="archived">已存檔</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-3">
+          <Button type="button" variant="outline" size="sm" onClick={handleExportCsv} disabled={applications.length === 0}>
+            匯出 CSV
+          </Button>
+          <Select value={filterStatus} onValueChange={(v) => setFilterStatus(v as HostApplicationStatus | "all")}>
+            <SelectTrigger className="w-40 bg-slate-700/50 border-purple-400/30 text-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-slate-800 border-purple-400/30">
+              <SelectItem value="all">全部狀態</SelectItem>
+              <SelectItem value="pending">待處理</SelectItem>
+              <SelectItem value="contacted">已聯絡</SelectItem>
+              <SelectItem value="rejected">已拒絕</SelectItem>
+              <SelectItem value="archived">已存檔</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Applications List */}

@@ -382,7 +382,7 @@ export default function Partnership() {
                   📱 WhatsApp
                 </a>
                 <a
-                  href="mailto:ktcreativefirm@gmail.com"
+                  href="mailto:hello@6bpodcasts.com"
                   className="px-4 py-2 rounded-lg text-xs font-bold transition-all hover:opacity-90"
                   style={{ background: "var(--line)", border: "1px solid var(--text-3)", color: "var(--text)" }}
                 >

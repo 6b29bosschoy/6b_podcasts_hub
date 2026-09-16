@@ -120,9 +120,9 @@ export default function Contact() {
             <div className="glass-card rounded-xl p-5">
               <h3 className="font-black mb-4" style={{ color: "var(--text)" }}>直接聯絡</h3>
               <div className="flex flex-col gap-3">
-                <a href="mailto:ktcreativefirm@gmail.com" className="flex items-center gap-3 text-sm hover:opacity-80 transition-opacity" style={{ color: "var(--text-2)" }}>
+                <a href="mailto:hello@6bpodcasts.com" className="flex items-center gap-3 text-sm hover:opacity-80 transition-opacity" style={{ color: "var(--text-2)" }}>
                   <Mail size={16} style={{ color: "var(--red)" }} />
-                  ktcreativefirm@gmail.com
+                  hello@6bpodcasts.com
                 </a>
                 <a href="https://wa.me/85298729990" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm hover:opacity-80 transition-opacity" style={{ color: "var(--text-2)" }}>
                   <Phone size={16} style={{ color: "var(--gold)" }} />

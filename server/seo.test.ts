@@ -48,7 +48,7 @@ describe("SEO server output", () => {
     const fallback = renderCrawlerFallback(document);
 
     expect((fallback.match(/<h1>/g) ?? [])).toHaveLength(1);
-    expect(fallback).toContain("6B Podcast｜香港兩性關係 Podcast 平台");
+    expect(fallback).toContain("6B 路邊系列｜香港感情故事、人物訪談與玄學指引");
     expect(fallback).toContain("路邊電台");
     expect(fallback).toContain("路邊玄學堂");
     expect(fallback).toContain("感情樹窿投稿");

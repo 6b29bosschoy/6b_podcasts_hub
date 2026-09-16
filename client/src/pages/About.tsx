@@ -71,8 +71,7 @@ export default function About() {
       ],
       worksFor: {
         "@type": "Organization",
-        name: "KT Creative Firm Ltd",
-        alternateName: "路天邊制作有限公司",
+        name: "路邊 PODCASTS",
       },
     },
     buildBreadcrumbSchema([
@@ -98,7 +97,7 @@ export default function About() {
             關於我們
           </h1>
           <p className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: "var(--text-2)" }}>
-            KT CREATIVE FIRM LTD（路天邊制作有限公司）致力於透過專業的媒體製作與創新的行銷策略，幫助品牌與個人在數位時代中建立獨特的聲音與影響力。根據大數據顯示，訪談節目在香港越來越受到重視，收聽與收看觀眾持續增長，成為品牌推廣的重要平台。
+            路邊 PODCASTS 是一間香港內容公司，專注以真實對話、人物故事與玄學人生指引，陪觀眾整理關係、生活與每一次選擇。
           </p>
         </div>
       </section>
@@ -113,13 +112,13 @@ export default function About() {
             </div>
             <div className="glass-card rounded-2xl p-8 md:p-10 space-y-5" style={{ border: "1px solid var(--red)" }}>
               <p className="leading-relaxed" style={{ color: "var(--text-2)" }}>
-                根據 2024 年最新大數據研究顯示，訪談節目在香港的受歡迎程度持續上升，收聽與收看人數年均增長超過 <strong style={{ color: "var(--gold)" }}>35%</strong>。這背後的原因很簡單：在資訊爆炸的時代，觀眾渴望真實、有深度的內容，而訪談節目恰好提供了這種價值。
+                路邊 PODCASTS 由一集又一集的真實對話起步。由感情故事、人物訪談到人生轉捩點，我哋相信願意講真話，先有機會聽見真正值得理解的事。
               </p>
               <p className="leading-relaxed" style={{ color: "var(--text-2)" }}>
-                KT CREATIVE FIRM 從「路邊 PODCASTS」這個旗艦頻道起步，透過一集又一集的深度訪談，我們學會了如何捕捉最真實的故事，並將其轉化為能夠感動人心的內容。
+                作為一間香港內容公司，路邊 PODCASTS 以兩性關係作入口，再從玄學與生活觀察提供另一個拆局角度；內容不急著替人下結論，而是留出空間讓觀眾整理自己的下一步。
               </p>
               <p className="leading-relaxed" style={{ color: "var(--text-2)" }}>
-                如今，我們將這些經驗與專業技術結合，為客戶提供從內容策劃、拍攝製作到推廣行銷的一站式服務。我們不僅是製作團隊，更是您品牌故事的共同創作者。
+                我哋亦會為合作品牌、嘉賓和創作者策劃對話與內容製作。每次合作都由實際目標、受眾與故事本身出發，建立有延續性的內容關係。
               </p>
             </div>
           </div>
@@ -179,10 +178,10 @@ export default function About() {
                   <h3 className="text-2xl font-black mb-4" style={{ color: "var(--text)" }}>Ray Choy 蔡力泓</h3>
                   <div className="space-y-3">
                     <p className="text-sm leading-relaxed" style={{ color: "var(--text-2)" }}>
-                      Ray Choy 是 KT CREATIVE FIRM 的創辦人，也是「路邊 PODCASTS」的靈魂人物。從第一集節目開始，他就明白一個真實的故事能夠深刻觸動人心，而這份感動正是品牌與受眾建立連結的最強力量。
+                      Ray Choy 是「路邊 PODCASTS」創辦人及主持人。從第一集節目開始，他就明白一個真實的故事能夠深刻觸動人心，而這份感動正是平台與觀眾建立連結的起點。
                     </p>
                     <p className="text-sm leading-relaxed" style={{ color: "var(--text-2)" }}>
-                      憑藉對內容製作的熱情與多年實戰經驗，Ray 帶領團隊為眾多品牌與個人打造了極具影響力的節目。他深信，好的內容不僅要能感動人，更要透過精準的流量優化與策略推廣，讓這份感動傳遞給更多人。
+                      Ray 相信，好的內容不止要有討論價值，也要令觀眾感到被理解。路邊 PODCASTS 會繼續由真實故事出發，透過對話陪大家整理關係、人生和眼前的選擇。
                     </p>
                   </div>
                   {/* Contact info */}
@@ -197,7 +196,7 @@ export default function About() {
                       📱 WhatsApp 聯絡
                     </a>
                     <a
-                      href="mailto:ktcreativefirm@gmail.com"
+                      href="mailto:hello@6bpodcasts.com"
                       className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all hover:opacity-90"
                       style={{ background: "var(--line)", border: "1px solid var(--text-3)", color: "var(--text)" }}
                     >
