@@ -4,6 +4,7 @@ import {
   CANONICAL_ORIGIN,
   PUBLIC_SITEMAP_PATHS,
   SITE_DESCRIPTION,
+  SITE_KEYWORDS,
   SITE_TITLE,
   getArticleParagraphs,
   getHomeRedirectTarget,
@@ -27,28 +28,37 @@ describe("SEO server output", () => {
     }
   });
 
-  it("emits the requested home title, description, canonical, OG/Twitter URLs and two JSON-LD scripts", async () => {
+  it("emits homepage SEO metadata within the required character and keyword limits", async () => {
     const document = await resolveSeoDocument("/");
     const head = renderSeoHead(document);
 
     expect(head).toContain(`<title>${SITE_TITLE}</title>`);
     expect(head).toContain(`<meta name="description" content="${SITE_DESCRIPTION}" />`);
+    expect(head).toContain(`<meta name="keywords" content="${SITE_KEYWORDS}" />`);
+    expect([...SITE_TITLE].length).toBeGreaterThanOrEqual(30);
+    expect([...SITE_TITLE].length).toBeLessThanOrEqual(60);
+    expect([...SITE_DESCRIPTION].length).toBeGreaterThanOrEqual(50);
+    expect([...SITE_DESCRIPTION].length).toBeLessThanOrEqual(160);
+    expect(SITE_KEYWORDS.split(",")).toHaveLength(5);
     expect(head).toContain('<link rel="canonical" href="https://6bpodcasts.com/" />');
     expect(head).toContain('<meta property="og:url" content="https://6bpodcasts.com/" />');
     expect(head).toContain('<meta name="twitter:url" content="https://6bpodcasts.com/" />');
-    expect(head).toContain('<meta property="og:title" content="6B Podcast｜香港兩性關係 Podcast・感情樹窿・玄學拆局" />');
-    expect(head).toContain('<meta name="twitter:title" content="6B Podcast｜香港兩性關係 Podcast・感情樹窿・玄學拆局" />');
+    expect(head).toContain(`<meta property="og:title" content="${SITE_TITLE}" />`);
+    expect(head).toContain(`<meta name="twitter:title" content="${SITE_TITLE}" />`);
     expect((head.match(/application\/ld\+json/g) ?? [])).toHaveLength(2);
     expect(head).toContain('"@type":"Organization"');
     expect(head).toContain('"@type":"PodcastSeries"');
   });
 
-  it("renders exactly one crawler-visible H1 plus all required home discovery links without JavaScript", async () => {
+  it("renders exactly one crawler-visible H1, a descriptive H2 and all required home discovery links", async () => {
     const document = await resolveSeoDocument("/");
     const fallback = renderCrawlerFallback(document);
 
     expect((fallback.match(/<h1>/g) ?? [])).toHaveLength(1);
+    expect((fallback.match(/<h2>/g) ?? [])).toHaveLength(1);
     expect(fallback).toContain("6B 路邊系列｜香港感情故事、人物訪談與玄學指引");
+    expect(fallback).toContain("香港感情故事、人物訪談與玄學人生指引");
+    expect([...(fallback.match(/<h2>([^<]+)<\/h2>/)?.[1] ?? "")].length).toBeLessThanOrEqual(80);
     expect(fallback).toContain("路邊電台");
     expect(fallback).toContain("路邊玄學堂");
     expect(fallback).toContain("感情樹窿投稿");

@@ -1,8 +1,9 @@
 import { getBlogPostBySlug, getYoutubeCache } from "../db";
 
 export const CANONICAL_ORIGIN = "https://6bpodcasts.com";
-export const SITE_TITLE = "6B Podcast｜香港兩性關係 Podcast・感情樹窿・玄學拆局";
-export const SITE_DESCRIPTION = "香港最敢講感情真相嘅 Podcast。真實感情投稿、兩性關係訪談、玄學角度拆解感情難題。有嘢想講？匿名投稿感情樹窿。";
+export const SITE_TITLE = "6B 路邊系列｜香港感情故事、人物訪談、兩性關係 Podcast、廣東話玄學指引、諮詢及匿名投稿平台";
+export const SITE_DESCRIPTION = "6B 路邊系列集合香港感情故事、真實人物訪談與兩性關係 Podcast，亦提供玄學人生指引及諮詢資訊。由別人的經歷看清關係，想講心事可匿名投稿；路邊電台與路邊玄學堂以廣東話陪你整理感情困局、人生選擇與下一步方向，從節目內容到服務流程，讓你有地方慢慢講、慢慢理清。";
+export const SITE_KEYWORDS = "香港感情故事,兩性關係 Podcast,路邊電台,路邊玄學堂,玄學諮詢";
 export const OG_IMAGE = `${CANONICAL_ORIGIN}/manus-storage/og-image-main_4e62cddd.jpg`;
 
 const STATIC_SITEMAP_PATHS = [
@@ -36,6 +37,7 @@ export const PUBLIC_SITEMAP_PATHS: readonly string[] = [...STATIC_SITEMAP_PATHS]
 type SeoPage = {
   title: string;
   description: string;
+  keywords?: string;
   h1: string;
   intro: string;
   bodyParagraphs?: string[];
@@ -59,6 +61,7 @@ const PAGE_SEO: Record<string, SeoPage> = {
   "/": {
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
+    keywords: SITE_KEYWORDS,
     h1: "6B 路邊系列｜香港感情故事、人物訪談與玄學指引",
     intro: "6B 路邊系列以真實人物訪談、感情故事與玄學指引，陪你由別人的經歷整理自己的關係與人生選擇。你可以收聽最新節目、匿名講出心事，或者了解玄學諮詢安排。",
   },
@@ -380,6 +383,7 @@ export function renderSeoHead(document: SeoDocument): string {
   return [
     `<title>${title}</title>`,
     `<meta name="description" content="${description}" />`,
+    document.keywords ? `<meta name="keywords" content="${escapeHtml(document.keywords)}" />` : "",
     `<meta name="robots" content="${document.robots ?? "index, follow"}" />`,
     `<meta name="author" content="路邊電台 6B Podcasts" />`,
     `<link rel="canonical" href="${canonicalUrl}" />`,
@@ -410,7 +414,8 @@ export function renderCrawlerFallback(document: SeoDocument): string {
     .map((link) => `<a href="${CANONICAL_ORIGIN}${link.href}">${escapeHtml(link.label)}</a>`)
     .join(" · ");
   const articleBody = document.bodyParagraphs?.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("") ?? "";
-  return `<main id="seo-content" data-seo-fallback><h1>${escapeHtml(document.h1)}</h1><p>${escapeHtml(document.intro)}</p>${articleBody}<nav aria-label="主要欄目">${links}</nav></main>`;
+  const homeSubheading = document.path === "/" ? "<h2>香港感情故事、人物訪談與玄學人生指引</h2>" : "";
+  return `<main id="seo-content" data-seo-fallback><h1>${escapeHtml(document.h1)}</h1>${homeSubheading}<p>${escapeHtml(document.intro)}</p>${articleBody}<nav aria-label="主要欄目">${links}</nav></main>`;
 }
 
 export function injectSeoDocument(template: string, document: SeoDocument): string {

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { ShortHighlightsSection } from "@/components/ShortHighlightsSection";
@@ -7,6 +7,9 @@ import { Play, ChevronRight, Youtube, Calendar } from "lucide-react";
 
 const HERO_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663073423209/XJagJnJEiagVDDmfVeExSL/hero-new-main-3ptD2DHC6jMTxZHCYKJLcE.webp";
 const HERO_BG_MOBILE = "https://d2xsxph8kpxj0f.cloudfront.net/310519663073423209/XJagJnJEiagVDDmfVeExSL/hero-new-mobile-WybngLNmW22rmhrdvNB7xw.webp";
+const HOME_SEO_TITLE = "6B 路邊系列｜香港感情故事、人物訪談、兩性關係 Podcast、廣東話玄學指引、諮詢及匿名投稿平台";
+const HOME_SEO_DESCRIPTION = "6B 路邊系列集合香港感情故事、真實人物訪談與兩性關係 Podcast，亦提供玄學人生指引及諮詢資訊。由別人的經歷看清關係，想講心事可匿名投稿；路邊電台與路邊玄學堂以廣東話陪你整理感情困局、人生選擇與下一步方向，從節目內容到服務流程，讓你有地方慢慢講、慢慢理清。";
+const HOME_SEO_KEYWORDS = "香港感情故事,兩性關係 Podcast,路邊電台,路邊玄學堂,玄學諮詢";
 
 const EXPLORE_CARDS = [
   {
@@ -142,6 +145,23 @@ function VideoCard({ v }: { v: VideoItem }) {
 }
 
 export default function Portal() {
+  useEffect(() => {
+    document.title = HOME_SEO_TITLE;
+
+    const updateMeta = (name: "description" | "keywords", content: string) => {
+      let meta = document.head.querySelector<HTMLMetaElement>(`meta[name="${name}"]`);
+      if (!meta) {
+        meta = document.createElement("meta");
+        meta.name = name;
+        document.head.appendChild(meta);
+      }
+      meta.content = content;
+    };
+
+    updateMeta("description", HOME_SEO_DESCRIPTION);
+    updateMeta("keywords", HOME_SEO_KEYWORDS);
+  }, []);
+
   const videoQueryInput = useMemo(
     () => ({ channel: "all" as const, limit: 12 }),
     []
@@ -359,8 +379,9 @@ export default function Portal() {
                 color: "var(--text)",
               }}
             >
-              你今天想探索甚麼？
+              香港感情故事、人物訪談與玄學人生指引
             </h2>
+            <p className="mt-2 text-sm" style={{ color: "var(--text-2)" }}>你今天想探索甚麼？</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
